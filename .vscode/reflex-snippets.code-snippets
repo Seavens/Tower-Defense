@@ -1,0 +1,38 @@
+{
+	"Reflex Slice": {
+		"scope": "typescript",
+		"prefix": [
+			"slice",
+			"reflexslice"
+		],
+		"description": "Create a Reflex slice",
+		"body": [
+			"import { createProducer } from \"@rbxts/reflex\";",
+			"",
+			"export interface ${TM_FILENAME_BASE/(.*)(-.*)/${1:/pascalcase}/g}State {}",
+			"",
+			"const ${TM_FILENAME_BASE/(.*)(-.*)/${1:/camelcase}/g}State: ${TM_FILENAME_BASE/(.*)(-.*)/${1:/pascalcase}/g}State = {};"
+			"",
+			"export const ${TM_FILENAME_BASE/(.*)(-.*)/${1:/camelcase}/g}Slice = createProducer<${TM_FILENAME_BASE/(.*)(-.*)/${1:/pascalcase}/g}State, $2<${TM_FILENAME_BASE/(.*)(-.*)/${1:/pascalcase}/g}State>>(${TM_FILENAME_BASE/(.*)(-.*)/${1:/camelcase}/g}State, {",
+			"\t$3",
+			"});",
+			"",
+		],
+	},
+	"Reflex Action": {
+		"scope": "typescript",
+		"prefix": [
+			"action",
+			"reflexaction",
+		],
+		"description": "Create a Reflex action",
+		"body": [
+			"$2: (state: State, payload: $3): State => {",
+			"\t$4",
+			"\treturn produce(state, (draft: Draft<State>): void => {",
+			"\t\t$5",
+			"\t});",
+			"},",
+		]
+	}
+}

@@ -1,0 +1,1 @@
+type RBXAssetId = `rbxassetid://${number}`;
