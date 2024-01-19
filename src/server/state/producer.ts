@@ -1,6 +1,7 @@
 import { broadcastMiddleware } from "./middleware";
 import { combineProducers } from "@rbxts/reflex";
 import { dataSlice } from "./slices";
+import { sharedSlices } from "shared/state/slices";
 import type { DataState } from "./slices";
 import type { InferActions, InferState } from "@rbxts/reflex";
 
@@ -18,6 +19,7 @@ export const serverSlices = {
 };
 export const combinedSlices = {
 	...serverSlices,
+	...sharedSlices,
 };
 
 export const serverProducer = combineProducers(combinedSlices).applyMiddleware(
