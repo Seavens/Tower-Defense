@@ -8,7 +8,7 @@ import { selectData } from "server/state/selectors";
 import { serverProducer } from "server/state/producer";
 import type { Bin } from "@rbxts/bin";
 
-export class Entity extends API {
+export class Entity extends API<Character> {
 	public static readonly entities = new Map<string, Entity>();
 
 	public static readonly onEntityAdded = new Signal<Entity>();

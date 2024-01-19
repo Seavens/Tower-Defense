@@ -12,6 +12,7 @@
 	"eslint.format.enable": true,
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"cSpell.words": [
+		"basehealth",
 		"freefall"
 	]
 }

@@ -1,0 +1,100 @@
+import { GameStatus } from "shared/types/enums";
+import { Mob } from "server/classes/mob";
+import { MobUtility } from "shared/modules/mob-utility";
+import { Service } from "@flamework/core";
+import { mapDefinitions } from "shared/definitions/maps";
+import { mobDefinitions } from "shared/definitions/mobs";
+import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
+import { serverProducer } from "server/state/producer";
+import type { MapId } from "shared/types/ids";
+import type { OnMobEnded, OnMobRemoved } from "./mob-service";
+import type { OnStart } from "@flamework/core";
+
+@Service({})
+export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
+	public spawnWave(map: MapId, wave: number): void {
+		const { waves } = mapDefinitions[map];
+		const definition = waves[wave - 1];
+		serverProducer.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		MobUtility.setIndex(0);
+		let longestDuration = 0;
+		for (const [id, { count, delay, wait }] of pairs(definition)) {
+			if (count <= 0) {
+				continue;
+			}
+			const duration = delay + count * wait;
+			task.delay(delay, (): void => {
+				let status = serverProducer.getState(selectGameStatus);
+				for (const _ of $range(1, count)) {
+					if (status === GameStatus.Ended) {
+						break;
+					}
+					const index = MobUtility.getIndex();
+					const mob = new Mob(index, id);
+					mob.start();
+					task.wait(wait);
+					if (wait < 0) {
+						continue;
+					}
+					status = serverProducer.getState(selectGameStatus);
+				}
+			});
+			if (duration > longestDuration) {
+				longestDuration = duration;
+			}
+			const status = serverProducer.getState(selectGameStatus);
+			if (status === GameStatus.Ended) {
+				break;
+			}
+		}
+		task.delay(longestDuration, (): void => {
+			serverProducer.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
+		});
+	}
+
+	public onMobRemoved(): void {
+		const count = Mob.getMobCount();
+		const status = serverProducer.getState(selectGameStatus);
+		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
+			return;
+		}
+		serverProducer.gameEndWave({}, { broadcast: true });
+		warn("Wave ended.");
+		// Temporary...
+		// We'll change this later to start after
+		// either 30 seconds or whenever all players
+		// vote to start the wave early.
+		task.wait(3);
+		warn("Wave started.");
+		serverProducer.gameStartWave({}, { broadcast: true });
+	}
+
+	public onMobEnded(mob: Mob): void {
+		const current = mob.getHealth();
+		const { id } = mob;
+		const { health } = mobDefinitions[id];
+		const damage = current ** 2 / (health * 2);
+		serverProducer.gameBaseDamage({ damage }, { broadcast: true });
+		const { health: basehealth, status } = serverProducer.getState(selectGame);
+		warn(`Base: ${basehealth} | Damage: -${damage} | Mobs: ${Mob.getMobCount()}`);
+		if (status !== GameStatus.Ended) {
+			return;
+		}
+		Mob.removeAllMobs();
+		warn("Round ended.");
+	}
+
+	public onStart(): void {
+		serverProducer.subscribe(selectCurrentWave, (wave: number): void => {
+			const status = serverProducer.getState(selectGameStatus);
+			const map = serverProducer.getState(selectCurrentMap);
+			if ((status !== GameStatus.Ongoing && status !== GameStatus.Spawning) || map === undefined) {
+				return;
+			}
+			this.spawnWave(map, wave);
+		});
+		task.wait(5);
+		serverProducer.gameStartRound({ health: math.huge }, { broadcast: true });
+		serverProducer.gameStartWave({}, { broadcast: true });
+	}
+}

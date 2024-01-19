@@ -1,6 +1,5 @@
 import { Entity as API } from "shared/api/entity";
 import { Bin } from "@rbxts/bin";
-import { Character } from "./character";
 import { EntityUtility } from "shared/modules/entity-utility";
 import { Option } from "@rbxts/rust-classes";
 import { Players, Workspace } from "@rbxts/services";
@@ -8,11 +7,12 @@ import { Signal } from "@rbxts/beacon";
 import { clientProducer } from "client/state/producer";
 import { selectData } from "client/state/selectors";
 import type { Data } from "shared/types/data";
+import { Character } from "client/classes/character";
 
 const camera = Workspace.CurrentCamera;
 const localPlayer = Players.LocalPlayer;
 
-export class Entity extends API {
+export class Entity extends API<Character> {
 	public static readonly entities = new Map<string, Entity>();
 
 	public static readonly onEntityAdded = new Signal<Entity>();

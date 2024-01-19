@@ -3,7 +3,7 @@ import { Option } from "@rbxts/rust-classes";
 import type { Character } from "./character";
 import type { Data } from "shared/types/data";
 
-export abstract class Entity {
+export abstract class Entity<T extends Character = Character> {
 	public readonly user: string;
 	public readonly id: number;
 
@@ -12,7 +12,7 @@ export abstract class Entity {
 
 	protected destroyed = false;
 
-	protected abstract character?: Character;
+	protected abstract character?: T;
 
 	public constructor(user: string, id: number, player?: Player) {
 		this.user = user;
@@ -20,7 +20,7 @@ export abstract class Entity {
 		this.player = player;
 	}
 
-	public getCharacter(): Option<Character> {
+	public getCharacter(): Option<T> {
 		const { character } = this;
 		return Option.wrap(character);
 	}
