@@ -34,6 +34,13 @@
 				"$path": "out/shared"
 			}
 		},
+		"ServerStorage": {
+			"$className": "ServerStorage",
+			"maps": {
+				"$className": "Folder",
+				"$ignoreUnknownInstances": true
+			}
+		},
 		"StarterPlayer": {
 			"$className": "StarterPlayer",
 			"StarterPlayerScripts": {

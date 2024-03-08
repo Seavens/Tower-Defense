@@ -2,5 +2,6 @@ import type { MapDefinition } from "./map-definition";
 import type { MobDefinition } from "./mob-definition";
 import type { StatusDefinition } from "./status-definition";
 import type { WaveDefinition } from "./wave-definition";
+import type { TowerDefinition } from "./tower-definition";
 
-export type { MapDefinition, MobDefinition, StatusDefinition, WaveDefinition };
+export type { MapDefinition, MobDefinition, StatusDefinition, WaveDefinition, TowerDefinition };

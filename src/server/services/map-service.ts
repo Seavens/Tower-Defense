@@ -4,12 +4,18 @@ import { Service } from "@flamework/core";
 import { selectCurrentMap } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";
 import type { OnStart } from "@flamework/core";
+import { Tag } from "shared/types/enums";
 
 const { maps } = ServerStorage;
 const { map } = Workspace;
 
 @Service({})
 export class MapService implements OnStart {
+
+	private setSpawnLocation(): void {
+		map.spawnLocation.AddTag(Tag.SpawnLocation);
+	}
+
 	public changeMap(id: MapId): void {
 		const prefab = maps.FindFirstChild(id);
 		if (prefab === undefined) {
@@ -30,6 +36,7 @@ export class MapService implements OnStart {
 				return;
 			}
 			this.changeMap(id);
+			this.setSpawnLocation();
 		});
 		serverProducer.gameChangeMap({ map: MapId.Test }, { broadcast: true });
 	}
