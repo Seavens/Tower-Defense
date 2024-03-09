@@ -1,5 +1,5 @@
 import { Workspace } from "@rbxts/services";
-import { mapDefinitions } from "shared/definitions/maps";
+import { MapDefinitions } from "shared/definitions/maps";
 import type { MapId } from "shared/types/ids";
 import type { WaveDefinition } from "shared/types/definitions";
 
@@ -23,12 +23,12 @@ export class MapUtility {
 	}
 
 	public static getWave(map: MapId, wave: number): WaveDefinition | undefined {
-		const { waves } = mapDefinitions[map];
+		const { waves } = MapDefinitions[map];
 		return waves[wave];
 	}
 
 	public static getWaveCount(map: MapId): number {
-		const { waves } = mapDefinitions[map];
+		const { waves } = MapDefinitions[map];
 		return waves.size();
 	}
 

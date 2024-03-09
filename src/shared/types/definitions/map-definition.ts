@@ -8,4 +8,5 @@ export interface MapDefinition<I extends MapId> {
 	desc: string;
 	difficulty: MapDifficulty;
 	waves: Array<WaveDefinition>;
+	baseHealth: number;
 }

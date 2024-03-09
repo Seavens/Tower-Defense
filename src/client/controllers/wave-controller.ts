@@ -3,7 +3,7 @@ import { GameStatus } from "shared/types/enums";
 import { Mob } from "client/classes/mob";
 import { MobUtility } from "shared/modules/mob-utility";
 import { clientProducer } from "client/state/producer";
-import { mapDefinitions } from "shared/definitions/maps";
+import { MapDefinitions } from "shared/definitions/maps";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
 import type { MapId } from "shared/types/ids";
 import type { OnMobEnded } from "./mob-controller";
@@ -12,7 +12,7 @@ import type { OnStart } from "@flamework/core";
 @Controller({})
 export class WaveController implements OnStart, OnMobEnded {
 	public spawnWave(map: MapId, wave: number): void {
-		const { waves } = mapDefinitions[map];
+		const { waves } = MapDefinitions[map];
 		const definition = waves[wave - 1];
 		MobUtility.setIndex(0);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {

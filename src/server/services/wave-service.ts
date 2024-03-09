@@ -2,7 +2,7 @@ import { GameStatus } from "shared/types/enums";
 import { Mob } from "server/classes/mob";
 import { MobUtility } from "shared/modules/mob-utility";
 import { Service } from "@flamework/core";
-import { mapDefinitions } from "shared/definitions/maps";
+import { MapDefinitions } from "shared/definitions/maps";
 import { mobDefinitions } from "shared/definitions/mobs";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";
@@ -13,7 +13,7 @@ import type { OnStart } from "@flamework/core";
 @Service({})
 export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 	public spawnWave(map: MapId, wave: number): void {
-		const { waves } = mapDefinitions[map];
+		const { waves } = MapDefinitions[map];
 		const definition = waves[wave - 1];
 		serverProducer.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		MobUtility.setIndex(0);
@@ -75,8 +75,8 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 		const { health } = mobDefinitions[id];
 		const damage = current ** 2 / (health * 2);
 		serverProducer.gameBaseDamage({ damage }, { broadcast: true });
-		const { health: basehealth, status } = serverProducer.getState(selectGame);
-		warn(`Base: ${basehealth} | Damage: -${damage} | Mobs: ${Mob.getMobCount()}`);
+		const { health: baseHealth, status } = serverProducer.getState(selectGame);
+		warn(`Base: ${baseHealth} | Damage: -${damage} | Mobs: ${Mob.getMobCount()}`);
 		if (status !== GameStatus.Ended) {
 			return;
 		}
@@ -94,7 +94,11 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 			this.spawnWave(map, wave);
 		});
 		task.wait(5);
-		serverProducer.gameStartRound({ health: math.huge }, { broadcast: true });
+		const map = serverProducer.getState(selectCurrentMap);
+		if (map === undefined) {
+			return;
+		}
+		serverProducer.gameStartRound({ health: MapDefinitions[map].baseHealth }, { broadcast: true });
 		serverProducer.gameStartWave({}, { broadcast: true });
 	}
 }
