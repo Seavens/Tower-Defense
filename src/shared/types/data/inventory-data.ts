@@ -1,5 +1,5 @@
-import type { Item } from "../objects";
+import type { Tower } from "../objects";
 
 export interface InventoryData {
-	slots: Map<string, Item>;
+	slots: Map<string, Tower>;
 }

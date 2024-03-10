@@ -1,8 +1,20 @@
+import { isTowerId } from "../ids";
 import { t } from "@rbxts/t";
-import type { Item } from "./item";
 import type { Tower } from "./tower";
 
-export const isItem = t.strictInterface({});
-export const isTower = t.strictInterface({});
+export const isTower = t.strictInterface({
+	id: isTowerId,
+	owner: t.number,
+	original: t.number,
 
-export type { Item, Tower };
+	damage: t.number,
+	range: t.number,
+	attackSpeed: t.number,
+
+	uuid: t.string,
+	timestamp: t.number,
+
+	level: t.number,
+});
+
+export type { Tower };

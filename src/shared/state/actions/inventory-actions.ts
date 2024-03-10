@@ -1,6 +1,6 @@
 import type { DataActions } from "./data-actions";
 import type { EntityMetadata, ReplicationMetadata } from "../metadata";
-import type { Item } from "shared/types/objects";
+import type { Tower } from "shared/types/objects";
 
 export type InventoryActions<S> = {
 	inventoryAddItem: (state: S, payload: InventoryAddItem, metadata: EntityMetadata & ReplicationMetadata) => S;
@@ -8,7 +8,7 @@ export type InventoryActions<S> = {
 } & DataActions<S>;
 
 export interface InventoryAddItem {
-	item: Item;
+	item: Tower;
 	slot: string;
 }
 

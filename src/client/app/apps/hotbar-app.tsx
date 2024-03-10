@@ -20,7 +20,7 @@ export function HotbarApp(): Element {
 			BackgroundTransparency={1}
 			BorderSizePixel={0}
 		>
-			<Hotbar inventoryData={[inventoryData]} playerData={profileData} />
+			<Hotbar inventoryData={inventoryData} playerData={profileData} />
 		</frame>
 	);
 }
