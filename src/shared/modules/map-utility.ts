@@ -1,5 +1,5 @@
-import { Workspace } from "@rbxts/services";
 import { MapDefinitions } from "shared/definitions/maps";
+import { Workspace } from "@rbxts/services";
 import type { MapId } from "shared/types/ids";
 import type { WaveDefinition } from "shared/types/definitions";
 
