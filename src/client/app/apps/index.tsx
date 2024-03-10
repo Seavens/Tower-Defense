@@ -1,24 +1,15 @@
-import { ItemSlot } from "client/app/components/index";
-import { TowerId } from "shared/types/ids";
+import { HotbarApp } from "./hotbar-app";
+import { ReflexProvider } from "@rbxts/roact-reflex";
+import { clientProducer } from "client/state/producer";
 import Roact from "@rbxts/roact";
 import type { Element } from "@rbxts/roact";
 
-const tower = {
-	level: 10,
-	id: TowerId.God,
-	owner: 1,
-	original: 1,
-	damage: 1,
-	range: 1,
-	attackSpeed: 1,
-	uuid: "1",
-	timestamp: 1,
-};
-
-export default function App(): Element {
+export function App(): Element {
 	return (
-		<screengui IgnoreGuiInset={true}>
-			<ItemSlot towerData={tower} />
+		<screengui IgnoreGuiInset={true} ResetOnSpawn={false} ZIndexBehavior={Enum.ZIndexBehavior.Sibling} Key={"app"}>
+			<ReflexProvider producer={clientProducer}>
+				<HotbarApp />
+			</ReflexProvider>
 		</screengui>
 	);
 }

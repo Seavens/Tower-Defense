@@ -2,18 +2,17 @@ import { isItem } from "../objects";
 import { t } from "@rbxts/t";
 import type { InventoryData } from "./inventory-data";
 import type { Item } from "../objects";
-import type { PlayerData } from "./player-data";
+import type { ProfileData } from "./profile-data";
 
 export interface Data {
-	player: PlayerData;
+	profile: ProfileData;
 	inventory: InventoryData;
 }
 
-export const isPlayerData: t.check<PlayerData> = t.strictInterface({
+export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	level: t.number,
 	experience: t.number,
-	gold: t.number,
-	inventory: t.array(isItem),
+	coins: t.number,
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
@@ -21,19 +20,19 @@ export const isInventoryData: t.check<InventoryData> = t.strictInterface({
 });
 
 export const isData: t.check<Data> = t.strictInterface({
-	player: isPlayerData,
+	profile: isProfileData,
 	inventory: isInventoryData,
 });
 
 export const DATA_TEMPLATE: Data = {
-	player: {
+	profile: {
 		level: 1,
 		experience: 0,
-		gold: 0,
+		coins: 0,
 	},
 	inventory: {
 		slots: new Map<string, Item>(),
 	},
 };
 
-export type { PlayerData, InventoryData };
+export type { ProfileData, InventoryData };

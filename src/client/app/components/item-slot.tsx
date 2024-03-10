@@ -57,7 +57,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 					</imagebutton>
 					<frame
 						Key={"Level Frame Outter Border"}
-						Size={new UDim2(0.235, 0, 0.235, 0)}
+						Size={new UDim2(0.245, 0, 0.245, 0)}
 						Position={new UDim2(0.16, 0, 0.16, 0)}
 						AnchorPoint={new Vector2(0.5, 0.5)}
 						BackgroundTransparency={0.5}
@@ -66,7 +66,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 					>
 						<frame
 							Key={"Level Frame Inner Border"}
-							Size={new UDim2(0.925, 0, 0.925, 0)}
+							Size={new UDim2(0.935, 0, 0.935, 0)}
 							Position={new UDim2(0.5, 0, 0.5, 0)}
 							AnchorPoint={new Vector2(0.5, 0.5)}
 							BackgroundTransparency={0.5}

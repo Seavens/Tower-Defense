@@ -1,8 +1,9 @@
 import { combineProducers } from "@rbxts/reflex";
 import { inventorySlice } from "./slices";
+import { profileSlice } from "./slices/player-slice";
 import { receiverMiddleware } from "./middleware";
-import type { InferActions, InferState } from "@rbxts/reflex";
 import { sharedSlices } from "shared/state/slices";
+import type { InferActions, InferState } from "@rbxts/reflex";
 
 export type ClientProducers = typeof clientSlices;
 export type ClientProducer = typeof clientProducer;
@@ -10,6 +11,7 @@ export type ClientState = InferState<ClientProducer>;
 export type ClientActions = InferActions<ClientProducer>;
 
 export const clientSlices = {
+	profile: profileSlice,
 	inventory: inventorySlice,
 };
 export const combinedSlices = {

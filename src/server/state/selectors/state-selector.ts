@@ -1,13 +1,17 @@
 import { createSelector } from "@rbxts/reflex";
 import { selectInventoryState } from "./inventory-selector";
-import type { InventoryState } from "../slices";
+import { selectProfileState } from "./player-selector"; // Import the selectPlayerState function
+import type { InventoryState, ProfileState } from "../slices"; // Import the PlayerState type
 import type { ServerEntityState, ServerState } from "../producer";
 
 export function selectState(user: string): (state: ServerState) => ServerEntityState {
-	return createSelector([selectInventoryState(user)], (inventory: InventoryState): ServerEntityState => {
-		return {
-			inventory,
-			player,
-		};
-	});
+	return createSelector(
+		[selectInventoryState(user), selectProfileState(user)],
+		(inventory: InventoryState, profile: ProfileState): ServerEntityState => {
+			return {
+				profile,
+				inventory,
+			};
+		},
+	);
 }

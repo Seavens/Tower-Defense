@@ -53,13 +53,19 @@ const tower4: Tower = {
 	timestamp: 1,
 };
 
+const profileData = {
+	level: 100,
+	experience: 500000,
+	coins: 0,
+};
+
 const inventoryData: Array<Tower> = [tower1, tower2, tower3, tower4, tower1, tower2];
 
 const HotbarStory: FlipbookStory = {
 	summary: "Item Slot",
 	controls: undefined,
 	story: (props: {}): Element => {
-		return Hotbar({ inventoryData: inventoryData, playerData: { level: 1, experience: 0, gold: 0 }, ...props });
+		return Hotbar({ inventoryData: inventoryData, playerData: profileData });
 	},
 };
 

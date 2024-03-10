@@ -10,6 +10,7 @@ import type {
 	GameStartWave,
 } from "./game-actions";
 import type { InventoryActions, InventoryAddItem, InventoryRemoveItem } from "./inventory-actions";
+import type { ProfileActions, ProfileAddCoins, ProfileAddExperience, ProfileRemoveCoins } from "./profile-actions";
 
 export type {
 	DataActions,
@@ -26,4 +27,8 @@ export type {
 	InventoryActions,
 	InventoryAddItem,
 	InventoryRemoveItem,
+	ProfileActions,
+	ProfileAddCoins,
+	ProfileAddExperience,
+	ProfileRemoveCoins,
 };

@@ -1,22 +1,23 @@
 import { DATA_TEMPLATE } from "shared/types/data";
-import type { PlayerData } from "shared/types/data";
+import type { ProfileData } from "shared/types/data";
+import type { ProfileState } from "../slices/profile-slice";
 import type { ServerState } from "../producer";
 
-export function selectPlayerState(user: string): (state: ServerState) => PlayerState {
-	return function (state: ServerState): PlayerState {
+export function selectProfileState(user: string): (state: ServerState) => ProfileState {
+	return function (state: ServerState): ProfileState {
 		const { data } = state;
-		const { player } = data;
-		let result = player[user];
+		const { profile } = data;
+		let result = profile[user];
 		if (result === undefined) {
-			result = { data: DATA_TEMPLATE.player };
+			result = { data: DATA_TEMPLATE.profile };
 		}
 		return result;
 	};
 }
 
-export function selectPlayerData(user: string): (state: ServerState) => PlayerData {
-	return function (state: ServerState): PlayerData {
-		const Player = selectPlayerState(user)(state);
-		return Player.data;
+export function selectPlayerData(user: string): (state: ServerState) => ProfileData {
+	return function (state: ServerState): ProfileData {
+		const { data } = selectProfileState(user)(state);
+		return data;
 	};
 }
