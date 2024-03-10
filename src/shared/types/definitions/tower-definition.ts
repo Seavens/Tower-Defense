@@ -1,21 +1,22 @@
-import { RarityId } from "../ids/rarity-id";
-import { TowerId } from "../ids/tower-id";
 import type { DamageKind } from "../kinds";
+import type { RarityId } from "../ids/rarity-id";
+import type { TowerId } from "../ids/tower-id";
 
 export interface TowerDefinition<I extends TowerId> {
 	id: I;
 	name: string;
 	desc: string;
 
-    damage: [number, number];
-    range: [number, number];
-    attackSpeed: [number, number];
+	damage: [number, number];
+	range: [number, number];
+	attackSpeed: [number, number];
 
-    kind?: DamageKind;
+	kind?: DamageKind;
 
-    count: number;
-    cost: number;
+	count: number;
+	cost: number;
 
-    rarity: RarityId;
-    
+	rarity: RarityId;
+
+	imageId: number;
 }

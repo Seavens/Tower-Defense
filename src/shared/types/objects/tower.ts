@@ -1,16 +1,18 @@
-import { TowerId } from "../ids";
+import type { TowerId } from "../ids";
 
 export interface Tower {
-    id: TowerId;
-    owner: number;
-    original: number;
-    
-    damage: number;
-    range: number;
-    attackSpeed: number;
+	id: TowerId;
+	owner: number;
+	original: number;
 
-    uuid: string;
-    timestamp: number;
+	damage: number;
+	range: number;
+	attackSpeed: number;
 
-    // rank?: number;
+	uuid: string;
+	timestamp: number;
+
+	level: number;
+
+	// rank?: number;
 }
