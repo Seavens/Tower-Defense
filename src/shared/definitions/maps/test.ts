@@ -9,16 +9,16 @@ export const testMap: MapDefinition<MapId.Test> = {
 	difficulty: MapDifficulty.Easy,
 	waves: [
 		{
-			[MobId.Zombie]: { count: 20, delay: 5, wait: .75 },
+			[MobId.Zombie]: { count: 20, delay: 5, wait: 0.75 },
 		},
 		{
-			[MobId.Zombie]: { count: 40, delay: 5, wait: .5 },
+			[MobId.Zombie]: { count: 40, delay: 5, wait: 0.5 },
 		},
 		{
-			[MobId.Zombie]: { count: 80, delay: 5, wait: .3 },
+			[MobId.Zombie]: { count: 80, delay: 5, wait: 0.3 },
 		},
 		{
-			[MobId.Zombie]: { count: 160, delay: 5, wait: .3 },
+			[MobId.Zombie]: { count: 160, delay: 5, wait: 0.3 },
 		},
 	],
 	baseHealth: 100,

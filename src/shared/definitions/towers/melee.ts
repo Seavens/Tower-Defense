@@ -13,5 +13,5 @@ export const meleeTower: TowerDefinition<TowerId.Melee> = {
 	count: 5,
 	cost: 100,
 	rarity: RarityId.Rare,
-	imageId: 12021525623,
+	imageId: 178007979,
 };

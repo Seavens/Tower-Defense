@@ -6,7 +6,7 @@ import type { FlipbookStory } from ".";
 import type { Tower } from "shared/types/objects";
 
 const towerData: Tower = {
-	level: 10,
+	level: 100,
 	id: TowerId.God,
 	owner: 1,
 	original: 1,

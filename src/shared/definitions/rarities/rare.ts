@@ -1,11 +1,11 @@
 import { RARITY_WEIGHTS } from "shared/constants/rarity-constants";
-import { RarityDefinition } from "shared/types/definitions/rarity-definition";
 import { RarityId } from "shared/types/ids/rarity-id";
+import type { RarityDefinition } from "shared/types/definitions/rarity-definition";
 
 export const rareRarity: RarityDefinition<RarityId.Rare> = {
-    id: RarityId.Rare,
-    name: "Rare",
-    desc: "A rare rarity.",
-    weight: RARITY_WEIGHTS[RarityId.Rare],
-    colorHex: "0047AB",
+	id: RarityId.Rare,
+	name: "Rare",
+	desc: "A rare rarity.",
+	weight: RARITY_WEIGHTS[RarityId.Rare],
+	color: [0.25, 0.25, 0.98],
 };

@@ -7,6 +7,7 @@ export function selectState(user: string): (state: ServerState) => ServerEntityS
 	return createSelector([selectInventoryState(user)], (inventory: InventoryState): ServerEntityState => {
 		return {
 			inventory,
+			player,
 		};
 	});
 }
