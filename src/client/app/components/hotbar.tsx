@@ -1,7 +1,6 @@
 import { Fragment } from "@rbxts/react";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
-import { TowerId } from "shared/types/ids";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { InventoryData } from "shared/types/data";
@@ -15,7 +14,7 @@ interface HotbarProps {
 
 export function Hotbar(props: HotbarProps): Element {
 	const { inventoryData } = props;
-	const { stored, equipped } = inventoryData;
+	const { equipped } = inventoryData;
 	const { level, experience, coins } = props.playerData;
 	const maxExp = LevelFunctions.getMaxExp(level);
 	const expSize = experience / maxExp;
@@ -50,12 +49,6 @@ export function Hotbar(props: HotbarProps): Element {
 						return <ItemSlot tower={tower} key={`${index}`} />;
 					})}
 				</Fragment>
-				{/* <ItemSlot towerData={eq} />
-				<ItemSlot towerData={tower2} />
-				<ItemSlot towerData={tower3} />
-				<ItemSlot towerData={tower4} />
-				<ItemSlot towerData={tower5} />
-				<ItemSlot towerData={tower6} /> */}
 			</frame>
 			<frame
 				key={"Level Frame"}
@@ -97,7 +90,7 @@ export function Hotbar(props: HotbarProps): Element {
 							<uicorner CornerRadius={new UDim(0.25, 0)} />
 						</frame>
 					</imagelabel>
-					<textbox
+					<textlabel
 						key={"Level Text"}
 						Size={new UDim2(1, 0, 0.6, 0)}
 						Position={new UDim2(0.015, 0, 0.5, 0)}
@@ -175,7 +168,7 @@ export function Hotbar(props: HotbarProps): Element {
 					<uiaspectratioconstraint AspectRatio={1} />
 					<uicorner CornerRadius={new UDim(0.5, 0)} />
 
-					<textbox
+					<textlabel
 						key={"Level Text"}
 						Size={new UDim2(0.85, 0, 0.85, 0)}
 						Position={new UDim2(0.5, 0, 0.5, 0)}

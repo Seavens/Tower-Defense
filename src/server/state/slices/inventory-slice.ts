@@ -1,15 +1,10 @@
 import { createProducer } from "@rbxts/reflex";
-import { original, produce } from "@rbxts/immut";
-import type {
-	DataAdded,
-	DataRemoved,
-	InventoryActions,
-	InventoryAddItem,
-	InventoryRemoveItem,
-} from "shared/state/actions";
+import Immut, { original, produce } from "@rbxts/immut";
+import type { DataAdded, DataRemoved, InventoryActions, InventoryAddItem } from "shared/state/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata } from "shared/state/metadata";
 import type { InventoryData } from "shared/types/data";
+import type { InventoryRemoveItem } from "shared/state/actions/inventory-actions";
 
 export interface InventoryState {
 	data: InventoryData;
@@ -64,6 +59,24 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			const { data } = state;
 			const { stored } = data;
 			stored.delete(slot);
+			return draft;
+		});
+	},
+	inventoryEquipItem: (state: State, payload: InventoryRemoveItem, metadata: EntityMetadata): State => {
+		const { slot } = payload;
+		const { user } = metadata;
+		return produce(state, (draft: Draft<State>): State => {
+			const state = draft[user];
+			if (state === undefined) {
+				return original(draft);
+			}
+			const { data } = state;
+			const { stored, equipped } = data;
+			const item = stored.get(slot);
+			if (item !== undefined) {
+				stored.delete(slot);
+				Immut.table.insert(equipped, item);
+			}
 			return draft;
 		});
 	},

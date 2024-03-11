@@ -19,7 +19,4 @@ export const combinedSlices = {
 	...sharedSlices,
 };
 
-export const clientProducer = combineProducers(combinedSlices).applyMiddleware(
-	receiverMiddleware(),
-	receiverMiddleware(),
-);
+export const clientProducer = combineProducers(combinedSlices).applyMiddleware(receiverMiddleware());

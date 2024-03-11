@@ -1,4 +1,3 @@
-import { RarityId } from "shared/types/ids/rarity-id";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { rarityDefinitions } from "shared/definitions/rarities";
 import React from "@rbxts/react";
@@ -74,7 +73,7 @@ export function ItemSlot(props: ItemSlotProps): Element {
 							BackgroundColor3={new Color3(color[0], color[1], color[2]).Lerp(new Color3(1, 1, 1), 0.95)}
 						>
 							<uicorner CornerRadius={new UDim(0.5, 0)} />
-							<textbox
+							<textlabel
 								key={"Level Text"}
 								Size={new UDim2(0.8, 0, 0.8, 0)}
 								Position={new UDim2(0.5, 0, 0.5, 0)}
@@ -111,7 +110,7 @@ export function ItemSlot(props: ItemSlotProps): Element {
 							Image={`rbxassetid://12790545456`}
 							ImageTransparency={0.5}
 						>
-							<textbox
+							<textlabel
 								key={"Cost Text"}
 								Size={new UDim2(0.925, 0, 0.925, 0)}
 								Position={new UDim2(0.5, 0, 0.5, 0)}
