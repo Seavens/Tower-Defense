@@ -16,7 +16,8 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
-	slots: t.map(t.string, isTower),
+	stored: t.map(t.string, isTower),
+	equipped: t.array(isTower),
 });
 
 export const isData: t.check<Data> = t.strictInterface({
@@ -31,7 +32,8 @@ export const DATA_TEMPLATE: Data = {
 		coins: 0,
 	},
 	inventory: {
-		slots: new Map<string, Tower>(),
+		stored: new Map<string, Tower>(),
+		equipped: new Array<Tower>(),
 	},
 };
 

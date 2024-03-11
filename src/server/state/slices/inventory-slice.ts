@@ -48,8 +48,8 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 				return original(draft);
 			}
 			const { data } = state;
-			const { slots } = data;
-			slots.set(slot, item);
+			const { stored } = data;
+			stored.set(slot, item);
 			return draft;
 		});
 	},
@@ -62,8 +62,8 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 				return original(draft);
 			}
 			const { data } = state;
-			const { slots } = data;
-			slots.delete(slot);
+			const { stored } = data;
+			stored.delete(slot);
 			return draft;
 		});
 	},

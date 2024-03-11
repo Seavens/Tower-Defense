@@ -1,22 +1,22 @@
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TowerDefinitions } from "shared/definitions/towers";
-import { markPureComponent } from "@rbxts/roact-hooked";
 import { rarityDefinitions } from "shared/definitions/rarities";
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
+import type { Element } from "@rbxts/react";
 import type { Tower } from "shared/types/objects";
 
 interface ItemSlotProps {
-	towerData: Tower;
+	tower: Tower;
 }
 
-export function ItemSlot(props: ItemSlotProps): Roact.Element {
-	const { id, level } = props.towerData;
+export function ItemSlot(props: ItemSlotProps): Element {
+	const { id, level } = props.tower;
 	const { imageId, rarity, cost } = TowerDefinitions[id];
 	const { color } = rarityDefinitions[rarity];
 
 	return (
 		<frame
-			Key={"ItemSlot Invisiable Frame"}
+			key={"ItemSlot Invisiable Frame"}
 			Size={new UDim2(0.8, 0, 0.8, 0)}
 			Position={new UDim2(0.5, 0, 0.5, 0)}
 			AnchorPoint={new Vector2(0.5, 0.5)}
@@ -25,7 +25,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 		>
 			<uiaspectratioconstraint AspectRatio={1} />
 			<imagelabel
-				Key={"ItemSlot Frame Outter Border"}
+				key={"ItemSlot Frame Outter Border"}
 				Size={new UDim2(1, 0, 1, 0)}
 				Position={new UDim2(0.5, 0, 0.5, 0)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
@@ -35,7 +35,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 			>
 				<uicorner CornerRadius={new UDim(0.15, 0)} />
 				<imagelabel
-					Key={"ItemSlot Frame Inner Border"}
+					key={"ItemSlot Frame Inner Border"}
 					Size={new UDim2(0.95, 0, 0.95, 0)}
 					Position={new UDim2(0.5, 0, 0.5, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
@@ -45,7 +45,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 				>
 					<uicorner CornerRadius={new UDim(0.15, 0)} />
 					<imagebutton
-						Key={"ItemSlot ImageButton"}
+						key={"ItemSlot ImageButton"}
 						Size={new UDim2(1, 0, 1, 0)}
 						Position={new UDim2(0.5, 0, 1, 0)}
 						AnchorPoint={new Vector2(0.5, 1)}
@@ -56,7 +56,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 						<uicorner CornerRadius={new UDim(0.15, 0)} />
 					</imagebutton>
 					<frame
-						Key={"Level Frame Outter Border"}
+						key={"Level Frame Outter Border"}
 						Size={new UDim2(0.245, 0, 0.245, 0)}
 						Position={new UDim2(0.16, 0, 0.16, 0)}
 						AnchorPoint={new Vector2(0.5, 0.5)}
@@ -65,7 +65,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 						BackgroundColor3={new Color3(color[0], color[1], color[2]).Lerp(new Color3(1, 1, 1), 0.25)}
 					>
 						<frame
-							Key={"Level Frame Inner Border"}
+							key={"Level Frame Inner Border"}
 							Size={new UDim2(0.935, 0, 0.935, 0)}
 							Position={new UDim2(0.5, 0, 0.5, 0)}
 							AnchorPoint={new Vector2(0.5, 0.5)}
@@ -75,7 +75,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 						>
 							<uicorner CornerRadius={new UDim(0.5, 0)} />
 							<textbox
-								Key={"Level Text"}
+								key={"Level Text"}
 								Size={new UDim2(0.8, 0, 0.8, 0)}
 								Position={new UDim2(0.5, 0, 0.5, 0)}
 								AnchorPoint={new Vector2(0.5, 0.5)}
@@ -92,7 +92,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 					<uicorner CornerRadius={new UDim(0.15, 0)} />
 
 					<imagelabel
-						Key={"Cost Frame Outter Border"}
+						key={"Cost Frame Outter Border"}
 						Size={new UDim2(0.75, 0, 0.125, 0)}
 						Position={new UDim2(0.5, 0, 1, 0)}
 						AnchorPoint={new Vector2(0.5, 1)}
@@ -102,7 +102,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 						ImageTransparency={0.5}
 					>
 						<imagelabel
-							Key={"Cost Frame inner Border"}
+							key={"Cost Frame inner Border"}
 							Size={new UDim2(0.9625, 0, 0.9, 0)}
 							Position={new UDim2(0.5, 0, 1.0, 0)}
 							AnchorPoint={new Vector2(0.5, 1)}
@@ -112,7 +112,7 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 							ImageTransparency={0.5}
 						>
 							<textbox
-								Key={"Cost Text"}
+								key={"Cost Text"}
 								Size={new UDim2(0.925, 0, 0.925, 0)}
 								Position={new UDim2(0.5, 0, 0.5, 0)}
 								AnchorPoint={new Vector2(0.5, 0.5)}
@@ -130,5 +130,3 @@ export function ItemSlot(props: ItemSlotProps): Roact.Element {
 		</frame>
 	);
 }
-
-markPureComponent(ItemSlot);

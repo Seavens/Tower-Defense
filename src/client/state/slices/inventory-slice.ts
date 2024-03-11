@@ -40,8 +40,8 @@ export const inventorySlice = createProducer<InventoryState, InventoryActions<In
 		const { item, slot } = payload;
 		return produce(state, (draft: Draft<InventoryState>): InventoryState => {
 			const { data } = draft;
-			const { slots } = data;
-			slots.set(slot, item);
+			const { stored } = data;
+			stored.set(slot, item);
 			return draft;
 		});
 	},
@@ -49,8 +49,8 @@ export const inventorySlice = createProducer<InventoryState, InventoryActions<In
 		const { slot } = payload;
 		return produce(state, (draft: Draft<InventoryState>): InventoryState => {
 			const { data } = draft;
-			const { slots } = data;
-			slots.delete(slot);
+			const { stored } = data;
+			stored.delete(slot);
 			return draft;
 		});
 	},

@@ -1,8 +1,8 @@
 import { GameStatus } from "shared/types/enums";
+import { MapDefinitions } from "shared/definitions/maps";
 import { Mob } from "server/classes/mob";
 import { MobUtility } from "shared/modules/mob-utility";
 import { Service } from "@flamework/core";
-import { MapDefinitions } from "shared/definitions/maps";
 import { mobDefinitions } from "shared/definitions/mobs";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";

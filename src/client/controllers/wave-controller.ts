@@ -1,9 +1,9 @@
 import { Controller } from "@flamework/core";
 import { GameStatus } from "shared/types/enums";
+import { MapDefinitions } from "shared/definitions/maps";
 import { Mob } from "client/classes/mob";
 import { MobUtility } from "shared/modules/mob-utility";
 import { clientProducer } from "client/state/producer";
-import { MapDefinitions } from "shared/definitions/maps";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
 import type { MapId } from "shared/types/ids";
 import type { OnMobEnded } from "./mob-controller";

@@ -1,5 +1,6 @@
 import type { Tower } from "../objects";
 
 export interface InventoryData {
-	slots: Map<string, Tower>;
+	stored: Map<string, Tower>;
+	equipped: Array<Tower>;
 }

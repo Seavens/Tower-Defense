@@ -1,7 +1,9 @@
 import { Character as API } from "shared/api/character";
 import { Animator } from "shared/classes/animator";
 import { CHARACTER_ANIMATIONS } from "shared/constants/character-constants";
+import { EntityUtility } from "shared/modules/entity-utility";
 import { Option } from "@rbxts/rust-classes";
+import { Players } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
 import { isAnimationId } from "shared/types/ids";
 import type { AnimationId } from "shared/types/ids";
@@ -42,6 +44,12 @@ export class Character extends API {
 		const { characters } = this;
 		const character = characters.get(user);
 		return Option.wrap(character);
+	}
+
+	public static localCharacter(): Option<Character> {
+		const localPlayer = Players.LocalPlayer;
+		const user = EntityUtility.getUser(localPlayer);
+		return this.getCharacter(user);
 	}
 
 	public getAnimator(): Option<Animator<AnimationId>> {

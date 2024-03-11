@@ -1,6 +1,8 @@
-import Roact from "@rbxts/roact";
+import React from "@rbxts/react";
+import ReactRoblox from "@rbxts/react-roblox";
 
 export = {
-	roact: Roact,
+	react: React,
+	reactRoblox: ReactRoblox,
 	storyRoots: [script.Parent],
 };

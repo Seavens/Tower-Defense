@@ -8,7 +8,7 @@ import { isAnimationId } from "shared/types/ids";
 import type { AnimationId } from "shared/types/ids";
 import type { Bin } from "@rbxts/bin";
 
-export class Character extends API{
+export class Character extends API {
 	public static readonly characters = new Map<string, Character>();
 
 	public static readonly onCharacterAdded = new Signal<Character>();

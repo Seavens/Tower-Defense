@@ -1,25 +1,27 @@
+import { Fragment } from "@rbxts/react";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
 import { TowerId } from "shared/types/ids";
-import { markPureComponent } from "@rbxts/roact-hooked";
-import Roact from "@rbxts/roact";
-import type { ProfileData } from "shared/types/data/profile-data";
+import React from "@rbxts/react";
+import type { Element } from "@rbxts/react";
+import type { InventoryData } from "shared/types/data";
+import type { ProfileData } from "shared/types/data";
 import type { Tower } from "shared/types/objects";
 
-interface hotbarProps {
-	inventoryData: Array<Tower>;
+interface HotbarProps {
+	inventoryData: InventoryData;
 	playerData: ProfileData;
 }
 
-export function Hotbar(props: hotbarProps): Roact.Element {
+export function Hotbar(props: HotbarProps): Element {
 	const { inventoryData } = props;
-	const [tower1, tower2, tower3, tower4, tower5, tower6] = inventoryData;
+	const { stored, equipped } = inventoryData;
 	const { level, experience, coins } = props.playerData;
 	const maxExp = LevelFunctions.getMaxExp(level);
 	const expSize = experience / maxExp;
 	return (
 		<frame
-			Key={"Hotbar Invisiable Frame"}
+			key={"Hotbar Invisiable Frame"}
 			Size={new UDim2(0.5, 0, 0.18, 0)}
 			AnchorPoint={new Vector2(0.5, 1)}
 			Position={new UDim2(0.5, 0, 0.995, 0)}
@@ -28,7 +30,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 		>
 			<uiaspectratioconstraint AspectRatio={4.5} />
 			<frame
-				Key={"Grid Frame"}
+				key={"Grid Frame"}
 				Size={new UDim2(1, 0, 0.8, 0)}
 				Position={new UDim2(0.5, 0, 0, 0)}
 				AnchorPoint={new Vector2(0.5, 0)}
@@ -36,23 +38,27 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				Transparency={1}
 			>
 				<uilistlayout
-					Key={"Hotbar GridLayout"}
+					key={"Hotbar GridLayout"}
 					SortOrder={Enum.SortOrder.LayoutOrder}
 					FillDirection={Enum.FillDirection.Horizontal}
 					HorizontalAlignment={Enum.HorizontalAlignment.Center}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					Padding={new UDim(0.005, 0)}
 				/>
-				<ItemSlot towerData={tower1} />
+				<Fragment>
+					{...equipped.map((tower: Tower, index: number): Element => {
+						return <ItemSlot tower={tower} key={`${index}`} />;
+					})}
+				</Fragment>
+				{/* <ItemSlot towerData={eq} />
 				<ItemSlot towerData={tower2} />
 				<ItemSlot towerData={tower3} />
 				<ItemSlot towerData={tower4} />
 				<ItemSlot towerData={tower5} />
-				<ItemSlot towerData={tower6} />
+				<ItemSlot towerData={tower6} /> */}
 			</frame>
-
 			<frame
-				Key={"Level Frame"}
+				key={"Level Frame"}
 				Size={new UDim2(1, 0, 0.28, 0)}
 				Position={new UDim2(0.5, 0, 1, 0)}
 				AnchorPoint={new Vector2(0.5, 1)}
@@ -60,7 +66,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				Transparency={1}
 			>
 				<frame
-					Key={"Level Bar Outline"}
+					key={"Level Bar Outline"}
 					Size={new UDim2(1, 0, 0.55, 0)}
 					Position={new UDim2(0.5, 0, 0.5, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
@@ -69,7 +75,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 					ZIndex={0}
 				>
 					<imagelabel
-						Key={"Level Bar Inline"}
+						key={"Level Bar Inline"}
 						Size={new UDim2(0.989, 0, 0.7, 0)}
 						Position={new UDim2(0.5, 0, 0.5, 0)}
 						AnchorPoint={new Vector2(0.5, 0.5)}
@@ -80,7 +86,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 						ZIndex={1}
 					>
 						<frame
-							Key={"Level Bar"}
+							key={"Level Bar"}
 							Size={new UDim2(expSize, 0, 1, 0)}
 							Position={new UDim2(0, 0, 0, 0)}
 							AnchorPoint={new Vector2(0, 0)}
@@ -92,7 +98,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 						</frame>
 					</imagelabel>
 					<textbox
-						Key={"Level Text"}
+						key={"Level Text"}
 						Size={new UDim2(1, 0, 0.6, 0)}
 						Position={new UDim2(0.015, 0, 0.5, 0)}
 						AnchorPoint={new Vector2(0, 0.5)}
@@ -106,7 +112,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 					/>
 				</frame>
 				<frame
-					Key={"Level Bar"}
+					key={"Level Bar"}
 					Size={new UDim2(0.005, 0, 0.6, 0)}
 					Position={new UDim2(expSize, 0, 0.5, 0)}
 					AnchorPoint={new Vector2(0, 0.5)}
@@ -117,7 +123,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				/>
 			</frame>
 			<imagelabel
-				Key={"Side Box L"}
+				key={"Side Box L"}
 				Size={new UDim2(0.19, 0, 0.19, 0)}
 				Position={new UDim2(0.003, 0, 0.86, 0)}
 				AnchorPoint={new Vector2(0.35, 0.5)}
@@ -131,7 +137,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				<uiaspectratioconstraint AspectRatio={0.5} />
 			</imagelabel>
 			<imagelabel
-				Key={"Side Box R"}
+				key={"Side Box R"}
 				Size={new UDim2(0.19, 0, 0.19, 0)}
 				Position={new UDim2(0.992, 0, 0.86, 0)}
 				AnchorPoint={new Vector2(0.35, 0.5)}
@@ -145,7 +151,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				<uiaspectratioconstraint AspectRatio={0.5} />
 			</imagelabel>
 			<imagelabel
-				Key={"Level Box"}
+				key={"Level Box"}
 				Size={new UDim2(0.275, 0, 0.275, 0)}
 				Position={new UDim2(0.5, 0, 0.86, 0)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
@@ -157,7 +163,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 				<uiaspectratioconstraint AspectRatio={1} />
 				<uicorner CornerRadius={new UDim(0.5, 0)} />
 				<imagelabel
-					Key={"Level Box"}
+					key={"Level Box"}
 					Size={new UDim2(0.85, 0, 0.85, 0)}
 					Position={new UDim2(0.5, 0, 0.5, 0)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
@@ -170,7 +176,7 @@ export function Hotbar(props: hotbarProps): Roact.Element {
 					<uicorner CornerRadius={new UDim(0.5, 0)} />
 
 					<textbox
-						Key={"Level Text"}
+						key={"Level Text"}
 						Size={new UDim2(0.85, 0, 0.85, 0)}
 						Position={new UDim2(0.5, 0, 0.5, 0)}
 						AnchorPoint={new Vector2(0.5, 0.5)}

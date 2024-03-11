@@ -1,8 +1,7 @@
-import { CreateStory } from ".";
 import { Hotbar } from "../components";
 import { TowerId } from "shared/types/ids";
-import type { Element } from "@rbxts/roact";
-import type { FlipbookStory } from ".";
+import type { Element } from "@rbxts/react";
+import type { InventoryData } from "shared/types/data";
 import type { Tower } from "shared/types/objects";
 
 const tower1: Tower = {
@@ -59,14 +58,12 @@ const profileData = {
 	coins: 0,
 };
 
-const inventoryData: Array<Tower> = [tower1, tower2, tower3, tower4, tower1, tower2];
-
-const HotbarStory: FlipbookStory = {
-	summary: "Item Slot",
-	controls: undefined,
-	story: (props: {}): Element => {
-		return Hotbar({ inventoryData: inventoryData, playerData: profileData });
-	},
+const inventoryData: InventoryData = {
+	stored: new Map<string, Tower>([
+		["1", tower1],
+		["2", tower2],
+		["3", tower3],
+		["4", tower4],
+	]),
+	equipped: [tower1, tower2, tower3, tower4],
 };
-
-export = CreateStory(HotbarStory);
