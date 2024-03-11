@@ -23,7 +23,7 @@
     "prettier": "^2.3.2",
     "rbxts-transformer-flamework": "^1.1.0",
     "roblox-ts": "^2.3.0-dev-3a5b920",
-    "typescript": "~5.2.2"
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@flamework/components": "^1.1.0",
