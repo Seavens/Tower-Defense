@@ -1,3 +1,4 @@
+import { LEVEL_TOWER_GROWTH_RATE } from "shared/constants/level-constants";
 import { Modding } from "@flamework/core";
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TowerDefinitions } from "shared/definitions/towers";
@@ -65,15 +66,21 @@ export function GenerateTower(owner: number): Tower {
 
 	const id = genTower();
 	const uuid = generateUUID();
+	const range = genFromRange(id, "range");
+	const damage = genFromRange(id, "damage");
+	const attackSpeed = genFromRange(id, "attackSpeed");
+	const level = 1;
+
 	return {
 		id,
 		owner,
 		original: owner,
-		range: genFromRange(id, "range"),
-		damage: genFromRange(id, "damage"),
-		attackSpeed: genFromRange(id, "attackSpeed"),
+		range: range,
+		damage: damage,
+		attackSpeed: attackSpeed,
 		uuid,
 		timestamp: os.time(),
-		level: 1,
+		level: level,
+		cost: TowerDefinitions[id].cost * (level * LEVEL_TOWER_GROWTH_RATE),
 	};
 }

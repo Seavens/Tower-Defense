@@ -18,5 +18,5 @@ export interface TowerDefinition<I extends TowerId> {
 
 	rarity: RarityId;
 
-	imageId: number;
+	imageId: RBXAssetId;
 }

@@ -8,15 +8,15 @@ interface ItemSlotProps {
 	tower: Tower;
 }
 
-export function ItemSlot(props: ItemSlotProps): Element {
-	const { id, level } = props.tower;
+export function ItemSlot({ tower }: ItemSlotProps): Element {
+	const { id, level } = tower;
 	const { imageId, rarity, cost } = TowerDefinitions[id];
 	const { color } = rarityDefinitions[rarity];
 
 	return (
 		<frame
 			key={"ItemSlot Invisiable Frame"}
-			Size={new UDim2(0.8, 0, 0.8, 0)}
+			Size={new UDim2(0, 50, 0, 50)}
 			Position={new UDim2(0.5, 0, 0.5, 0)}
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			BorderSizePixel={0}
@@ -50,7 +50,7 @@ export function ItemSlot(props: ItemSlotProps): Element {
 						AnchorPoint={new Vector2(0.5, 1)}
 						BackgroundTransparency={1}
 						BorderSizePixel={0}
-						Image={`http://www.roblox.com/asset/?id=${imageId}`}
+						Image={imageId}
 					>
 						<uicorner CornerRadius={new UDim(0.15, 0)} />
 					</imagebutton>

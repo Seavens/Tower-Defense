@@ -18,20 +18,17 @@ const state: ProfileState = {
 
 export const profileSlice = createProducer<ProfileState, ProfileActions<ProfileState>>(state, {
 	profileAddExperience: (state: ProfileState, payload: number): ProfileState => {
-		const user = Players.LocalPlayer.UserId;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			LevelFunctions.levelUp(draft.data.level, payload);
 		});
 	},
 
 	profileAddCoins: (state: ProfileState, payload: number): ProfileState => {
-		const user = Players.LocalPlayer.UserId;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			draft.data.coins += payload;
 		});
 	},
 	profileRemoveCoins: (state: ProfileState, payload: number): ProfileState => {
-		const user = Players.LocalPlayer.UserId;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			draft.data.coins -= payload;
 		});

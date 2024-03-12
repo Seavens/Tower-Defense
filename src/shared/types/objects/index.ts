@@ -15,6 +15,7 @@ export const isTower = t.strictInterface({
 	timestamp: t.number,
 
 	level: t.number,
+	cost: t.number,
 });
 
 export type { Tower };

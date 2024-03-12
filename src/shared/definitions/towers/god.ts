@@ -13,5 +13,5 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	count: 1,
 	cost: 1000,
 	rarity: RarityId.Mythical,
-	imageId: 16172534401,
+	imageId: `rbxassetid://16172534401`,
 };

@@ -32,10 +32,10 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 					const index = MobUtility.getIndex();
 					const mob = new Mob(index, id);
 					mob.start();
-					task.wait(wait);
 					if (wait < 0) {
 						continue;
 					}
+					task.wait(wait);
 					status = serverProducer.getState(selectGameStatus);
 				}
 			});

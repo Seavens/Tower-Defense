@@ -2,6 +2,7 @@ import type { TowerId } from "../ids";
 
 export interface Tower {
 	id: TowerId;
+
 	owner: number;
 	original: number;
 
@@ -13,6 +14,8 @@ export interface Tower {
 	timestamp: number;
 
 	level: number;
+
+	cost: number;
 
 	// rank?: number;
 }
