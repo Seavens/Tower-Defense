@@ -16,7 +16,7 @@ export function ItemSlot({ tower }: ItemSlotProps): Element {
 	return (
 		<frame
 			key={"ItemSlot Invisiable Frame"}
-			Size={new UDim2(0, 50, 0, 50)}
+			Size={new UDim2(0.8, 0, 0.8, 0)}
 			Position={new UDim2(0.5, 0, 0.5, 0)}
 			AnchorPoint={new Vector2(0.5, 0.5)}
 			BorderSizePixel={0}
@@ -51,6 +51,11 @@ export function ItemSlot({ tower }: ItemSlotProps): Element {
 						BackgroundTransparency={1}
 						BorderSizePixel={0}
 						Image={imageId}
+						Event={{
+							MouseButton1Click: () => {
+								warn(`ItemSlot clicked: ${id}`);
+							},
+						}}
 					>
 						<uicorner CornerRadius={new UDim(0.15, 0)} />
 					</imagebutton>

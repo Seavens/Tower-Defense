@@ -33,6 +33,16 @@ export const profileSlice = createProducer<ProfileState, ProfileActions<ProfileS
 			draft.data.coins -= payload;
 		});
 	},
+	profileAddGems: (state: ProfileState, payload: number): ProfileState => {
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			draft.data.gems += payload;
+		});
+	},
+	profileRemoveGems: (state: ProfileState, payload: number): ProfileState => {
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			draft.data.gems -= payload;
+		});
+	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {
 		const { data } = payload;
 		return produce(state, (draft: Draft<ProfileState>): ProfileState => {

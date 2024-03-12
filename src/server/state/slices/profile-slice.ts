@@ -47,6 +47,26 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			player.data.coins -= payload;
 		});
 	},
+	profileAddGems: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+		const { user } = metadata;
+		return produce(state, (draft: Draft<State>): void => {
+			const player = draft[user];
+			if (player === undefined) {
+				return;
+			}
+			player.data.gems += payload;
+		});
+	},
+	profileRemoveGems: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+		const { user } = metadata;
+		return produce(state, (draft: Draft<State>): void => {
+			const player = draft[user];
+			if (player === undefined) {
+				return;
+			}
+			player.data.gems -= payload;
+		});
+	},
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {
 		const { data } = payload;
 		const { user } = metadata;

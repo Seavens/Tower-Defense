@@ -17,5 +17,7 @@ export interface Tower {
 
 	cost: number;
 
+	locked: boolean;
+
 	// rank?: number;
 }

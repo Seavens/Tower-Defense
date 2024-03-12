@@ -82,5 +82,6 @@ export function GenerateTower(owner: number): Tower {
 		timestamp: os.time(),
 		level: level,
 		cost: TowerDefinitions[id].cost * (level * LEVEL_TOWER_GROWTH_RATE),
+		locked: false,
 	};
 }

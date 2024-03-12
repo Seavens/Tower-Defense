@@ -5,6 +5,8 @@ export type ProfileActions<S> = {
 	profileAddExperience: (state: S, payload: number, metadata: EntityMetadata & ReplicationMetadata) => S;
 	profileAddCoins: (state: S, payload: number, metadata: EntityMetadata & ReplicationMetadata) => S;
 	profileRemoveCoins: (state: S, payload: number, metadata: EntityMetadata & ReplicationMetadata) => S;
+	profileAddGems: (state: S, payload: number, metadata: EntityMetadata & ReplicationMetadata) => S;
+	profileRemoveGems: (state: S, payload: number, metadata: EntityMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
 export interface ProfileAddExperience {
@@ -17,4 +19,12 @@ export interface ProfileAddCoins {
 
 export interface ProfileRemoveCoins {
 	coins: number;
+}
+
+export interface ProfileAddGems {
+	gems: number;
+}
+
+export interface ProfileRemoveGems {
+	gems: number;
 }

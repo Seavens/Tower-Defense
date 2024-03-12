@@ -19,9 +19,9 @@ for (const index of $range(1, 25)) {
 const state: DeepPartial<ClientState> = { inventory: { data: { stored } } };
 
 function InventoryStory(): Element {
-	const { stored } = useSelector(selectInventoryData);
+	const { stored, equipped } = useSelector(selectInventoryData);
 
-	return <Inventory stored={stored} equipped={[]} />;
+	return <Inventory stored={stored} equipped={equipped} />;
 }
 
 function Story(): Element {

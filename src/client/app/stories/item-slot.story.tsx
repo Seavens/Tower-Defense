@@ -16,8 +16,9 @@ const state: DeepPartial<ClientState> = { inventory: { data: { equipped: [Genera
 function ItemSlotStory(): Element {
 	const { equipped } = useSelector(selectInventoryData);
 	const [tower] = equipped;
+	const [slot, item] = tower;
 
-	return <ItemSlot tower={tower} />;
+	return <ItemSlot tower={item} />;
 }
 
 function Story(): Element {

@@ -57,7 +57,7 @@ export const inventorySlice = createProducer<InventoryState, InventoryActions<In
 			const item = stored.get(slot);
 			if (item !== undefined) {
 				stored.delete(slot);
-				Immut.table.insert(equipped, item);
+				equipped.set(slot, item);
 			}
 			return draft;
 		});

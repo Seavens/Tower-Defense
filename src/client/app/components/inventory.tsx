@@ -235,11 +235,11 @@ export function Inventory(props: InventoryData): Element {
 							>
 								<uicorner CornerRadius={new UDim(0.2, 0)} />
 								<textlabel
-									key={"Damage Stat"}
+									key={"Level Label"}
+									Text={`Level: ${selectedItem.level}`}
 									Size={UDim2.fromScale(0.9, 0.9)}
 									AnchorPoint={new Vector2(0.5, 0.5)}
 									Position={UDim2.fromScale(0.5, 0.5)}
-									Text={`Damage: ${math.round(selectedItem.damage)}`}
 									TextColor3={new Color3(1, 1, 1)}
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
@@ -257,13 +257,12 @@ export function Inventory(props: InventoryData): Element {
 								Image={`rbxassetid://12790545456`}
 								ImageTransparency={0.5}
 							>
-								<uicorner CornerRadius={new UDim(0.2, 0)} />
 								<textlabel
-									key={"Range Stat"}
+									key={"Damage Stat Label"}
 									Size={UDim2.fromScale(0.9, 0.9)}
 									AnchorPoint={new Vector2(0.5, 0.5)}
 									Position={UDim2.fromScale(0.5, 0.5)}
-									Text={`Range: ${math.round(selectedItem.range)}`}
+									Text={`Damage: ${math.round(selectedItem.damage)}`}
 									TextColor3={new Color3(1, 1, 1)}
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
@@ -281,13 +280,12 @@ export function Inventory(props: InventoryData): Element {
 								Image={`rbxassetid://12790545456`}
 								ImageTransparency={0.5}
 							>
-								<uicorner CornerRadius={new UDim(0.2, 0)} />
 								<textlabel
-									key={"Attack Stat"}
+									key={"Range Stat Label"}
 									Size={UDim2.fromScale(0.9, 0.9)}
 									AnchorPoint={new Vector2(0.5, 0.5)}
 									Position={UDim2.fromScale(0.5, 0.5)}
-									Text={`Cooldown: ${math.round(selectedItem.attackSpeed)}`}
+									Text={`Range: ${math.round(selectedItem.range)}`}
 									TextColor3={new Color3(1, 1, 1)}
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
@@ -297,7 +295,7 @@ export function Inventory(props: InventoryData): Element {
 								/>
 							</imagelabel>
 							<imagelabel
-								key={"Stats Tile Four Frame"}
+								key={"Stat Tle Four Frame"}
 								Size={UDim2.fromScale(0.93, 0.12)}
 								AnchorPoint={new Vector2(0.5, 0.5)}
 								Position={UDim2.fromScale(0.5, 0.795)}
@@ -305,64 +303,16 @@ export function Inventory(props: InventoryData): Element {
 								Image={`rbxassetid://12790545456`}
 								ImageTransparency={0.5}
 							>
-								<uicorner CornerRadius={new UDim(0.2, 0)} />
-								<textbutton
-									Text={"Sell"}
-									Size={UDim2.fromScale(0.45, 0.65)}
-									AnchorPoint={new Vector2(0.45, 0.5)}
-									Position={UDim2.fromScale(0.25, 0.5)}
+								<textlabel
+									key={"Attack Stat Label"}
+									Size={UDim2.fromScale(0.9, 0.9)}
+									AnchorPoint={new Vector2(0.5, 0.5)}
+									Position={UDim2.fromScale(0.5, 0.5)}
+									Text={`Cooldown: ${math.round(selectedItem.attackSpeed)}`}
 									TextColor3={new Color3(1, 1, 1)}
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
-									Font={Enum.Font.GothamMedium}
-									TextScaled={true}
-									BackgroundColor3={new Color3(0.57, 0.19, 0.19)}
-									Event={{
-										MouseButton1Click: () => {
-											// Need to remove tower from inventory and add the coins to the player.
-											// Couldn't figure out how to get the slot selected.
-											//
-											//
-											//
-											// warn(
-											// 	`Sold: ${selectedItem.id} for $${math.round(
-											// 		TowerDefinitions[selectedItem.id].cost,
-											// 	)} in slot ${1} from storage ${
-											// 		useSelector(selectInventoryData).stored
-											// 	}`,
-											// 	`Removed Item: ${clientProducer.inventoryRemoveItem(
-											// 		{ slot: "1" },
-											// 		{
-											// 			user: `${Players.LocalPlayer.UserId}`,
-											// 			replicate: true,
-											// 		},
-											// 	)}`,
-											// 	`Coins: ${
-											// 		clientProducer.profileAddCoins(
-											// 			TowerDefinitions[selectedItem.id].cost,
-											// 			{
-											// 				user: `${Players.LocalPlayer.Name}`,
-											// 				replicate: true,
-											// 			},
-											// 		).profile.data.coins
-											// 	}`,
-											// );
-											warn(`Sold: ${selectedItem.id} for $${math.round(selectedItem.cost)}`);
-										},
-									}}
-								>
-									<uicorner CornerRadius={new UDim(0.2, 0)} />
-								</textbutton>
-								<textlabel
-									key={"Etc Stats"}
-									Size={UDim2.fromScale(0.45, 0.5)}
-									AnchorPoint={new Vector2(0.5, 0.5)}
-									Position={UDim2.fromScale(0.75, 0.5)}
-									Text={`+$${math.round(selectedItem.cost)}`}
-									TextColor3={new Color3(0.95, 0.9, 0.24)}
-									TextStrokeColor3={new Color3(0, 0, 0)}
 									BackgroundTransparency={1}
-									TextStrokeTransparency={0}
 									Font={Enum.Font.GothamMedium}
 									TextScaled={true}
 								/>
