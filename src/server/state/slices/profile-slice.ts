@@ -1,7 +1,16 @@
 import { LevelFunctions } from "shared/functions/level-functions";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
-import type { DataAdded, DataRemoved, ProfileActions } from "shared/state/actions";
+import type {
+	DataAdded,
+	DataRemoved,
+	ProfileActions,
+	ProfileAdjustCoins,
+	ProfileAdjustDailyRewards,
+	ProfileAdjustExperience,
+	ProfileAdjustGems,
+	ProfileAdjustLevel,
+} from "shared/state/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata, ReplicationMetadata } from "shared/state/metadata";
 import type { ProfileData } from "shared/types/data";
@@ -17,55 +26,122 @@ interface State {
 const state: State = {};
 
 export const profileSlice = createProducer<State, ProfileActions<State>>(state, {
-	profileAddExperience: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+	profileAdjustLevel: (state: State, payload: ProfileAdjustLevel, metadata: EntityMetadata): State => {
 		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			LevelFunctions.levelUp(player.data.level, player.data.experience);
-		});
+		const { level, isAdd } = payload;
+		if (isAdd) {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.level = level;
+			});
+		} else {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.level -= level;
+			});
+		}
 	},
-	profileAddCoins: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+	profileAdjustExperience: (
+		state: State,
+		payload: ProfileAdjustExperience,
+		metadata: EntityMetadata & ReplicationMetadata,
+	): State => {
 		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			player.data.coins += payload;
-		});
+		const { experience, isAdd } = payload;
+		if (isAdd) {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				LevelFunctions.levelUp(player.data.level, experience);
+			});
+		} else {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				LevelFunctions.levelDown(player.data.level, experience);
+			});
+		}
 	},
-	profileRemoveCoins: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+	profileAdjustCoins: (
+		state: State,
+		payload: ProfileAdjustCoins,
+		metadata: EntityMetadata & ReplicationMetadata,
+	): State => {
 		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			player.data.coins -= payload;
-		});
+		const { coins, isAdd } = payload;
+		if (isAdd) {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.coins += coins;
+			});
+		} else {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.coins -= coins;
+			});
+		}
 	},
-	profileAddGems: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+	profileAdjustGems: (state: State, payload: ProfileAdjustGems, metadata: EntityMetadata & ReplicationMetadata) => {
 		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			player.data.gems += payload;
-		});
+		const { gems, isAdd } = payload;
+		if (isAdd) {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.gems += gems;
+			});
+		} else {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.gems -= gems;
+			});
+		}
 	},
-	profileRemoveGems: (state: State, payload: number, metadata: EntityMetadata & ReplicationMetadata): State => {
+	profileAdjustDailyRewards: (
+		state: State,
+		payload: ProfileAdjustDailyRewards,
+		metadata: EntityMetadata & ReplicationMetadata,
+	) => {
 		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			player.data.gems -= payload;
-		});
+		const { streak, date } = payload;
+		if (streak !== undefined) {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.dailyRewards.streak = streak;
+			});
+		} else {
+			return produce(state, (draft: Draft<State>): void => {
+				const player = draft[user];
+				if (player === undefined) {
+					return;
+				}
+				player.data.dailyRewards.lastClaimed = date;
+			});
+		}
 	},
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {
 		const { data } = payload;

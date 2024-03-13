@@ -21,4 +21,19 @@ export namespace LevelFunctions {
 		}
 		return [level, leftover];
 	}
+
+	export function levelDown(start: number, exp: number): [level: number, exp: number] {
+		if (exp === math.huge) {
+			return [1, 0];
+		}
+		let level = start;
+		let required = getMaxExp(level);
+		let leftover = exp;
+		while (leftover < 0) {
+			level -= 1;
+			leftover += required;
+			required = getMaxExp(level);
+		}
+		return [level, leftover];
+	}
 }

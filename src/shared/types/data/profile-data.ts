@@ -4,8 +4,8 @@ export interface ProfileData {
 	coins: number;
 	gems: number;
 
-	// dailyRewards: {
-	// 	lastClaimed: DateTime;
-	// 	streak: number;
-	// };
+	dailyRewards: {
+		lastClaimed: DateTime;
+		streak: number;
+	};
 }

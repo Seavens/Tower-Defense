@@ -211,7 +211,7 @@ export function Inventory(props: InventoryData): Element {
 									Position={UDim2.fromScale(0.5, 0.5)}
 									BackgroundColor3={new Color3(0.27, 0.25, 0.16)}
 									Image={assetID}
-									ImageTransparency={0.5}
+									ImageTransparency={0}
 									BackgroundTransparency={0.5}
 								>
 									<uicorner CornerRadius={new UDim(0.1, 0)} />

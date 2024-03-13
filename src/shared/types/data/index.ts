@@ -14,6 +14,10 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	experience: t.number,
 	coins: t.number,
 	gems: t.number,
+	dailyRewards: t.strictInterface({
+		lastClaimed: t.DateTime,
+		streak: t.number,
+	}),
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
@@ -32,6 +36,10 @@ export const DATA_TEMPLATE: Data = {
 		experience: 0,
 		coins: 0,
 		gems: 0,
+		dailyRewards: {
+			lastClaimed: DateTime.now(),
+			streak: 0,
+		},
 	},
 	inventory: {
 		stored: new Map<string, Tower>(),
