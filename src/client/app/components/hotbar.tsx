@@ -9,7 +9,7 @@ import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { InventoryData } from "shared/types/data";
 import type { ProfileData } from "shared/types/data";
-import type { Tower } from "shared/types/objects";
+import type { TowerObject } from "shared/types/objects";
 
 interface HotbarProps {
 	inventoryData: InventoryData;
@@ -48,10 +48,9 @@ export function Hotbar(props: HotbarProps): Element {
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					Padding={new UDim(0.005, 0)}
 				/>
-				{Dictionary.map<Record<string, Tower>, string, Element>(
+				{Dictionary.map<Record<string, TowerObject>, string, Element>(
 					equipped as never, // This is required because of how `Sift.Dictionary.map` types work.
-					(tower: Tower, key: string): Element => {
-						warn(`Tower: ${tower.id}, Key: ${key}`);
+					(tower: TowerObject, key: string): Element => {
 						return <ItemSlot tower={tower} key={key} />;
 					},
 				)}

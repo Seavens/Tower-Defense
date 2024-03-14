@@ -1,6 +1,6 @@
 import type { TowerId } from "../ids";
 
-export interface Tower {
+export interface TowerObject {
 	id: TowerId;
 
 	owner: number;
@@ -8,7 +8,7 @@ export interface Tower {
 
 	damage: number;
 	range: number;
-	attackSpeed: number;
+	cooldown: number;
 
 	uuid: string;
 	timestamp: number;

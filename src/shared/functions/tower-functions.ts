@@ -5,13 +5,13 @@ import { TowerDefinitions } from "shared/definitions/towers";
 import { generateUUID } from "./generate-uuid";
 import { rarityDefinitions } from "shared/definitions/rarities";
 import { t } from "@rbxts/t";
-import type { Tower } from "shared/types/objects";
 import type { TowerDefinition } from "shared/types/definitions";
 import type { TowerId } from "shared/types/ids";
+import type { TowerObject } from "shared/types/objects";
 
 const isRange = t.strictArray(t.number, t.number);
 
-export function GenerateTower(owner: number): Tower {
+export function GenerateTowerObject(owner: number): TowerObject {
 	function getTowersOfRarity(rarity: RarityId): Array<TowerId> {
 		const allIds = Modding.inspect<Array<TowerId>>();
 		const filtered = new Array<TowerId>();
@@ -68,7 +68,7 @@ export function GenerateTower(owner: number): Tower {
 	const uuid = generateUUID();
 	const range = genFromRange(id, "range");
 	const damage = genFromRange(id, "damage");
-	const attackSpeed = genFromRange(id, "attackSpeed");
+	const attackSpeed = genFromRange(id, "cooldown");
 	const level = 1;
 
 	return {
@@ -77,11 +77,11 @@ export function GenerateTower(owner: number): Tower {
 		original: owner,
 		range: range,
 		damage: damage,
-		attackSpeed: attackSpeed,
+		cooldown: attackSpeed,
 		uuid,
 		timestamp: os.time(),
 		level: level,
-		cost: TowerDefinitions[id].cost * (level * LEVEL_TOWER_GROWTH_RATE),
+		cost: TowerDefinitions[id].startCost * (level * LEVEL_TOWER_GROWTH_RATE),
 		locked: false,
 	};
 }

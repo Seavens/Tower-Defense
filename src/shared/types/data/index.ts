@@ -1,8 +1,8 @@
-import { isTower } from "../objects";
+import { isTowerObject } from "../objects";
 import { t } from "@rbxts/t";
 import type { InventoryData } from "./inventory-data";
 import type { ProfileData } from "./profile-data";
-import type { Tower } from "../objects";
+import type { TowerObject } from "../objects";
 
 export interface Data {
 	profile: ProfileData;
@@ -21,8 +21,8 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
-	stored: t.map(t.string, isTower),
-	equipped: t.map(t.string, isTower),
+	stored: t.map(t.string, isTowerObject),
+	equipped: t.map(t.string, isTowerObject),
 });
 
 export const isData: t.check<Data> = t.strictInterface({
@@ -42,8 +42,8 @@ export const DATA_TEMPLATE: Data = {
 		},
 	},
 	inventory: {
-		stored: new Map<string, Tower>(),
-		equipped: new Map<string, Tower>(),
+		stored: new Map<string, TowerObject>(),
+		equipped: new Map<string, TowerObject>(),
 	},
 };
 

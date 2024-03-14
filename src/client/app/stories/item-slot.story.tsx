@@ -1,6 +1,6 @@
 import { $print } from "rbxts-transform-debug";
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { GenerateTower } from "shared/functions/tower-functions";
+import { GenerateTowerObject } from "shared/functions/tower-functions";
 import { ItemSlot } from "../components";
 import { ReflexProvider, useProducer, useSelector } from "@rbxts/react-reflex";
 import { clientProducer } from "client/state/producer";
@@ -11,7 +11,7 @@ import ReactRoblox from "@rbxts/react-roblox";
 import type { ClientProducer, ClientState } from "client/state/producer";
 import type { Element } from "@rbxts/react";
 
-const state: DeepPartial<ClientState> = { inventory: { data: { equipped: [GenerateTower(-1)] } } };
+const state: DeepPartial<ClientState> = { inventory: { data: { equipped: [GenerateTowerObject(-1)] } } };
 
 function ItemSlotStory(): Element {
 	const { equipped } = useSelector(selectInventoryData);

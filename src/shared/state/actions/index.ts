@@ -9,7 +9,12 @@ import type {
 	GameStartRound,
 	GameStartWave,
 } from "./game-actions";
-import type { InventoryActions, InventoryAddItem, InventoryRemoveItem } from "./inventory-actions";
+import type {
+	InventoryActions,
+	InventoryAddItem,
+	InventoryEquipStatus,
+	InventoryRemoveItem,
+} from "./inventory-actions";
 import type {
 	ProfileActions,
 	ProfileAdjustCoins,
@@ -34,6 +39,7 @@ export type {
 	InventoryActions,
 	InventoryAddItem,
 	InventoryRemoveItem,
+	InventoryEquipStatus,
 	ProfileActions,
 	ProfileAdjustCoins,
 	ProfileAdjustDailyRewards,

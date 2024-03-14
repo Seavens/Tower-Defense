@@ -9,12 +9,12 @@ export interface TowerDefinition<I extends TowerId> {
 
 	damage: [number, number];
 	range: [number, number];
-	attackSpeed: [number, number];
+	cooldown: [number, number];
 
 	kind?: DamageKind;
 
 	count: number;
-	cost: number;
+	startCost: number;
 
 	rarity: RarityId;
 

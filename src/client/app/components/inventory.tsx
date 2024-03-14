@@ -12,7 +12,7 @@ import { useViewport } from "@rbxts/pretty-react-hooks";
 import React, { Fragment } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { InventoryData } from "shared/types/data";
-import type { Tower } from "shared/types/objects";
+import type { TowerObject } from "shared/types/objects";
 
 interface InventoryProps {}
 
@@ -120,9 +120,9 @@ export function Inventory(props: InventoryData): Element {
 									HorizontalAlignment={Enum.HorizontalAlignment.Left}
 									VerticalAlignment={Enum.VerticalAlignment.Top}
 								/>
-								{Dictionary.map<Record<string, Tower>, string, Element>(
+								{Dictionary.map<Record<string, TowerObject>, string, Element>(
 									stored as never, // This is required because of how `Sift.Dictionary.map` types work.
-									(tower: Tower, key: string): Element => {
+									(tower: TowerObject, key: string): Element => {
 										return <ItemSlot tower={tower} key={key} />;
 									},
 								)}
@@ -308,7 +308,7 @@ export function Inventory(props: InventoryData): Element {
 									Size={UDim2.fromScale(0.9, 0.9)}
 									AnchorPoint={new Vector2(0.5, 0.5)}
 									Position={UDim2.fromScale(0.5, 0.5)}
-									Text={`Cooldown: ${math.round(selectedItem.attackSpeed)}`}
+									Text={`Cooldown: ${math.round(selectedItem.cooldown)}`}
 									TextColor3={new Color3(1, 1, 1)}
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}

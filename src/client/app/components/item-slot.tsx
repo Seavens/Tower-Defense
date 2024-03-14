@@ -2,15 +2,15 @@ import { TowerDefinitions } from "shared/definitions/towers";
 import { rarityDefinitions } from "shared/definitions/rarities";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Tower } from "shared/types/objects";
+import type { TowerObject } from "shared/types/objects";
 
 interface ItemSlotProps {
-	tower: Tower;
+	tower: TowerObject;
 }
 
 export function ItemSlot({ tower }: ItemSlotProps): Element {
-	const { id, level } = tower;
-	const { imageId, rarity, cost } = TowerDefinitions[id];
+	const { id, level, cost } = tower;
+	const { imageId, rarity } = TowerDefinitions[id];
 	const { color } = rarityDefinitions[rarity];
 
 	return (

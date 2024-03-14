@@ -1,15 +1,15 @@
 import { isTowerId } from "../ids";
 import { t } from "@rbxts/t";
-import type { Tower } from "./tower";
+import type { TowerObject } from "./tower";
 
-export const isTower = t.strictInterface({
+export const isTowerObject = t.strictInterface({
 	id: isTowerId,
 	owner: t.number,
 	original: t.number,
 
 	damage: t.number,
 	range: t.number,
-	attackSpeed: t.number,
+	cooldown: t.number,
 
 	uuid: t.string,
 	timestamp: t.number,
@@ -20,4 +20,4 @@ export const isTower = t.strictInterface({
 	locked: t.boolean,
 });
 
-export type { Tower };
+export type { TowerObject };
