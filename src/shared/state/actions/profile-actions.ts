@@ -10,11 +10,6 @@ export type ProfileActions<S> = {
 	) => S;
 	profileAdjustCoins: (state: S, payload: ProfileAdjustCoins, metadata: EntityMetadata & ReplicationMetadata) => S;
 	profileAdjustGems: (state: S, payload: ProfileAdjustGems, metadata: EntityMetadata & ReplicationMetadata) => S;
-	profileAdjustDailyRewards: (
-		state: S,
-		payload: ProfileAdjustDailyRewards,
-		metadata: EntityMetadata & ReplicationMetadata,
-	) => S;
 } & DataActions<S>;
 
 export interface ProfileAdjustLevel {
@@ -38,5 +33,5 @@ export interface ProfileAdjustGems {
 
 export interface ProfileAdjustDailyRewards {
 	streak: number;
-	date: DateTime;
+	date: string;
 }

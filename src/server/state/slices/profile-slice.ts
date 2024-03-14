@@ -118,31 +118,6 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			});
 		}
 	},
-	profileAdjustDailyRewards: (
-		state: State,
-		payload: ProfileAdjustDailyRewards,
-		metadata: EntityMetadata & ReplicationMetadata,
-	) => {
-		const { user } = metadata;
-		const { streak, date } = payload;
-		if (streak !== undefined) {
-			return produce(state, (draft: Draft<State>): void => {
-				const player = draft[user];
-				if (player === undefined) {
-					return;
-				}
-				player.data.dailyRewards.streak = streak;
-			});
-		} else {
-			return produce(state, (draft: Draft<State>): void => {
-				const player = draft[user];
-				if (player === undefined) {
-					return;
-				}
-				player.data.dailyRewards.lastClaimed = date;
-			});
-		}
-	},
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {
 		const { data } = payload;
 		const { user } = metadata;

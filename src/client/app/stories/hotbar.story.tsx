@@ -30,10 +30,6 @@ const playerProfile = {
 	experience: 4565,
 	coins: 17457,
 	gems: 436,
-	dailyRewards: {
-		lastClaimed: DateTime.now(),
-		streak: 3,
-	},
 };
 
 const state: DeepPartial<ClientState> = { inventory: { data: { equipped, stored } } };

@@ -69,16 +69,6 @@ export const profileSlice = createProducer<ProfileState, ProfileActions<ProfileS
 			}
 		});
 	},
-	profileAdjustDailyRewards: (state: ProfileState, payload: ProfileAdjustDailyRewards): ProfileState => {
-		const { streak, date } = payload;
-		return produce(state, (draft: Draft<ProfileState>): void => {
-			if (streak !== undefined) {
-				draft.data.dailyRewards.streak += payload.streak;
-			} else {
-				draft.data.dailyRewards.lastClaimed = payload.date;
-			}
-		});
-	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {
 		const { data } = payload;
 		return produce(state, (draft: Draft<ProfileState>): ProfileState => {
