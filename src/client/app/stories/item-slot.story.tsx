@@ -1,34 +1,18 @@
-import { $print } from "rbxts-transform-debug";
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { GenerateTowerObject } from "shared/functions/tower-functions";
-import { ItemSlot } from "../components";
+import { ItemSlot } from "../components/item-slot";
 import { ReflexProvider, useProducer, useSelector } from "@rbxts/react-reflex";
-import { clientProducer } from "client/state/producer";
 import { selectInventoryData } from "client/state/selectors";
-import { useStoryProducer } from "../hooks";
-import React, { useEffect } from "@rbxts/react";
+import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
-import type { ClientProducer, ClientState } from "client/state/producer";
 import type { Element } from "@rbxts/react";
 
-const state: DeepPartial<ClientState> = { inventory: { data: { equipped: [GenerateTowerObject(-1)] } } };
-
 function ItemSlotStory(): Element {
-	const { equipped } = useSelector(selectInventoryData);
-	const [tower] = equipped;
-	const [slot, item] = tower;
-
-	return <ItemSlot tower={item} />;
+	return <ItemSlot />;
 }
 
 function Story(): Element {
-	const producer = useStoryProducer(state);
-
-	return (
-		<ReflexProvider producer={producer}>
-			<ItemSlotStory />
-		</ReflexProvider>
-	);
+	return <ItemSlotStory />;
 }
 
 export = CreateReactStory({ react: React, reactRoblox: ReactRoblox }, (props) => {

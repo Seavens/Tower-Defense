@@ -1,3 +1,4 @@
+// Resourced from Littensy: https://github.com/littensy/slither
 import { useCamera, useDebounceState, useEventListener } from "@rbxts/pretty-react-hooks";
 import { useMemo } from "@rbxts/react";
 

@@ -1,4 +1,5 @@
-export { ItemSlot } from "./item-slot";
-export { Hotbar } from "./hotbar";
-export { Inventory } from "./inventory";
-export { Corner } from "./corner";
+import { Hotbar } from "./hotbar";
+import { Inventory } from "./inventory";
+import { Item } from "./item";
+
+export { Hotbar, Inventory, Item };

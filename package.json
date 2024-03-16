@@ -45,6 +45,7 @@
     "@rbxts/sift": "^0.0.8",
     "@rbxts/t": "^3.1.0",
     "@rbxts/ui-labs": "^2.0.0",
-    "rbxts-transform-debug": "^2.2.0"
+    "rbxts-transform-debug": "^2.2.0",
+    "rbxts-transform-env": "^2.2.0"
   }
 }

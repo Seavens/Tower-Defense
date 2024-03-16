@@ -1,9 +1,9 @@
 import { LEVEL_TOWER_GROWTH_RATE } from "shared/constants/level-constants";
 import { Modding } from "@flamework/core";
+import { RarityDefinitions } from "shared/definitions/rarities";
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { generateUUID } from "./generate-uuid";
-import { rarityDefinitions } from "shared/definitions/rarities";
 import { t } from "@rbxts/t";
 import type { TowerDefinition } from "shared/types/definitions";
 import type { TowerId } from "shared/types/ids";
@@ -29,10 +29,10 @@ export function GenerateTowerObject(owner: number): TowerObject {
 		const randomValue = math.random();
 		let cumulative = 0;
 		const weights = [
-			rarityDefinitions[RarityId.Rare].weight,
-			rarityDefinitions[RarityId.Epic].weight,
-			rarityDefinitions[RarityId.Legendary].weight,
-			rarityDefinitions[RarityId.Mythical].weight,
+			RarityDefinitions[RarityId.Rare].weight,
+			RarityDefinitions[RarityId.Epic].weight,
+			RarityDefinitions[RarityId.Legendary].weight,
+			RarityDefinitions[RarityId.Mythical].weight,
 		];
 		const rarities = [RarityId.Rare, RarityId.Epic, RarityId.Legendary, RarityId.Mythical];
 
@@ -79,7 +79,7 @@ export function GenerateTowerObject(owner: number): TowerObject {
 		damage: damage,
 		cooldown: attackSpeed,
 		uuid,
-		timestamp: os.time(),
+		timestamp: DateTime.now().ToIsoDate(),
 		level: level,
 		cost: TowerDefinitions[id].startCost * (level * LEVEL_TOWER_GROWTH_RATE),
 		locked: false,

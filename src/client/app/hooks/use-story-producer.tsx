@@ -1,4 +1,3 @@
-import { $print } from "rbxts-transform-debug";
 import { Dictionary } from "@rbxts/sift";
 import { clientProducer } from "client/state/producer";
 import { useUnmountEffect } from "@rbxts/pretty-react-hooks";

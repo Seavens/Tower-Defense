@@ -1,3 +1,4 @@
+// Resourced from Littensy: https://github.com/littensy/slither
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 

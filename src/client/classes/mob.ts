@@ -31,7 +31,6 @@ export class Mob extends API {
 	protected declare elapsed: number;
 	protected declare duration: number;
 	protected declare destroyed: boolean;
-
 	protected readonly instance: Model;
 
 	static {

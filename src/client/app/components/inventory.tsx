@@ -1,6 +1,6 @@
-import { Corner } from "./corner";
+import { Corner } from "./pretty-components/corner";
 import { Dictionary } from "@rbxts/sift";
-import { ItemSlot } from "./item-slot";
+import { Item } from "./item";
 import { Players } from "@rbxts/services";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { TowerId } from "shared/types/ids";
@@ -123,7 +123,7 @@ export function Inventory(props: InventoryData): Element {
 								{Dictionary.map<Record<string, TowerObject>, string, Element>(
 									stored as never, // This is required because of how `Sift.Dictionary.map` types work.
 									(tower: TowerObject, key: string): Element => {
-										return <ItemSlot tower={tower} key={key} />;
+										return <Item itemKey={key} tower={tower} />;
 									},
 								)}
 							</scrollingframe>

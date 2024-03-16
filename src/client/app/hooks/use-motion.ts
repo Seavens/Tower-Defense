@@ -1,3 +1,4 @@
+// Resourced from Littensy: https://github.com/littensy/slither
 import * as prettyReactHooks from "@rbxts/pretty-react-hooks";
 import { RunService } from "@rbxts/services";
 import { createMotion } from "@rbxts/ripple";

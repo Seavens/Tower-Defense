@@ -11,7 +11,7 @@ export interface TowerObject {
 	cooldown: number;
 
 	uuid: string;
-	timestamp: number;
+	timestamp: string;
 
 	level: number;
 

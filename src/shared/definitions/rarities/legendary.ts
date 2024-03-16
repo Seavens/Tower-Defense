@@ -7,5 +7,5 @@ export const legendaryRarity: RarityDefinition<RarityId.Legendary> = {
 	name: "Legendary",
 	desc: "A legendary rarity.",
 	weight: RARITY_WEIGHTS[RarityId.Legendary],
-	color: [0.6, 0.67, 0.21],
+	colorRGB: [255, 202, 75],
 };

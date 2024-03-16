@@ -1,15 +1,15 @@
-import { Corner } from "./corner";
+import { Corner } from "./pretty-components/corner";
 import { Dictionary } from "@rbxts/sift";
-import { Events } from "client/network";
-import { Fragment } from "@rbxts/react";
+import { Item } from "./item";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
-import { useMouse } from "@rbxts/pretty-react-hooks";
-import React from "@rbxts/react";
+import { brighten } from "client/app/utils/color-utils";
+import { formatNumber } from "../utils/math-utils";
+import { palette } from "client/app/utils/palette";
+import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { InventoryData } from "shared/types/data";
 import type { ProfileData } from "shared/types/data";
-import type { TowerObject } from "shared/types/objects";
 
 interface HotbarProps {
 	inventoryData: InventoryData;
@@ -18,22 +18,39 @@ interface HotbarProps {
 
 export function Hotbar(props: HotbarProps): Element {
 	const { inventoryData } = props;
-	const { stored, equipped } = inventoryData;
+	const { equipped } = inventoryData;
 	const { level, experience, coins, gems } = props.profileData;
 	const maxExp = LevelFunctions.getMaxExp(level);
 	const expSize = experience / maxExp;
+	const texture = "rbxassetid://12790545456";
+
+	const itemElements = useMemo(() => {
+		const elements: Array<React.Element> = [];
+
+		for (let i = 1; i <= 6; i = i + 1) {
+			const tower = equipped.get(`${i}`);
+			if (tower !== undefined) {
+				print(i);
+				elements.push(<Item itemKey={`${i}`} tower={tower} />);
+			} else {
+				warn(i);
+				elements.push(<ItemSlot />);
+			}
+		}
+		return elements;
+	}, [equipped]);
+
 	return (
 		<frame
-			key={"Hotbar Invisiable Frame"}
-			Size={UDim2.fromScale(0.5, 0.18)}
+			key={"Hotbar Main Frame"}
+			Size={UDim2.fromOffset(900, 200)}
 			AnchorPoint={new Vector2(0.5, 1)}
-			Position={UDim2.fromScale(0.5, 0.995)}
+			Position={UDim2.fromScale(0.5, 0.99)}
 			BorderSizePixel={0}
 			Transparency={1}
 		>
-			<uiaspectratioconstraint AspectRatio={4.5} />
 			<frame
-				key={"Grid Frame"}
+				key={"Equipped Frame"}
 				Size={UDim2.fromScale(1, 0.8)}
 				Position={UDim2.fromScale(0.5, 0)}
 				AnchorPoint={new Vector2(0.5, 0)}
@@ -48,12 +65,7 @@ export function Hotbar(props: HotbarProps): Element {
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					Padding={new UDim(0.005, 0)}
 				/>
-				{Dictionary.map<Record<string, TowerObject>, string, Element>(
-					equipped as never, // This is required because of how `Sift.Dictionary.map` types work.
-					(tower: TowerObject, key: string): Element => {
-						return <ItemSlot tower={tower} key={key} />;
-					},
-				)}
+				{itemElements}
 			</frame>
 			<frame
 				key={"Level Frame"}
@@ -69,30 +81,32 @@ export function Hotbar(props: HotbarProps): Element {
 					Position={UDim2.fromScale(0.5, 0.5)}
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BorderSizePixel={0}
-					BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
+					BackgroundColor3={brighten(palette.purple, -0.5)}
 					ZIndex={0}
 				>
+					<uicorner CornerRadius={new UDim(0.5, 0)} />
 					<imagelabel
 						key={"Level Bar Inline"}
 						Size={UDim2.fromScale(0.989, 0.7)}
 						Position={UDim2.fromScale(0.5, 0.5)}
 						AnchorPoint={new Vector2(0.5, 0.5)}
 						BorderSizePixel={0}
-						BackgroundColor3={new Color3(0.44, 0.2, 0.2)}
-						Image={`rbxassetid://12790545456`}
+						BackgroundColor3={brighten(palette.purple, -0.5)}
+						Image={texture}
 						ImageTransparency={0.5}
 						ZIndex={1}
 					>
+						<uicorner CornerRadius={new UDim(0.5, 0)} />
 						<frame
 							key={"Level Bar"}
 							Size={UDim2.fromScale(expSize, 1)}
 							Position={UDim2.fromScale(0, 0)}
 							AnchorPoint={new Vector2(0, 0)}
 							BorderSizePixel={0}
-							BackgroundColor3={new Color3(0.25, 0.3, 0.51)}
+							BackgroundColor3={palette.purple}
 							ZIndex={1}
 						>
-							<uicorner CornerRadius={new UDim(0.25, 0)} />
+							<uicorner CornerRadius={new UDim(0.5, 0)} />
 						</frame>
 					</imagelabel>
 					<textlabel
@@ -104,62 +118,12 @@ export function Hotbar(props: HotbarProps): Element {
 						TextColor3={new Color3(1, 1, 1)}
 						TextScaled={true}
 						Font={Enum.Font.GothamMedium}
-						Text={`${experience}/${maxExp}`}
+						Text={`${formatNumber(experience)}/${formatNumber(maxExp)}`}
 						ZIndex={2}
 						TextXAlignment={Enum.TextXAlignment.Left}
 					/>
 				</frame>
-				<frame
-					key={"Level Bar"}
-					Size={UDim2.fromScale(0.005, 0.6)}
-					Position={UDim2.fromScale(expSize, 0.5)}
-					AnchorPoint={new Vector2(0, 0.5)}
-					BackgroundTransparency={0}
-					BorderSizePixel={2}
-					BackgroundColor3={new Color3(0.4, 0.4, 0.61)}
-					ZIndex={1}
-				/>
 			</frame>
-			<imagelabel
-				key={"Side Box L"}
-				Size={UDim2.fromScale(0.19, 0.19)}
-				Position={UDim2.fromScale(0.003, 0.86)}
-				AnchorPoint={new Vector2(0.35, 0.5)}
-				BorderSizePixel={3}
-				BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-				BorderColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={0}
-				Image={`rbxassetid://12790545456`}
-				ImageTransparency={0.5}
-			>
-				<uiaspectratioconstraint AspectRatio={0.5} />
-				<Corner
-					pos={UDim2.fromScale(0.1, 0.5)}
-					innerSize={UDim2.fromScale(0.6, 0.6)}
-					outSize={UDim2.fromScale(1, 1)}
-					rotation={0}
-				/>
-			</imagelabel>
-			<imagelabel
-				key={"Side Box R"}
-				Size={UDim2.fromScale(0.19, 0.19)}
-				Position={UDim2.fromScale(0.992, 0.86)}
-				AnchorPoint={new Vector2(0.35, 0.5)}
-				BorderSizePixel={3}
-				BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-				BorderColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={0}
-				Image={`rbxassetid://12790545456`}
-				ImageTransparency={0.5}
-			>
-				<uiaspectratioconstraint AspectRatio={0.5} />
-				<Corner
-					pos={UDim2.fromScale(0.9, 0.5)}
-					innerSize={UDim2.fromScale(0.6, 0.6)}
-					outSize={UDim2.fromScale(1, 1)}
-					rotation={0}
-				/>
-			</imagelabel>
 			<imagelabel
 				key={"Level Box"}
 				Size={UDim2.fromScale(0.275, 0.275)}
@@ -167,7 +131,7 @@ export function Hotbar(props: HotbarProps): Element {
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
 				ZIndex={5}
-				Image={`rbxassetid://12790545456`}
+				Image={texture}
 				ImageTransparency={0.5}
 			>
 				<uiaspectratioconstraint AspectRatio={1} />
@@ -179,7 +143,7 @@ export function Hotbar(props: HotbarProps): Element {
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
 					ZIndex={5}
-					Image={`rbxassetid://12790545456`}
+					Image={texture}
 					ImageTransparency={0.5}
 				>
 					<uiaspectratioconstraint AspectRatio={1} />
@@ -200,117 +164,32 @@ export function Hotbar(props: HotbarProps): Element {
 					/>
 				</imagelabel>
 			</imagelabel>
-			<imagelabel
-				key={"Coin Outter Box"}
-				Size={UDim2.fromScale(0.275, 0.2)}
-				Position={UDim2.fromScale(0.2025, -0.07)}
+			<textlabel
+				key={"Coins Text"}
+				Size={UDim2.fromScale(0.25, 0.15)}
+				Position={UDim2.fromScale(0.25, 0)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={5}
-				Image={`rbxassetid://12790545456`}
-				ImageTransparency={0.5}
-			>
-				<uicorner CornerRadius={new UDim(0.15, 0)} />
-				<imagelabel
-					key={"Coin Inner Box"}
-					Size={UDim2.fromScale(0.95, 0.725)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					ZIndex={5}
-					Image={`rbxassetid://12790545456`}
-					ImageTransparency={0.5}
-				>
-					<uicorner CornerRadius={new UDim(0.15, 0)} />
-					<textlabel
-						key={"Coin Text"}
-						Size={UDim2.fromScale(0.85, 0.85)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`Coins: ${coins}`}
-						TextStrokeColor3={new Color3(0, 0, 0)}
-						TextStrokeTransparency={0.5}
-					></textlabel>
-				</imagelabel>
-			</imagelabel>
-			<imagelabel
-				key={"Gems Outter Box"}
-				Size={UDim2.fromScale(0.275, 0.2)}
-				Position={UDim2.fromScale(0.4985, -0.07)}
+				BackgroundTransparency={1}
+				TextColor3={new Color3(1, 1, 1)}
+				TextScaled={true}
+				Font={Enum.Font.GothamMedium}
+				Text={`Coins: ${formatNumber(coins)}`}
+				TextStrokeColor3={new Color3(0, 0, 0)}
+				TextStrokeTransparency={0.5}
+			/>
+			<textlabel
+				key={"Gems Text"}
+				Size={UDim2.fromScale(0.25, 0.15)}
+				Position={UDim2.fromScale(0.75, 0)}
 				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={5}
-				Image={`rbxassetid://12790545456`}
-				ImageTransparency={0.5}
-			>
-				<uicorner CornerRadius={new UDim(0.15, 0)} />
-				<imagelabel
-					key={"Gems inner Box"}
-					Size={UDim2.fromScale(0.95, 0.725)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					ZIndex={5}
-					Image={`rbxassetid://12790545456`}
-					ImageTransparency={0.5}
-				>
-					<uicorner CornerRadius={new UDim(0.15, 0)} />
-					<textlabel
-						key={"Gems Text"}
-						Size={UDim2.fromScale(0.85, 0.85)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`Gems: ${coins}`}
-						TextStrokeColor3={new Color3(0, 0, 0)}
-						TextStrokeTransparency={0.5}
-					></textlabel>
-				</imagelabel>
-			</imagelabel>
-			<imagelabel
-				key={"IDK Outter Box"}
-				Size={UDim2.fromScale(0.275, 0.2)}
-				Position={UDim2.fromScale(0.795, -0.07)}
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={5}
-				Image={`rbxassetid://12790545456`}
-				ImageTransparency={0.5}
-			>
-				<uicorner CornerRadius={new UDim(0.15, 0)} />
-				<imagelabel
-					key={"IDK inner Box"}
-					Size={UDim2.fromScale(0.95, 0.725)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					ZIndex={5}
-					Image={`rbxassetid://12790545456`}
-					ImageTransparency={0.5}
-				>
-					<uicorner CornerRadius={new UDim(0.15, 0)} />
-					<textlabel
-						key={"IDK Text"}
-						Size={UDim2.fromScale(0.85, 0.85)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`IDK`}
-						TextStrokeColor3={new Color3(0, 0, 0)}
-						TextStrokeTransparency={0.5}
-					></textlabel>
-				</imagelabel>
-			</imagelabel>
+				BackgroundTransparency={1}
+				TextColor3={new Color3(1, 1, 1)}
+				TextScaled={true}
+				Font={Enum.Font.GothamMedium}
+				Text={`Gems: ${formatNumber(gems)}`}
+				TextStrokeColor3={new Color3(0, 0, 0)}
+				TextStrokeTransparency={0.5}
+			/>
 			<imagelabel
 				key={"Inventory Button Outter Frame"}
 				Size={UDim2.fromScale(0.2, 0.4)}
@@ -318,7 +197,7 @@ export function Hotbar(props: HotbarProps): Element {
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				BorderSizePixel={0}
 				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				Image={`rbxassetid://12790545456`}
+				Image={texture}
 				ImageTransparency={0.5}
 			>
 				<uicorner CornerRadius={new UDim(0.15, 0)} />
@@ -329,7 +208,7 @@ export function Hotbar(props: HotbarProps): Element {
 					AnchorPoint={new Vector2(0.5, 0.5)}
 					BorderSizePixel={0}
 					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					Image={`rbxassetid://12790545456`}
+					Image={texture}
 					ImageTransparency={0.5}
 					Event={{
 						MouseButton1Click: () => {

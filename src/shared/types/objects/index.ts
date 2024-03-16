@@ -12,7 +12,7 @@ export const isTowerObject = t.strictInterface({
 	cooldown: t.number,
 
 	uuid: t.string,
-	timestamp: t.number,
+	timestamp: t.string,
 
 	level: t.number,
 	cost: t.number,

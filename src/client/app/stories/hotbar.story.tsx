@@ -27,7 +27,7 @@ for (const index of $range(1, 25)) {
 
 const playerProfile = {
 	level: 9,
-	experience: 4565,
+	experience: 50000 / 2,
 	coins: 17457,
 	gems: 436,
 };
