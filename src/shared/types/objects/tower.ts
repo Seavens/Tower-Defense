@@ -2,11 +2,10 @@ import type { TowerId } from "../ids";
 
 export interface TowerObject {
 	id: TowerId;
-
 	owner: number;
 	original: number;
 
-	damage: number;
+	damage: number; // Multiplier
 	range: number;
 	cooldown: number;
 
@@ -14,9 +13,7 @@ export interface TowerObject {
 	timestamp: string;
 
 	level: number;
-
 	cost: number;
-
 	locked: boolean;
 
 	// rank?: number;

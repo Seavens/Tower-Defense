@@ -14,9 +14,9 @@ export interface TowerDefinition<I extends TowerId> {
 	kind?: DamageKind;
 
 	count: number;
-	startCost: number;
+	cost: number;
 
 	rarity: RarityId;
 
-	imageId: RBXAssetId;
+	image: RBXAssetId;
 }

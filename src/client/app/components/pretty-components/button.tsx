@@ -1,14 +1,9 @@
 // Resourced from Littensy: https://github.com/littensy/slither
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-
-import { TowerDefinitions } from "shared/definitions/towers";
 import type { FrameProps } from "./frame";
-import type { TowerObject } from "shared/types/objects";
 
-export interface ButtonProps extends FrameProps<ImageButton> {
-	tower: TowerObject;
+export interface ButtonProps extends FrameProps<TextButton> {
 	active?: boolean | React.Binding<boolean>;
 	onClick?: () => void;
 	onMouseDown?: () => void;
@@ -21,18 +16,17 @@ export function Button(props: ButtonProps): Element {
 	const { onClick, onMouseDown, onMouseEnter, onMouseLeave, onMouseUp } = props;
 
 	const event = {
-		Activated: onClick && (() => onClick()),
-		MouseButton1Down: onMouseDown && (() => onMouseDown()),
-		MouseButton1Up: onMouseUp && (() => onMouseUp()),
-		MouseEnter: onMouseEnter && (() => onMouseEnter()),
-		MouseLeave: onMouseLeave && (() => onMouseLeave()),
+		Activated: onClick && ((): void => onClick()),
+		MouseButton1Down: onMouseDown && ((): void => onMouseDown()),
+		MouseButton1Up: onMouseUp && ((): void => onMouseUp()),
+		MouseEnter: onMouseEnter && ((): void => onMouseEnter()),
+		MouseLeave: onMouseLeave && ((): void => onMouseLeave()),
 		...props.event,
 	};
 
 	return (
-		<imagebutton
+		<textbutton
 			Active={props.active}
-			Image={TowerDefinitions[props.tower.id].imageId}
 			AutoButtonColor={false}
 			Size={props.size}
 			Position={props.position}
@@ -49,6 +43,6 @@ export function Button(props: ButtonProps): Element {
 		>
 			{props.children}
 			{props.cornerRadius && <uicorner CornerRadius={props.cornerRadius} />}
-		</imagebutton>
+		</textbutton>
 	);
 }

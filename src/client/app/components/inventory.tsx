@@ -1,12 +1,7 @@
 import { Corner } from "./pretty-components/corner";
 import { Dictionary } from "@rbxts/sift";
-import { Item } from "./item";
-import { Players } from "@rbxts/services";
 import { TowerDefinitions } from "shared/definitions/towers";
-import { TowerId } from "shared/types/ids";
-import { clientProducer } from "client/state/producer";
-import { number } from "@rbxts/react/src/prop-types";
-import { selectInventoryData, selectProfileData } from "client/state/selectors";
+import { selectInventoryData } from "client/state/selectors";
 import { useSelector } from "@rbxts/react-reflex";
 import { useViewport } from "@rbxts/pretty-react-hooks";
 import React, { Fragment } from "@rbxts/react";
@@ -20,7 +15,7 @@ export function Inventory(props: InventoryData): Element {
 	const viewportSize = useViewport().getValue();
 	const { stored } = useSelector(selectInventoryData);
 	const selectedItem = stored.get("1")!;
-	const assetID = `${TowerDefinitions[selectedItem.id].imageId}`;
+	const assetID = `${TowerDefinitions[selectedItem.id].image}`;
 
 	return (
 		<imagelabel
@@ -123,7 +118,7 @@ export function Inventory(props: InventoryData): Element {
 								{Dictionary.map<Record<string, TowerObject>, string, Element>(
 									stored as never, // This is required because of how `Sift.Dictionary.map` types work.
 									(tower: TowerObject, key: string): Element => {
-										return <Item itemKey={key} tower={tower} />;
+										return <Fragment />;
 									},
 								)}
 							</scrollingframe>

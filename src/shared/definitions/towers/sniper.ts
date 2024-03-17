@@ -11,7 +11,7 @@ export const sniperTower: TowerDefinition<TowerId.Sniper> = {
 	cooldown: [6, 10],
 	kind: undefined,
 	count: 3,
-	startCost: 500,
+	cost: 500,
 	rarity: RarityId.Legendary,
-	imageId: `rbxassetid://12270286289`,
+	image: `rbxassetid://12270286289`,
 };

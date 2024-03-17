@@ -11,7 +11,7 @@ export const meleeTower: TowerDefinition<TowerId.Melee> = {
 	cooldown: [3, 5],
 	kind: undefined,
 	count: 5,
-	startCost: 100,
+	cost: 100,
 	rarity: RarityId.Rare,
-	imageId: `rbxassetid://178007979`,
+	image: `rbxassetid://178007979`,
 };

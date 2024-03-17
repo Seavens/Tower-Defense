@@ -7,5 +7,5 @@ export const epicRarity: RarityDefinition<RarityId.Epic> = {
 	name: "Epic",
 	desc: "An epic rarity.",
 	weight: RARITY_WEIGHTS[RarityId.Epic],
-	colorRGB: [106, 13, 173],
+	color: Color3.fromRGB(106, 13, 173),
 };

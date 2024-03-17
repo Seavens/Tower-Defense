@@ -81,7 +81,8 @@ export function GenerateTowerObject(owner: number): TowerObject {
 		uuid,
 		timestamp: DateTime.now().ToIsoDate(),
 		level: level,
-		cost: TowerDefinitions[id].startCost * (level * LEVEL_TOWER_GROWTH_RATE),
+		// cost: TowerDefinitions[id].cost * (level * LEVEL_TOWER_GROWTH_RATE),
+		cost: TowerDefinitions[id].cost,
 		locked: false,
 	};
 }

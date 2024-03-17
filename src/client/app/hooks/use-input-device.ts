@@ -13,6 +13,7 @@ const getInputType = (inputType = UserInputService.GetLastInputType()): InputDev
 	} else if (inputType === Enum.UserInputType.Touch) {
 		return "touch";
 	}
+	return "keyboard";
 };
 
 /**

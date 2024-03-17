@@ -7,5 +7,5 @@ export const secretRarity: RarityDefinition<RarityId.Secret> = {
 	name: "Secret",
 	desc: "A secret rarity.",
 	weight: RARITY_WEIGHTS[RarityId.Secret],
-	colorRGB: [0, 0, 0],
+	color: Color3.fromRGB(0, 0, 0),
 };

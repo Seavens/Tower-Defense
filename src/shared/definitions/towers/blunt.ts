@@ -11,7 +11,7 @@ export const bluntTower: TowerDefinition<TowerId.Blunt> = {
 	cooldown: [4, 7],
 	kind: undefined,
 	count: 3,
-	startCost: 500,
+	cost: 500,
 	rarity: RarityId.Epic,
-	imageId: `rbxassetid://16672016840`,
+	image: `rbxassetid://16672016840`,
 };

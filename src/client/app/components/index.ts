@@ -1,5 +1,5 @@
 import { Hotbar } from "./hotbar";
 import { Inventory } from "./inventory";
-import { Item } from "./item";
+import { ItemSlot } from "./item-slot";
 
-export { Hotbar, Inventory, Item };
+export { Hotbar, Inventory, ItemSlot };

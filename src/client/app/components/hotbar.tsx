@@ -1,41 +1,32 @@
-import { Corner } from "./pretty-components/corner";
-import { Dictionary } from "@rbxts/sift";
-import { Item } from "./item";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
+import { MAXIMUM_EQUIPPED } from "shared/constants/inventory-constants";
 import { brighten } from "client/app/utils/color-utils";
 import { formatNumber } from "../utils/math-utils";
 import { palette } from "client/app/utils/palette";
-import React, { useMemo, useState } from "@rbxts/react";
+import { selectInventoryData, selectProfileData } from "client/state/selectors";
+import { useSelector } from "@rbxts/react-reflex";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { InventoryData } from "shared/types/data";
-import type { ProfileData } from "shared/types/data";
 
-interface HotbarProps {
-	inventoryData: InventoryData;
-	profileData: ProfileData;
-}
+interface HotbarProps {}
 
 export function Hotbar(props: HotbarProps): Element {
-	const { inventoryData } = props;
-	const { equipped } = inventoryData;
-	const { level, experience, coins, gems } = props.profileData;
-	const maxExp = LevelFunctions.getMaxExp(level);
-	const expSize = experience / maxExp;
+	const { equipped } = useSelector(selectInventoryData);
+	const { coins, experience, gems, level } = useSelector(selectProfileData);
+
+	const max = useMemo((): number => {
+		return LevelFunctions.getMaxExp(level);
+	}, [level]);
+
 	const texture = "rbxassetid://12790545456";
 
-	const itemElements = useMemo(() => {
-		const elements: Array<React.Element> = [];
-
-		for (let i = 1; i <= 6; i = i + 1) {
-			const tower = equipped.get(`${i}`);
-			if (tower !== undefined) {
-				print(i);
-				elements.push(<Item itemKey={`${i}`} tower={tower} />);
-			} else {
-				warn(i);
-				elements.push(<ItemSlot />);
-			}
+	const elements = useMemo(() => {
+		const elements: Array<Element> = [];
+		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+			const slot = `${index}`;
+			const tower = equipped.get(slot);
+			elements.push(<ItemSlot {...tower} />);
 		}
 		return elements;
 	}, [equipped]);
@@ -65,7 +56,7 @@ export function Hotbar(props: HotbarProps): Element {
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					Padding={new UDim(0.005, 0)}
 				/>
-				{itemElements}
+				{elements}
 			</frame>
 			<frame
 				key={"Level Frame"}
@@ -99,7 +90,7 @@ export function Hotbar(props: HotbarProps): Element {
 						<uicorner CornerRadius={new UDim(0.5, 0)} />
 						<frame
 							key={"Level Bar"}
-							Size={UDim2.fromScale(expSize, 1)}
+							Size={UDim2.fromScale(math.min(experience / max, 1), 1)}
 							Position={UDim2.fromScale(0, 0)}
 							AnchorPoint={new Vector2(0, 0)}
 							BorderSizePixel={0}
@@ -118,7 +109,7 @@ export function Hotbar(props: HotbarProps): Element {
 						TextColor3={new Color3(1, 1, 1)}
 						TextScaled={true}
 						Font={Enum.Font.GothamMedium}
-						Text={`${formatNumber(experience)}/${formatNumber(maxExp)}`}
+						Text={`${formatNumber(experience)}/${formatNumber(max)}`}
 						ZIndex={2}
 						TextXAlignment={Enum.TextXAlignment.Left}
 					/>

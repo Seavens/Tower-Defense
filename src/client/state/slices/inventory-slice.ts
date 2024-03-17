@@ -1,4 +1,5 @@
 import { DATA_TEMPLATE } from "shared/types/data";
+import { InventoryImpl } from "shared/modules/inventory-impl";
 import { clear, insert } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import Immut, { produce } from "@rbxts/immut";
@@ -52,13 +53,8 @@ export const inventorySlice = createProducer<InventoryState, InventoryActions<In
 	inventoryEquipItem: (state: InventoryState, payload: InventoryRemoveItem): InventoryState => {
 		const { slot } = payload;
 		return produce(state, (draft: Draft<InventoryState>): InventoryState => {
-			const { data } = draft;
-			const { stored, equipped } = data;
-			const item = stored.get(slot);
-			if (item !== undefined) {
-				stored.delete(slot);
-				equipped.set(slot, item);
-			}
+			const data = InventoryImpl.equipTower(state.data, slot);
+			state.data = data;
 			return draft;
 		});
 	},

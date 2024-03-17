@@ -11,7 +11,7 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	cooldown: [4, 7],
 	kind: undefined,
 	count: 1,
-	startCost: 700,
+	cost: 700,
 	rarity: RarityId.Mythical,
-	imageId: `rbxassetid://16172534401`,
+	image: `rbxassetid://16172534401`,
 };

@@ -16,7 +16,6 @@ export const isTowerObject = t.strictInterface({
 
 	level: t.number,
 	cost: t.number,
-
 	locked: t.boolean,
 });
 

@@ -12,10 +12,9 @@ interface CornerProps {
 export function Corner({ pos, outSize, innerSize, rotation }: CornerProps): Element {
 	return (
 		<imagelabel
-			key={"Inventory Frame Outter Border"}
-			Size={UDim2.fromScale(outSize.X.Scale, outSize.Y.Scale)}
+			Size={outSize}
 			AnchorPoint={new Vector2(0.5, 0.5)}
-			Position={UDim2.fromScale(pos.X.Scale, pos.Y.Scale)}
+			Position={pos}
 			BackgroundColor3={new Color3(0.09, 0.09, 0.09)}
 			Image={`rbxassetid://12790545456`}
 			ImageTransparency={0.5}
@@ -24,8 +23,7 @@ export function Corner({ pos, outSize, innerSize, rotation }: CornerProps): Elem
 		>
 			<uiaspectratioconstraint AspectRatio={1} />
 			<imagelabel
-				key={"Inventory Frame Outter Border"}
-				Size={UDim2.fromScale(innerSize.X.Scale, innerSize.Y.Scale)}
+				Size={innerSize}
 				AnchorPoint={new Vector2(0.5, 0.5)}
 				Position={UDim2.fromScale(0.5, 0.5)}
 				BackgroundColor3={new Color3(0.56, 0.53, 0.33)}

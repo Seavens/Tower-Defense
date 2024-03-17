@@ -6,5 +6,5 @@ export interface RarityDefinition<I extends RarityId> {
 	desc: string;
 
 	weight: number;
-	colorRGB: [number, number, number];
+	color: Color3;
 }

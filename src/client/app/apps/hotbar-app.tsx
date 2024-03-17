@@ -1,14 +1,8 @@
 import { Hotbar } from "../components";
-import { Players } from "@rbxts/services";
-import { selectInventoryData, selectProfileData } from "client/state/selectors";
-import { useSelector } from "@rbxts/react-reflex";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function HotbarApp(): Element {
-	const profileData = useSelector(selectProfileData);
-	const inventoryData = useSelector(selectInventoryData);
-
 	return (
 		<frame
 			key={"Hotbar App Frame"}
@@ -18,7 +12,7 @@ export function HotbarApp(): Element {
 			BackgroundTransparency={1}
 			BorderSizePixel={0}
 		>
-			<Hotbar inventoryData={inventoryData} profileData={profileData} />
+			<Hotbar />
 		</frame>
 	);
 }
