@@ -25,7 +25,7 @@ for (const index of $range(1, 25)) {
 
 const state: DeepPartial<ClientState> = {
 	inventory: { data: { equipped, stored } },
-	profile: { data: { level: 9, experience: 50000 / 2, coins: 17457, gems: 436 } },
+	profile: { data: { level: 10, experience: 50, coins: 17457, gems: 436 } },
 };
 
 function HotbarStory(): Element {

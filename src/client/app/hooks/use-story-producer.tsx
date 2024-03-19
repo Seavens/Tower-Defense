@@ -12,7 +12,7 @@ export function useStoryProducer(state?: DeepPartial<ClientState>): ClientProduc
 				return;
 			}
 			const initial = producer.getState();
-			const combined = Dictionary.mergeDeep(state, initial);
+			const combined = Dictionary.mergeDeep(initial, state);
 			producer.setState(combined);
 		},
 		[state],

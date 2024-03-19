@@ -1,5 +1,5 @@
 import { Frame, Group } from "./pretty-components";
-import { ITEM_SLOT_SIZE } from "../constants/inventory";
+import { ITEM_SLOT_SIZE } from "../constants/UI";
 import { RarityDefinitions } from "shared/definitions/rarities";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { brightness, darken } from "shared/utils/color-utils";
@@ -11,7 +11,6 @@ import type { Element } from "@rbxts/react";
 import type { TowerObject } from "shared/types/objects";
 
 const WHITE_COLOR = new Color3(1, 1, 1);
-const DARK_COLOR = new Color3(0.25, 0.25, 0.25);
 
 export interface ItemSlotProps extends Partial<TowerObject> {
 	onClick?: (uuid: string) => void;
@@ -42,8 +41,8 @@ export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
 			size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
-			backgroundColor={DARK_COLOR}
-			backgroundTransparency={0.5}
+			backgroundColor={color}
+			backgroundTransparency={0.65}
 			clipsDescendants={true}
 			key={"item-slot"}
 		>
@@ -97,16 +96,28 @@ export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
 					backgroundColor={color}
 					key={"lower-color"}
 				>
+					<Frame
+						size={UDim2.fromScale(1, 0.5)}
+						anchorPoint={Vector2.one}
+						position={UDim2.fromScale(1, 0.25)}
+						backgroundColor={color}
+						key={"lower-color-top"}
+						zIndex={1}
+					/>
 					<textlabel
 						Size={UDim2.fromScale(1, 1)}
 						AnchorPoint={Vector2.one}
 						Position={UDim2.fromScale(1, 1)}
 						BackgroundTransparency={1}
 						TextColor3={
-							brightness(color) + 0.5 >= brightness(WHITE_COLOR) ? darken(WHITE_COLOR, 1) : WHITE_COLOR
+							new Color3(1, 1, 1)
+							// brightness(color) + 0.5 >= brightness(WHITE_COLOR) ? darken(WHITE_COLOR, 1) : WHITE_COLOR
 						}
+						TextStrokeTransparency={0.5}
 						Text={definition === undefined ? "" : `$${cost}`}
+						TextSize={px(10)}
 						key={"tower-cost"}
+						Font={Enum.Font.GothamBold}
 					/>
 					<uicorner CornerRadius={new UDim(0, px(5))} key={"lower-corner"} />
 				</Frame>

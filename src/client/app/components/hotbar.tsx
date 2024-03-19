@@ -1,25 +1,29 @@
+import { Frame, Group } from "./pretty-components";
+import { HOTBAR_SIZE } from "../constants/UI";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
 import { MAXIMUM_EQUIPPED } from "shared/constants/inventory-constants";
-import { brighten } from "client/app/utils/color-utils";
+import { darken } from "shared/utils/color-utils";
 import { formatNumber } from "../utils/math-utils";
-import { palette } from "client/app/utils/palette";
+import { palette } from "../utils/palette";
 import { selectInventoryData, selectProfileData } from "client/state/selectors";
+import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
+const ITEMS_PADDING = 5;
+
 interface HotbarProps {}
 
 export function Hotbar(props: HotbarProps): Element {
+	const px = usePx();
 	const { equipped } = useSelector(selectInventoryData);
 	const { coins, experience, gems, level } = useSelector(selectProfileData);
 
 	const max = useMemo((): number => {
 		return LevelFunctions.getMaxExp(level);
 	}, [level]);
-
-	const texture = "rbxassetid://12790545456";
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -32,197 +36,61 @@ export function Hotbar(props: HotbarProps): Element {
 	}, [equipped]);
 
 	return (
-		<frame
-			key={"Hotbar Main Frame"}
-			Size={UDim2.fromOffset(900, 200)}
-			AnchorPoint={new Vector2(0.5, 1)}
-			Position={UDim2.fromScale(0.5, 0.99)}
-			BorderSizePixel={0}
-			Transparency={1}
+		<Group
+			key={"hotbar-group"}
+			size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y))}
+			anchorPoint={new Vector2(0.5, 1)}
+			position={UDim2.fromScale(0.5, 1)}
 		>
-			<frame
-				key={"Equipped Frame"}
-				Size={UDim2.fromScale(1, 0.8)}
-				Position={UDim2.fromScale(0.5, 0)}
-				AnchorPoint={new Vector2(0.5, 0)}
-				BorderSizePixel={0}
-				Transparency={1}
+			<Frame
+				key={"item-group"}
+				size={UDim2.fromOffset(ITEM_SLOT_SIZE)}
+				anchorPoint={new Vector2(0.5, 0.5)}
+				position={UDim2.fromScale(0.5, 0.4)}
+				backgroundTransparency={1}
 			>
 				<uilistlayout
-					key={"Hotbar GridLayout"}
-					SortOrder={Enum.SortOrder.LayoutOrder}
+					key={"item-layout"}
 					FillDirection={Enum.FillDirection.Horizontal}
 					HorizontalAlignment={Enum.HorizontalAlignment.Center}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
-					Padding={new UDim(0.005, 0)}
+					Padding={new UDim(0, px(ITEMS_PADDING))}
 				/>
 				{elements}
-			</frame>
-			<frame
-				key={"Level Frame"}
-				Size={UDim2.fromScale(1, 0.28)}
-				Position={UDim2.fromScale(0.5, 1)}
-				AnchorPoint={new Vector2(0.5, 1)}
-				BorderSizePixel={0}
-				Transparency={1}
+			</Frame>
+			<Frame
+				key={"level-frame"}
+				// size={UDim2.}
+				backgroundColor={darken(palette.purple, 0.75)}
+				cornerRadius={new UDim(0, px(5))}
+				anchorPoint={new Vector2(0.5, 0.5)}
+				position={UDim2.fromScale(0.5, 0.85)}
 			>
-				<frame
-					key={"Level Bar Outline"}
-					Size={UDim2.fromScale(1, 0.55)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BorderSizePixel={0}
-					BackgroundColor3={brighten(palette.purple, -0.5)}
-					ZIndex={0}
+				<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} key={"level-outline"} />
+				<Frame
+					key={"level-bar"}
+					size={UDim2.fromScale(experience / max, 1)}
+					anchorPoint={new Vector2(0, 0.5)}
+					position={UDim2.fromScale(0, 0.5)}
+					backgroundColor={palette.yellow}
+					cornerRadius={new UDim(0, px(5))}
 				>
-					<uicorner CornerRadius={new UDim(0.5, 0)} />
-					<imagelabel
-						key={"Level Bar Inline"}
-						Size={UDim2.fromScale(0.989, 0.7)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BorderSizePixel={0}
-						BackgroundColor3={brighten(palette.purple, -0.5)}
-						Image={texture}
-						ImageTransparency={0.5}
-						ZIndex={1}
-					>
-						<uicorner CornerRadius={new UDim(0.5, 0)} />
-						<frame
-							key={"Level Bar"}
-							Size={UDim2.fromScale(math.min(experience / max, 1), 1)}
-							Position={UDim2.fromScale(0, 0)}
-							AnchorPoint={new Vector2(0, 0)}
-							BorderSizePixel={0}
-							BackgroundColor3={palette.purple}
-							ZIndex={1}
-						>
-							<uicorner CornerRadius={new UDim(0.5, 0)} />
-						</frame>
-					</imagelabel>
-					<textlabel
-						key={"Level Text"}
-						Size={UDim2.fromScale(1, 0.6)}
-						Position={UDim2.fromScale(0.015, 0.5)}
-						AnchorPoint={new Vector2(0, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`${formatNumber(experience)}/${formatNumber(max)}`}
-						ZIndex={2}
-						TextXAlignment={Enum.TextXAlignment.Left}
-					/>
-				</frame>
-			</frame>
-			<imagelabel
-				key={"Level Box"}
-				Size={UDim2.fromScale(0.275, 0.275)}
-				Position={UDim2.fromScale(0.5, 0.86)}
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				ZIndex={5}
-				Image={texture}
-				ImageTransparency={0.5}
-			>
-				<uiaspectratioconstraint AspectRatio={1} />
-				<uicorner CornerRadius={new UDim(0.5, 0)} />
-				<imagelabel
-					key={"Level Box"}
-					Size={UDim2.fromScale(0.85, 0.85)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					ZIndex={5}
-					Image={texture}
-					ImageTransparency={0.5}
-				>
-					<uiaspectratioconstraint AspectRatio={1} />
-					<uicorner CornerRadius={new UDim(0.5, 0)} />
+					<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} key={"level-outline"} />
+				</Frame>
 
-					<textlabel
-						key={"Level Text"}
-						Size={UDim2.fromScale(0.85, 0.85)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`${level}`}
-						TextStrokeColor3={new Color3(0, 0, 0)}
-						TextStrokeTransparency={0.5}
-					/>
-				</imagelabel>
-			</imagelabel>
-			<textlabel
-				key={"Coins Text"}
-				Size={UDim2.fromScale(0.25, 0.15)}
-				Position={UDim2.fromScale(0.25, 0)}
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundTransparency={1}
-				TextColor3={new Color3(1, 1, 1)}
-				TextScaled={true}
-				Font={Enum.Font.GothamMedium}
-				Text={`Coins: ${formatNumber(coins)}`}
-				TextStrokeColor3={new Color3(0, 0, 0)}
-				TextStrokeTransparency={0.5}
-			/>
-			<textlabel
-				key={"Gems Text"}
-				Size={UDim2.fromScale(0.25, 0.15)}
-				Position={UDim2.fromScale(0.75, 0)}
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				BackgroundTransparency={1}
-				TextColor3={new Color3(1, 1, 1)}
-				TextScaled={true}
-				Font={Enum.Font.GothamMedium}
-				Text={`Gems: ${formatNumber(gems)}`}
-				TextStrokeColor3={new Color3(0, 0, 0)}
-				TextStrokeTransparency={0.5}
-			/>
-			<imagelabel
-				key={"Inventory Button Outter Frame"}
-				Size={UDim2.fromScale(0.2, 0.4)}
-				Position={UDim2.fromScale(1.125, 0.4)}
-				AnchorPoint={new Vector2(0.5, 0.5)}
-				BorderSizePixel={0}
-				BackgroundColor3={new Color3(0.18, 0.18, 0.18)}
-				Image={texture}
-				ImageTransparency={0.5}
-			>
-				<uicorner CornerRadius={new UDim(0.15, 0)} />
-				<imagebutton
-					key={"Inventory Button Inner Frame"}
-					Size={UDim2.fromScale(0.9, 0.8)}
-					Position={UDim2.fromScale(0.5, 0.5)}
-					AnchorPoint={new Vector2(0.5, 0.5)}
-					BorderSizePixel={0}
-					BackgroundColor3={new Color3(0.49, 0.49, 0.49)}
-					Image={texture}
-					ImageTransparency={0.5}
-					Event={{
-						MouseButton1Click: () => {
-							warn("Inventory Button Clicked");
-						},
-					}}
-				>
-					<uicorner CornerRadius={new UDim(0.15, 0)} />
-					<textlabel
-						key={"Inventory Button Text"}
-						Size={UDim2.fromScale(0.85, 0.85)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						AnchorPoint={new Vector2(0.5, 0.5)}
-						BackgroundTransparency={1}
-						TextColor3={new Color3(1, 1, 1)}
-						TextScaled={true}
-						Font={Enum.Font.GothamMedium}
-						Text={`Inventory`}
-						TextStrokeColor3={new Color3(0, 0, 0)}
-						TextStrokeTransparency={0.5}
-					/>
-				</imagebutton>
-			</imagelabel>
-		</frame>
+				<textlabel
+					key="Level progress	text"
+					Size={UDim2.fromScale(0.5, 1)}
+					AnchorPoint={new Vector2(0, 0.5)}
+					Position={new UDim2(0, px(5), 0.5, 0)}
+					BackgroundTransparency={1}
+					TextColor3={palette.white}
+					Text={`${formatNumber(experience)}/${formatNumber(max)}`}
+					TextSize={px(12)}
+					Font={Enum.Font.GothamMedium}
+					TextXAlignment={Enum.TextXAlignment.Left}
+				/>
+			</Frame>
+		</Group>
 	);
 }
