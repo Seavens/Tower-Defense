@@ -1,6 +1,6 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { GenerateTowerObject } from "shared/functions/tower-functions";
-import { ItemSlot } from "../components/item-slot";
+import { ItemSlot } from "../components/inventory/item-slot";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 

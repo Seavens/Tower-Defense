@@ -1,16 +1,16 @@
-import { Frame, Group } from "./pretty-components";
-import { ITEM_SLOT_SIZE } from "../constants/UI";
+import { Frame, Group } from "../pretty-components";
+import { ITEM_SLOT_SIZE } from "../../constants/inventory-ui";
 import { RarityDefinitions } from "shared/definitions/rarities";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { brightness, darken } from "shared/utils/color-utils";
-import { usePx } from "../hooks";
+import { fonts } from "client/app/constants/fonts";
+import { palette } from "client/app/utils/palette";
+import { usePx } from "../../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { AnyRarityDefinition } from "shared/definitions/rarities";
 import type { AnyTowerDefinition } from "shared/definitions/towers";
 import type { Element } from "@rbxts/react";
 import type { TowerObject } from "shared/types/objects";
-
-const WHITE_COLOR = new Color3(1, 1, 1);
 
 export interface ItemSlotProps extends Partial<TowerObject> {
 	onClick?: (uuid: string) => void;
@@ -34,7 +34,7 @@ export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
 	}, [definition]);
 
 	const cost = definition?.cost ?? 0;
-	const color = rarity?.color ?? WHITE_COLOR;
+	const color = rarity?.color ?? palette.white;
 
 	return (
 		<Frame
@@ -109,21 +109,26 @@ export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
 						AnchorPoint={Vector2.one}
 						Position={UDim2.fromScale(1, 1)}
 						BackgroundTransparency={1}
-						TextColor3={
-							new Color3(1, 1, 1)
-							// brightness(color) + 0.5 >= brightness(WHITE_COLOR) ? darken(WHITE_COLOR, 1) : WHITE_COLOR
-						}
-						TextStrokeTransparency={0.5}
+						TextColor3={brightness(color) >= 0.235 ? palette.white : palette.black}
 						Text={definition === undefined ? "" : `$${cost}`}
 						TextSize={px(10)}
+						FontFace={fonts.inter.bold}
 						key={"tower-cost"}
-						Font={Enum.Font.GothamBold}
-					/>
+					>
+						<uistroke
+							LineJoinMode={Enum.LineJoinMode.Round}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Contextual}
+							Color={brightness(color) < 0.235 ? palette.white : palette.black}
+							Transparency={0.25}
+							Thickness={2}
+							key={"text-stroke"}
+						/>
+					</textlabel>
 					<uicorner CornerRadius={new UDim(0, px(5))} key={"lower-corner"} />
 				</Frame>
 			</Group>
 			<uistroke
-				Color={WHITE_COLOR}
+				Color={palette.white}
 				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 				Thickness={1}
 				key={"slot-outline"}

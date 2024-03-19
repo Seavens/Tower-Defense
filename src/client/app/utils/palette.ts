@@ -1,6 +1,7 @@
 export const palette = {
 	white: Color3.fromRGB(255, 255, 255),
 	black: Color3.fromRGB(0, 0, 0),
+	gray: Color3.fromRGB(25, 25, 25),
 	blue: Color3.fromRGB(56, 67, 214),
 	purple: Color3.fromRGB(122, 57, 202),
 	red: Color3.fromRGB(218, 56, 84),

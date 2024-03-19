@@ -1,6 +1,7 @@
-import { Corner } from "./pretty-components/corner";
+import { Corner } from "../pretty-components/corner";
 import { Dictionary } from "@rbxts/sift";
 import { TowerDefinitions } from "shared/definitions/towers";
+import { fonts } from "client/app/constants/fonts";
 import { selectInventoryData } from "client/state/selectors";
 import { useSelector } from "@rbxts/react-reflex";
 import { useViewport } from "@rbxts/pretty-react-hooks";
@@ -239,7 +240,7 @@ export function Inventory(props: InventoryData): Element {
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
 									BackgroundTransparency={1}
-									Font={Enum.Font.GothamMedium}
+									FontFace={fonts.inter.bold}
 									TextScaled={true}
 								/>
 							</imagelabel>
@@ -262,7 +263,7 @@ export function Inventory(props: InventoryData): Element {
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
 									BackgroundTransparency={1}
-									Font={Enum.Font.GothamMedium}
+									FontFace={fonts.inter.bold}
 									TextScaled={true}
 								/>
 							</imagelabel>
@@ -285,7 +286,7 @@ export function Inventory(props: InventoryData): Element {
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
 									BackgroundTransparency={1}
-									Font={Enum.Font.GothamMedium}
+									FontFace={fonts.inter.bold}
 									TextScaled={true}
 								/>
 							</imagelabel>
@@ -308,7 +309,7 @@ export function Inventory(props: InventoryData): Element {
 									TextStrokeColor3={new Color3(0, 0, 0)}
 									TextStrokeTransparency={0}
 									BackgroundTransparency={1}
-									Font={Enum.Font.GothamMedium}
+									FontFace={fonts.inter.bold}
 									TextScaled={true}
 								/>
 							</imagelabel>
