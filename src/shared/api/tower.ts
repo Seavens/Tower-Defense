@@ -6,21 +6,9 @@ import type { TowerObject } from "shared/types/objects";
 export abstract class Tower {
 	protected placed = false;
 	protected bin = new Bin();
-	private towerData: TowerObject;
-	private towerDef: TowerDefinition<TowerId>;
 
 	public constructor(towerObj: TowerObject) {
-		this.towerData = towerObj;
-		this.towerDef = TowerDefinitions[towerObj.id];
 		this.placed = true;
-	}
-
-	public getTowerData(): TowerObject {
-		return this.towerData;
-	}
-
-	public getTowerDef(): TowerDefinition<TowerId> {
-		return this.towerDef;
 	}
 
 	public destory(): void {
