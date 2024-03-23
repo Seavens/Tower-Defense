@@ -10,13 +10,14 @@ import React, { useMemo } from "@rbxts/react";
 import type { AnyRarityDefinition } from "shared/definitions/rarities";
 import type { AnyTowerDefinition } from "shared/definitions/towers";
 import type { Element } from "@rbxts/react";
+import type { TowerId } from "shared/types/ids";
 import type { TowerObject } from "shared/types/objects";
 
 export interface ItemSlotProps extends Partial<TowerObject> {
-	onClick?: (uuid: string) => void;
+	onClick?: (id: TowerId) => void;
 }
 
-export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
+export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
 	const definition = useMemo((): AnyTowerDefinition | undefined => {
@@ -70,10 +71,10 @@ export function ItemSlot({ id, uuid, onClick }: ItemSlotProps): Element {
 						ScaleType={Enum.ScaleType.Fit}
 						Event={{
 							MouseButton1Click: (): void => {
-								if (uuid === undefined) {
+								if (id === undefined) {
 									return;
 								}
-								onClick?.(uuid);
+								onClick?.(id);
 							},
 						}}
 						key={"slot-image"}

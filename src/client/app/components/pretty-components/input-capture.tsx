@@ -1,10 +1,9 @@
 // Resourced from Littensy: https://github.com/littensy/slither
+import { Group } from "./group";
 import { IS_EDIT } from "shared/constants/core-constants";
 import { UserInputService } from "@rbxts/services";
 import { useEventListener } from "@rbxts/pretty-react-hooks";
 import React, { useState } from "@rbxts/react";
-
-import { Group } from "./group";
 
 interface InputCaptureProps {
 	readonly onInputBegan?: (rbx: Frame, input: InputObject) => void;
@@ -25,23 +24,23 @@ export function InputCapture({
 }: InputCaptureProps): JSX.Element {
 	const [frame, frameRef] = useState<Frame>();
 
-	useEventListener(UserInputService.InputBegan, (input, gameProcessed) => {
-		if (frame && !IS_EDIT && !gameProcessed) {
-			onInputBegan?.(frame, input);
-		}
-	});
+	// useEventListener(UserInputService.InputBegan, (input, gameProcessed) => {
+	// 	if (frame && !IS_EDIT && !gameProcessed) {
+	// 		onInputBegan?.(frame, input);
+	// 	}
+	// });
 
-	useEventListener(UserInputService.InputEnded, (input) => {
-		if (frame && !IS_EDIT) {
-			onInputEnded?.(frame, input);
-		}
-	});
+	// useEventListener(UserInputService.InputEnded, (input) => {
+	// 	if (frame && !IS_EDIT) {
+	// 		onInputEnded?.(frame, input);
+	// 	}
+	// });
 
-	useEventListener(UserInputService.InputChanged, (input) => {
-		if (frame && !IS_EDIT) {
-			onInputChanged?.(frame, input);
-		}
-	});
+	// useEventListener(UserInputService.InputChanged, (input) => {
+	// 	if (frame && !IS_EDIT) {
+	// 		onInputChanged?.(frame, input);
+	// 	}
+	// });
 
 	return (
 		<Group

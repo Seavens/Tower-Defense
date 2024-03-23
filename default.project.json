@@ -32,6 +32,18 @@
 			},
 			"source": {
 				"$path": "out/shared"
+			},
+			"assets": {
+				"$className": "Folder",
+				"$ignoreUnknownInstances": true,
+				"towers": {
+					"$className": "Folder",
+					"$ignoreUnknownInstances": true
+				},
+				"mobs": {
+					"$className": "Folder",
+					"$ignoreUnknownInstances": true
+				}
 			}
 		},
 		"ServerStorage": {
@@ -56,6 +68,14 @@
 				"FilteringEnabled": true
 			},
 			"characters": {
+				"$className": "Folder",
+				"$ignoreUnknownInstances": true
+			},
+			"debris": {
+				"$className": "Folder",
+				"$ignoreUnknownInstances": true
+			},
+			"placed": {
 				"$className": "Folder",
 				"$ignoreUnknownInstances": true
 			}

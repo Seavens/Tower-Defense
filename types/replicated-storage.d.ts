@@ -4,5 +4,6 @@ interface ReplicatedStorage {
 	};
 	assets: Folder & {
 		mobs: Folder;
+		towers: Folder;
 	};
 }

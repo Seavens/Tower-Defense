@@ -6,7 +6,7 @@ interface Workspace {
 
 		spawnLocation: SpawnLocation;
 	};
-
 	mobs: Folder;
-	towers: Folder;
+	placed: Folder;
+	debris: Folder;
 }

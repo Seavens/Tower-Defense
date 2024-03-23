@@ -1,7 +1,7 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
 import type { DamageKind } from "./types/kinds";
-import type { StatusId } from "./types/ids";
+import type { StatusId, TowerId } from "./types/ids";
 
 interface ClientToServerEvents {
 	replicateReady(): void;
@@ -22,6 +22,8 @@ interface ServerToClientEvents {
 	replicateMobStatusRemoved(index: number, status: StatusId): void;
 
 	replicateIndexReset(index: number): void;
+
+	replicateTowerPlacement(id: TowerId, position: Vector3, owner: string): void;
 }
 
 interface ClientToServerFunctions {

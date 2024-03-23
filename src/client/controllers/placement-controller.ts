@@ -8,11 +8,12 @@ import { setCollision } from "shared/functions/set-collision";
 import type { OnStart, OnTick } from "@flamework/core";
 
 const { assets } = ReplicatedStorage;
-const { towers } = Workspace;
+const { towers } = assets;
+const { placed, debris, characters, mobs } = Workspace;
 const camera = Workspace.CurrentCamera;
 
 const params = new RaycastParams();
-params.AddToFilter(towers);
+params.AddToFilter([placed, debris, characters, mobs]);
 params.FilterType = Enum.RaycastFilterType.Exclude;
 
 type PlacementCallback = (placing: string, asset: Model) => void;
@@ -37,12 +38,13 @@ export class PlacementController implements OnStart, OnTick {
 	}
 
 	public getAsset(name: string): Option<Model> {
-		const asset = assets.FindFirstChild(name);
+		const asset = towers.FindFirstChild(name);
 		if (asset === undefined || !asset.IsA("Model")) {
 			return undefined;
 		}
 		const cloned = asset.Clone();
-		cloned.Parent = towers;
+		// !! Ghostify here.👻
+		cloned.Parent = debris;
 		setCollision(cloned, Collision.Tower, true);
 		return cloned;
 	}
@@ -97,10 +99,18 @@ export class PlacementController implements OnStart, OnTick {
 				return;
 			}
 			const inputType = input.UserInputType;
+			const inputState = input.UserInputState;
 			const { placing, prefab } = this;
-			if (prefab === undefined || placing === undefined || inputType !== Enum.UserInputType.MouseButton1) {
+			if (
+				prefab === undefined ||
+				placing === undefined ||
+				// !! Fuck mobile.
+				inputType !== Enum.UserInputType.MouseButton1 ||
+				inputState !== Enum.UserInputState.Begin
+			) {
 				return;
 			}
+			// check that current {cframe/raycast hit instance} is placable
 			const { listeners } = PlacementController;
 			for (const listener of listeners) {
 				reuseThread((): void => listener(placing, prefab));

@@ -19,7 +19,7 @@ export namespace InventoryImpl {
 
 	export function equipTower(state: Draft<InventoryData>, slot: string): InventoryData {
 		if (!isDraft(state)) {
-			return original(state);
+			return state;
 		}
 		const { equipped, stored } = state;
 		const tower = stored.get(slot);

@@ -1,5 +1,6 @@
 import { DATA_TEMPLATE } from "shared/types/data";
 import { InventoryImpl } from "shared/modules/inventory-impl";
+import { Workspace } from "@rbxts/services";
 import { clear, insert } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import Immut, { produce } from "@rbxts/immut";
