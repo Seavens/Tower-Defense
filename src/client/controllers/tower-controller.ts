@@ -1,6 +1,7 @@
 import { Controller } from "@flamework/core";
-import { Events } from "client/network";
+import { Events, Functions } from "client/network";
 import { PlacementController } from "./placement-controller";
+import { Tower } from "client/classes/tower";
 import { Workspace } from "@rbxts/services";
 import { clientProducer } from "client/state/producer";
 import { selectInventoryData, selectPlacementState } from "client/state/selectors";
@@ -12,7 +13,7 @@ const { placed } = Workspace;
 @Controller({})
 export class TowerController implements OnStart {
 	public onStart(): void {
-		PlacementController.onPlaced((placing: string, asset: Model): void => {
+		PlacementController.onPlaced(async (placing: string, asset: Model): Promise<void> => {
 			const { slot } = clientProducer.getState(selectPlacementState);
 			if (slot === undefined) {
 				return;
@@ -22,14 +23,19 @@ export class TowerController implements OnStart {
 			if (tower === undefined) {
 				return;
 			}
+			const { id, uuid } = tower;
 			const cframe = asset.GetPivot();
 			// !! Raycast downward to confirm valid placement location
 			// ...
 			// !! Replicate tower placement
 			// !! Below may be unnecessary if the tower class handles models
 			// !! its self (recommended).
-			const model = asset.Clone();
-			model.Parent = placed;
+			Functions.requestPlaceTower(id, cframe).then((success: boolean): void => {
+				if (!success) {
+					return;
+				}
+				new Tower(id, uuid, cframe);
+			});
 			//
 			clientProducer.endPlacement({});
 		});

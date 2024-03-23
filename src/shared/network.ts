@@ -28,6 +28,8 @@ interface ServerToClientEvents {
 
 interface ClientToServerFunctions {
 	requestResetCharacter(): void;
+	// !! I recommend against using `CFrame` since it takes up a lot of data.
+	requestPlaceTower(id: TowerId, cframe: CFrame): boolean;
 }
 
 interface ServerToClientFunctions {}

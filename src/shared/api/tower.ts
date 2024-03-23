@@ -1,21 +1,22 @@
-import type { Draft } from "@rbxts/immut/src/types-external";
+import type { TowerId } from "shared/types/ids";
 import type { TowerObject } from "shared/types/objects";
+
+export type TowerStats = Omit<TowerObject, "id" | "owner" | "original" | "uuid" | "timestamp" | "locked">;
+
 export abstract class Tower {
-	public constructor(towerObj: TowerObject) {}
+	public readonly id: TowerId;
+	public readonly cframe: CFrame;
+	public readonly uuid: string;
 
-	public attack(): void {
-		// Attack logic
+	// !! Temporarily set `stats` to be `stats?`
+	public constructor(id: TowerId, uuid: string, cframe: CFrame, stats?: TowerStats) {
+		this.id = id;
+		this.cframe = cframe;
+		this.uuid = uuid;
 	}
 
-	public targeting(): void {
-		// Targeting logic
-	}
-
-	public sell(): void {
-		// Sell logic
-	}
-
-	public upgrade(): void {
-		// Upgrade logic
-	}
+	public abstract attack(): void;
+	public abstract targeting(): void;
+	public abstract sell(): void;
+	public abstract upgrade(): void;
 }
