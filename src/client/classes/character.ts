@@ -2,7 +2,6 @@ import { Character as API } from "shared/api/character";
 import { Animator } from "shared/classes/animator";
 import { CHARACTER_ANIMATIONS } from "shared/constants/character-constants";
 import { EntityUtility } from "shared/modules/entity-utility";
-import { Option } from "@rbxts/rust-classes";
 import { Players } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
 import { isAnimationId } from "shared/types/ids";
@@ -43,7 +42,7 @@ export class Character extends API {
 	public static getCharacter(user: string): Option<Character> {
 		const { characters } = this;
 		const character = characters.get(user);
-		return Option.wrap(character);
+		return character;
 	}
 
 	public static localCharacter(): Option<Character> {
@@ -54,7 +53,7 @@ export class Character extends API {
 
 	public getAnimator(): Option<Animator<AnimationId>> {
 		const { animator } = this;
-		return Option.wrap(animator);
+		return animator;
 	}
 
 	public destroy(): void {

@@ -2,7 +2,6 @@ import { Character as API } from "shared/api/character";
 import { Animator } from "shared/classes/animator";
 import { CHARACTER_ANIMATIONS } from "shared/constants/character-constants";
 import { Events } from "server/network";
-import { Option } from "@rbxts/rust-classes";
 import { Signal } from "@rbxts/beacon";
 import { isAnimationId } from "shared/types/ids";
 import type { AnimationId } from "shared/types/ids";
@@ -46,12 +45,12 @@ export class Character extends API {
 	public static getCharacter(user: string): Option<Character> {
 		const { characters } = this;
 		const character = characters.get(user);
-		return Option.wrap(character);
+		return character;
 	}
 
 	public getAnimator(): Option<Animator<AnimationId>> {
 		const { animator: characterAnimator } = this;
-		return Option.wrap(characterAnimator);
+		return characterAnimator;
 	}
 
 	public setHealth(health: number, max?: number): void {
@@ -88,7 +87,6 @@ export class Character extends API {
 
 	public teleportTo(cframe: CFrame): void {
 		const { instance } = this;
-		// Some other behavior maybe?
 		instance.PivotTo(cframe);
 	}
 

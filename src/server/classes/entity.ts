@@ -2,7 +2,6 @@ import { Entity as API } from "shared/api/entity";
 import { Character } from "./character";
 import { DATA_TEMPLATE, type Data } from "shared/types/data";
 import { DataService } from "server/services/data-service";
-import { Option } from "@rbxts/rust-classes";
 import { Signal } from "@rbxts/beacon";
 import { selectData } from "server/state/selectors";
 import { serverProducer } from "server/state/producer";
@@ -76,7 +75,7 @@ export class Entity extends API<Character> {
 	public static getEntity(user: string): Option<Entity> {
 		const { entities } = this;
 		const entity = entities.get(user);
-		return Option.wrap(entity);
+		return entity;
 	}
 
 	public getData(): Promise<Data | void> {

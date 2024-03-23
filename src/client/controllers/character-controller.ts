@@ -30,18 +30,17 @@ export class CharacterController implements OnStart {
 
 	public onStart(): void {
 		Events.replicateCharacterAdded.connect((user: string, rig: Model): void => {
-			const option = Character.getCharacter(user);
-			if (option.isSome()) {
+			const character = Character.getCharacter(user);
+			if (character === undefined) {
 				return;
 			}
 			new Character(user, rig);
 		});
 		Events.replicateCharacterRemoved.connect((user: string): void => {
-			const option = Character.getCharacter(user);
-			if (option.isNone()) {
+			const character = Character.getCharacter(user);
+			if (character === undefined) {
 				return;
 			}
-			const character = option.unwrap();
 			character.destroy();
 		});
 		Character.onCharacterAdded.Connect((entity: Character): void => this.onCharacterAdded(entity));

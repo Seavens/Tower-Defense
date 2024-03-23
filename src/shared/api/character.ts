@@ -7,7 +7,6 @@ import { Collision, isBaseAnimation } from "shared/types/enums";
 import { Players, RunService, Workspace } from "@rbxts/services";
 import { setCollision } from "shared/functions/set-collision";
 import type { AnimationId } from "shared/types/ids";
-import type { Option } from "@rbxts/rust-classes";
 
 const { characters } = Workspace;
 

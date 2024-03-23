@@ -1,6 +1,5 @@
 import { Mob as API } from "shared/api/mob";
 import { MobUtility } from "shared/modules/mob-utility";
-import { Option } from "@rbxts/rust-classes";
 import { RunService, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
 import { reuseThread } from "shared/functions/reuse-thread";
@@ -59,7 +58,7 @@ export class Mob extends API {
 	public static getMob(index: number): Option<Mob> {
 		const { mobs } = this;
 		const mob = mobs.get(index);
-		return Option.wrap(mob);
+		return mob;
 	}
 
 	public static getMobCount(): number {

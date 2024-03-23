@@ -2,7 +2,6 @@ import { Entity as API } from "shared/api/entity";
 import { Bin } from "@rbxts/bin";
 import { Character } from "client/classes/character";
 import { EntityUtility } from "shared/modules/entity-utility";
-import { Option } from "@rbxts/rust-classes";
 import { Players, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
 import { clientProducer } from "client/state/producer";
@@ -70,7 +69,7 @@ export class Entity extends API<Character> {
 	public static getEntity(user: string): Option<Entity> {
 		const { entities } = this;
 		const entity = entities.get(user);
-		return Option.wrap(entity);
+		return entity;
 	}
 
 	public getData(): Data {

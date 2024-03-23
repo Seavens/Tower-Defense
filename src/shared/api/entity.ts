@@ -1,5 +1,4 @@
 import { Bin } from "@rbxts/bin";
-import { Option } from "@rbxts/rust-classes";
 import type { Character } from "./character";
 import type { Data } from "shared/types/data";
 
@@ -22,7 +21,7 @@ export abstract class Entity<T extends Character = Character> {
 
 	public getCharacter(): Option<T> {
 		const { character } = this;
-		return Option.wrap(character);
+		return character;
 	}
 
 	public getBin(): Bin {

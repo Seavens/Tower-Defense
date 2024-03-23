@@ -1,5 +1,5 @@
 import { combineProducers } from "@rbxts/reflex";
-import { inventorySlice } from "./slices";
+import { inventorySlice, placementSlice } from "./slices";
 import { profileSlice } from "./slices/player-slice";
 import { receiverMiddleware } from "./middleware";
 import { sharedSlices } from "shared/state/slices";
@@ -13,6 +13,7 @@ export type ClientActions = InferActions<ClientProducer>;
 export const clientSlices = {
 	profile: profileSlice,
 	inventory: inventorySlice,
+	placement: placementSlice,
 };
 export const combinedSlices = {
 	...clientSlices,

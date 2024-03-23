@@ -60,11 +60,10 @@ export class PlayerController implements OnStart {
 
 	public onPlayerRemoved(player: Player): void {
 		const user = EntityUtility.getUser(player);
-		const option = Entity.getEntity(user);
-		if (option.isNone()) {
+		const entity = Entity.getEntity(user);
+		if (entity === undefined) {
 			return;
 		}
-		const entity = option.unwrap();
 		entity.destroy();
 		playerRemoving.fire(entity);
 	}

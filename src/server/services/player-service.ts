@@ -34,11 +34,10 @@ export class PlayerService implements OnStart {
 	public onPlayerRemoved(player: Player): Promise<unknown> {
 		const { removing, loaded } = this;
 		const user = Entity.getUser(player);
-		const option = Entity.getEntity(user);
-		if (option.isNone()) {
+		const entity = Entity.getEntity(user);
+		if (entity === undefined) {
 			return Promise.resolve();
 		}
-		const entity = option.unwrap();
 		const promises = playerRemoving.fire(entity);
 		const promise = Promise.all(promises).finally((): void => {
 			removing.delete(entity);
@@ -52,11 +51,10 @@ export class PlayerService implements OnStart {
 	public onPlayerReady(player: Player): void {
 		const { loaded } = this;
 		const user = Entity.getUser(player);
-		const option = Entity.getEntity(user);
-		if (option.isNone()) {
+		const entity = Entity.getEntity(user);
+		if (entity === undefined) {
 			return;
 		}
-		const entity = option.unwrap();
 		if (loaded.has(entity)) {
 			return;
 		}

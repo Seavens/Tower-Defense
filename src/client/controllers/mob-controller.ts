@@ -58,39 +58,35 @@ export class MobController implements OnStart {
 		Events.replicateMobDamage.connect((data: Vector2int16, kind: DamageKind): void => {
 			const index = data.X;
 			const damage = data.Y;
-			const option = Mob.getMob(index);
-			if (option.isNone()) {
+			const mob = Mob.getMob(index);
+			if (mob === undefined) {
 				return;
 			}
-			const mob = option.unwrap();
 			mob.takeDamage(damage, kind);
 		});
 		Events.replicateMobDeath.connect((index: number): void => {
-			const option = Mob.getMob(index);
-			if (option.isNone()) {
+			const mob = Mob.getMob(index);
+			if (mob === undefined) {
 				return;
 			}
-			const mob = option.unwrap();
 			mob.forceKill();
 		});
 		Events.replicateMobStatusAdded.connect((data: Vector2int16, status: StatusId, timestamp: number): void => {
 			const index = data.X;
 			const duration = data.Y;
-			const option = Mob.getMob(index);
-			if (option.isNone()) {
+			const mob = Mob.getMob(index);
+			if (mob === undefined) {
 				return;
 			}
 			const now = Workspace.GetServerTimeNow();
 			const delta = now - timestamp;
-			const mob = option.unwrap();
 			mob.applyStatus(status, duration - delta);
 		});
 		Events.replicateMobStatusRemoved.connect((index: number, status: StatusId): void => {
-			const option = Mob.getMob(index);
-			if (option.isNone()) {
+			const mob = Mob.getMob(index);
+			if (mob === undefined) {
 				return;
 			}
-			const mob = option.unwrap();
 			mob.removeStatus(status);
 		});
 		if (mobUnreliable === undefined || !mobUnreliable.IsA("UnreliableRemoteEvent")) {
@@ -105,11 +101,10 @@ export class MobController implements OnStart {
 			const current = first.Y;
 			const target = second.X;
 			const alpha = second.Y / 1000;
-			const option = Mob.getMob(index);
-			if (option.isNone()) {
+			const mob = Mob.getMob(index);
+			if (mob === undefined) {
 				return;
 			}
-			const mob = option.unwrap();
 		});
 	}
 }

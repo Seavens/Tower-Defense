@@ -1,5 +1,4 @@
 import { Bin } from "@rbxts/bin";
-import { Option } from "@rbxts/rust-classes";
 import type { t } from "@rbxts/t";
 
 type RobloxAnimator = Instances["Animator"];
@@ -41,7 +40,7 @@ export class Animator<T extends string> {
 	public getAnimation(id: T): Option<AnimationTrack> {
 		const { loaded } = this;
 		const track = loaded.get(id);
-		return Option.wrap(track);
+		return track;
 	}
 
 	public isPlaying(id: T): boolean {

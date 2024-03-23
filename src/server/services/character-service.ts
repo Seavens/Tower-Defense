@@ -40,11 +40,10 @@ export class CharacterService implements OnStart, OnPlayerAdded {
 	public onCharacterDied(character: Character): void {
 		characterDied.fire(character);
 		const { user } = character;
-		const option = Entity.getEntity(user);
-		if (option.isNone()) {
+		const entity = Entity.getEntity(user);
+		if (entity === undefined) {
 			return;
 		}
-		const entity = option.unwrap();
 		task.delay(CHARACTER_RESPAWN_WAIT, (): void => {
 			if (!entity.isRespawnable() || !entity.canRespawn()) {
 				character.destroy();
