@@ -1,10 +1,10 @@
 export const enum Tag {
 	// Locations
-	SpawnLocation = "tag:spawn_location",
-	Placeable = "tag:placeable",
+	SpawnLocation = "tag_id:spawn_location",
+	Placeable = "tag_id:placeable",
 
 	// Entities
-	Character = "tag:character",
-	Mob = "tag:mob",
-	Tower = "tag:tower",
+	Character = "tag_id:character",
+	Mob = "tag_id:mob",
+	Tower = "tag_id:tower",
 }

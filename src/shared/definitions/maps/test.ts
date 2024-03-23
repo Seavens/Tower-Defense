@@ -21,5 +21,5 @@ export const testMap: MapDefinition<MapId.Test> = {
 			[MobId.Zombie]: { count: 160, delay: 5, wait: 0.3 },
 		},
 	],
-	baseHealth: 100,
+	baseHealth: math.huge,
 };

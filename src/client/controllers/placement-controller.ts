@@ -2,8 +2,8 @@ import { Collision } from "shared/types/enums";
 import { Controller } from "@flamework/core";
 import { ReplicatedStorage, UserInputService, Workspace } from "@rbxts/services";
 import { clientProducer } from "client/state/producer";
+import { isPlacing, selectPlacing } from "client/state/selectors";
 import { reuseThread } from "shared/functions/reuse-thread";
-import { selectPlacing } from "client/state/selectors";
 import { setCollision } from "shared/functions/set-collision";
 import type { OnStart, OnTick } from "@flamework/core";
 
@@ -37,16 +37,27 @@ export class PlacementController implements OnStart, OnTick {
 		return placing !== undefined;
 	}
 
-	public getAsset(name: string): Option<Model> {
+	public getAsset(name: string, ghostify?: boolean): Option<Model> {
 		const asset = towers.FindFirstChild(name);
 		if (asset === undefined || !asset.IsA("Model")) {
 			return undefined;
 		}
 		const cloned = asset.Clone();
-		// !! Ghostify here.👻
+		if (ghostify === true) {
+			this.ghostify(cloned);
+		}
 		cloned.Parent = debris;
 		setCollision(cloned, Collision.Tower, true);
 		return cloned;
+	}
+
+	public ghostify(asset: Model): void {
+		for (const instance of asset.GetDescendants()) {
+			if (instance.IsA("BasePart")) {
+				instance.Material = Enum.Material.ForceField;
+				instance.BrickColor = new BrickColor("Lime green");
+			}
+		}
 	}
 
 	public getCFrame(): CFrame {
@@ -69,6 +80,7 @@ export class PlacementController implements OnStart, OnTick {
 		if (!this.isPlacing()) {
 			const { prefab } = this;
 			if (prefab !== undefined) {
+				this.getAsset(prefab.Name, false);
 				prefab.Destroy();
 				this.prefab = undefined;
 				this.previous = undefined;
@@ -79,7 +91,7 @@ export class PlacementController implements OnStart, OnTick {
 		let { prefab, cframe: last } = this;
 		if (prefab === undefined || placing !== previous) {
 			prefab?.Destroy();
-			prefab = this.getAsset(placing);
+			prefab = this.getAsset(placing, true);
 			last = this.getCFrame();
 			this.prefab = prefab;
 			this.previous = placing;
@@ -104,7 +116,6 @@ export class PlacementController implements OnStart, OnTick {
 			if (
 				prefab === undefined ||
 				placing === undefined ||
-				// !! Fuck mobile.
 				inputType !== Enum.UserInputType.MouseButton1 ||
 				inputState !== Enum.UserInputState.Begin
 			) {

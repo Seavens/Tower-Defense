@@ -1,7 +1,7 @@
+import { Collision, Tag } from "shared/types/enums";
 import { MapId } from "shared/types/ids";
 import { ServerStorage, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
-import { Tag } from "shared/types/enums";
 import { selectCurrentMap } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";
 import type { OnStart } from "@flamework/core";
@@ -30,12 +30,19 @@ export class MapService implements OnStart {
 				return;
 			}
 			this.changeMap(id);
-			this.setSpawnLocation();
+			this.setTags();
 		});
 		serverProducer.gameChangeMap({ map: MapId.Test }, { broadcast: true });
 	}
 
-	private setSpawnLocation(): void {
-		map.spawnLocation.AddTag(Tag.SpawnLocation);
+	private setTags(): void {
+		const { placeable, spawnLocation } = map;
+
+		spawnLocation.AddTag(Tag.SpawnLocation);
+		spawnLocation.CollisionGroup = Collision.Spawn;
+
+		for (const instance of placeable.GetChildren()) {
+			instance.AddTag(Tag.Placeable);
+		}
 	}
 }

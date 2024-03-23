@@ -99,8 +99,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 		if (map === undefined) {
 			return;
 		}
-		// serverProducer.gameStartRound({ health: MapDefinitions[map].baseHealth }, { broadcast: true });
-		serverProducer.gameStartRound({ health: math.huge }, { broadcast: true });
+		serverProducer.gameStartRound({ health: MapDefinitions[map].baseHealth }, { broadcast: true });
 		serverProducer.gameStartWave({}, { broadcast: true });
 	}
 }

@@ -31,8 +31,4 @@ export class MapUtility {
 		const { waves } = MapDefinitions[map];
 		return waves.size();
 	}
-
-	public static tagSpawn(): void {
-		Workspace.map.WaitForChild("SpawnLocation").AddTag("SpawnLocation");
-	}
 }
