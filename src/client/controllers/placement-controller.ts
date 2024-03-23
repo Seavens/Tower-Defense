@@ -80,6 +80,7 @@ export class PlacementController implements OnStart, OnTick {
 		if (!this.isPlacing()) {
 			const { prefab } = this;
 			if (prefab !== undefined) {
+				warn("Clone");
 				this.getAsset(prefab.Name, false);
 				prefab.Destroy();
 				this.prefab = undefined;
@@ -90,6 +91,7 @@ export class PlacementController implements OnStart, OnTick {
 		const { placing, previous } = this;
 		let { prefab, cframe: last } = this;
 		if (prefab === undefined || placing !== previous) {
+			warn("Ghost");
 			prefab?.Destroy();
 			prefab = this.getAsset(placing, true);
 			last = this.getCFrame();

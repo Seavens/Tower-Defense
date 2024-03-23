@@ -1,21 +1,21 @@
-import { Bin } from "@rbxts/bin";
-import { TowerDefinitions } from "shared/definitions/towers";
-import type { TowerDefinition } from "shared/types/definitions";
-import type { TowerId } from "shared/types/ids";
+import type { Draft } from "@rbxts/immut/src/types-external";
 import type { TowerObject } from "shared/types/objects";
 export abstract class Tower {
-	protected placed = false;
-	protected bin = new Bin();
+	public constructor(towerObj: TowerObject) {}
 
-	public constructor(towerObj: TowerObject) {
-		this.placed = true;
+	public attack(): void {
+		// Attack logic
 	}
 
-	public destory(): void {
-		if (this.placed !== true) {
-			return;
-		}
-		this.bin.destroy();
-		this.placed = false;
+	public targeting(): void {
+		// Targeting logic
+	}
+
+	public sell(): void {
+		// Sell logic
+	}
+
+	public upgrade(): void {
+		// Upgrade logic
 	}
 }

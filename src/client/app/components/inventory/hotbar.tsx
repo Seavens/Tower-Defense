@@ -3,7 +3,6 @@ import { Frame, Group } from "../pretty-components";
 import { ItemSlot } from "./item-slot";
 import { LevelFunctions } from "shared/functions/level-functions";
 import { MAXIMUM_EQUIPPED } from "shared/constants/inventory-constants";
-import { abbreviate } from "client/app/utils/math-utils";
 import { clientProducer } from "client/state/producer";
 import { darken } from "shared/utils/color-utils";
 import { fonts } from "client/app/constants/fonts";
@@ -11,6 +10,7 @@ import { palette } from "../../utils/palette";
 import { selectInventoryData, selectProfileData } from "client/state/selectors";
 import { usePx } from "../../hooks";
 import { useSelector } from "@rbxts/react-reflex";
+import Abbreviator from "@rbxts/abbreviate";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { TowerId } from "shared/types/ids";
@@ -18,6 +18,7 @@ import type { TowerId } from "shared/types/ids";
 interface HotbarProps {}
 
 export function Hotbar(props: HotbarProps): Element {
+	const abbreviator = new Abbreviator();
 	const px = usePx();
 
 	const { equipped } = useSelector(selectInventoryData);
@@ -96,7 +97,7 @@ export function Hotbar(props: HotbarProps): Element {
 					Position={new UDim2(0, px(5), 0.5, 0)}
 					BackgroundTransparency={1}
 					TextColor3={palette.white}
-					Text={`${abbreviate.numberToString(experience)}/${abbreviate.numberToString(max)}`}
+					Text={`${abbreviator.numberToString(experience)}/${abbreviator.numberToString(max)}`}
 					TextSize={px(12)}
 					FontFace={fonts.inter.bold}
 					TextXAlignment={Enum.TextXAlignment.Left}
@@ -120,7 +121,7 @@ export function Hotbar(props: HotbarProps): Element {
 					Position={UDim2.fromScale(0.5, 0.5)}
 					BackgroundColor3={palette.gray} // temp
 					TextColor3={palette.white}
-					Text={abbreviate.numberToString(level)}
+					Text={abbreviator.numberToString(level)}
 					TextSize={px(10)}
 					FontFace={fonts.inter.bold}
 					AutomaticSize={Enum.AutomaticSize.X}
