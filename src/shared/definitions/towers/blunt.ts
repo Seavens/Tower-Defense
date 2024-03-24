@@ -1,4 +1,5 @@
 import { RarityId } from "shared/types/ids/rarity-id";
+import { TargetId } from "shared/types/ids";
 import { TowerId } from "shared/types/ids/tower-id";
 import type { TowerDefinition } from "shared/types/definitions/tower-definition";
 
@@ -14,4 +15,5 @@ export const bluntTower: TowerDefinition<TowerId.Blunt> = {
 	cost: 500,
 	rarity: RarityId.Epic,
 	image: `rbxassetid://16672016840`,
+	targeting: [TargetId.First],
 };

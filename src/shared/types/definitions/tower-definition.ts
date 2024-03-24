@@ -1,5 +1,6 @@
 import type { DamageKind } from "../kinds";
 import type { RarityId } from "../ids/rarity-id";
+import type { TargetId } from "../ids";
 import type { TowerId } from "../ids/tower-id";
 
 export interface TowerDefinition<I extends TowerId> {
@@ -17,6 +18,8 @@ export interface TowerDefinition<I extends TowerId> {
 	cost: number;
 
 	rarity: RarityId;
+
+	targeting: [TargetId.First];
 
 	image: RBXAssetId;
 }

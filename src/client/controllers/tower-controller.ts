@@ -5,13 +5,13 @@ import { Tower } from "client/classes/tower";
 import { Workspace } from "@rbxts/services";
 import { clientProducer } from "client/state/producer";
 import { selectInventoryData, selectPlacementState } from "client/state/selectors";
-import type { OnStart } from "@flamework/core";
+import type { OnStart, OnTick } from "@flamework/core";
 import type { TowerId } from "shared/types/ids";
 
 const { placed } = Workspace;
 
 @Controller({})
-export class TowerController implements OnStart {
+export class TowerController implements OnStart, OnTick {
 	public onStart(): void {
 		PlacementController.onPlaced(async (placing: string, asset: Model): Promise<void> => {
 			const { slot } = clientProducer.getState(selectPlacementState);
@@ -34,7 +34,7 @@ export class TowerController implements OnStart {
 				if (!success) {
 					return;
 				}
-				new Tower(id, uuid, cframe);
+				new Tower(id, uuid, cframe, tower);
 			});
 			//
 			clientProducer.endPlacement({});
@@ -47,4 +47,5 @@ export class TowerController implements OnStart {
 		});
 		// !! Consider allowing for hotkey'ing to towers, ie; pressing `1` would select the 1st tower and begin placement.
 	}
+	public onTick(): void {}
 }

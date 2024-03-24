@@ -45,16 +45,19 @@ export class PlacementController implements OnStart, OnTick {
 
 	public isValidCFrame(cframe: CFrame): boolean {
 		const { placeable } = this;
+
 		if (placeable === undefined) {
 			return false;
 		}
 		// !! Bug.
-		const origin = cframe.Position.mul(Vector3.yAxis.mul(5));
+		const origin = cframe.Position.add(Vector3.yAxis.mul(5));
 		const direction = Vector3.yAxis.mul(-15);
 		const raycast = Workspace.Raycast(origin, direction, placeable);
+
 		if (raycast === undefined) {
 			return false;
 		}
+
 		const instance = raycast.Instance;
 		if (!instance.HasTag(Tag.Placeable)) {
 			return false;
@@ -62,19 +65,18 @@ export class PlacementController implements OnStart, OnTick {
 		return true;
 	}
 
-	public getAsset(name: string, ghostify?: boolean): Option<Model> {
+	public getAsset(name: string, forceField?: boolean): Option<Model> {
 		const asset = towers.FindFirstChild(name);
 		if (asset === undefined || !asset.IsA("Model")) {
 			return undefined;
 		}
 		const cloned = asset.Clone();
-		if (ghostify === true) {
+		if (forceField === true) {
 			for (const instance of cloned.GetDescendants()) {
 				if (!instance.IsA("BasePart")) {
 					continue;
 				}
 				instance.Material = Enum.Material.ForceField;
-				instance.BrickColor = new BrickColor("Lime green");
 			}
 		}
 		cloned.Parent = debris;

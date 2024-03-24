@@ -1,4 +1,5 @@
 import { RarityId } from "shared/types/ids/rarity-id";
+import { TargetId } from "shared/types/ids";
 import { TowerId } from "shared/types/ids/tower-id";
 import type { TowerDefinition } from "shared/types/definitions/tower-definition";
 
@@ -14,4 +15,5 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	cost: 700,
 	rarity: RarityId.Mythical,
 	image: `rbxassetid://16172534401`,
+	targeting: [TargetId.First],
 };

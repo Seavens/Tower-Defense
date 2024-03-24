@@ -4,8 +4,8 @@ import { Flamework } from "@flamework/core";
 import { MapId } from "./map-id";
 import { MobId } from "./mob-id";
 import { StatusId } from "./status-id";
+import { TargetId } from "./target-id";
 import { TowerId } from "./tower-id";
-import type { TargetId } from "./target-id";
 
 export const isAnimationId = Flamework.createGuard<AnimationId>();
 export const isTowerId = Flamework.createGuard<TowerId>();
