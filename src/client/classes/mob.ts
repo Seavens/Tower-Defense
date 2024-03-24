@@ -50,6 +50,7 @@ export class Mob extends API {
 		const model = MobUtility.getInstance(id);
 		model.Parent = Workspace.mobs;
 		this.instance = model;
+		model.Name = `${model.Name}_${index}`;
 		bin.add(model);
 		onMobAdded.FireDeferred(this);
 		mobs.set(index, this);
@@ -105,7 +106,7 @@ export class Mob extends API {
 
 	public destroy(): void {
 		const { mobs, onMobRemoved } = Mob;
-		const { index } = this;
+		const { index, instance } = this;
 		if (this.isDestroyed()) {
 			return;
 		}
@@ -114,5 +115,8 @@ export class Mob extends API {
 			mobs.delete(index);
 		});
 		super.destroy();
+		pcall((): void => {
+			instance.Destroy();
+		});
 	}
 }

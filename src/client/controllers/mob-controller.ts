@@ -34,9 +34,6 @@ const mobRemoved = new Listener<OnMobRemoved>();
 const mobEnded = new Listener<OnMobEnded>();
 const mobDied = new Listener<OnMobDied>();
 
-const mobUnreliable = ReplicatedStorage.FindFirstChild("mobResyncUnreliable");
-const isMobData = t.strictArray(t.Vector2int16, t.Vector2int16);
-
 @Controller({})
 export class MobController implements OnStart {
 	public onStart(): void {
@@ -89,14 +86,7 @@ export class MobController implements OnStart {
 			}
 			mob.removeStatus(status);
 		});
-		if (mobUnreliable === undefined || !mobUnreliable.IsA("UnreliableRemoteEvent")) {
-			return;
-		}
-		mobUnreliable.OnClientEvent.Connect((...args: Array<unknown>): void => {
-			if (!isMobData(args)) {
-				return;
-			}
-			const [first, second] = args;
+		Events.replicateMobResync.connect((first: Vector2int16, second: Vector2int16): void => {
 			const index = first.X;
 			const current = first.Y;
 			const target = second.X;

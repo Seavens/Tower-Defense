@@ -21,7 +21,7 @@ export const bluntTower: TowerDefinition<TowerId.Blunt> = {
 		TargetId.Last,
 		TargetId.Strongest,
 		TargetId.Weakest,
-		TargetId.Furthest,
+		TargetId.Farthest,
 		TargetId.Closest,
 	],
 };

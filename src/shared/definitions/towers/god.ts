@@ -21,7 +21,7 @@ export const godTower: TowerDefinition<TowerId.God> = {
 		TargetId.Last,
 		TargetId.Strongest,
 		TargetId.Weakest,
-		TargetId.Furthest,
+		TargetId.Farthest,
 		TargetId.Closest,
 	],
 };

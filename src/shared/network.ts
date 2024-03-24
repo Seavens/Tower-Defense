@@ -1,12 +1,13 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
 import type { DamageKind } from "./types/kinds";
-import type { StatusId, TowerId } from "./types/ids";
+import type { StatusId, TargetId, TowerId } from "./types/ids";
 
 interface ClientToServerEvents {
 	replicateReady(): void;
 
 	replicatePlaceTower(uuid: string, position: Vector3): void;
+	replicateTowerTargeting(key: string, targeting: TargetId): void;
 }
 
 interface ServerToClientEvents {

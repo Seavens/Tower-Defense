@@ -1,4 +1,4 @@
-import type { TowerId } from "../ids";
+import type { TargetId, TowerId } from "../ids";
 
 export interface ReplicatedTower {
 	id: TowerId;
@@ -7,6 +7,8 @@ export interface ReplicatedTower {
 	position: Vector3;
 	upgrades: number;
 	index: number;
+	targeting: TargetId;
+	key: string;
 }
 
 export interface TowerObject {

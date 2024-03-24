@@ -3,28 +3,23 @@ import { produce } from "@rbxts/immut";
 import type { BroadcastMetadata, EntityMetadata } from "../metadata";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ReplicatedTower } from "shared/types/objects";
-import type { TowerActions, TowerPlace, TowerSell, TowerUpgrade } from "../actions";
+import type { TowerActions, TowerPlace, TowerSell, TowerSetTargeting, TowerUpgrade } from "../actions";
 
 export interface TowerState {
-	placed: Map<string, Map<string, ReplicatedTower>>; // Map<{Tower UUID}, Map<{Tower Index}, ReplicatedTower>>;
+	placed: Map<string, ReplicatedTower>; // Map<{{Tower UUID}_{Tower Index}}, ReplicatedTower>;
 }
 
 const towerState: TowerState = {
-	placed: new Map<string, Map<string, ReplicatedTower>>(),
+	placed: new Map<string, ReplicatedTower>(),
 };
 
 export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(towerState, {
 	towerPlace: (
 		state: TowerState,
-		{ id, position, uuid, index }: TowerPlace,
+		{ id, uuid, index, key, position, targeting }: TowerPlace,
 		{ user }: EntityMetadata & BroadcastMetadata,
 	): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
-			let towers = placed.get(uuid);
-			if (towers === undefined) {
-				towers = new Map<string, ReplicatedTower>();
-				placed.set(uuid, towers);
-			}
 			const tower: ReplicatedTower = {
 				id,
 				uuid,
@@ -32,41 +27,40 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 				owner: user,
 				upgrades: 0,
 				index,
+				targeting,
+				key,
 			};
-			towers.set(`${index}`, tower);
+			placed.set(key, tower);
 		}),
-	towerSell: (
-		state: TowerState,
-		{ uuid, index }: TowerSell,
-		{ user }: EntityMetadata & BroadcastMetadata,
-	): TowerState =>
+	towerSell: (state: TowerState, { key }: TowerSell, { user }: EntityMetadata & BroadcastMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
-			const towers = placed.get(uuid);
-			if (towers === undefined) {
-				return;
-			}
-			const tower = towers.get(`${index}`);
+			const tower = placed.get(key);
 			const owner = tower?.owner;
 			if (tower === undefined || owner !== user) {
 				return;
 			}
-			if (towers.size() <= 1) {
-				towers.clear();
-				placed.delete(uuid);
-			}
-			towers.delete(`${index}`);
+			placed.delete(key);
 		}),
-	towerUpgrade: (
+	towerSetTargeting: (
 		state: TowerState,
-		{ uuid, index }: TowerUpgrade,
+		{ key, targeting }: TowerSetTargeting,
 		{ user }: EntityMetadata & BroadcastMetadata,
 	): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
-			const towers = placed.get(uuid);
-			if (towers === undefined) {
+			const tower = placed.get(key);
+			const owner = tower?.owner;
+			if (tower === undefined || owner !== user) {
 				return;
 			}
-			const tower = towers.get(`${index}`);
+			tower.targeting = targeting;
+		}),
+	towerUpgrade: (
+		state: TowerState,
+		{ key }: TowerUpgrade,
+		{ user }: EntityMetadata & BroadcastMetadata,
+	): TowerState =>
+		produce(state, ({ placed }: Draft<TowerState>): void => {
+			const tower = placed.get(key);
 			const owner = tower?.owner;
 			if (tower === undefined || owner !== user) {
 				return;

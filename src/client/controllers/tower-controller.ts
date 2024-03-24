@@ -5,7 +5,7 @@ import { PlacementController } from "./placement-controller";
 import { Tower } from "client/classes/tower";
 import { clientProducer } from "client/state/producer";
 import { selectInventoryData, selectPlacementState } from "client/state/selectors";
-import { selectPlacedTowers, selectTowersOfUUID } from "shared/state/selectors";
+import { selectPlacedTowers } from "shared/state/selectors";
 import type { OnStart, OnTick } from "@flamework/core";
 import type { ReplicatedTower } from "shared/types/objects";
 
@@ -31,20 +31,13 @@ export class TowerController implements OnStart, OnTick {
 		});
 		clientProducer.observe(
 			selectPlacedTowers,
-			(_: Map<string, ReplicatedTower>, uuid: string): defined => uuid,
-			(_: Map<string, ReplicatedTower>, uuid: string): (() => void) => {
-				const observer = clientProducer.observe(
-					selectTowersOfUUID(uuid),
-					(_: ReplicatedTower, uuid: string): defined => uuid,
-					({ id, position, upgrades, uuid, index }: ReplicatedTower): (() => void) => {
-						const cframe = new CFrame(position);
-						const tower = new Tower(id, uuid, index, cframe, upgrades);
-						return (): void => {
-							tower.destroy();
-						};
-					},
-				);
-				return observer;
+			(_: ReplicatedTower, key: string): defined => key,
+			({ id, uuid, index, owner, position, upgrades }: ReplicatedTower, key: string): (() => void) => {
+				const cframe = new CFrame(position);
+				const tower = new Tower(id, uuid, index, cframe, upgrades);
+				return (): void => {
+					tower.destroy();
+				};
 			},
 		);
 		Events.replicateTowerTarget.connect((key: string, target?: number): void => {
