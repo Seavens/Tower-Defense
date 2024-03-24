@@ -33,7 +33,7 @@ export class Tower extends API {
 			throw `Could not find model for Tower(${id})!`;
 		}
 		const instance = model.Clone();
-		setCollision(instance, Collision.Tower);
+		setCollision(instance, Collision.Tower, true);
 		instance.PivotTo(cframe);
 		instance.Parent = placed;
 		this.instance = instance;
