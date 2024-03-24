@@ -5,7 +5,9 @@ import { RunService } from "@rbxts/services";
 import { TargetId, type TowerId } from "shared/types/ids";
 import { TowerDefinitions } from "shared/definitions/towers";
 import { reuseThread } from "shared/functions/reuse-thread";
+import { selectSpecificTower } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";
+import { targetingModules } from "server/modules/targeting";
 import type { TowerStats } from "shared/api/tower";
 
 export class Tower extends API {
@@ -46,96 +48,49 @@ export class Tower extends API {
 		warn(id, uuid, index, owner, stats);
 	}
 
+	public static getTower(key: string): Option<Tower> {
+		const { towers } = this;
+		return towers.get(key);
+	}
+
+	public isTargetingValid(targeting: TargetId): boolean {
+		const { id } = this;
+		const { targeting: allowed } = TowerDefinitions[id];
+		if (!allowed.includes(targeting)) {
+			return false;
+		}
+		return true;
+	}
+
+	public setTargeting(targeting: TargetId): void {
+		if (!this.isTargetingValid(targeting)) {
+			return;
+		}
+		const { key, owner } = this;
+		serverProducer.towerSetTargeting({ key, targeting }, { user: owner, broadcast: true });
+	}
+
+	public getTargeting(): TargetId {
+		const { id, key } = this;
+		const tower = serverProducer.getState(selectSpecificTower(key));
+		if (tower === undefined) {
+			const {
+				targeting: [targeting],
+			} = TowerDefinitions[id];
+			return targeting;
+		}
+		return tower.targeting;
+	}
+
 	public getTarget(): Option<Mob> {
 		const { cframe, stats } = this;
 		const { range } = stats;
 		const position = cframe.Position;
 		const mobs = Mob.getMobsInRadius(position, range);
-
-		const targetSelection = TargetId.First;
-
-		if (targetSelection === TargetId.First) {
-			const [first] = mobs;
-			if (first === undefined) {
-				return undefined;
-			}
-			const target = first.Object;
-			return target;
-		}
-		if (targetSelection === TargetId.Last) {
-			const last = mobs[mobs.size() - 1];
-			if (last === undefined) {
-				return undefined;
-			}
-			const target = last.Object;
-			return target;
-		}
-		if (targetSelection === TargetId.Strongest) {
-			let [{ Object: strongest }] = mobs;
-			for (const { Object: mob } of mobs) {
-				if (mob === undefined || strongest === undefined) {
-					return undefined;
-				}
-				if (mob.getHealth() > strongest.getHealth()) {
-					strongest = mob;
-				}
-			}
-			if (strongest === undefined) {
-				return undefined;
-			}
-			const target = strongest;
-			return target;
-		}
-		if (targetSelection === TargetId.Weakest) {
-			let [weakest] = mobs;
-			for (const mob of mobs) {
-				if (mob === undefined || weakest === undefined) {
-					return undefined;
-				}
-				if (mob.Object.getHealth() < weakest.Object.getHealth()) {
-					weakest = mob;
-				}
-			}
-			if (weakest === undefined) {
-				return undefined;
-			}
-			const target = weakest.Object;
-			return target;
-		}
-		if (targetSelection === TargetId.Closest) {
-			let [closest] = mobs;
-			for (const mob of mobs) {
-				if (mob === undefined || closest === undefined) {
-					return undefined;
-				}
-				if (mob.Object.getCFrame().Position.Magnitude < closest.Object.getCFrame().Position.Magnitude) {
-					closest = mob;
-				}
-			}
-			if (closest === undefined) {
-				return undefined;
-			}
-			const target = closest.Object;
-			return target;
-		}
-		if (targetSelection === TargetId.Furthest) {
-			let [furthest] = mobs;
-			for (const mob of mobs) {
-				if (mob === undefined || furthest === undefined) {
-					return undefined;
-				}
-				if (mob.Object.getCFrame().Position.Magnitude > furthest.Object.getCFrame().Position.Magnitude) {
-					furthest = mob;
-				}
-			}
-			if (furthest === undefined) {
-				return undefined;
-			}
-			const target = furthest.Object;
-			return target;
-		} else {
-			return undefined;
-		}
+		const targeting = TargetId.First;
+		const module = targetingModules[targeting];
+		const target = module.getTarget(mobs);
+		return target;
 	}
 
 	public attackTarget(delta: number): void {
@@ -147,10 +102,8 @@ export class Tower extends API {
 		}
 		this.lastAttack = now;
 		const currentTarget = this.getTarget();
-		warn(currentTarget === lastTarget);
 		if (currentTarget !== lastTarget) {
 			const target = currentTarget?.index;
-			warn(target);
 			Events.replicateTowerTarget.broadcast(key, target);
 		}
 		this.lastTarget = currentTarget;
@@ -162,13 +115,13 @@ export class Tower extends API {
 	}
 
 	public upgradeTower(multiplier: number): void {
-		const { uuid, index, base, owner } = this;
+		const { key, base, owner } = this;
 		const stats = { ...base };
 		for (const [key, stat] of pairs(stats)) {
 			stats[key] = stat * multiplier;
 		}
 		this.stats = stats;
-		serverProducer.towerUpgrade({ uuid, index }, { user: owner, broadcast: true });
+		serverProducer.towerUpgrade({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

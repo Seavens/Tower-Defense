@@ -19,9 +19,9 @@ export class MobUtility {
 		return model;
 	}
 
-	public static getIndex(): number {
+	public static getIndex(increment = true): number {
 		const { index } = this;
-		this.index = index + 1;
+		this.index = index + (increment ? 1 : 0);
 		return index;
 	}
 

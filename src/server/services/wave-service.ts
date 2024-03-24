@@ -1,3 +1,4 @@
+import { Events } from "server/network";
 import { GameStatus } from "shared/types/enums";
 import { MapDefinitions } from "shared/definitions/maps";
 import { Mob } from "server/classes/mob";
@@ -6,12 +7,14 @@ import { Service } from "@flamework/core";
 import { mobDefinitions } from "shared/definitions/mobs";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/state/selectors";
 import { serverProducer } from "server/state/producer";
+import type { Entity } from "shared/api/entity";
 import type { MapId } from "shared/types/ids";
 import type { OnMobEnded, OnMobRemoved } from "./mob-service";
+import type { OnPlayerAdded } from "./player-service";
 import type { OnStart } from "@flamework/core";
 
 @Service({})
-export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
+export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerAdded {
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = MapDefinitions[map];
 		const definition = waves[wave - 1];
@@ -83,6 +86,14 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded {
 		}
 		Mob.removeAllMobs();
 		warn("Round ended.");
+	}
+
+	public onPlayerAdded(entity: Entity): void {
+		if (!entity.isPlayer()) {
+			return;
+		}
+		const { player } = entity;
+		Events.replicateIndexReset(player, MobUtility.getIndex(false));
 	}
 
 	public onStart(): void {

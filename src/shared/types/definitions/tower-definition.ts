@@ -24,7 +24,7 @@ export interface TowerDefinition<I extends TowerId> {
 		TargetId.Last,
 		TargetId.Strongest,
 		TargetId.Weakest,
-		TargetId.Furthest,
+		TargetId.Farthest,
 		TargetId.Closest,
 	];
 

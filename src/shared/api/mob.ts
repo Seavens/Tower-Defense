@@ -129,8 +129,10 @@ export abstract class Mob {
 		const { id, max, health } = this;
 		const { resistances } = mobDefinitions[id];
 		if (resistances.includes(kind)) {
+			warn(this.index, "|", "Resisted damage.");
 			return;
 		}
+		warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
 			this.onDied();
@@ -143,8 +145,10 @@ export abstract class Mob {
 
 	public forceKill(): void {
 		if (this.isDead() || this.isDestroyed()) {
+			warn(this.index, "|", "Failed to forcekill.");
 			return;
 		}
+		warn(this.index, "|", "Forcekilled");
 		this.onDied();
 		this.destroy();
 	}
@@ -158,7 +162,13 @@ export abstract class Mob {
 	}
 
 	public onTick(delta: number): void {
-		if (this.isDead() || !this.isStarted()) {
+		if (!this.isStarted()) {
+			return;
+		}
+		if (this.isDead()) {
+			warn(this.index, "|", "Dead past tick.");
+			this.onDied();
+			this.destroy();
 			return;
 		}
 		const { statuses, target, current, final } = this;
@@ -193,8 +203,10 @@ export abstract class Mob {
 
 	public destroy(): void {
 		if (this.isDestroyed()) {
+			warn(this.index, "|", "Failed to destroy.");
 			return;
 		}
+		warn(this.index, "|", "Successfully destroyed.");
 		const { bin } = this;
 		bin.destroy();
 		this.destroyed = true;

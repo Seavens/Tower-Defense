@@ -4,5 +4,5 @@ export const enum TargetId {
 	Strongest = "target_id:strongest",
 	Weakest = "target_id:weakest",
 	Closest = "target_id:closest",
-	Furthest = "target_id:furthest",
+	Farthest = "target_id:furthest",
 }

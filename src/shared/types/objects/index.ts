@@ -1,5 +1,5 @@
 import { Flamework } from "@flamework/core";
-import { isTowerId } from "../ids";
+import { isTargetId, isTowerId } from "../ids";
 import { t } from "@rbxts/t";
 import type { Party, PartyInvite } from "./party";
 import type { ReplicatedTower, TowerObject } from "./tower";
@@ -27,6 +27,8 @@ export const isReplicatedTower: t.check<ReplicatedTower> = t.strictInterface({
 	position: t.Vector3,
 	upgrades: t.number,
 	index: t.number,
+	targeting: isTargetId,
+	key: t.string,
 });
 
 export const isParty = Flamework.createGuard<Party>();

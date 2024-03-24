@@ -1,3 +1,4 @@
+import { createSelector } from "@rbxts/reflex";
 import type { ReplicatedTower } from "shared/types/objects";
 import type { SharedState, TowerState } from "../slices";
 
@@ -6,16 +7,27 @@ export function selectTowerState(state: SharedState): TowerState {
 	return tower;
 }
 
-export function selectPlacedTowers(state: SharedState): Map<string, Map<string, ReplicatedTower>> {
+export function selectPlacedTowers(state: SharedState): Map<string, ReplicatedTower> {
 	const { placed } = selectTowerState(state);
 	return placed;
 }
 
-export function selectTowersOfUUID(uuid: string): (state: SharedState) => Map<string, ReplicatedTower> {
-	return function (state: SharedState): Map<string, ReplicatedTower> {
+export function selectSpecificTower(key: string): (state: SharedState) => Option<ReplicatedTower> {
+	return function (state: SharedState): Option<ReplicatedTower> {
 		const placed = selectPlacedTowers(state);
-		const towers = placed.get(uuid);
-		return towers ?? new Map<string, ReplicatedTower>();
-		// We shouldn't have to worry about that ??, it should never be undefined.
+		return placed.get(key);
 	};
+}
+
+export function selectTowersByOwner(owner: string): (state: SharedState) => Array<ReplicatedTower> {
+	return createSelector(selectPlacedTowers, (placed: Map<string, ReplicatedTower>): Array<ReplicatedTower> => {
+		const towers = new Array<ReplicatedTower>();
+		for (const [key, tower] of placed) {
+			if (tower.owner !== owner) {
+				continue;
+			}
+			towers.push(tower);
+		}
+		return towers;
+	});
 }
