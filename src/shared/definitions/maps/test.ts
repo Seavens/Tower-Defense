@@ -1,5 +1,5 @@
 import { MapDifficulty } from "shared/types/enums";
-import { MapId, MobId } from "shared/types/ids";
+import { MapId, MobId, TowerId } from "shared/types/ids";
 import type { MapDefinition } from "shared/types/definitions";
 
 export const testMap: MapDefinition<MapId.Test> = {
@@ -21,5 +21,11 @@ export const testMap: MapDefinition<MapId.Test> = {
 			[MobId.Zombie]: { count: 160, delay: 5, wait: 0.3 },
 		},
 	],
+	towerLimits: {
+		[TowerId.Blunt]: 10,
+		[TowerId.God]: 2,
+		[TowerId.Melee]: 5,
+		[TowerId.Sniper]: 5,
+	},
 	baseHealth: math.huge,
 };

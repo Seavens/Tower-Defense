@@ -4,6 +4,7 @@ import { Listener } from "shared/classes/listener";
 import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { reuseThread } from "shared/functions/reuse-thread";
+import { serverProducer } from "server/state/producer";
 import type { OnStart } from "@flamework/core";
 
 export interface OnPlayerAdded {
@@ -28,13 +29,16 @@ export class PlayerService implements OnStart {
 
 	public onPlayerAdded(player: Player): void {
 		const entity = Entity.fromPlayer(player);
+		const { user } = entity;
 		playerAdded.fire(entity);
+		serverProducer.playerAdded({}, { user });
 	}
 
 	public onPlayerRemoved(player: Player): Promise<unknown> {
 		const { removing, loaded } = this;
 		const user = Entity.getUser(player);
 		const entity = Entity.getEntity(user);
+		serverProducer.playerRemoved({}, { user });
 		if (entity === undefined) {
 			return Promise.resolve();
 		}

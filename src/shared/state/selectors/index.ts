@@ -6,6 +6,7 @@ import {
 	selectPartyState,
 } from "./party-selectors";
 import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "./game-selector";
+import { selectPlacedTowers, selectTowerState, selectTowersOfUUID } from "./tower-selectors";
 
 export {
 	selectCurrentMap,
@@ -17,4 +18,7 @@ export {
 	selectPartyByUser,
 	selectPartyState,
 	isUserInParty,
+	selectPlacedTowers,
+	selectTowerState,
+	selectTowersOfUUID,
 };

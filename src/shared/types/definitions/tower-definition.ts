@@ -12,7 +12,7 @@ export interface TowerDefinition<I extends TowerId> {
 	range: [number, number];
 	cooldown: [number, number];
 
-	kind?: DamageKind;
+	kind: DamageKind;
 
 	count: number;
 	cost: number;

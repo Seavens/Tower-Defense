@@ -5,19 +5,19 @@ export type TowerStats = Omit<TowerObject, "id" | "owner" | "original" | "uuid" 
 
 export abstract class Tower {
 	public readonly id: TowerId;
-	public readonly cframe: CFrame;
 	public readonly uuid: string;
-	public readonly stats: TowerStats;
+	public readonly index: number;
+	public readonly cframe: CFrame;
 
-	// !! Temporarily set `stats` to be `stats?`
-	public constructor(id: TowerId, uuid: string, cframe: CFrame, stats: TowerStats) {
+	protected readonly key: string;
+
+	public constructor(id: TowerId, uuid: string, index: number, cframe: CFrame) {
 		this.id = id;
-		this.cframe = cframe;
 		this.uuid = uuid;
-		this.stats = stats;
+		this.index = index;
+		this.cframe = cframe;
+		this.key = `${uuid}_${index}`;
 	}
-	public abstract targeting(): void;
-	public abstract attack(delta: number): void;
-	public abstract sell(): void;
-	public abstract upgrade(): void;
+
+	public abstract destroy(): void;
 }

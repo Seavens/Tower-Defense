@@ -5,9 +5,13 @@ import type { StatusId, TowerId } from "./types/ids";
 
 interface ClientToServerEvents {
 	replicateReady(): void;
+
+	replicatePlaceTower(uuid: string, position: Vector3): void;
 }
 
 interface ServerToClientEvents {
+	replicateTowerTarget: Networking.Unreliable<(tower: string, target?: number) => void>;
+
 	replicateDataLoaded(): void;
 
 	replicateHydration(state: defined): void;
@@ -23,13 +27,11 @@ interface ServerToClientEvents {
 
 	replicateIndexReset(index: number): void;
 
-	replicateTowerPlacement(id: TowerId, position: Vector3, owner: string): void;
+	replicateTowerPlacement(uuid: string, id: TowerId, position: Vector3): void;
 }
 
 interface ClientToServerFunctions {
 	requestResetCharacter(): void;
-	// !! I recommend against using `CFrame` since it takes up a lot of data.
-	requestPlaceTower(id: TowerId, cframe: CFrame): boolean;
 }
 
 interface ServerToClientFunctions {}

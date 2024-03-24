@@ -37,6 +37,7 @@
     "@rbxts/character-promise": "^1.0.2",
     "@rbxts/immut": "^0.4.4-ts.0",
     "@rbxts/lapis": "^0.2.7",
+    "@rbxts/octo-tree": "^0.3.1",
     "@rbxts/pretty-react-hooks": "^0.4.2",
     "@rbxts/react": "^0.3.4",
     "@rbxts/react-reflex": "^0.3.4",

@@ -1,3 +1,4 @@
+import { DamageKind } from "shared/types/kinds";
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TargetId } from "shared/types/ids";
 import { TowerId } from "shared/types/ids/tower-id";
@@ -10,7 +11,7 @@ export const sniperTower: TowerDefinition<TowerId.Sniper> = {
 	damage: [53, 63],
 	range: [65, 70],
 	cooldown: [6, 10],
-	kind: undefined,
+	kind: DamageKind.Projectile,
 	count: 3,
 	cost: 500,
 	rarity: RarityId.Legendary,

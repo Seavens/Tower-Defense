@@ -1,3 +1,4 @@
+import { DamageKind } from "shared/types/kinds";
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TargetId } from "shared/types/ids";
 import { TowerId } from "shared/types/ids/tower-id";
@@ -10,7 +11,7 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	damage: [84, 94],
 	range: [30, 50],
 	cooldown: [4, 7],
-	kind: undefined,
+	kind: DamageKind.Magic,
 	count: 1,
 	cost: 700,
 	rarity: RarityId.Mythical,

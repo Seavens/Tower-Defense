@@ -1,11 +1,14 @@
 import { Mob as API } from "shared/api/mob";
 import { Events } from "server/network";
+import { MOB_POSITION_UPDATE } from "shared/constants/core-constants";
 import { ReplicatedStorage, RunService, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
 import { reuseThread } from "shared/functions/reuse-thread";
+import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { DamageKind } from "shared/types/kinds";
 import type { MobId, StatusId } from "shared/types/ids";
+import type { Node } from "@rbxts/octo-tree";
 
 const unreliable = new Instance("UnreliableRemoteEvent");
 unreliable.Name = "mobResyncUnreliable";
@@ -18,6 +21,8 @@ export class Mob extends API {
 	public static readonly onMobRemoved = new Signal<Mob>();
 	public static readonly onMobEnded = new Signal<Mob>();
 	public static readonly onMobDied = new Signal<Mob>();
+
+	protected static octree = new Octree<Mob>();
 
 	public declare readonly index: number;
 	public declare readonly id: MobId;
@@ -35,6 +40,10 @@ export class Mob extends API {
 	protected declare duration: number;
 	protected declare destroyed: boolean;
 
+	protected readonly node: Node<Mob>;
+
+	protected movement = os.clock();
+
 	static {
 		RunService.Heartbeat.Connect((delta: number): void => {
 			const { mobs } = this;
@@ -47,8 +56,13 @@ export class Mob extends API {
 	}
 
 	public constructor(index: number, id: MobId) {
-		const { mobs, onMobAdded } = Mob;
+		const { mobs, octree, onMobAdded } = Mob;
 		super(index, id);
+		const { waypoints } = this;
+		const [first] = waypoints;
+		const position = first.Position;
+		const node = octree.CreateNode(position, this);
+		this.node = node;
 		onMobAdded.FireDeferred(this);
 		mobs.set(index, this);
 		this.start();
@@ -63,6 +77,12 @@ export class Mob extends API {
 	public static getMobCount(): number {
 		const { mobs } = this;
 		return mobs.size();
+	}
+
+	public static getMobsInRadius(position: Vector3, radius: number): Array<Option<Node<Mob>>> {
+		const { octree } = this;
+		const mobs = octree.SearchRadius(position, radius);
+		return mobs;
 	}
 
 	public static removeAllMobs(): void {
@@ -92,7 +112,17 @@ export class Mob extends API {
 	}
 
 	public onMovement(): void {
-		//
+		const { octree } = Mob;
+		const { node, movement } = this;
+		const now = os.clock();
+		// Optimization, octree position changes can potentially be expensive.
+		if (now - movement < MOB_POSITION_UPDATE) {
+			return;
+		}
+		this.movement = now;
+		const cframe = this.getCFrame();
+		const position = cframe.Position;
+		octree.ChangeNodePosition(node, position);
 	}
 
 	public onStatus(status: StatusId, duration: number, added: boolean): void {
@@ -121,11 +151,12 @@ export class Mob extends API {
 	}
 
 	public destroy(): void {
-		const { mobs, onMobRemoved } = Mob;
-		const { index } = this;
+		const { mobs, octree, onMobRemoved } = Mob;
+		const { node, index } = this;
 		if (this.isDestroyed()) {
 			return;
 		}
+		octree.RemoveNode(node);
 		onMobRemoved.FireDeferred(this);
 		mobs.delete(index);
 		super.destroy();

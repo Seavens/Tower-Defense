@@ -28,6 +28,7 @@ import type {
 	ProfileAdjustGems,
 	ProfileAdjustLevel,
 } from "./profile-actions";
+import type { TowerActions, TowerPlace, TowerSell, TowerUpgrade } from "./tower-actions";
 
 export type {
 	DataActions,
@@ -61,4 +62,8 @@ export type {
 	PlayerActions,
 	PlayerAdded,
 	PlayerRemoved,
+	TowerActions,
+	TowerPlace,
+	TowerSell,
+	TowerUpgrade,
 };

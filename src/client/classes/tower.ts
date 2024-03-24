@@ -2,52 +2,59 @@ import { Tower as API } from "shared/api/tower";
 import { Collision } from "shared/types/enums";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { setCollision } from "shared/functions/set-collision";
-import { t } from "@rbxts/t";
 import type { Mob } from "./mob";
 import type { TowerId } from "shared/types/ids";
-import type { TowerStats } from "shared/api/tower";
 
-const { assets } = ReplicatedStorage;
-const { towers } = assets;
+const {
+	assets: { towers: assets },
+} = ReplicatedStorage;
 const { placed } = Workspace;
 
 export class Tower extends API {
-	public readonly instance: Model;
-	private lastAttack: number = 0;
+	public static towers = new Map<string, Tower>();
 
-	public constructor(id: TowerId, uuid: string, cframe: CFrame, stats: TowerStats) {
-		super(id, uuid, cframe, stats);
-		const model = towers.FindFirstChild(id);
+	public declare readonly id: TowerId;
+	public declare readonly cframe: CFrame;
+	public declare readonly uuid: string;
+
+	public readonly instance: Model;
+
+	protected lastAttack = 0;
+	protected lastTarget: Option<Mob>;
+
+	public constructor(id: TowerId, uuid: string, index: number, cframe: CFrame, upgrades: number) {
+		const { towers } = Tower;
+		super(id, uuid, index, cframe);
+		const { key } = this;
+		towers.set(key, this);
+		const model = assets.FindFirstChild(id);
 		if (model === undefined || !model.IsA("Model")) {
 			// !! Handle this error?
-			throw "raaah";
+			throw `Could not find model for Tower(${id})!`;
 		}
 		const instance = model.Clone();
 		setCollision(instance, Collision.Tower);
 		instance.PivotTo(cframe);
 		instance.Parent = placed;
 		this.instance = instance;
-		this.targeting();
 	}
 
-	public attack(delta: number): void {
-		warn("Attack", delta);
-		// Cooldown
-		const { stats } = this;
-		const { cooldown, range } = stats;
-
-		const now = os.clock();
-		if (now - this.lastAttack < cooldown) {
-			return;
-		}
-		this.lastAttack = now;
-
-		// Targeting
-		const radius = this.cframe.Position;
-		warn("Targeting", radius, range);
+	public static getTower(key: string): Option<Tower> {
+		const { towers } = this;
+		return towers.get(key);
 	}
 
-	public targeting(): void {}
-	public sell(): void {}
-	public upgrade(): void {}
+	public rotateToTarget(target: Vector3): void {
+		const { instance, cframe } = this;
+		const position = cframe.Position;
+		const pivot = CFrame.lookAt(position, target, Vector3.yAxis);
+		instance.PivotTo(pivot);
+	}
+
+	public destroy(): void {
+		const { towers } = Tower;
+		const { instance, key } = this;
+		towers.delete(key);
+		instance.Destroy();
+	}
 }

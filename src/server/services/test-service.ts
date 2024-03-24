@@ -1,6 +1,5 @@
 import { GenerateTowerObject } from "shared/functions/tower-functions";
 import { Service } from "@flamework/core";
-import { serverProducer } from "server/state/producer";
 import type { Entity } from "server/classes/entity";
 import type { EntityMetadata, ReplicationMetadata } from "shared/state/metadata";
 import type { OnDataLoaded } from "./data-service";

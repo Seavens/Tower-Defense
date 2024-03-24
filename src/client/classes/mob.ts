@@ -110,7 +110,9 @@ export class Mob extends API {
 			return;
 		}
 		onMobRemoved.FireDeferred(this);
-		mobs.delete(index);
+		task.defer((): void => {
+			mobs.delete(index);
+		});
 		super.destroy();
 	}
 }

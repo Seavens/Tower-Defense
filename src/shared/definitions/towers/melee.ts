@@ -1,3 +1,4 @@
+import { DamageKind } from "shared/types/kinds";
 import { RarityId } from "shared/types/ids/rarity-id";
 import { TargetId } from "shared/types/ids";
 import { TowerId } from "shared/types/ids/tower-id";
@@ -10,7 +11,7 @@ export const meleeTower: TowerDefinition<TowerId.Melee> = {
 	damage: [24, 34],
 	range: [18, 22],
 	cooldown: [3, 5],
-	kind: undefined,
+	kind: DamageKind.Sharp,
 	count: 5,
 	cost: 100,
 	rarity: RarityId.Rare,

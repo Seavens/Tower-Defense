@@ -1,14 +1,13 @@
 import { Controller } from "@flamework/core";
-import { Events, Functions } from "client/network";
+import { Events } from "client/network";
+import { Mob } from "client/classes/mob";
 import { PlacementController } from "./placement-controller";
 import { Tower } from "client/classes/tower";
-import { Workspace } from "@rbxts/services";
 import { clientProducer } from "client/state/producer";
 import { selectInventoryData, selectPlacementState } from "client/state/selectors";
+import { selectPlacedTowers, selectTowersOfUUID } from "shared/state/selectors";
 import type { OnStart, OnTick } from "@flamework/core";
-import type { TowerId } from "shared/types/ids";
-
-const { placed } = Workspace;
+import type { ReplicatedTower } from "shared/types/objects";
 
 @Controller({})
 export class TowerController implements OnStart, OnTick {
@@ -23,29 +22,46 @@ export class TowerController implements OnStart, OnTick {
 			if (tower === undefined) {
 				return;
 			}
-			const { id, uuid } = tower;
+			const { uuid } = tower;
 			const cframe = asset.GetPivot();
+			const position = cframe.Position;
 			// !! Raycast downward to confirm valid placement location
-			// ...
-			// !! Replicate tower placement
-			// !! Below may be unnecessary if the tower class handles models
-			// !! its self (recommended).
-			Functions.requestPlaceTower(id, cframe).then((success: boolean): void => {
-				if (!success) {
-					return;
-				}
-				new Tower(id, uuid, cframe, tower);
-			});
-			//
+			Events.replicatePlaceTower(uuid, position);
 			clientProducer.endPlacement({});
 		});
-		// !! Listen to server confirmation of a tower placement.
-		Events.replicateTowerPlacement.connect((id: TowerId, position: Vector3, owner: string): void => {
-			// ...
-			// !! Create new tower instance.
-			// !! new Tower(...);
+		clientProducer.observe(
+			selectPlacedTowers,
+			(_: Map<string, ReplicatedTower>, uuid: string): defined => uuid,
+			(_: Map<string, ReplicatedTower>, uuid: string): (() => void) => {
+				const observer = clientProducer.observe(
+					selectTowersOfUUID(uuid),
+					(_: ReplicatedTower, uuid: string): defined => uuid,
+					({ id, position, upgrades, uuid, index }: ReplicatedTower): (() => void) => {
+						const cframe = new CFrame(position);
+						const tower = new Tower(id, uuid, index, cframe, upgrades);
+						return (): void => {
+							tower.destroy();
+						};
+					},
+				);
+				return observer;
+			},
+		);
+		Events.replicateTowerTarget.connect((key: string, target?: number): void => {
+			if (target === undefined) {
+				return;
+			}
+			const tower = Tower.getTower(key);
+			const mob = Mob.getMob(target);
+			if (tower === undefined || mob === undefined) {
+				return;
+			}
+			const cframe = mob.getCFrame();
+			const position = cframe.Position;
+			tower.rotateToTarget(position);
 		});
 		// !! Consider allowing for hotkey'ing to towers, ie; pressing `1` would select the 1st tower and begin placement.
 	}
+
 	public onTick(): void {}
 }
