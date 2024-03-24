@@ -10,10 +10,6 @@ import type { DamageKind } from "shared/types/kinds";
 import type { MobId, StatusId } from "shared/types/ids";
 import type { Node } from "@rbxts/octo-tree";
 
-const unreliable = new Instance("UnreliableRemoteEvent");
-unreliable.Name = "mobResyncUnreliable";
-unreliable.Parent = ReplicatedStorage;
-
 export class Mob extends API {
 	public static readonly mobs = new Map<number, Mob>();
 
@@ -79,7 +75,7 @@ export class Mob extends API {
 		return mobs.size();
 	}
 
-	public static getMobsInRadius(position: Vector3, radius: number): Array<Option<Node<Mob>>> {
+	public static getMobsInRadius(position: Vector3, radius: number): Array<Node<Mob>> {
 		const { octree } = this;
 		const mobs = octree.SearchRadius(position, radius);
 		return mobs;
@@ -108,7 +104,7 @@ export class Mob extends API {
 		const { current, target } = this;
 		const first = new Vector2int16(index, current);
 		const second = new Vector2int16(target, 0);
-		unreliable.FireAllClients(first, second);
+		Events.replicateMobResync.broadcast(first, second);
 	}
 
 	public onMovement(): void {
@@ -147,7 +143,7 @@ export class Mob extends API {
 		const alpha = this.getAlpha();
 		const first = new Vector2int16(index, current);
 		const second = new Vector2int16(target, alpha * 1000);
-		unreliable.FireAllClients(first, second);
+		Events.replicateMobResync.broadcast(first, second);
 	}
 
 	public destroy(): void {

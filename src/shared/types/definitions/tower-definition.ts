@@ -19,7 +19,14 @@ export interface TowerDefinition<I extends TowerId> {
 
 	rarity: RarityId;
 
-	targeting: [TargetId.First];
+	targeting: [
+		TargetId.First,
+		TargetId.Last,
+		TargetId.Strongest,
+		TargetId.Weakest,
+		TargetId.Furthest,
+		TargetId.Closest,
+	];
 
 	image: RBXAssetId;
 }

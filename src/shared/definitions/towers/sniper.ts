@@ -16,5 +16,12 @@ export const sniperTower: TowerDefinition<TowerId.Sniper> = {
 	cost: 500,
 	rarity: RarityId.Legendary,
 	image: `rbxassetid://12270286289`,
-	targeting: [TargetId.First],
+	targeting: [
+		TargetId.First,
+		TargetId.Last,
+		TargetId.Strongest,
+		TargetId.Weakest,
+		TargetId.Furthest,
+		TargetId.Closest,
+	],
 };

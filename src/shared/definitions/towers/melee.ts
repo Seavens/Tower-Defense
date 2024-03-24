@@ -16,5 +16,12 @@ export const meleeTower: TowerDefinition<TowerId.Melee> = {
 	cost: 100,
 	rarity: RarityId.Rare,
 	image: `rbxassetid://178007979`,
-	targeting: [TargetId.First],
+	targeting: [
+		TargetId.First,
+		TargetId.Last,
+		TargetId.Strongest,
+		TargetId.Weakest,
+		TargetId.Furthest,
+		TargetId.Closest,
+	],
 };

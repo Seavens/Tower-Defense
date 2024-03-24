@@ -16,5 +16,12 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	cost: 700,
 	rarity: RarityId.Mythical,
 	image: `rbxassetid://16172534401`,
-	targeting: [TargetId.First],
+	targeting: [
+		TargetId.First,
+		TargetId.Last,
+		TargetId.Strongest,
+		TargetId.Weakest,
+		TargetId.Furthest,
+		TargetId.Closest,
+	],
 };

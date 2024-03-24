@@ -16,5 +16,12 @@ export const bluntTower: TowerDefinition<TowerId.Blunt> = {
 	cost: 500,
 	rarity: RarityId.Epic,
 	image: `rbxassetid://16672016840`,
-	targeting: [TargetId.First],
+	targeting: [
+		TargetId.First,
+		TargetId.Last,
+		TargetId.Strongest,
+		TargetId.Weakest,
+		TargetId.Furthest,
+		TargetId.Closest,
+	],
 };

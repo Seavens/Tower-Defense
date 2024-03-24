@@ -11,6 +11,7 @@ interface ClientToServerEvents {
 
 interface ServerToClientEvents {
 	replicateTowerTarget: Networking.Unreliable<(tower: string, target?: number) => void>;
+	replicateMobResync: Networking.Unreliable<(first: Vector2int16, second: Vector2int16) => void>;
 
 	replicateDataLoaded(): void;
 
