@@ -1,13 +1,13 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
-import type { DamageKind } from "./types/kinds";
-import type { StatusId, TargetId, TowerId } from "./types/ids";
+import type { MobDamage, MobStatus } from "./mobs/types";
+import type { TowerId, TowerTargeting } from "./tower/types";
 
 interface ClientToServerEvents {
 	replicateReady(): void;
 
 	replicatePlaceTower(uuid: string, position: Vector3): void;
-	replicateTowerTargeting(key: string, targeting: TargetId): void;
+	replicateTowerTargeting(key: string, targeting: TowerTargeting): void;
 }
 
 interface ServerToClientEvents {
@@ -22,10 +22,10 @@ interface ServerToClientEvents {
 	replicateCharacterAdded(user: string, rig: Model): void;
 	replicateCharacterRemoved(user: string): void;
 
-	replicateMobDamage(data: Vector2int16, kind: DamageKind): void;
+	replicateMobDamage(data: Vector2int16, kind: MobDamage): void;
 	replicateMobDeath(index: number): void;
-	replicateMobStatusAdded(data: Vector2int16, status: StatusId, timestamp: number): void;
-	replicateMobStatusRemoved(index: number, status: StatusId): void;
+	replicateMobStatusAdded(data: Vector2int16, status: MobStatus, timestamp: number): void;
+	replicateMobStatusRemoved(index: number, status: MobStatus): void;
 
 	replicateIndexReset(index: number): void;
 

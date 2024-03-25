@@ -1,1 +1,0 @@
-export const PARTY_INVITE_EXPIRATION = 10;

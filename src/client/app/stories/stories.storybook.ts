@@ -1,3 +1,0 @@
-export = {
-	storyRoots: [script.Parent],
-};
