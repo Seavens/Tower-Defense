@@ -1,9 +1,10 @@
-import { type Item, isItemId } from "shared/item/types";
+import { type Item, isItem } from "shared/inventory/types";
+import { isSlot } from "shared/guards";
 import { t } from "@rbxts/t";
 
 export interface InventoryData {
-	stored: Map<string, Item>;
-	equipped: Map<string, Item>;
+	stored: Map<Slot, Item>;
+	equipped: Map<Slot, Item>;
 }
 
 export interface ProfileData {
@@ -26,8 +27,8 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
-	stored: t.map(t.string, isItemId),
-	equipped: t.map(t.string, isItemId),
+	stored: t.map(isSlot, isItem),
+	equipped: t.map(isSlot, isItem),
 });
 
 export const isData: t.check<Data> = t.strictInterface({

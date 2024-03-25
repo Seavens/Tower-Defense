@@ -1,5 +1,5 @@
 import { ItemRarity } from "../types";
-import { RARITY_WEIGHTS } from "shared/item/constants";
+import { RARITY_WEIGHTS } from "../constants";
 import type { RarityDefinition } from ".";
 
 export const epicRarity: RarityDefinition<ItemRarity.Epic> = {

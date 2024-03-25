@@ -1,5 +1,5 @@
 import type { Data } from "./types";
-import type { Item } from "shared/item/types";
+import type { Item } from "shared/inventory/types";
 
 export const DATA_TEMPLATE: Data = {
 	profile: {
@@ -9,7 +9,7 @@ export const DATA_TEMPLATE: Data = {
 		gems: 0,
 	},
 	inventory: {
-		stored: new Map<string, Item>(),
-		equipped: new Map<string, Item>(),
+		stored: new Map<Slot, Item>(),
+		equipped: new Map<Slot, Item>(),
 	},
 };
