@@ -5,8 +5,6 @@ export const enum MobId {
 }
 
 export const enum MobDamage {
-	// Penetrating = "mob_damage:penetrating",
-	// Explosive = "mob_damage:explosive",
 	Sharp = "mob_damage:sharp",
 	Blunt = "mob_damage:blunt",
 	Magic = "mob_damage:magic",

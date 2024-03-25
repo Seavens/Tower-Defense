@@ -8,9 +8,9 @@ export const godTower: TowerDefinition<TowerId.God> = {
 	name: "God Tower",
 	desc: "A God tower that attacks enemies from anywhere.",
 
-	damage: [84, 94],
-	range: [30, 50],
-	cooldown: [4, 7],
+	damage: 84,
+	range: 30,
+	cooldown: 4,
 
 	kind: MobDamage.Magic,
 

@@ -10,9 +10,10 @@ import React, { useMemo } from "@rbxts/react";
 import type { AnyRarityDefinition } from "shared/inventory/rarities";
 import type { AnyTowerDefintion } from "shared/tower/definitions";
 import type { Element } from "@rbxts/react";
-import type { TowerId, TowerObject } from "shared/tower/types";
+import type { Item } from "shared/item/types";
+import type { TowerId } from "shared/tower/types";
 
-export interface ItemSlotProps extends Partial<TowerObject> {
+export interface ItemSlotProps extends Partial<Item> {
 	onClick?: (id: TowerId) => void;
 }
 

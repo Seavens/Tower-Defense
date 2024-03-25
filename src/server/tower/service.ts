@@ -9,10 +9,11 @@ import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { towerDefinitions } from "shared/tower/definitions";
 import type { Entity } from "server/player/class";
+import type { Item } from "shared/item/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
-import type { TowerId, TowerObject, TowerTargeting } from "shared/tower/types";
+import type { TowerId, TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
@@ -25,7 +26,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		if (map === undefined) {
 			return;
 		}
-		let stats: Option<TowerObject> = undefined;
+		let stats: Option<Item> = undefined;
 		for (const [_, tower] of equipped) {
 			if (tower.uuid !== uuid) {
 				continue;

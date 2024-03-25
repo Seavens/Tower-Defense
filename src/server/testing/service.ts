@@ -1,5 +1,5 @@
 import { Service } from "@flamework/core";
-import { generateTowerObject } from "shared/tower/utility";
+import { TowerUtility } from "shared/tower/utility";
 import type { Entity } from "server/player/class";
 import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { OnDataLoaded } from "../data/service";
@@ -15,7 +15,7 @@ export class TestService implements OnDataLoaded {
 			}
 			const { user, id } = entity;
 			const slot = `${index}`;
-			const item = generateTowerObject(id);
+			const item = TowerUtility.generateTowerObject(id);
 			const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
 			// serverProducer.inventoryAddItem({ item, slot }, metadata);
 			// task.wait();

@@ -8,9 +8,9 @@ export const sniperTower: TowerDefinition<TowerId.Sniper> = {
 	name: "Sniper Tower",
 	desc: "A sniper tower that attacks enemies from a distance.",
 
-	damage: [53, 63],
-	range: [65, 70],
-	cooldown: [6, 10],
+	damage: 53,
+	range: 65,
+	cooldown: 6,
 
 	kind: MobDamage.Projectile,
 

@@ -8,7 +8,7 @@ export function receiverMiddleware(): ProducerMiddleware {
 		return () => (dispatch) => dispatch;
 	}
 	const receiver = createBroadcastReceiver({
-		start: () => {},
+		start: () => Events.replicateReady(),
 	});
 	Events.replicateActions.connect((actions: Array<BroadcastAction>): void => {
 		receiver.dispatch(actions);

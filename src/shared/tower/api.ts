@@ -1,6 +1,4 @@
-import type { TowerId, TowerObject, TowerTargeting } from "./types";
-
-export type TowerStats = Omit<TowerObject, "id" | "owner" | "original" | "uuid" | "timestamp" | "locked">;
+import type { TowerId, TowerTargeting } from "./types";
 
 export abstract class Tower {
 	public readonly id: TowerId;

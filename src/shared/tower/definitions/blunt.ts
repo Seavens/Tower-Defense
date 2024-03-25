@@ -8,9 +8,9 @@ export const bluntTower: TowerDefinition<TowerId.Blunt> = {
 	name: "Blunt Tower",
 	desc: "A Blunt tower that attacks enemies as a groups.",
 
-	damage: [32, 42],
-	range: [15, 19],
-	cooldown: [4, 7],
+	damage: 32,
+	range: 15,
+	cooldown: 4,
 
 	kind: MobDamage.Blunt,
 

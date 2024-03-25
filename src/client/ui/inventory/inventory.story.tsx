@@ -1,6 +1,6 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { ReflexProvider, useSelector } from "@rbxts/react-reflex";
-import { generateTowerObject } from "shared/tower/utility";
+import { TowerUtility } from "shared/tower/utility";
 import { selectInventoryData } from "client/inventory/selectors";
 import { useStoryProducer } from "../hooks";
 import React from "@rbxts/react";
@@ -12,7 +12,7 @@ import type { TowerObject } from "shared/tower/types";
 const stored = new Map<string, TowerObject>();
 for (const index of $range(1, 25)) {
 	const key = `${index}`;
-	const tower = generateTowerObject(-1);
+	const tower = TowerUtility.generateTowerObject(-1);
 	stored.set(key, tower);
 }
 const state: DeepPartial<ClientState> = { inventory: { data: { stored } } };

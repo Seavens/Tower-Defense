@@ -8,9 +8,9 @@ export const meleeTower: TowerDefinition<TowerId.Melee> = {
 	name: "Melee Tower",
 	desc: "A melee tower that attacks nearby enemies.",
 
-	damage: [24, 34],
-	range: [18, 22],
-	cooldown: [3, 5],
+	damage: 24,
+	range: 18,
+	cooldown: 3,
 
 	kind: MobDamage.Sharp,
 

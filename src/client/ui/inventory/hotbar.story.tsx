@@ -1,7 +1,7 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { Hotbar } from "./hotbar";
 import { ReflexProvider } from "@rbxts/react-reflex";
-import { generateTowerObject } from "shared/tower/utility";
+import { TowerUtility } from "shared/tower/utility";
 import { useStoryProducer } from "../hooks";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
@@ -12,14 +12,14 @@ import type { TowerObject } from "shared/tower/types";
 const equipped = new Map<string, TowerObject>();
 for (const index of $range(1, 6)) {
 	const key = `${index}`;
-	const tower = generateTowerObject(-1);
+	const tower = TowerUtility.generateTowerObject(-1);
 	equipped.set(key, tower);
 }
 
 const stored = new Map<string, TowerObject>();
 for (const index of $range(1, 25)) {
 	const key = `${index}`;
-	const tower = generateTowerObject(-1);
+	const tower = TowerUtility.generateTowerObject(-1);
 	stored.set(key, tower);
 }
 

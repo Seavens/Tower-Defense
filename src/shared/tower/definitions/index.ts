@@ -8,13 +8,9 @@ import type { MobDamage } from "shared/mobs/types";
 import type { TowerTargeting } from "../types";
 
 export interface TowerDefinition<I extends TowerId> {
-	id: I;
-	name: string;
-	desc: string;
-
-	damage: [number, number];
-	range: [number, number];
-	cooldown: [number, number];
+	damage: number;
+	range: number;
+	cooldown: number;
 
 	kind: MobDamage;
 
@@ -31,8 +27,6 @@ export interface TowerDefinition<I extends TowerId> {
 		TowerTargeting.Farthest,
 		TowerTargeting.Closest,
 	];
-
-	image: RBXAssetId;
 }
 
 export type AnyTowerDefintion = (typeof towerDefinitions)[TowerId];

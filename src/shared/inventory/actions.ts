@@ -1,6 +1,7 @@
+import type {} from "shared/tower/types";
 import type { DataActions } from "shared/data/actions";
 import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
-import type { TowerObject } from "shared/tower/types";
+import type { Item } from "shared/item/types";
 
 export type InventoryActions<S> = {
 	inventoryAddItem: (state: S, payload: InventoryAddItem, metadata: EntityMetadata & ReplicationMetadata) => S;
@@ -9,7 +10,7 @@ export type InventoryActions<S> = {
 } & DataActions<S>;
 
 export interface InventoryAddItem {
-	item: TowerObject;
+	item: Item;
 	slot: string;
 }
 
@@ -18,6 +19,6 @@ export interface InventoryRemoveItem {
 }
 
 export interface InventoryEquipItem {
-	item: TowerObject;
+	item: Item;
 	slot: string;
 }

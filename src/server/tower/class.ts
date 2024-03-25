@@ -10,7 +10,6 @@ import { store } from "server/state/store";
 import { targetingModules } from "server/tower/targeting";
 import { towerDefinitions } from "shared/tower/definitions";
 import type { TowerId } from "shared/tower/types";
-import type { TowerStats } from "shared/tower/api";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
@@ -86,7 +85,8 @@ export class Tower extends API {
 
 	public getTarget(): Option<Mob> {
 		const { cframe, stats } = this;
-		const { range } = stats;
+		const { rangeMulti } = stats;
+		const range = towerDefinitions[this.id].range * rangeMulti;
 		const position = cframe.Position;
 		const mobs = Mob.getMobsInRadius(position, range);
 		const targeting = TowerTargeting.First;
@@ -97,7 +97,9 @@ export class Tower extends API {
 
 	public attackTarget(delta: number): void {
 		const { id, key, stats, lastAttack, lastTarget } = this;
-		const { cooldown, damage } = stats;
+		const { cooldownMulti, damageMulti } = stats;
+		const cooldown = towerDefinitions[id].cooldown * cooldownMulti;
+		const damage = towerDefinitions[id].damage * damageMulti;
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
