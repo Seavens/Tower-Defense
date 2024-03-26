@@ -1,15 +1,8 @@
 import { Darken } from "@rbxts/colour-utils";
 import { Frame, Group } from "../components";
-import {
-	INVENTORY_COLUMN_COUNT,
-	INVENTORY_ROW_SIZE,
-	INVENTORY_SIZE,
-	ITEM_SLOT_SIZE,
-	SCROLLING_DEPTH,
-} from "./constants";
+import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { MAXIMUM_STORED } from "shared/inventory/constants";
 import { selectInventoryData } from "client/inventory/selectors";
 import { store } from "client/state/store";
 import { usePx } from "../hooks";
@@ -58,7 +51,7 @@ export function Inventory(props: InventoryProps): Element {
 				backgroundColor={background}
 				anchorPoint={new Vector2(0.5, 0.5)}
 				position={UDim2.fromScale(0.644, 0.5)}
-				backgroundTransparency={0.1}
+				backgroundTransparency={0}
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
 				<uistroke Color={outline} Thickness={px(2)} />
@@ -81,7 +74,11 @@ export function Inventory(props: InventoryProps): Element {
 						CanvasSize={UDim2.fromOffset(0, px(INVENTORY_COLUMN_COUNT * (ITEM_SLOT_SIZE.Y + 5)) + px(36))}
 						ZIndex={2}
 					>
-						<uipadding PaddingTop={new UDim(0, px(18))} PaddingRight={new UDim(0, px(4))} />
+						<uipadding
+							PaddingTop={new UDim(0, px(18))}
+							PaddingLeft={new UDim(0, px(4))}
+							PaddingRight={new UDim(0, px(4))}
+						/>
 						<uigridlayout
 							CellSize={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
 							CellPadding={UDim2.fromOffset(px(5), px(5))}
@@ -93,12 +90,39 @@ export function Inventory(props: InventoryProps): Element {
 						{elements}
 					</scrollingframe>
 					<Frame
+						size={new UDim2(1, -px(15), 0, px(15))}
+						position={UDim2.fromScale(0.5, 0)}
+						anchorPoint={new Vector2(0.5, 0)}
+						backgroundColor={background}
+						zIndex={2}
+					>
+						<uigradient
+							Transparency={TRANSPARENCY_GRADIENT}
+							Rotation={90}
+							key={"top-scrolling-transparency"}
+						/>
+					</Frame>
+					<Frame
+						size={new UDim2(1, -px(15), 0, px(15))}
+						position={UDim2.fromScale(0.5, 1)}
+						anchorPoint={new Vector2(0.5, 1)}
+						backgroundColor={background}
+						zIndex={2}
+					>
+						<uigradient
+							Transparency={TRANSPARENCY_GRADIENT}
+							Rotation={270}
+							key={"bottom-scrolling-transparency"}
+						/>
+					</Frame>
+					<Frame
 						size={new UDim2(0, px(thickness), 1, -px(6))}
 						position={new UDim2(1, -px.scale(thickness / 2), 0.5, 0)}
 						anchorPoint={new Vector2(1, 0.5)}
 						backgroundColor={Latte.Base}
 						backgroundTransparency={0.75}
 						cornerRadius={new UDim(0, px(4))}
+						key={"scrollbar-background"}
 					/>
 				</Group>
 			</Frame>
@@ -108,7 +132,7 @@ export function Inventory(props: InventoryProps): Element {
 				backgroundColor={background}
 				anchorPoint={new Vector2(0.5, 0.5)}
 				position={UDim2.fromScale(0.147, 0.5)}
-				backgroundTransparency={0.1}
+				backgroundTransparency={0}
 				zIndex={1}
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />

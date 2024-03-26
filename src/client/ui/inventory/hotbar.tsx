@@ -12,7 +12,7 @@ import { store } from "client/state/store";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import Abbreviator from "@rbxts/abbreviate";
-import React, { useMemo } from "@rbxts/react";
+import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId, TowerItemId } from "shared/inventory/types";
 
