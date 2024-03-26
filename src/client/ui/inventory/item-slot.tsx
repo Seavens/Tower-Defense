@@ -1,15 +1,17 @@
-import { type AnyItemDefinition, itemDefinitions } from "shared/inventory/items";
 import { Frame, Group } from "../components";
 import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
-import { type Item, type ItemId, ItemKind } from "shared/inventory/types";
+import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { fonts } from "client/ui/constants";
+import { itemDefinitions } from "shared/inventory/items";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
+import type { AnyItemDefinition } from "shared/inventory/items";
 import type { AnyRarityDefinition } from "shared/inventory/rarities";
 import type { Element } from "@rbxts/react";
+import type { Item, ItemId } from "shared/inventory/types";
 
 export interface ItemSlotProps extends Partial<Item> {
 	onClick?: (id: ItemId) => void;

@@ -55,13 +55,12 @@ export const inventorySlice = createProducer<InventoryState, ExcludeMetadata<Inv
 		return produce(state, (draft: Draft<InventoryState>): InventoryState => {
 			const { data } = draft;
 			const { stored } = data;
-			for (const i of $range(1, items.size())) {
-				const available = InventoryImpl.getAvailableSlot(stored, MAXIMUM_STORED);
-				if (available === undefined) {
+			for (const item of items) {
+				const slot = InventoryImpl.getAvailableSlot(stored, MAXIMUM_STORED);
+				if (slot === undefined) {
 					return original(draft);
 				}
-				const item = items[i];
-				stored.set(available, item);
+				stored.set(slot, item);
 			}
 			return draft;
 		});

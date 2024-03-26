@@ -13,6 +13,7 @@ export namespace InventoryImpl {
 				continue;
 			}
 			available = slot;
+			break;
 		}
 		return available;
 	}

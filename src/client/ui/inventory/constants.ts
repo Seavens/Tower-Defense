@@ -1,4 +1,4 @@
-import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
+import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
 
 export const ITEM_SLOT_SIZE = new Vector2(60, 75);
 
@@ -13,4 +13,5 @@ export const HOTBAR_SIZE = new Vector2(
 export const INVENTORY_SIZE = new Vector2(ITEM_SLOT_SIZE.X * 12, ITEM_SLOT_SIZE.Y * 6);
 
 export const INVENTORY_ROW_SIZE = 7;
+export const INVENTORY_COLUMN_COUNT = MAXIMUM_STORED / INVENTORY_ROW_SIZE;
 export const SCROLLING_DEPTH = 45.5 * ITEM_SLOT_SIZE.Y;
