@@ -1,8 +1,8 @@
+import { ItemClass } from "../types";
 import { ItemId } from "../types";
 import { ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mobs/types";
 import { TowerTargeting } from "shared/tower/types";
-import type { ItemClass } from "../types";
 import type { ItemDefinition } from ".";
 
 export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemClass.Tower> = {
@@ -14,6 +14,8 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemClass.Tower> = {
 	rarity: ItemRarity.Epic,
 
 	class: {
+		class: ItemClass.Tower,
+
 		damage: 32,
 		range: 15,
 		cooldown: 4,

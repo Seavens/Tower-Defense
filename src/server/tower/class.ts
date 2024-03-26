@@ -1,28 +1,23 @@
 import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { Mob } from "../mob/class";
-import { MobStatus } from "shared/mobs/types";
 import { RunService } from "@rbxts/services";
+import { type TowerItemIds, itemDefinitions } from "shared/inventory/items";
 import { TowerTargeting } from "shared/tower/types";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "server/tower/targeting";
-import { towerDefinitions } from "shared/tower/definitions";
-import type { TowerId } from "shared/tower/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
 
-	public declare readonly id: TowerId;
+	public declare readonly id: TowerItemIds;
 	public declare readonly uuid: string;
 	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
 
 	public readonly owner: string;
-	public stats: TowerStats;
-
-	protected readonly base: TowerStats;
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
@@ -38,15 +33,12 @@ export class Tower extends API {
 		});
 	}
 
-	public constructor(id: TowerId, uuid: string, index: number, cframe: CFrame, owner: string, stats: TowerStats) {
+	public constructor(id: TowerItemIds, uuid: string, index: number, cframe: CFrame, owner: string) {
 		const { towers } = Tower;
 		super(id, uuid, index, cframe);
 		const { key } = this;
 		towers.set(key, this);
 		this.owner = owner;
-		this.stats = stats;
-		this.base = stats;
-		warn(id, uuid, index, owner, stats);
 	}
 
 	public static getTower(key: string): Option<Tower> {
@@ -56,8 +48,8 @@ export class Tower extends API {
 
 	public isTargetingValid(targeting: TowerTargeting): boolean {
 		const { id } = this;
-		const { targeting: allowed } = towerDefinitions[id];
-		if (!allowed.includes(targeting)) {
+		const { targeting: allowed } = itemDefinitions[id].class;
+		if (allowed.includes(targeting) === false) {
 			return false;
 		}
 		return true;
@@ -77,16 +69,16 @@ export class Tower extends API {
 		if (tower === undefined) {
 			const {
 				targeting: [targeting],
-			} = towerDefinitions[id];
+			} = itemDefinitions[id].class;
 			return targeting;
 		}
 		return tower.targeting;
 	}
 
 	public getTarget(): Option<Mob> {
-		const { cframe, stats } = this;
-		const { rangeMulti } = stats;
-		const range = towerDefinitions[this.id].range * rangeMulti;
+		const { cframe } = this;
+		const defRange = itemDefinitions[this.id].class.range;
+		const range = defRange * rangeMulti;
 		const position = cframe.Position;
 		const mobs = Mob.getMobsInRadius(position, range);
 		const targeting = TowerTargeting.First;

@@ -23,7 +23,6 @@
 		"consistent-return": "error",
 		"sort-imports-es6-autofix/sort-imports-es6": "error",
 		"@typescript-eslint/member-ordering": "error",
-		"@typescript-eslint/strict-boolean-expressions": "error",
 		"@typescript-eslint/consistent-type-imports": "error",
 		"@typescript-eslint/explicit-function-return-type": "error",
 		"@typescript-eslint/explicit-member-accessibility": "error",

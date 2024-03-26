@@ -1,14 +1,16 @@
+import type { ItemId } from "shared/inventory/types";
 import type { TowerId, TowerTargeting } from "./types";
+import type { TowerItemIds } from "shared/inventory/items";
 
 export abstract class Tower {
-	public readonly id: TowerId;
+	public readonly id: TowerItemIds;
 	public readonly uuid: string;
 	public readonly index: number;
 	public readonly cframe: CFrame;
 
 	protected readonly key: string;
 
-	public constructor(id: TowerId, uuid: string, index: number, cframe: CFrame) {
+	public constructor(id: TowerItemIds, uuid: string, index: number, cframe: CFrame) {
 		this.id = id;
 		this.uuid = uuid;
 		this.index = index;
