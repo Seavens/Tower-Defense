@@ -1,9 +1,9 @@
-import { ItemClass } from "../types";
+import { ItemKind } from "../types";
 import { ItemId } from "../types";
 import { ItemRarity } from "shared/inventory/types";
 import type { ItemDefinition } from ".";
 
-export const chaliceRelicItem: ItemDefinition<ItemId.Chalice, ItemClass.Relic> = {
+export const chaliceRelicItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = {
 	id: ItemId.Chalice,
 	name: "Chalice",
 	desc: "..",
@@ -11,8 +11,8 @@ export const chaliceRelicItem: ItemDefinition<ItemId.Chalice, ItemClass.Relic> =
 	image: "rbxassetid://16452498785",
 	rarity: ItemRarity.Legendary,
 
-	class: {
-		class: ItemClass.Relic,
+	kind: {
+		kind: ItemKind.Relic,
 
 		placeholder: 1,
 	},

@@ -5,7 +5,7 @@ export type PlacementActions<S> = {
 
 export interface PlacementBegin {
 	placing: string;
-	slot: string;
+	slot: Slot;
 }
 
 export interface PlacementEnd {}

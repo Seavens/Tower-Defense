@@ -1,6 +1,6 @@
+import { ItemId } from "shared/inventory/types";
 import { MapDifficulty, MapId } from "../types";
 import { MobId } from "shared/mobs/types";
-import { TowerId } from "shared/tower/types";
 import type { MapDefinition } from ".";
 
 export const testMap: MapDefinition<MapId.Test> = {
@@ -23,10 +23,10 @@ export const testMap: MapDefinition<MapId.Test> = {
 		},
 	],
 	towerLimits: {
-		[TowerId.Blunt]: 10,
-		[TowerId.God]: 2,
-		[TowerId.Melee]: 5,
-		[TowerId.Sniper]: 5,
+		[ItemId.Blunt]: 10,
+		[ItemId.God]: 2,
+		[ItemId.Melee]: 5,
+		[ItemId.Sniper]: 5,
 	},
 	baseHealth: math.huge,
 };

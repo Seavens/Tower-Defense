@@ -4,19 +4,19 @@ import { chaliceRelicItem } from "./chalice";
 import { godTowerItem } from "./god";
 import { meleeTowerItem } from "./melee";
 import { sniperTowerItem } from "./sniper";
-import type { ItemClass } from "../types";
+import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mobs/types";
 import type { TowerTargeting } from "shared/tower/types";
 
 interface TowerDefinition {
-	class: ItemClass.Tower;
+	kind: ItemKind.Tower;
 
 	damage: number;
 	range: number;
 	cooldown: number;
 
-	kind: MobDamage;
+	damageKind: MobDamage;
 	count: number;
 	cost: number;
 
@@ -24,17 +24,17 @@ interface TowerDefinition {
 }
 
 interface RelicDefinition {
-	class: ItemClass.Relic;
+	kind: ItemKind.Relic;
 
 	placeholder: number;
 }
 
 export interface ItemClasses {
-	[ItemClass.Tower]: TowerDefinition;
-	[ItemClass.Relic]: RelicDefinition;
+	[ItemKind.Tower]: TowerDefinition;
+	[ItemKind.Relic]: RelicDefinition;
 }
 
-export interface ItemDefinition<I extends ItemId, C extends ItemClass> {
+export interface ItemDefinition<I extends ItemId, C extends ItemKind> {
 	id: I;
 	name: string;
 	desc: string;
@@ -42,22 +42,11 @@ export interface ItemDefinition<I extends ItemId, C extends ItemClass> {
 	rarity: ItemRarity;
 	image: RBXAssetId;
 
-	class: ItemClasses[C];
+	kind: ItemClasses[C];
 }
 
 type InferClass<T> = T extends ItemDefinition<ItemId, infer C> ? C : never;
 export type AnyItemDefinition = (typeof itemDefinitions)[ItemId];
-
-export type RelicItemIds = {
-	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, ItemClass.Relic>
-		? I
-		: never;
-}[ItemId];
-export type TowerItemIds = {
-	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, ItemClass.Tower>
-		? I
-		: never;
-}[ItemId];
 
 export const itemDefinitions = {
 	[ItemId.Sniper]: sniperTowerItem,

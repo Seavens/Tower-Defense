@@ -1,11 +1,11 @@
-import { ItemClass } from "../types";
+import { ItemKind } from "../types";
 import { ItemId } from "../types";
 import { ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mobs/types";
 import { TowerTargeting } from "shared/tower/types";
 import type { ItemDefinition } from ".";
 
-export const godTowerItem: ItemDefinition<ItemId.God, ItemClass.Tower> = {
+export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 	id: ItemId.God,
 	name: "God Tower",
 	desc: "A God tower that attacks enemies from anywhere.",
@@ -13,14 +13,14 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemClass.Tower> = {
 	rarity: ItemRarity.Mythical,
 	image: `rbxassetid://16172534401`,
 
-	class: {
-		class: ItemClass.Tower,
+	kind: {
+		kind: ItemKind.Tower,
 
 		damage: 84,
 		range: 30,
 		cooldown: 4,
 
-		kind: MobDamage.Magic,
+		damageKind: MobDamage.Magic,
 		count: 1,
 		cost: 700,
 

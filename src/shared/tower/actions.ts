@@ -1,5 +1,6 @@
 import type { BroadcastMetadata, EntityMetadata } from "shared/replication/metadata";
-import type { TowerId, TowerTargeting } from "./types";
+import type { TowerItemId } from "shared/inventory/types";
+import type { TowerTargeting } from "./types";
 
 export type TowerActions<S> = {
 	placeTower: (state: S, payload: TowerPlace, metadata: EntityMetadata & BroadcastMetadata) => S;
@@ -9,7 +10,7 @@ export type TowerActions<S> = {
 };
 
 export interface TowerPlace {
-	id: TowerId;
+	id: TowerItemId;
 	uuid: string;
 	index: number;
 	key: string;

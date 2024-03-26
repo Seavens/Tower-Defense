@@ -1,11 +1,12 @@
 import { Tower as API } from "shared/tower/api";
 import { Collision, setCollision } from "shared/utils/collision";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { itemDefinitions } from "shared/inventory/items";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
-import { towerDefinitions } from "shared/tower/definitions";
 import type { Mob } from "shared/mobs/api";
-import type { TowerId, TowerTargeting } from "shared/tower/types";
+import type { TowerItemId } from "shared/inventory/types";
+import type { TowerTargeting } from "shared/tower/types";
 
 const {
 	assets: { towers: assets },
@@ -15,7 +16,7 @@ const { placed } = Workspace;
 export class Tower extends API {
 	public static towers = new Map<string, Tower>();
 
-	public declare readonly id: TowerId;
+	public declare readonly id: TowerItemId;
 	public declare readonly cframe: CFrame;
 	public declare readonly uuid: string;
 
@@ -24,7 +25,7 @@ export class Tower extends API {
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
 
-	public constructor(id: TowerId, uuid: string, index: number, cframe: CFrame, upgrades: number) {
+	public constructor(id: TowerItemId, uuid: string, index: number, cframe: CFrame, upgrades: number) {
 		const { towers } = Tower;
 		super(id, uuid, index, cframe);
 		const { key } = this;
@@ -50,9 +51,9 @@ export class Tower extends API {
 		const { id, key } = this;
 		const tower = store.getState(selectSpecificTower(key));
 		if (tower === undefined) {
-			const {
-				targeting: [targeting],
-			} = towerDefinitions[id];
+			const definition = itemDefinitions[id];
+			const { targeting: defaults } = definition.kind;
+			const [targeting] = defaults;
 			return targeting;
 		}
 		return tower.targeting;

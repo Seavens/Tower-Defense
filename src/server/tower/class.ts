@@ -2,22 +2,24 @@ import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { Mob } from "../mob/class";
 import { RunService } from "@rbxts/services";
-import { type TowerItemIds, itemDefinitions } from "shared/inventory/items";
 import { TowerTargeting } from "shared/tower/types";
+import { itemDefinitions } from "shared/inventory/items";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "server/tower/targeting";
+import type { ItemTowerClass, TowerItemId } from "shared/inventory/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
 
-	public declare readonly id: TowerItemIds;
+	public declare readonly id: TowerItemId;
 	public declare readonly uuid: string;
 	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
 
 	public readonly owner: string;
+	public readonly props: ItemTowerClass;
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
@@ -33,12 +35,20 @@ export class Tower extends API {
 		});
 	}
 
-	public constructor(id: TowerItemIds, uuid: string, index: number, cframe: CFrame, owner: string) {
+	public constructor(
+		id: TowerItemId,
+		uuid: string,
+		index: number,
+		cframe: CFrame,
+		owner: string,
+		props: ItemTowerClass,
+	) {
 		const { towers } = Tower;
 		super(id, uuid, index, cframe);
 		const { key } = this;
 		towers.set(key, this);
 		this.owner = owner;
+		this.props = props;
 	}
 
 	public static getTower(key: string): Option<Tower> {
@@ -48,7 +58,7 @@ export class Tower extends API {
 
 	public isTargetingValid(targeting: TowerTargeting): boolean {
 		const { id } = this;
-		const { targeting: allowed } = itemDefinitions[id].class;
+		const { targeting: allowed } = itemDefinitions[id].kind;
 		if (allowed.includes(targeting) === false) {
 			return false;
 		}
@@ -69,15 +79,16 @@ export class Tower extends API {
 		if (tower === undefined) {
 			const {
 				targeting: [targeting],
-			} = itemDefinitions[id].class;
+			} = itemDefinitions[id].kind;
 			return targeting;
 		}
 		return tower.targeting;
 	}
 
 	public getTarget(): Option<Mob> {
-		const { cframe } = this;
-		const defRange = itemDefinitions[this.id].class.range;
+		const { cframe, props } = this;
+		const { range: rangeMulti } = props;
+		const defRange = itemDefinitions[this.id].kind.range;
 		const range = defRange * rangeMulti;
 		const position = cframe.Position;
 		const mobs = Mob.getMobsInRadius(position, range);
@@ -88,10 +99,12 @@ export class Tower extends API {
 	}
 
 	public attackTarget(delta: number): void {
-		const { id, key, stats, lastAttack, lastTarget } = this;
-		const { cooldownMulti, damageMulti } = stats;
-		const cooldown = towerDefinitions[id].cooldown * cooldownMulti;
-		const damage = towerDefinitions[id].damage * damageMulti;
+		const { id, key, props, lastAttack, lastTarget } = this;
+		const definition = itemDefinitions[id];
+		const { cooldown: cooldownMulti, damage: damageMulti } = props;
+		const { cooldown: baseCooldown, damage: baseDamage } = definition.kind;
+		const cooldown = baseCooldown * cooldownMulti;
+		const damage = baseDamage * damageMulti;
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
@@ -106,18 +119,18 @@ export class Tower extends API {
 		if (currentTarget === undefined) {
 			return;
 		}
-		const { kind } = towerDefinitions[id];
+		const { damageKind: kind } = definition.kind;
 		currentTarget.takeDamage(damage, kind);
 	}
 
 	public upgradeTower(multiplier: number): void {
-		const { key, base, owner } = this;
-		const stats = { ...base };
-		for (const [key, stat] of pairs(stats)) {
-			stats[key] = stat * multiplier;
-		}
-		this.stats = stats;
-		store.upgradeTower({ key }, { user: owner, broadcast: true });
+		// const { key, base, owner } = this;
+		// const stats = { ...base };
+		// for (const [key, stat] of pairs(stats)) {
+		// 	stats[key] = stat * multiplier;
+		// }
+		// this.stats = stats;
+		// store.upgradeTower({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

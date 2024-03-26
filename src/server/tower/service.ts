@@ -1,23 +1,24 @@
 import { Events } from "server/network";
+import { ItemKind, ItemTowerClass, TowerItemId, isTowerItemId } from "shared/inventory/types";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
+import { itemDefinitions } from "shared/inventory/items";
 import { mapDefinitions } from "shared/map/definitions";
 import { selectCurrentMap } from "shared/game/selectors";
 import { selectInventoryData } from "server/inventory/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
-import { towerDefinitions } from "shared/tower/definitions";
 import type { Entity } from "server/player/class";
-import type { Item } from "shared/item/types";
+import type { Item, ItemId } from "shared/inventory/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
-import type { TowerId, TowerTargeting } from "shared/tower/types";
+import type { TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
-	protected placedTowers = new Map<TowerId, number>();
+	protected placedTowers = new Map<ItemId, number>();
 
 	public onPlaceTower(player: Player, uuid: string, position: Vector3): void {
 		const user = getUser(player);
@@ -26,33 +27,40 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		if (map === undefined) {
 			return;
 		}
-		let stats: Option<Item> = undefined;
-		for (const [_, tower] of equipped) {
-			if (tower.uuid !== uuid) {
+		let result: Option<Item> = undefined;
+		// !! Rename this shit (`i`).
+		for (const [_, item] of equipped) {
+			if (item.uuid !== uuid) {
 				continue;
 			}
-			stats = tower;
+			result = item;
 			break;
 		}
-		if (stats === undefined) {
+		if (result === undefined || !isTowerItemId(result.id) || result.props.kind !== ItemKind.Tower) {
 			return;
 		}
+		const { id, props } = result;
+
 		const { towerLimits } = mapDefinitions[map];
-		// !! Temporary, validate position.
-		const { id } = stats;
-		const { placedTowers } = this;
 		const limit = towerLimits[id];
+		// !! Temporary, validate position.
+		const { placedTowers } = this;
 		const placed = placedTowers.get(id) ?? 0;
-		if (placed >= limit) {
+
+		const definition = itemDefinitions[id];
+		const { kind } = definition.kind;
+
+		if (placed >= limit || kind !== ItemKind.Tower) {
 			return;
 		}
-		const {
-			targeting: [targeting],
-		} = towerDefinitions[id];
+
+		const { targeting: allowed } = definition.kind;
+		const [targeting] = allowed;
 		const index = placed + 1;
 		const cframe = new CFrame(position);
-		const tower = new Tower(id, uuid, index, cframe, user, stats);
+		const tower = new Tower(id, uuid, index, cframe, user, props);
 		const key = tower.getKey();
+
 		store.placeTower({ id, uuid, index, key, position, targeting }, { user, broadcast: true });
 		placedTowers.set(id, index);
 	}

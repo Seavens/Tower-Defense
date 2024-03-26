@@ -1,7 +1,8 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
 import type { MobDamage, MobStatus } from "./mobs/types";
-import type { TowerId, TowerTargeting } from "./tower/types";
+import type { TowerItemId } from "./inventory/types";
+import type { TowerTargeting } from "./tower/types";
 
 interface ClientToServerEvents {
 	replicateReady(): void;
@@ -29,7 +30,7 @@ interface ServerToClientEvents {
 
 	replicateIndexReset(index: number): void;
 
-	replicateTowerPlacement(uuid: string, id: TowerId, position: Vector3): void;
+	replicateTowerPlacement(uuid: string, id: TowerItemId, position: Vector3): void;
 }
 
 interface ClientToServerFunctions {

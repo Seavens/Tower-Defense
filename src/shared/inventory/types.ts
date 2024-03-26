@@ -1,6 +1,7 @@
 import { Flamework } from "@flamework/core";
 import { isUUID } from "shared/guards";
 import { t } from "@rbxts/t";
+import type { ItemDefinition, itemDefinitions } from "./items";
 
 export const enum ItemRarity {
 	Rare = "rarity_id:rare",
@@ -10,7 +11,7 @@ export const enum ItemRarity {
 	Secret = "rarity_id:secret",
 }
 
-export const enum ItemClass {
+export const enum ItemKind {
 	Tower = "item_kind:tower",
 	Relic = "item_kind:relic",
 }
@@ -23,8 +24,19 @@ export const enum ItemId {
 	Chalice = "item_id:chalice",
 }
 
+export type RelicItemId = {
+	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, ItemKind.Relic>
+		? I
+		: never;
+}[ItemId];
+export type TowerItemId = {
+	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, ItemKind.Tower>
+		? I
+		: never;
+}[ItemId];
+
 export interface ItemTowerClass {
-	class: ItemClass.Tower;
+	kind: ItemKind.Tower;
 	damage: number;
 	range: number;
 	cooldown: number;
@@ -34,28 +46,29 @@ export interface ItemTowerClass {
 }
 
 export interface ItemRelicClass {
-	class: ItemClass.Relic;
+	kind: ItemKind.Relic;
 	multiplier: number;
 }
 
-export interface ItemClasses {
-	[ItemClass.Tower]: ItemTowerClass;
-	[ItemClass.Relic]: ItemRelicClass;
+export interface ItemKinds {
+	[ItemKind.Tower]: ItemTowerClass;
+	[ItemKind.Relic]: ItemRelicClass;
 }
 
 export interface Item {
 	id: ItemId;
 	uuid: UUID;
-	// timestamp: number;
-	props: ItemClasses[ItemClass];
+	props: ItemKinds[ItemKind];
 }
 
 export const isItemRarity = Flamework.createGuard<ItemRarity>();
 export const isItemTowerClass = Flamework.createGuard<ItemTowerClass>();
 export const isItemRelicClass = Flamework.createGuard<ItemRelicClass>();
 
-export const isItemClass = Flamework.createGuard<ItemClass>();
+export const isItemClass = Flamework.createGuard<ItemKind>();
 export const isItemId = Flamework.createGuard<ItemId>();
+export const isTowerItemId = Flamework.createGuard<TowerItemId>();
+export const isRelicItemId = Flamework.createGuard<RelicItemId>();
 
 export const isItem: t.check<Item> = t.strictInterface({
 	id: isItemId,

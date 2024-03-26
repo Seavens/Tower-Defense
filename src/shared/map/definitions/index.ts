@@ -2,7 +2,7 @@ import { MapId } from "../types";
 import { testMap } from "./test";
 import type { MapDifficulty } from "../types";
 import type { MobId } from "shared/mobs/types";
-import type { TowerId } from "shared/tower/types";
+import type { TowerItemId } from "shared/inventory/types";
 
 export type WaveDefinition = {
 	[I in MobId]?: {
@@ -18,7 +18,7 @@ export interface MapDefinition<I extends MapId> {
 	desc: string;
 	difficulty: MapDifficulty;
 	waves: Array<WaveDefinition>;
-	towerLimits: { [T in TowerId]: number };
+	towerLimits: { [T in TowerItemId]: number };
 	baseHealth: number;
 }
 

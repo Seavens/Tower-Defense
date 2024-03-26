@@ -1,11 +1,17 @@
-import { ItemClass, ItemRarity } from "shared/inventory/types";
+import { ItemKind, ItemRarity } from "shared/inventory/types";
 import { Modding } from "@flamework/core";
 import { createUUID } from "shared/utils/create-uuid";
 import { itemDefinitions } from "./items";
 import { rarityDefinitions } from "shared/inventory/rarities";
-import type { Item, ItemId, ItemRelicClass, ItemTowerClass } from "shared/inventory/types";
+import type { Item, ItemId, ItemRelicClass, ItemTowerClass, RelicItemId, TowerItemId } from "shared/inventory/types";
 
 const allItemIds = Modding.inspect<Array<ItemId>>();
+const towerItemIds = Modding.inspect<Array<TowerItemId>>();
+const relicItemIds = Modding.inspect<Array<RelicItemId>>();
+const mappedItemIds = {
+	[ItemKind.Tower]: towerItemIds,
+	[ItemKind.Relic]: relicItemIds,
+};
 
 export namespace ItemUtility {
 	export function getRarity(): ItemRarity {
@@ -32,17 +38,23 @@ export namespace ItemUtility {
 		return math.random() + 1;
 	}
 
-	export function createItem(owner: number): Item {
-		const id = allItemIds[math.random(1, allItemIds.size()) - 1];
+	export function createItem(owner: number, kind?: ItemKind): Item {
+		let id: ItemId;
+		if (kind !== undefined) {
+			const ids = mappedItemIds[kind];
+			id = ids[math.random(1, ids.size()) - 1];
+		} else {
+			id = allItemIds[math.random(1, allItemIds.size()) - 1];
+		}
 		const definition = itemDefinitions[id];
 		// TS/JS moment
-		const { class: kind } = definition.class;
+		const { kind: itemKind } = definition.kind;
 		//
 		const uuid = createUUID();
-		if (kind === ItemClass.Relic) {
+		if (itemKind === ItemKind.Relic) {
 			const multiplier = getMultiplier();
 			const props: ItemRelicClass = {
-				class: ItemClass.Relic,
+				kind: ItemKind.Relic,
 				multiplier,
 			};
 			const item: Item = {
@@ -56,7 +68,7 @@ export namespace ItemUtility {
 		const damage = getMultiplier();
 		const range = getMultiplier();
 		const props: ItemTowerClass = {
-			class: ItemClass.Tower,
+			kind: ItemKind.Tower,
 			cooldown,
 			damage,
 			level: 0,
