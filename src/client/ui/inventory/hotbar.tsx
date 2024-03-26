@@ -14,7 +14,7 @@ import { useSelector } from "@rbxts/react-reflex";
 import Abbreviator from "@rbxts/abbreviate";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { TowerId } from "shared/tower/types";
+import type { ItemId, TowerItemId } from "shared/inventory/types";
 
 interface HotbarProps {}
 
@@ -32,12 +32,12 @@ export function Hotbar(props: HotbarProps): Element {
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
-			const slot = `${index}`;
+			const slot: Slot = `${index}`;
 			const tower = equipped.get(slot);
 			elements.push(
 				<ItemSlot
 					{...tower}
-					onClick={(placing: TowerId): void => {
+					onClick={(placing: ItemId): void => {
 						store.beginPlacement({ placing, slot });
 					}}
 				/>,
@@ -110,10 +110,6 @@ export function Hotbar(props: HotbarProps): Element {
 				anchorPoint={new Vector2(0.5, 1)}
 				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING / 2)}
 				backgroundColor={Latte.Overlay0} // temp
-				// textColor3={palette.white}
-				// Text={`${level}`}
-				// TextSize={px(12)}
-				// Font={Enum.Font.GothamMedium}
 			>
 				<textlabel
 					key={"level-value"}

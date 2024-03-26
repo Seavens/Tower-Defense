@@ -25,8 +25,7 @@ interface TowerDefinition {
 
 interface RelicDefinition {
 	kind: ItemKind.Relic;
-
-	placeholder: number;
+	multiplier: number;
 }
 
 export interface ItemClasses {

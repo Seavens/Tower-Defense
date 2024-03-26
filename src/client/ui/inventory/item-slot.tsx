@@ -1,30 +1,28 @@
+import { type AnyItemDefinition, itemDefinitions } from "shared/inventory/items";
 import { Frame, Group } from "../components";
 import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
+import { type Item, type ItemId, ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { fonts } from "client/ui/constants";
 import { rarityDefinitions } from "shared/inventory/rarities";
-import { towerDefinitions } from "shared/tower/definitions";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { AnyRarityDefinition } from "shared/inventory/rarities";
-import type { AnyTowerDefintion } from "shared/tower/definitions";
 import type { Element } from "@rbxts/react";
-import type { Item } from "shared/item/types";
-import type { TowerId } from "shared/tower/types";
 
 export interface ItemSlotProps extends Partial<Item> {
-	onClick?: (id: TowerId) => void;
+	onClick?: (id: ItemId) => void;
 }
 
 export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
-	const definition = useMemo((): Option<AnyTowerDefintion> => {
+	const definition = useMemo((): Option<AnyItemDefinition> => {
 		if (id === undefined) {
 			return undefined;
 		}
-		return towerDefinitions[id];
+		return itemDefinitions[id];
 	}, [id]);
 	const rarity = useMemo((): Option<AnyRarityDefinition> => {
 		if (definition === undefined) {
@@ -34,7 +32,14 @@ export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 		return rarityDefinitions[rarity];
 	}, [definition]);
 
-	const cost = definition?.cost ?? 0;
+	const cost = useMemo((): number | undefined => {
+		if (definition === undefined || definition.kind.kind !== ItemKind.Tower) {
+			return undefined;
+		}
+		const { cost } = definition.kind;
+		return cost;
+	}, [definition]);
+
 	const color = rarity?.color ?? Latte.Base;
 
 	return (
@@ -46,6 +51,7 @@ export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 			backgroundTransparency={0.65}
 			clipsDescendants={true}
 			key={"item-slot"}
+			layoutOrder={id !== undefined ? 2 : 1}
 		>
 			<Group
 				size={UDim2.fromScale(1, 0.8)}

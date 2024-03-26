@@ -1,5 +1,5 @@
-import { ItemKind } from "../types";
 import { ItemId } from "../types";
+import { ItemKind } from "../types";
 import { ItemRarity } from "shared/inventory/types";
 import type { ItemDefinition } from ".";
 
@@ -14,6 +14,6 @@ export const chaliceRelicItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = 
 	kind: {
 		kind: ItemKind.Relic,
 
-		placeholder: 1,
+		multiplier: 1.2,
 	},
 };

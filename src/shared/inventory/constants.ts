@@ -9,3 +9,4 @@ export const RARITY_WEIGHTS: { [I in ItemRarity]: number } = {
 };
 
 export const MAXIMUM_EQUIPPED = 6;
+export const MAXIMUM_STORED = 210;

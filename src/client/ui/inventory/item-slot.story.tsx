@@ -1,18 +1,29 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
+import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
+import { ItemUtility } from "shared/inventory/utils";
+import { ReflexProvider } from "@rbxts/react-reflex";
+import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
+import type { Element } from "@rbxts/react";
 
-// const tower = GenerateTowerObject(-1);
+const item = ItemUtility.createItem(1, ItemKind.Tower);
 
-// function ItemSlotStory(): Element {
-// 	return <ItemSlot {...tower} />;
-// }
-
-// function Story(): Element {
-// 	return <ItemSlotStory />;
-// }
-
-export = CreateReactStory({ react: React, reactRoblox: ReactRoblox }, (props) => {
-	return <ItemSlot />;
-});
+export = CreateReactStory(
+	{
+		name: "Hotbar",
+		react: React,
+		reactRoblox: ReactRoblox,
+		cleanup: (): void => {
+			store.resetState();
+		},
+	},
+	(): Element => {
+		return (
+			<ReflexProvider producer={store}>
+				<ItemSlot {...item} />
+			</ReflexProvider>
+		);
+	},
+);

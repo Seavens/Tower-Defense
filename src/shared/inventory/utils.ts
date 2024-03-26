@@ -35,10 +35,21 @@ export namespace ItemUtility {
 	}
 
 	export function getMultiplier(): number {
-		return math.random() + 1;
+		return math.min(math.random() + 0.85, 1.25);
 	}
 
-	export function createItem(owner: number, kind?: ItemKind): Item {
+	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;
+
+	export function createItem<T extends Option<ItemKind>>(
+		owner: number,
+		kind: T,
+	): T extends ItemKind.Tower ? ItemTowerClass : Item;
+	export function createItem<T extends Option<ItemKind>>(
+		owner: number,
+		kind: T,
+	): T extends ItemKind.Relic ? ItemRelicClass : Item;
+
+	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item {
 		let id: ItemId;
 		if (kind !== undefined) {
 			const ids = mappedItemIds[kind];
@@ -82,5 +93,14 @@ export namespace ItemUtility {
 			props,
 		};
 		return item;
+	}
+
+	export function createItems<T extends Option<ItemKind>>(owner: number, count: number, kind?: T): Array<Item> {
+		const items = new Array<Item>();
+		for (const _ of $range(1, count)) {
+			const item = createItem(owner, kind);
+			items.push(item);
+		}
+		return items;
 	}
 }

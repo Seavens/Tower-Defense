@@ -5,11 +5,11 @@ import type { InventoryData } from "shared/data/types";
 import type { Item } from "./types";
 
 export namespace InventoryImpl {
-	export function getAvailableSlot(equipped: Map<string, Item>): Slot | undefined {
+	export function getAvailableSlot(stored: Map<Slot, Item>, max: number): Slot | undefined {
 		let available: Option<Slot>;
-		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+		for (const index of $range(1, max)) {
 			const slot: Slot = `${index}`;
-			if (equipped.has(slot)) {
+			if (stored.has(slot)) {
 				continue;
 			}
 			available = slot;
@@ -26,7 +26,7 @@ export namespace InventoryImpl {
 		if (tower === undefined) {
 			return original(state);
 		}
-		const available = getAvailableSlot(equipped);
+		const available = getAvailableSlot(equipped, MAXIMUM_EQUIPPED);
 		if (available === undefined) {
 			return original(state);
 		}

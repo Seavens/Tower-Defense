@@ -1,5 +1,5 @@
-import { ItemKind } from "../types";
 import { ItemId } from "../types";
+import { ItemKind } from "../types";
 import { ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mobs/types";
 import { TowerTargeting } from "shared/tower/types";
