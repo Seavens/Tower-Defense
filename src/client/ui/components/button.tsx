@@ -1,9 +1,10 @@
 // Resourced from Littensy: https://github.com/littensy/slither
 import React from "@rbxts/react";
-import type { Element } from "@rbxts/react";
+import type { Binding, Element } from "@rbxts/react";
 import type { FrameProps } from "./frame";
 
 export interface ButtonProps extends FrameProps<TextButton> {
+	text?: string | Binding<string> | undefined;
 	active?: boolean | React.Binding<boolean>;
 	onClick?: () => void;
 	onMouseDown?: () => void;
@@ -26,6 +27,7 @@ export function Button(props: ButtonProps): Element {
 
 	return (
 		<textbutton
+			Text={props.text}
 			Active={props.active}
 			AutoButtonColor={false}
 			Size={props.size}

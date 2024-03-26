@@ -1,8 +1,7 @@
-// Resourced from Littensy: https://github.com/littensy/slither
 import { config } from "@rbxts/ripple";
 import type { SpringOptions } from "@rbxts/ripple";
 
-export const fonts = {
+export const FONTS = {
 	inter: {
 		regular: new Font("rbxassetid://12187365364"),
 		medium: new Font("rbxassetid://12187365364", Enum.FontWeight.Medium),

@@ -1,9 +1,9 @@
+import { FONTS } from "client/ui/constants";
 import { Frame, Group } from "../components";
 import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { fonts } from "client/ui/constants";
 import { itemDefinitions } from "shared/inventory/items";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import { usePx } from "../hooks";
@@ -121,7 +121,7 @@ export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 						TextColor3={GetPerceivedBrightness(color) >= 0.235 ? Latte.Base : Mocha.Crust}
 						Text={definition === undefined ? "" : `$${cost}`}
 						TextSize={px(10)}
-						FontFace={fonts.inter.bold}
+						FontFace={FONTS.inter.bold}
 						key={"tower-cost"}
 					>
 						<uistroke

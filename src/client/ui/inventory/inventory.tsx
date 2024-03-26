@@ -1,15 +1,18 @@
-import { Darken } from "@rbxts/colour-utils";
-import { Frame, Group } from "../components";
+import { Button, Frame, Group, Image } from "../components";
+import { Darken, Lighten } from "@rbxts/colour-utils";
+import { FONTS } from "../constants";
 import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
+import { type ItemId, isItemTowerClass } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
+import { TextField } from "../components/text-field";
 import { selectInventoryData } from "client/inventory/selectors";
 import { store } from "client/state/store";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
-import React, { useMemo } from "@rbxts/react";
+import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemId } from "shared/inventory/types";
+import type { Item, ItemTowerClass } from "shared/inventory/types";
 
 interface InventoryProps {}
 
@@ -21,16 +24,23 @@ export function Inventory(props: InventoryProps): Element {
 	const outline = Darken(Mocha.Base, 0.25);
 	const thickness = 6;
 
+	const [selected, setSelected] = useState<Slot>();
+
+	useMemo((): Option<Item> => {
+		if (selected === undefined) return undefined;
+		return stored.get(selected);
+	}, [stored, selected]);
+
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, stored.size())) {
 			const slot: Slot = `${index}`;
-			const tower = stored.get(slot);
+			const item = stored.get(slot);
 			elements.push(
 				<ItemSlot
-					{...tower}
-					onClick={(placing: ItemId): void => {
-						store.beginPlacement({ placing, slot });
+					{...item}
+					onClick={(): void => {
+						setSelected(slot);
 					}}
 				/>,
 			);
@@ -56,9 +66,133 @@ export function Inventory(props: InventoryProps): Element {
 				<uicorner CornerRadius={new UDim(0, px(5))} />
 				<uistroke Color={outline} Thickness={px(2)} />
 				<Group
+					key={"inventory-filters"}
+					size={UDim2.fromScale(1, 0.1)}
+					anchorPoint={new Vector2(0.5, 0)}
+					position={UDim2.fromScale(0.5, 0)}
+				>
+					<uilistlayout
+						FillDirection={Enum.FillDirection.Horizontal}
+						HorizontalAlignment={Enum.HorizontalAlignment.Center}
+						VerticalAlignment={Enum.VerticalAlignment.Center}
+						SortOrder={Enum.SortOrder.LayoutOrder}
+						Padding={new UDim(0, px(5))}
+					/>
+					<Button
+						text={""}
+						key={"filter-kind"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Lighten(background, 0.5)}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uiaspectratioconstraint AspectRatio={1} />
+						<Image
+							key={"filter-kind"}
+							size={UDim2.fromScale(0.8, 0.7)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							image={"rbxassetid://7964618035"}
+						/>
+					</Button>
+					<Button
+						text={""}
+						key={"filter-rarity"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Lighten(background, 0.5)}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uiaspectratioconstraint AspectRatio={1} />
+						<Image
+							key={"filter-rarity"}
+							size={UDim2.fromScale(1, 1)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							image={"rbxassetid://13916892997"}
+						/>
+					</Button>
+					<Button
+						text={""}
+						key={"filter-kind"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Lighten(background, 0.5)}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uiaspectratioconstraint AspectRatio={1} />
+						<Image
+							key={"filter-kind"}
+							size={UDim2.fromScale(0.8, 0.7)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							image={"rbxassetid://13916962510"}
+						/>
+					</Button>
+					<Button
+						text={""}
+						key={"filter-level"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Lighten(background, 0.5)}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uiaspectratioconstraint AspectRatio={1} />
+						<Image
+							key={"level-icon"}
+							size={UDim2.fromScale(1, 1)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							image={"rbxassetid://12499789261"}
+						/>
+					</Button>
+					<Button
+						text={""}
+						key={"filter-lock"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Lighten(background, 0.5)}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uiaspectratioconstraint AspectRatio={1} />
+						<Image
+							key={"lock-icon"}
+							size={UDim2.fromScale(1, 1)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							image={"rbxassetid://6088994136"}
+						/>
+					</Button>
+					<TextField
+						key={"search"}
+						size={UDim2.fromScale(0.515, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						placeholderText={"Search..."}
+						backgroundTransparency={0.85}
+						textSize={px(18)}
+						textColor={Latte.Base}
+						placeholderColor={Latte.Base}
+						font={FONTS.robotoMono.regular}
+					>
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+					</TextField>
+				</Group>
+				<Group
 					key={"scroll-group"}
-					size={UDim2.fromScale(1, 1)}
-					anchorPoint={new Vector2(0.5, 0.5)}
+					size={UDim2.fromScale(1, 0.9)}
+					anchorPoint={new Vector2(0.5, 0.45)}
 					position={UDim2.fromScale(0.5, 0.5)}
 				>
 					<scrollingframe

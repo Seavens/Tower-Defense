@@ -1,10 +1,10 @@
 import { Darken } from "@rbxts/colour-utils";
 import { EXP_BAR_SIZE_Y, HOTBAR_PADDING, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "./constants";
+import { FONTS } from "client/ui/constants";
 import { Frame, Group } from "../components";
 import { ItemSlot } from "./item-slot";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
-import { fonts } from "client/ui/constants";
 import { getMaxExp } from "shared/profile/utility";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
@@ -12,9 +12,9 @@ import { store } from "client/state/store";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import Abbreviator from "@rbxts/abbreviate";
-import React, { useMemo, useState } from "@rbxts/react";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemId, TowerItemId } from "shared/inventory/types";
+import type { ItemId } from "shared/inventory/types";
 
 interface HotbarProps {}
 
@@ -100,7 +100,7 @@ export function Hotbar(props: HotbarProps): Element {
 					TextColor3={Latte.Base}
 					Text={`${abbreviator.numberToString(experience)}/${abbreviator.numberToString(max)}`}
 					TextSize={px(12)}
-					FontFace={fonts.inter.bold}
+					FontFace={FONTS.inter.bold}
 					TextXAlignment={Enum.TextXAlignment.Left}
 				/>
 			</Frame>
@@ -120,7 +120,7 @@ export function Hotbar(props: HotbarProps): Element {
 					TextColor3={Latte.Base}
 					Text={abbreviator.numberToString(level)}
 					TextSize={px(10)}
-					FontFace={fonts.inter.bold}
+					FontFace={FONTS.inter.bold}
 					AutomaticSize={Enum.AutomaticSize.X}
 				>
 					<uipadding
