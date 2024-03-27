@@ -1,7 +1,9 @@
 import { Button, Frame, Group, Image } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { FONTS } from "../constants";
+import { FormatStats } from "./utils/format-stats";
 import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
+import { ItemClasses, itemDefinitions } from "shared/inventory/items";
 import { type ItemId, isItemTowerClass } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
@@ -12,7 +14,7 @@ import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Item, ItemTowerClass } from "shared/inventory/types";
+import type { Item, ItemKind, ItemTowerClass } from "shared/inventory/types";
 
 interface InventoryProps {}
 
@@ -26,10 +28,21 @@ export function Inventory(props: InventoryProps): Element {
 
 	const [selected, setSelected] = useState<Slot>();
 
-	useMemo((): Option<Item> => {
+	const item = useMemo((): Option<Item> => {
 		if (selected === undefined) return undefined;
 		return stored.get(selected);
 	}, [stored, selected]);
+
+	const stats = useMemo((): Option<String> => {
+		if (item === undefined) return undefined;
+		return FormatStats.formatStats(item);
+	}, [stored, item]);
+
+	// const itemDefinition = useMemo((): Option<Item> => {
+	// 	if (item === undefined) return undefined;
+	// 	return itemDefinitions
+
+	// }
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -271,6 +284,24 @@ export function Inventory(props: InventoryProps): Element {
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
 				<uistroke Color={outline} Thickness={px(2)} />
+
+				<uilistlayout
+					FillDirection={Enum.FillDirection.Vertical}
+					HorizontalAlignment={Enum.HorizontalAlignment.Center}
+					VerticalAlignment={Enum.VerticalAlignment.Top}
+					SortOrder={Enum.SortOrder.LayoutOrder}
+					Padding={new UDim(0, px(5))}
+				/>
+				<Frame
+					key={"item-background"}
+					size={UDim2.fromScale(0.9, 0.4)}
+					anchorPoint={new Vector2(0.5, 0)}
+					position={UDim2.fromScale(0.5, 0)}
+					backgroundTransparency={0.5}
+					// backgroundColor={}
+				>
+					<uiaspectratioconstraint AspectRatio={1} />
+				</Frame>
 			</Frame>
 		</Group>
 	);
