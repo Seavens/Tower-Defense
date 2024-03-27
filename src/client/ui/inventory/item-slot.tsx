@@ -5,11 +5,10 @@ import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { itemDefinitions } from "shared/inventory/items";
-import { rarityDefinitions } from "shared/inventory/rarities";
+import { useItemDefinition, useRarityDefinition } from "./utils";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { AnyItemDefinition } from "shared/inventory/items";
-import type { AnyRarityDefinition } from "shared/inventory/rarities";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
@@ -20,25 +19,18 @@ export interface ItemSlotProps extends Partial<Item> {
 export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
-	const definition = useMemo((): Option<AnyItemDefinition> => {
-		if (id === undefined) {
-			return undefined;
-		}
-		return itemDefinitions[id];
-	}, [id]);
-	const rarity = useMemo((): Option<AnyRarityDefinition> => {
+	const definition = useItemDefinition(id);
+	const rarity = useRarityDefinition(id);
+
+	const cost = useMemo((): Option<number> => {
 		if (definition === undefined) {
 			return undefined;
 		}
-		const { rarity } = definition;
-		return rarityDefinitions[rarity];
-	}, [definition]);
-
-	const cost = useMemo((): number | undefined => {
-		if (definition === undefined || definition.kind.kind !== ItemKind.Tower) {
+		const { kind } = definition;
+		if (kind.kind !== ItemKind.Tower) {
 			return undefined;
 		}
-		const { cost } = definition.kind;
+		const { cost } = kind;
 		return cost;
 	}, [definition]);
 

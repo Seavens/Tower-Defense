@@ -1,48 +1,43 @@
-import { Button, Frame, Group, Image } from "../components";
+import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { FONTS } from "../constants";
-import { FormatStats } from "./utils/format-stats";
 import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
-import { ItemClasses, itemDefinitions } from "shared/inventory/items";
-import { type ItemId, isItemTowerClass } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { TextField } from "../components/text-field";
+import { formatStats } from "./utils";
 import { selectInventoryData } from "client/inventory/selectors";
-import { store } from "client/state/store";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Item, ItemKind, ItemTowerClass } from "shared/inventory/types";
+import type { Item } from "shared/inventory/types";
 
 interface InventoryProps {}
+
+const BACKGROUND = Mocha.Base;
+const OUTLINE = Darken(Mocha.Base, 0.25);
+const THICKNESS = 6;
 
 export function Inventory(props: InventoryProps): Element {
 	const px = usePx();
 	const { stored } = useSelector(selectInventoryData);
 
-	const background = Mocha.Base;
-	const outline = Darken(Mocha.Base, 0.25);
-	const thickness = 6;
-
 	const [selected, setSelected] = useState<Slot>();
 
 	const item = useMemo((): Option<Item> => {
-		if (selected === undefined) return undefined;
+		if (selected === undefined) {
+			return undefined;
+		}
 		return stored.get(selected);
 	}, [stored, selected]);
 
-	const stats = useMemo((): Option<String> => {
-		if (item === undefined) return undefined;
-		return FormatStats.formatStats(item);
+	const stats = useMemo((): Option<string> => {
+		if (item === undefined) {
+			return undefined;
+		}
+		return formatStats(item, px(16), px(10));
 	}, [stored, item]);
-
-	// const itemDefinition = useMemo((): Option<Item> => {
-	// 	if (item === undefined) return undefined;
-	// 	return itemDefinitions
-
-	// }
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -71,13 +66,13 @@ export function Inventory(props: InventoryProps): Element {
 			<Frame
 				key={"right-background"}
 				size={UDim2.fromScale(0.68, 0.98)}
-				backgroundColor={background}
+				backgroundColor={BACKGROUND}
 				anchorPoint={new Vector2(0.5, 0.5)}
 				position={UDim2.fromScale(0.644, 0.5)}
 				backgroundTransparency={0}
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
-				<uistroke Color={outline} Thickness={px(2)} />
+				<uistroke Color={OUTLINE} Thickness={px(2)} />
 				<Group
 					key={"inventory-filters"}
 					size={UDim2.fromScale(1, 0.1)}
@@ -98,9 +93,9 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(background, 0.5)}
+						backgroundColor={Lighten(BACKGROUND, 0.5)}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
 						<Image
 							key={"filter-kind"}
@@ -117,9 +112,9 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(background, 0.5)}
+						backgroundColor={Lighten(BACKGROUND, 0.5)}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
 						<Image
 							key={"filter-rarity"}
@@ -136,9 +131,9 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(background, 0.5)}
+						backgroundColor={Lighten(BACKGROUND, 0.5)}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
 						<Image
 							key={"filter-kind"}
@@ -155,9 +150,9 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(background, 0.5)}
+						backgroundColor={Lighten(BACKGROUND, 0.5)}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
 						<Image
 							key={"level-icon"}
@@ -174,9 +169,9 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(background, 0.5)}
+						backgroundColor={Lighten(BACKGROUND, 0.5)}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
 						<Image
 							key={"lock-icon"}
@@ -199,7 +194,7 @@ export function Inventory(props: InventoryProps): Element {
 						placeholderColor={Latte.Base}
 						font={FONTS.robotoMono.regular}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={outline} />
+						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 					</TextField>
 				</Group>
 				<Group
@@ -211,12 +206,12 @@ export function Inventory(props: InventoryProps): Element {
 					<scrollingframe
 						key={"inventory-background"}
 						Size={new UDim2(1, -px(2), 1, 0)}
-						BackgroundColor3={background}
+						BackgroundColor3={BACKGROUND}
 						AnchorPoint={new Vector2(0.5, 0.5)}
 						Position={new UDim2(0.5, -px(2), 0.5, 0)}
 						BackgroundTransparency={1}
 						BorderSizePixel={0}
-						ScrollBarThickness={px(thickness)}
+						ScrollBarThickness={px(THICKNESS)}
 						ScrollBarImageColor3={Latte.Base}
 						CanvasSize={UDim2.fromOffset(0, px(INVENTORY_COLUMN_COUNT * (ITEM_SLOT_SIZE.Y + 5)) + px(36))}
 						ZIndex={2}
@@ -240,7 +235,7 @@ export function Inventory(props: InventoryProps): Element {
 						size={new UDim2(1, -px(15), 0, px(15))}
 						position={UDim2.fromScale(0.5, 0)}
 						anchorPoint={new Vector2(0.5, 0)}
-						backgroundColor={background}
+						backgroundColor={BACKGROUND}
 						zIndex={2}
 					>
 						<uigradient
@@ -253,7 +248,7 @@ export function Inventory(props: InventoryProps): Element {
 						size={new UDim2(1, -px(15), 0, px(15))}
 						position={UDim2.fromScale(0.5, 1)}
 						anchorPoint={new Vector2(0.5, 1)}
-						backgroundColor={background}
+						backgroundColor={BACKGROUND}
 						zIndex={2}
 					>
 						<uigradient
@@ -263,8 +258,8 @@ export function Inventory(props: InventoryProps): Element {
 						/>
 					</Frame>
 					<Frame
-						size={new UDim2(0, px(thickness), 1, -px(6))}
-						position={new UDim2(1, -px.scale(thickness / 2), 0.5, 0)}
+						size={new UDim2(0, px(THICKNESS), 1, -px(6))}
+						position={new UDim2(1, -px.scale(THICKNESS / 2), 0.5, 0)}
 						anchorPoint={new Vector2(1, 0.5)}
 						backgroundColor={Latte.Base}
 						backgroundTransparency={0.75}
@@ -276,14 +271,14 @@ export function Inventory(props: InventoryProps): Element {
 			<Frame
 				key={"left-background"}
 				size={UDim2.fromScale(0.285, 0.98)}
-				backgroundColor={background}
+				backgroundColor={BACKGROUND}
 				anchorPoint={new Vector2(0.5, 0.5)}
 				position={UDim2.fromScale(0.147, 0.5)}
 				backgroundTransparency={0}
 				zIndex={1}
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
-				<uistroke Color={outline} Thickness={px(2)} />
+				<uistroke Color={OUTLINE} Thickness={px(2)} />
 
 				<uilistlayout
 					FillDirection={Enum.FillDirection.Vertical}
@@ -294,12 +289,26 @@ export function Inventory(props: InventoryProps): Element {
 				/>
 				<Frame
 					key={"item-background"}
-					size={UDim2.fromScale(0.9, 0.4)}
+					size={UDim2.fromScale(0.9, 0.7)}
 					anchorPoint={new Vector2(0.5, 0)}
 					position={UDim2.fromScale(0.5, 0)}
 					backgroundTransparency={0.5}
 					// backgroundColor={}
 				>
+					<Text
+						size={UDim2.fromScale(1, 1)}
+						anchorPoint={Vector2.one.mul(0.5)}
+						position={UDim2.fromScale(0.5, 0.5)}
+						font={FONTS.inter.regular}
+						text={stats}
+						textColor={Latte.Base}
+						textWrapped={true}
+						textSize={px(12)}
+						textXAlignment={"Left"}
+						textYAlignment={"Top"}
+						richText={true}
+						key={"stats-text"}
+					/>
 					<uiaspectratioconstraint AspectRatio={1} />
 				</Frame>
 			</Frame>

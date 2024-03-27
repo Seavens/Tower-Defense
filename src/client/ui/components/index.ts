@@ -8,5 +8,20 @@ import { Group } from "./group";
 import { Image } from "./image";
 import { InputCapture } from "./input-capture";
 import { Layer } from "./layer";
+import { Text } from "./text";
+import { TextField } from "./text-field";
 
-export { Button, CanvasGroup, Corner, DelayRender, ErrorBoundary, Frame, Group, Image, InputCapture, Layer };
+export {
+	Button,
+	CanvasGroup,
+	Corner,
+	DelayRender,
+	ErrorBoundary,
+	Frame,
+	Group,
+	Image,
+	InputCapture,
+	Layer,
+	Text,
+	TextField,
+};

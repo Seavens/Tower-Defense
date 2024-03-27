@@ -25,12 +25,12 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		cost: 700,
 
 		targeting: [
-			TowerTargeting.First,
-			TowerTargeting.Last,
+			// TowerTargeting.First,
+			// TowerTargeting.Last,
 			TowerTargeting.Strongest,
-			TowerTargeting.Weakest,
-			TowerTargeting.Farthest,
-			TowerTargeting.Closest,
+			// TowerTargeting.Weakest,
+			// TowerTargeting.Farthest,
+			// TowerTargeting.Closest,
 		],
 	},
 };
