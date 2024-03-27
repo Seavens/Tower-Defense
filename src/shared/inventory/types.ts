@@ -30,6 +30,7 @@ export const enum ItemId {
 	Melee = "item_id:melee",
 	Blunt = "item_id:blunt",
 	God = "item_id:god",
+	EnternalDamnation = "item_id:enternal_damnation",
 	Chalice = "item_id:chalice",
 }
 

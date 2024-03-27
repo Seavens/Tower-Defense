@@ -39,17 +39,6 @@ export namespace ItemUtility {
 		return math.min(math.random() + MIN_RANGE, MAX_RANGE);
 	}
 
-	// export function getRating(item: Item): number {
-	// 	const { id, props } = item;
-	// 	const { kind } = itemDefinitions[id];
-	// 	if (kind.kind === ItemKind.Relic) {
-	// 		return props.multiplier;
-	// 	}
-	// 	const { damage, range, cooldown } = props;
-	// 	const { damage: baseDamage, range: baseRange, cooldown: baseCooldown } = kind;
-	// 	return (damage / baseDamage + range / baseRange + cooldown / baseCooldown) / 3;
-	// }
-
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;
 
 	export function createItem<T extends Option<ItemKind>>(
@@ -64,15 +53,15 @@ export namespace ItemUtility {
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item {
 		let id: ItemId;
 		if (kind !== undefined) {
+			const rarity = getRarity();
 			const ids = mappedItemIds[kind];
-			id = ids[math.random(1, ids.size()) - 1];
+			const filteredIds = ids.filter((id) => itemDefinitions[id].rarity === rarity);
+			id = filteredIds[math.random(1, filteredIds.size()) - 1];
 		} else {
 			id = allItemIds[math.random(1, allItemIds.size()) - 1];
 		}
 		const definition = itemDefinitions[id];
-		// TS/JS moment
 		const { kind: itemKind } = definition.kind;
-		//
 		const uuid = createUUID();
 		if (itemKind === ItemKind.Relic) {
 			const multiplier = getMultiplier();
@@ -95,7 +84,7 @@ export namespace ItemUtility {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
-			level: math.random(1, 10),
+			level: 1,
 			locked: false,
 			owner,
 			range,

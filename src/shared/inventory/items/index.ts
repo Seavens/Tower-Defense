@@ -1,6 +1,7 @@
 import { ItemId } from "../types";
 import { bluntTowerItem } from "./blunt";
 import { chaliceRelicItem } from "./chalice";
+import { enternalDamnationTowerItem } from "./enternal-damnation";
 import { godTowerItem } from "./god";
 import { meleeTowerItem } from "./melee";
 import { sniperTowerItem } from "./sniper";
@@ -52,6 +53,7 @@ export const itemDefinitions = {
 	[ItemId.Melee]: meleeTowerItem,
 	[ItemId.Blunt]: bluntTowerItem,
 	[ItemId.God]: godTowerItem,
+	[ItemId.EnternalDamnation]: enternalDamnationTowerItem,
 	[ItemId.Chalice]: chaliceRelicItem,
 } as const;
 itemDefinitions satisfies { [I in ItemId]: ItemDefinition<I, InferClass<(typeof itemDefinitions)[I]>> };

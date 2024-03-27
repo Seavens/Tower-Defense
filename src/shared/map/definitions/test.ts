@@ -23,10 +23,11 @@ export const testMap: MapDefinition<MapId.Test> = {
 		},
 	],
 	towerLimits: {
-		[ItemId.Blunt]: 10,
-		[ItemId.God]: 2,
-		[ItemId.Melee]: 5,
-		[ItemId.Sniper]: 5,
+		[ItemId.Blunt]: 15,
+		[ItemId.God]: 3,
+		[ItemId.Melee]: 6,
+		[ItemId.Sniper]: 6,
+		[ItemId.EnternalDamnation]: 2,
 	},
 	baseHealth: math.huge,
 };

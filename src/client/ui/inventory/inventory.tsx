@@ -58,7 +58,6 @@ export function Inventory(props: InventoryProps): Element {
 				continue;
 			}
 			const { id, props } = item;
-			// eslint-disable-next-line roblox-ts/lua-truthiness
 			if (filtered === ItemFiltering.Locked && !props.locked) {
 				continue;
 			}
@@ -73,8 +72,8 @@ export function Inventory(props: InventoryProps): Element {
 				filtered === ItemFiltering.Rarity
 					? RARITY_ORDERS[rarity]
 					: filtered === ItemFiltering.Level && props.kind === ItemKind.Tower
-						? MAXIMUM_TOWER_LEVEL - props.level
-						: undefined;
+					? MAXIMUM_TOWER_LEVEL - props.level
+					: undefined;
 			elements.push(
 				<ItemSlot
 					order={order}
@@ -268,6 +267,7 @@ export function Inventory(props: InventoryProps): Element {
 						textColor={Latte.Base}
 						placeholderColor={Latte.Base}
 						font={FONTS.robotoMono.regular}
+						change={{}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 					</TextField>
