@@ -95,7 +95,7 @@ export namespace ItemUtility {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
-			level: 1,
+			level: math.random(1, 10),
 			locked: false,
 			owner,
 			range,

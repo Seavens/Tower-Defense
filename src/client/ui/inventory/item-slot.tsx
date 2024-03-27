@@ -4,19 +4,18 @@ import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { itemDefinitions } from "shared/inventory/items";
 import { useItemDefinition, useRarityDefinition } from "./utils";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
-import type { AnyItemDefinition } from "shared/inventory/items";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
 export interface ItemSlotProps extends Partial<Item> {
+	order?: number;
 	onClick?: (id: ItemId) => void;
 }
 
-export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
+export function ItemSlot({ id, order, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
 	const definition = useItemDefinition(id);
@@ -45,7 +44,7 @@ export function ItemSlot({ id, onClick }: ItemSlotProps): Element {
 			backgroundTransparency={0.65}
 			clipsDescendants={true}
 			key={"item-slot"}
-			layoutOrder={id !== undefined ? 2 : 1}
+			layoutOrder={order}
 		>
 			<Group
 				size={UDim2.fromScale(1, 0.8)}

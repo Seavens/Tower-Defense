@@ -1,19 +1,26 @@
 import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { FONTS } from "../constants";
-import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
+import {
+	INVENTORY_COLUMN_COUNT,
+	INVENTORY_SIZE,
+	ITEM_SLOT_SIZE,
+	RARITY_ORDERS,
+	TRANSPARENCY_GRADIENT,
+} from "./constants";
 import { type Item, ItemId, ItemKind } from "shared/inventory/types";
+import { ItemFiltering } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
+import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
 import { TextField } from "../components/text-field";
-import { Tower } from "shared/tower/api";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
+import { itemDefinitions } from "shared/inventory/items";
 import { selectInventoryData } from "client/inventory/selectors";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemFiltering } from "shared/inventory/types";
 
 interface InventoryProps {}
 
@@ -25,6 +32,7 @@ export function Inventory(props: InventoryProps): Element {
 	const px = usePx();
 	const { stored } = useSelector(selectInventoryData);
 
+	const [filtered, setFiltering] = useState(ItemFiltering.All);
 	const [selected, setSelected] = useState<Slot>();
 
 	const item = useMemo((): Option<Item> => {
@@ -41,18 +49,35 @@ export function Inventory(props: InventoryProps): Element {
 		return formatStats(item, px(16), px(10));
 	}, [stored, item]);
 
-	const [filtered, setFiltering] = useState<ItemFiltering>();
-
-	// const filter = useMemo((): Option<> => {}, [filtered]);
-
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, stored.size())) {
 			const slot: Slot = `${index}`;
 			const item = stored.get(slot);
-
+			if (item === undefined) {
+				continue;
+			}
+			const { id, props } = item;
+			// eslint-disable-next-line roblox-ts/lua-truthiness
+			if (filtered === ItemFiltering.Locked && !props.locked) {
+				continue;
+			}
+			if (filtered === ItemFiltering.Relic && props.kind !== ItemKind.Relic) {
+				continue;
+			}
+			if (filtered === ItemFiltering.Tower && props.kind !== ItemKind.Tower) {
+				continue;
+			}
+			const { rarity } = itemDefinitions[id];
+			const order =
+				filtered === ItemFiltering.Rarity
+					? RARITY_ORDERS[rarity]
+					: filtered === ItemFiltering.Level && props.kind === ItemKind.Tower
+						? MAXIMUM_TOWER_LEVEL - props.level
+						: undefined;
 			elements.push(
 				<ItemSlot
+					order={order}
 					{...item}
 					onClick={(): void => {
 						setSelected(slot);
@@ -61,7 +86,7 @@ export function Inventory(props: InventoryProps): Element {
 			);
 		}
 		return elements;
-	}, [stored]);
+	}, [stored, filtered]);
 
 	const itemDef = useItemDefinition(item?.id);
 	const rarityDef = useRarityDefinition(itemDef?.id);
@@ -98,12 +123,20 @@ export function Inventory(props: InventoryProps): Element {
 					/>
 					<Button
 						text={""}
-						key={"filter-kind"}
+						key={"filter-kind-relic"}
 						size={UDim2.fromScale(0.08, 0.8)}
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
 						backgroundColor={Lighten(BACKGROUND, 0.5)}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Relic) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Relic;
+							});
+						}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -123,6 +156,14 @@ export function Inventory(props: InventoryProps): Element {
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
 						backgroundColor={Lighten(BACKGROUND, 0.5)}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Rarity) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Rarity;
+							});
+						}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -136,12 +177,20 @@ export function Inventory(props: InventoryProps): Element {
 					</Button>
 					<Button
 						text={""}
-						key={"filter-kind"}
+						key={"filter-kind-tower"}
 						size={UDim2.fromScale(0.08, 0.8)}
 						position={UDim2.fromScale(0.1, 0.5)}
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
 						backgroundColor={Lighten(BACKGROUND, 0.5)}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Tower) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Tower;
+							});
+						}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -161,6 +210,14 @@ export function Inventory(props: InventoryProps): Element {
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
 						backgroundColor={Lighten(BACKGROUND, 0.5)}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Level) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Level;
+							});
+						}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -180,6 +237,14 @@ export function Inventory(props: InventoryProps): Element {
 						anchorPoint={new Vector2(0, 0.5)}
 						cornerRadius={new UDim(0, px(4))}
 						backgroundColor={Lighten(BACKGROUND, 0.5)}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Locked) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Locked;
+							});
+						}}
 					>
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
 						<uiaspectratioconstraint AspectRatio={1} />

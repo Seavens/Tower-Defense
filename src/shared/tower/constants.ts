@@ -8,3 +8,5 @@ export const TOWER_TARGETING_DISPLAY: { [T in TowerTargeting]: string } = {
 	[TowerTargeting.Closest]: "Closest",
 	[TowerTargeting.Farthest]: "Farthest",
 } as const;
+
+export const MAXIMUM_TOWER_LEVEL = 10;
