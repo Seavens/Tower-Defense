@@ -3,6 +3,15 @@ import { isUUID } from "shared/guards";
 import { t } from "@rbxts/t";
 import type { ItemDefinition, itemDefinitions } from "./items";
 
+export const enum ItemFiltering {
+	All = "item_filter:all",
+	Tower = "item_filter:tower",
+	Relic = "item_filter:relic",
+	Rarity = "item_filter:rarity",
+	Level = "item_filter:level",
+	Locked = "item_filter:locked",
+}
+
 export const enum ItemRarity {
 	Rare = "rarity_id:rare",
 	Epic = "rarity_id:epic",
@@ -48,6 +57,7 @@ export interface ItemTowerClass {
 export interface ItemRelicClass {
 	kind: ItemKind.Relic;
 	multiplier: number;
+	locked: boolean;
 }
 
 export interface ItemKinds {

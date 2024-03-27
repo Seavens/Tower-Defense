@@ -4,7 +4,7 @@ import React from "@rbxts/react";
 import type { FrameProps } from "./frame";
 
 export interface ImageProps extends FrameProps<ImageLabel> {
-	image: string;
+	image?: RBXAssetId;
 	imageColor?: Color3 | React.Binding<Color3>;
 	imageTransparency?: number | React.Binding<number>;
 	imageRectOffset?: Vector2 | React.Binding<Vector2>;

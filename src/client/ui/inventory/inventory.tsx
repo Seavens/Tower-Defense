@@ -2,16 +2,18 @@ import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { FONTS } from "../constants";
 import { INVENTORY_COLUMN_COUNT, INVENTORY_SIZE, ITEM_SLOT_SIZE, TRANSPARENCY_GRADIENT } from "./constants";
+import { type Item, ItemId, ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { TextField } from "../components/text-field";
-import { formatStats } from "./utils";
+import { Tower } from "shared/tower/api";
+import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
 import { selectInventoryData } from "client/inventory/selectors";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Item } from "shared/inventory/types";
+import type { ItemFiltering } from "shared/inventory/types";
 
 interface InventoryProps {}
 
@@ -39,11 +41,16 @@ export function Inventory(props: InventoryProps): Element {
 		return formatStats(item, px(16), px(10));
 	}, [stored, item]);
 
+	const [filtered, setFiltering] = useState<ItemFiltering>();
+
+	// const filter = useMemo((): Option<> => {}, [filtered]);
+
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, stored.size())) {
 			const slot: Slot = `${index}`;
 			const item = stored.get(slot);
+
 			elements.push(
 				<ItemSlot
 					{...item}
@@ -55,6 +62,9 @@ export function Inventory(props: InventoryProps): Element {
 		}
 		return elements;
 	}, [stored]);
+
+	const itemDef = useItemDefinition(item?.id);
+	const rarityDef = useRarityDefinition(itemDef?.id);
 
 	return (
 		<Group
@@ -279,28 +289,43 @@ export function Inventory(props: InventoryProps): Element {
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
 				<uistroke Color={OUTLINE} Thickness={px(2)} />
+				<uipadding PaddingTop={new UDim(0, px(8))} />
 
 				<uilistlayout
 					FillDirection={Enum.FillDirection.Vertical}
 					HorizontalAlignment={Enum.HorizontalAlignment.Center}
 					VerticalAlignment={Enum.VerticalAlignment.Top}
 					SortOrder={Enum.SortOrder.LayoutOrder}
-					Padding={new UDim(0, px(5))}
+					Padding={new UDim(0, px(9))}
 				/>
-				<Frame
-					key={"item-background"}
+				<Image
+					key={"item-image"}
 					size={UDim2.fromScale(0.9, 0.7)}
 					anchorPoint={new Vector2(0.5, 0)}
 					position={UDim2.fromScale(0.5, 0)}
 					backgroundTransparency={0.5}
-					// backgroundColor={}
+					image={itemDef?.image}
+					backgroundColor={rarityDef?.color}
 				>
+					<uiaspectratioconstraint AspectRatio={1} />
+					<uicorner CornerRadius={new UDim(0, px(5))} />
+					<uistroke Color={OUTLINE} Thickness={px(2)} />
+				</Image>
+				<Frame
+					key={"item-stats"}
+					size={UDim2.fromScale(0.9, 0.535)}
+					anchorPoint={new Vector2(0.5, 0)}
+					position={UDim2.fromScale(0.5, 0)}
+					backgroundTransparency={0.5}
+				>
+					<uistroke Color={OUTLINE} Thickness={px(2)} />
+					<uicorner CornerRadius={new UDim(0, px(5))} />
 					<Text
-						size={UDim2.fromScale(1, 1)}
+						size={UDim2.fromScale(0.9, 0.9)}
 						anchorPoint={Vector2.one.mul(0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
 						font={FONTS.inter.regular}
-						text={stats}
+						text={stats ?? ""}
 						textColor={Latte.Base}
 						textWrapped={true}
 						textSize={px(12)}
@@ -309,7 +334,6 @@ export function Inventory(props: InventoryProps): Element {
 						richText={true}
 						key={"stats-text"}
 					/>
-					<uiaspectratioconstraint AspectRatio={1} />
 				</Frame>
 			</Frame>
 		</Group>

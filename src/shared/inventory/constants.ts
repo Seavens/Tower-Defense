@@ -9,6 +9,9 @@ export const RARITY_WEIGHTS: { [I in ItemRarity]: number } = {
 	[ItemRarity.Secret]: 0, // 0% chance
 };
 
+export const MIN_RANGE = 0.85;
+export const MAX_RANGE = 1.15;
+
 export const MAXIMUM_EQUIPPED = 6;
 export const MAXIMUM_STORED = 210;
 

@@ -1,4 +1,5 @@
 import { ItemKind, ItemRarity } from "shared/inventory/types";
+import { MAX_RANGE, MIN_RANGE } from "./constants";
 import { Modding } from "@flamework/core";
 import { createUUID } from "shared/utils/create-uuid";
 import { itemDefinitions } from "./items";
@@ -35,8 +36,19 @@ export namespace ItemUtility {
 	}
 
 	export function getMultiplier(): number {
-		return math.min(math.random() + 0.85, 1.25);
+		return math.min(math.random() + MIN_RANGE, MAX_RANGE);
 	}
+
+	// export function getRating(item: Item): number {
+	// 	const { id, props } = item;
+	// 	const { kind } = itemDefinitions[id];
+	// 	if (kind.kind === ItemKind.Relic) {
+	// 		return props.multiplier;
+	// 	}
+	// 	const { damage, range, cooldown } = props;
+	// 	const { damage: baseDamage, range: baseRange, cooldown: baseCooldown } = kind;
+	// 	return (damage / baseDamage + range / baseRange + cooldown / baseCooldown) / 3;
+	// }
 
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;
 
@@ -67,6 +79,7 @@ export namespace ItemUtility {
 			const props: ItemRelicClass = {
 				kind: ItemKind.Relic,
 				multiplier,
+				locked: false,
 			};
 			const item: Item = {
 				id,
@@ -82,7 +95,7 @@ export namespace ItemUtility {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
-			level: 0,
+			level: 1,
 			locked: false,
 			owner,
 			range,

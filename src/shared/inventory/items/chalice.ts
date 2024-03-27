@@ -13,7 +13,6 @@ export const chaliceRelicItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = 
 
 	kind: {
 		kind: ItemKind.Relic,
-
 		multiplier: 1.2,
 	},
 };
