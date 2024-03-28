@@ -40,6 +40,7 @@ export const DropMenu = (props: DropMenuProps): Element => {
 				} else {
 					setOpen(true);
 				}
+				props.onClick?.();
 			}}
 		>
 			<Frame

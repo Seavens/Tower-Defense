@@ -1,0 +1,41 @@
+import { UserInputService } from "@rbxts/services";
+import { setTimeout } from "@rbxts/set-timeout";
+import { useEventListener, useLatest } from "@rbxts/pretty-react-hooks";
+import { useInputDevice } from "./use-input-device";
+import { useMemo, useState } from "@rbxts/react";
+
+export interface ButtonEvents {
+	onMouseDown: () => void;
+	onMouseUp: () => void;
+	onMouseEnter: () => void;
+	onMouseLeave: () => void;
+}
+
+export function useButtonState(enabled = true): LuaTuple<[press: boolean, hover: boolean, events: ButtonEvents]> {
+	const [{ press, hover }, setState] = useState({
+		press: false,
+		hover: false,
+	});
+
+	const on = useLatest(enabled);
+	const touch = useLatest(useInputDevice() === "touch");
+
+	const events: ButtonEvents = useMemo(() => {
+		return {
+			onMouseDown: () => setState((state) => ({ ...state, press: on.current })),
+			onMouseUp: () => setState((state) => ({ ...state, press: false })),
+			onMouseEnter: () => setState((state) => ({ ...state, hover: on.current && !touch.current })),
+			onMouseLeave: () => setState({ press: false, hover: false }),
+		};
+	}, []);
+
+	useEventListener(UserInputService.InputEnded, (input) => {
+		if (input.UserInputType === Enum.UserInputType.Touch) {
+			setTimeout(() => {
+				setState({ press: false, hover: false });
+			}, 0);
+		}
+	});
+
+	return $tuple(press, hover, events);
+}

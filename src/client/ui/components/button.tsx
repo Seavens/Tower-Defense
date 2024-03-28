@@ -27,7 +27,7 @@ export function Button(props: ButtonProps): Element {
 
 	return (
 		<textbutton
-			Text={props.text}
+			Text={props.text !== undefined ? props.text : ""}
 			Active={props.active}
 			AutoButtonColor={false}
 			Size={props.size}

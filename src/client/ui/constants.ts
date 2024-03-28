@@ -12,7 +12,7 @@ export const FONTS = {
 	},
 };
 
-export const springs = {
+export const SPRINGS = {
 	...config.spring,
 	bubbly: { tension: 400, friction: 14 },
 	responsive: { tension: 400 },

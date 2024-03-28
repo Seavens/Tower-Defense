@@ -2,6 +2,7 @@ import { Button } from "./button";
 import { CanvasGroup } from "./canvas-group";
 import { Corner } from "./corner";
 import { DelayRender } from "./delay-render";
+import { DropDown } from "./drop-down";
 import { ErrorBoundary } from "./error-boundary";
 import { Frame } from "./frame";
 import { Group } from "./group";
@@ -24,4 +25,5 @@ export {
 	Layer,
 	Text,
 	TextField,
+	DropDown,
 };
