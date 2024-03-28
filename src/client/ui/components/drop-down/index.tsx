@@ -1,8 +1,9 @@
 import { type BindingOrValue, getBindingValue } from "@rbxts/pretty-react-hooks";
 import { Button } from "../button";
+import { Darken } from "@rbxts/colour-utils";
 import { DropdownOption } from "./option";
 import { FONTS } from "client/ui/constants";
-import { Latte, Mocha } from "@rbxts/catppuccin";
+import { Latte } from "@rbxts/catppuccin";
 import { Text } from "../text";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
@@ -19,6 +20,9 @@ interface DropDownProps {
 	index: number;
 	enabled?: boolean;
 	onClick: (option: string) => void;
+	backgroundColor: Color3;
+	textColor: Color3;
+	strokeColor?: Color3;
 }
 
 export function DropDown({
@@ -30,8 +34,13 @@ export function DropDown({
 	index,
 	enabled,
 	onClick,
+	backgroundColor,
+	textColor,
+	strokeColor,
 }: DropDownProps): Element {
 	const px = usePx();
+
+	const OUTLINE = Darken(backgroundColor, 0.25);
 
 	size ??= UDim2.fromOffset(px(200), px(16));
 	// Assume size is already in `px`
@@ -53,6 +62,7 @@ export function DropDown({
 					text={option}
 					enabled={true}
 					visible={open}
+					backgroundColor={backgroundColor}
 					onClick={(): void => {
 						onClick?.(option);
 						setSelected(index);
@@ -75,13 +85,20 @@ export function DropDown({
 			position={position}
 			anchorPoint={anchorPoint}
 			cornerRadius={cornerRadius ?? new UDim(0, px(3))}
-			backgroundColor={hover.map((value: number): Color3 => Mocha.Base.Lerp(Mocha.Overlay0, value))}
+			backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(backgroundColor, value))}
 			{...events}
 			onClick={(): void => {
 				setOpen((value: boolean): boolean => !value);
 			}}
 			key={"dropdown-frame"}
+			zIndex={10}
 		>
+			<uistroke
+				Color={strokeColor ?? OUTLINE}
+				Thickness={px(1)}
+				key={"dropdown-stroke"}
+				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+			/>
 			<scrollingframe
 				Size={new UDim2(1, -px(13), 2, 0)}
 				Position={new UDim2(0, 0, 1, px(1))}
@@ -109,7 +126,7 @@ export function DropDown({
 				anchorPoint={Vector2.one}
 				font={FONTS.inter.regular}
 				text={"v"}
-				textColor={Latte.Base}
+				textColor={textColor}
 				textWrapped={true}
 				textSize={px(12)}
 				key={"dropdown-icon"}
@@ -120,7 +137,7 @@ export function DropDown({
 				position={UDim2.fromScale(0, 0)}
 				font={FONTS.inter.regular}
 				text={options[selected - 1]}
-				textColor={Latte.Base}
+				textColor={textColor}
 				textWrapped={true}
 				textSize={px(12)}
 				key={"dropdown-selected"}

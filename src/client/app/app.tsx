@@ -1,4 +1,5 @@
 import { HotbarApp } from "../ui/inventory";
+import { InventoryApp } from "./inventory-app";
 import { Layer } from "client/ui/components";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
@@ -10,6 +11,7 @@ export function App(): Element {
 		<ReflexProvider producer={store}>
 			<Layer key={"app"}>
 				<HotbarApp />
+				<InventoryApp />
 			</Layer>
 		</ReflexProvider>
 	);

@@ -23,8 +23,15 @@ export namespace ItemUtility {
 			rarityDefinitions[ItemRarity.Epic].weight,
 			rarityDefinitions[ItemRarity.Legendary].weight,
 			rarityDefinitions[ItemRarity.Mythical].weight,
+			rarityDefinitions[ItemRarity.Secret].weight,
 		];
-		const rarities = [ItemRarity.Rare, ItemRarity.Epic, ItemRarity.Legendary, ItemRarity.Mythical];
+		const rarities = [
+			ItemRarity.Rare,
+			ItemRarity.Epic,
+			ItemRarity.Legendary,
+			ItemRarity.Mythical,
+			ItemRarity.Secret,
+		];
 
 		for (const index of $range(1, weights.size())) {
 			cumulative += weights[index - 1];
@@ -55,7 +62,9 @@ export namespace ItemUtility {
 		if (kind !== undefined) {
 			const rarity = getRarity();
 			const ids = mappedItemIds[kind];
-			const filteredIds = ids.filter((id) => itemDefinitions[id].rarity === rarity);
+			const filteredIds = ids.filter(
+				(id) => itemDefinitions[id].rarity === rarity && itemDefinitions[id].kind.kind === kind,
+			);
 			id = filteredIds[math.random(1, filteredIds.size()) - 1];
 		} else {
 			id = allItemIds[math.random(1, allItemIds.size()) - 1];

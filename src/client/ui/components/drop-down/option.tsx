@@ -1,4 +1,5 @@
 import { Button } from "../button";
+import { Darken } from "@rbxts/colour-utils";
 import { FONTS, SPRINGS } from "client/ui/constants";
 import { Group } from "../group";
 import { Latte, Mocha } from "@rbxts/catppuccin";
@@ -16,9 +17,17 @@ interface DropdownOptionProps {
 	enabled: boolean;
 	visible: boolean;
 	onClick?: () => void;
+	backgroundColor: Color3;
 }
 
-export function DropdownOption({ size, text, enabled, visible, onClick }: DropdownOptionProps): Element {
+export function DropdownOption({
+	size,
+	text,
+	enabled,
+	visible,
+	onClick,
+	backgroundColor,
+}: DropdownOptionProps): Element {
 	const px = usePx();
 
 	const [pressed, hovering, events] = useButtonState(enabled);
@@ -38,7 +47,7 @@ export function DropdownOption({ size, text, enabled, visible, onClick }: Dropdo
 				anchorPoint={Vector2.zero}
 				cornerRadius={new UDim(0, px(3))}
 				key={"option-button"}
-				backgroundColor={hover.map((value: number): Color3 => Mocha.Mantle.Lerp(Mocha.Overlay0, value))}
+				backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(Mocha.Overlay0, value))}
 				backgroundTransparency={transparency}
 				onClick={onClick}
 				{...events}

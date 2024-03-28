@@ -1,7 +1,6 @@
-import { Button, Frame, Group, Image, Text } from "../components";
-import { Darken, Lighten, Palette } from "@rbxts/colour-utils";
-import { DropMenu } from "../components/drop-menu";
-import { FONTS } from "../constants";
+import { Button, DropDown, Frame, Group, Image, Text } from "../components";
+import { Darken, Lighten } from "@rbxts/colour-utils";
+import { FONTS, PALETTE } from "../constants";
 import {
 	INVENTORY_COLUMN_COUNT,
 	INVENTORY_SIZE,
@@ -14,27 +13,47 @@ import { ItemFiltering } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
+import { Players } from "@rbxts/services";
 import { TextField } from "../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
 import { itemDefinitions } from "shared/inventory/items";
+import { map } from "@rbxts/pretty-react-hooks";
 import { selectInventoryData } from "client/inventory/selectors";
-import { usePx } from "../hooks";
+import { selectProfileData } from "client/profile/selectors";
+import { useButtonAnimation } from "../hooks/use-button-animation";
+import { useButtonState } from "../hooks/use-button-state";
+import { useMotion, usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
+import Abbreviator from "@rbxts/abbreviate";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
-interface InventoryProps {}
+interface InventoryProps {
+	visable: boolean;
+	onClose?: () => void;
+}
 
 const BACKGROUND = Mocha.Base;
-const OUTLINE = Darken(Mocha.Base, 0.25);
+const OUTLINE = Darken(BACKGROUND, 0.25);
+const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 6;
+const TEXTCOLOR = Latte.Base;
+
+const DEV_TRANSPARENT = 0;
 
 export function Inventory(props: InventoryProps): Element {
-	const px = usePx();
+	const { onClose, visable } = props;
 	const { stored } = useSelector(selectInventoryData);
+	const { coins, gems } = useSelector(selectProfileData);
 
+	const [pressed, hovering, events] = useButtonState();
 	const [filtered, setFiltering] = useState(ItemFiltering.All);
 	const [selected, setSelected] = useState<Slot>();
+	const { hover, position } = useButtonAnimation(pressed, hovering);
+	const [outline, outlikeMotion] = useMotion(0.5);
+
+	const px = usePx();
+	const abbreviator = new Abbreviator();
 
 	const item = useMemo((): Option<Item> => {
 		if (selected === undefined) {
@@ -62,12 +81,14 @@ export function Inventory(props: InventoryProps): Element {
 			if (filtered === ItemFiltering.Locked && !props.locked) {
 				continue;
 			}
+			// !! NEEDS TO BE SORTED BY KIND IN GROUPS, NOT JUST ONE GROUP
 			if (filtered === ItemFiltering.Relic && props.kind !== ItemKind.Relic) {
 				continue;
 			}
 			if (filtered === ItemFiltering.Tower && props.kind !== ItemKind.Tower) {
 				continue;
 			}
+
 			const { rarity } = itemDefinitions[id];
 			const order =
 				filtered === ItemFiltering.Rarity
@@ -82,6 +103,7 @@ export function Inventory(props: InventoryProps): Element {
 					onClick={(): void => {
 						setSelected(slot);
 					}}
+					selected={selected === slot}
 				/>,
 			);
 		}
@@ -109,186 +131,161 @@ export function Inventory(props: InventoryProps): Element {
 				<uicorner CornerRadius={new UDim(0, px(5))} />
 				<uistroke Color={OUTLINE} Thickness={px(2)} />
 				<Group
-					key={"inventory-filters"}
+					key={"inventory-topbar"}
 					size={UDim2.fromScale(1, 0.1)}
 					anchorPoint={new Vector2(0.5, 0)}
 					position={UDim2.fromScale(0.5, 0)}
+					zIndex={12}
 				>
-					<uilistlayout
-						FillDirection={Enum.FillDirection.Horizontal}
-						HorizontalAlignment={Enum.HorizontalAlignment.Center}
-						VerticalAlignment={Enum.VerticalAlignment.Center}
-						SortOrder={Enum.SortOrder.LayoutOrder}
-						Padding={new UDim(0, px(5))}
-					/>
-					<DropMenu
-						key={"filter-kind-relic"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0.5, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Mocha.Blue}
+					<Group
+						size={UDim2.fromScale(0.5, 0.9)}
+						anchorPoint={new Vector2(0, 0.56)}
+						position={UDim2.fromScale(0.04, 0.5)}
+					>
+						<uilistlayout
+							FillDirection={Enum.FillDirection.Horizontal}
+							HorizontalAlignment={Enum.HorizontalAlignment.Left}
+							VerticalAlignment={Enum.VerticalAlignment.Center}
+							SortOrder={Enum.SortOrder.LayoutOrder}
+							Padding={new UDim(0, px(2))}
+						/>
+						<Group
+							size={UDim2.fromOffset(px(155), px(28))}
+							position={UDim2.fromScale(0.238, 0.5)}
+							anchorPoint={Vector2.one.mul(0.5)}
+						>
+							<uilistlayout
+								FillDirection={Enum.FillDirection.Vertical}
+								HorizontalAlignment={Enum.HorizontalAlignment.Left}
+								VerticalAlignment={Enum.VerticalAlignment.Center}
+								SortOrder={Enum.SortOrder.LayoutOrder}
+								Padding={new UDim(0, px(2))}
+							/>
+							<Text
+								size={UDim2.fromOffset(px(155), px(13))}
+								position={UDim2.fromScale(0.035, 0.31)}
+								anchorPoint={new Vector2(0, 0.425)}
+								richText={true}
+								font={FONTS.robotoMono.regular}
+								text={`<font color="#${Color3.fromRGB(
+									237,
+									41,
+									242,
+								).ToHex()}">Gems</font>: ${abbreviator.numberToString(gems)}`}
+								textColor={TEXTCOLOR}
+								textScaled={true}
+								backgroundColor={BACKGROUND_LIGHT}
+								backgroundTransparency={DEV_TRANSPARENT}
+								textXAlignment="Left"
+								textYAlignment="Center"
+								cornerRadius={new UDim(0, px(4))}
+								key={"inventory-gems-text"}
+							>
+								<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Color={OUTLINE} Thickness={1} />
+								<uipadding PaddingLeft={new UDim(0, px(4))} />
+							</Text>
+							<Text
+								size={UDim2.fromOffset(px(155), px(13))}
+								position={UDim2.fromScale(0.035, 0.75)}
+								anchorPoint={new Vector2(0, 0.5)}
+								richText={true}
+								font={FONTS.robotoMono.regular}
+								text={`<font color="#${Color3.fromRGB(
+									232,
+									191,
+									10,
+								).ToHex()}">Coins</font>: ${abbreviator.numberToString(coins)}`}
+								textColor={TEXTCOLOR}
+								textScaled={true}
+								backgroundColor={BACKGROUND_LIGHT}
+								backgroundTransparency={DEV_TRANSPARENT}
+								textXAlignment="Left"
+								textYAlignment="Center"
+								cornerRadius={new UDim(0, px(4))}
+								key={"inventory-coins-text"}
+							>
+								<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Color={OUTLINE} Thickness={1} />
+								<uipadding PaddingLeft={new UDim(0, px(4))} />
+							</Text>
+						</Group>
+						<TextField
+							key={"search"}
+							size={UDim2.fromOffset(px(200), px(30))}
+							position={UDim2.fromScale(0.365, 0.5)}
+							anchorPoint={new Vector2(0, 0.5)}
+							cornerRadius={new UDim(0, px(4))}
+							placeholderText={"Search..."}
+							backgroundTransparency={0}
+							textSize={px(18)}
+							textColor={TEXTCOLOR}
+							placeholderColor={Latte.Base}
+							font={FONTS.robotoMono.regular}
+							backgroundColor={BACKGROUND_LIGHT}
+							change={{}}
+						>
+							<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
+						</TextField>
+						<DropDown
+							anchorPoint={new Vector2(0, 0.5)}
+							position={UDim2.fromScale(0.78, 0.5)}
+							textColor={TEXTCOLOR}
+							backgroundColor={BACKGROUND_LIGHT}
+							strokeColor={OUTLINE}
+							size={UDim2.fromOffset(px(80), px(30))}
+							cornerRadius={new UDim(0, px(4))}
+							options={["Off", "Item", "Rarity", "Level", "Locked"]}
+							index={1}
+							enabled={true}
+							onClick={(option: string): void => {
+								switch (option) {
+									case "Off":
+										setFiltering(ItemFiltering.All);
+										break;
+									case "Item":
+										setFiltering(ItemFiltering.Relic);
+										break;
+									case "Rarity":
+										setFiltering(ItemFiltering.Rarity);
+										break;
+									case "Level":
+										setFiltering(ItemFiltering.Level);
+										break;
+									case "Locked":
+										setFiltering(ItemFiltering.Locked);
+										break;
+								}
+							}}
+						/>
+					</Group>
+					<Button
+						size={UDim2.fromOffset(px(16), px(16))}
+						position={position.map(
+							(value: number): UDim2 =>
+								UDim2.fromScale(0.99, 0.28).Lerp(new UDim2(0.99, 0, 0.28, px(1)), value),
+						)}
+						anchorPoint={new Vector2(1, 0.5)}
+						cornerRadius={new UDim(0, px(3))}
+						backgroundColor={hover.map(
+							(value: number): Color3 => PALETTE.error.Lerp(PALETTE.accent, value / 3),
+						)}
+						rotation={hover.map((value: number): number => map(value, 0, 1, 0, 15))}
 						backgroundTransparency={0}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Relic) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Relic;
-							});
-						}}
-					/>
-					{/* <Button
-						text={""}
-						key={"filter-kind-relic"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(BACKGROUND, 0.5)}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Relic) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Relic;
-							});
-						}}
+						onClick={onClose}
+						{...events}
+						key={"inventory-close"}
 					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-						<uiaspectratioconstraint AspectRatio={1} />
-						<Image
-							key={"filter-kind"}
-							size={UDim2.fromScale(0.8, 0.7)}
-							position={UDim2.fromScale(0.5, 0.5)}
-							anchorPoint={new Vector2(0.5, 0.5)}
-							image={"rbxassetid://7964618035"}
-						/>
-					</Button> */}
-					{/* <Button
-						text={""}
-						key={"filter-rarity"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(BACKGROUND, 0.5)}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Rarity) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Rarity;
-							});
-						}}
-					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-						<uiaspectratioconstraint AspectRatio={1} />
-						<Image
-							key={"filter-rarity"}
+						<Text
 							size={UDim2.fromScale(1, 1)}
-							position={UDim2.fromScale(0.5, 0.5)}
-							anchorPoint={new Vector2(0.5, 0.5)}
-							image={"rbxassetid://13916892997"}
+							position={UDim2.fromScale(0.5, 0.435)}
+							anchorPoint={Vector2.one.mul(0.5)}
+							text={"×"}
+							textColor={TEXTCOLOR}
+							textSize={px(25)}
+							textTransparency={0.5}
+							textWrapped={true}
+							key={"close-text"}
 						/>
 					</Button>
-					<Button
-						text={""}
-						key={"filter-kind-tower"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(BACKGROUND, 0.5)}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Tower) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Tower;
-							});
-						}}
-					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-						<uiaspectratioconstraint AspectRatio={1} />
-						<Image
-							key={"filter-kind"}
-							size={UDim2.fromScale(0.8, 0.7)}
-							position={UDim2.fromScale(0.5, 0.5)}
-							anchorPoint={new Vector2(0.5, 0.5)}
-							image={"rbxassetid://13916962510"}
-						/>
-					</Button>
-					<Button
-						text={""}
-						key={"filter-level"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(BACKGROUND, 0.5)}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Level) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Level;
-							});
-						}}
-					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-						<uiaspectratioconstraint AspectRatio={1} />
-						<Image
-							key={"level-icon"}
-							size={UDim2.fromScale(1, 1)}
-							position={UDim2.fromScale(0.5, 0.5)}
-							anchorPoint={new Vector2(0.5, 0.5)}
-							image={"rbxassetid://12499789261"}
-						/>
-					</Button>
-					<Button
-						text={""}
-						key={"filter-lock"}
-						size={UDim2.fromScale(0.08, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						backgroundColor={Lighten(BACKGROUND, 0.5)}
-						onClick={(): void => {
-							setFiltering((value: ItemFiltering): ItemFiltering => {
-								if (value === ItemFiltering.Locked) {
-									return ItemFiltering.All;
-								}
-								return ItemFiltering.Locked;
-							});
-						}}
-					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-						<uiaspectratioconstraint AspectRatio={1} />
-						<Image
-							key={"lock-icon"}
-							size={UDim2.fromScale(1, 1)}
-							position={UDim2.fromScale(0.5, 0.5)}
-							anchorPoint={new Vector2(0.5, 0.5)}
-							image={"rbxassetid://6088994136"}
-						/>
-					</Button> */}
-					<TextField
-						key={"search"}
-						size={UDim2.fromScale(0.515, 0.8)}
-						position={UDim2.fromScale(0.1, 0.5)}
-						anchorPoint={new Vector2(0, 0.5)}
-						cornerRadius={new UDim(0, px(4))}
-						placeholderText={"Search..."}
-						backgroundTransparency={0.85}
-						textSize={px(18)}
-						textColor={Latte.Base}
-						placeholderColor={Latte.Base}
-						font={FONTS.robotoMono.regular}
-						change={{}}
-					>
-						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={OUTLINE} />
-					</TextField>
 				</Group>
 				<Group
 					key={"scroll-group"}
@@ -310,7 +307,7 @@ export function Inventory(props: InventoryProps): Element {
 						ZIndex={2}
 					>
 						<uipadding
-							PaddingTop={new UDim(0, px(18))}
+							PaddingTop={new UDim(0, px(4))}
 							PaddingLeft={new UDim(0, px(4))}
 							PaddingRight={new UDim(0, px(4))}
 						/>
@@ -325,7 +322,7 @@ export function Inventory(props: InventoryProps): Element {
 						{elements}
 					</scrollingframe>
 					<Frame
-						size={new UDim2(1, -px(15), 0, px(15))}
+						size={new UDim2(1, -px(5), 0, px(15))}
 						position={UDim2.fromScale(0.5, 0)}
 						anchorPoint={new Vector2(0.5, 0)}
 						backgroundColor={BACKGROUND}
@@ -338,7 +335,7 @@ export function Inventory(props: InventoryProps): Element {
 						/>
 					</Frame>
 					<Frame
-						size={new UDim2(1, -px(15), 0, px(15))}
+						size={new UDim2(1, -px(5), 0, px(15))}
 						position={UDim2.fromScale(0.5, 1)}
 						anchorPoint={new Vector2(0.5, 1)}
 						backgroundColor={BACKGROUND}
@@ -409,7 +406,7 @@ export function Inventory(props: InventoryProps): Element {
 						position={UDim2.fromScale(0.5, 0.5)}
 						font={FONTS.inter.regular}
 						text={stats ?? ""}
-						textColor={Latte.Base}
+						textColor={TEXTCOLOR}
 						textWrapped={true}
 						textSize={px(12)}
 						textXAlignment={"Left"}

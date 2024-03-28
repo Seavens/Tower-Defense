@@ -6,6 +6,7 @@ import { DATA_TEMPLATE } from "shared/data/constants";
 import { levelDown, levelUp } from "shared/profile/utility";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
+import type { ExcludeMetadata } from "shared/replication/metadata";
 import type {
 	ProfileActions,
 	ProfileAdjustCoins,
@@ -23,7 +24,7 @@ const state: ProfileState = {
 	data: DATA_TEMPLATE.profile,
 };
 
-export const profileSlice = createProducer<ProfileState, ProfileActions<ProfileState>>(state, {
+export const profileSlice = createProducer<ProfileState, ExcludeMetadata<ProfileActions<ProfileState>>>(state, {
 	profileAdjustLevel: (state: ProfileState, payload: ProfileAdjustLevel): ProfileState => {
 		const { level, isAdd } = payload;
 		if (isAdd) {

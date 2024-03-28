@@ -3,6 +3,7 @@ import { Inventory } from "./inventory";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utils";
 import { MAXIMUM_STORED } from "shared/inventory/constants";
+import { Players } from "@rbxts/services";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
@@ -22,9 +23,11 @@ export = CreateReactStory(
 	},
 	(): Element => {
 		store.inventoryAddItems({ items: items });
+		store.profileAdjustCoins({ isAdd: true, coins: 5465653468 });
+		store.profileAdjustGems({ isAdd: true, gems: 8338 });
 		return (
 			<ReflexProvider producer={store}>
-				<Inventory />
+				<Inventory visable={true} />
 			</ReflexProvider>
 		);
 	},

@@ -9,6 +9,7 @@ import { getMaxExp } from "shared/profile/utility";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { store } from "client/state/store";
+import { truncateNumber } from "./utils/format-stats";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import Abbreviator from "@rbxts/abbreviate";
@@ -23,7 +24,7 @@ export function Hotbar(props: HotbarProps): Element {
 	const px = usePx();
 
 	const { equipped } = useSelector(selectInventoryData);
-	const { coins, experience, gems, level } = useSelector(selectProfileData);
+	const { experience, level } = useSelector(selectProfileData);
 
 	const max = useMemo((): number => {
 		return getMaxExp(level);
@@ -92,7 +93,7 @@ export function Hotbar(props: HotbarProps): Element {
 					cornerRadius={new UDim(0, px(5))}
 				/>
 				<textlabel
-					key={"level-text"}
+					key={"experience-text"}
 					Size={UDim2.fromScale(0.5, 1)}
 					AnchorPoint={new Vector2(0, 0.5)}
 					Position={new UDim2(0, px(5), 0.5, 0)}
@@ -118,7 +119,7 @@ export function Hotbar(props: HotbarProps): Element {
 					Position={UDim2.fromScale(0.5, 0.5)}
 					BackgroundColor3={Latte.Overlay0} // temp
 					TextColor3={Latte.Base}
-					Text={abbreviator.numberToString(level)}
+					Text={truncateNumber(0, level)}
 					TextSize={px(10)}
 					FontFace={FONTS.inter.bold}
 					AutomaticSize={Enum.AutomaticSize.X}

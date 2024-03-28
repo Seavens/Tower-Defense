@@ -5,7 +5,7 @@ import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { rarityDefinitions } from "shared/inventory/rarities";
 
-function truncateNumber(decimals: number, number: number): string {
+export function truncateNumber(decimals: number, number: number): string {
 	return string.format(`%.${decimals}f`, number);
 }
 

@@ -11,6 +11,7 @@ import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
 export interface ItemSlotProps extends Partial<Item> {
+	selected?: boolean;
 	order?: number;
 	onClick?: (id: ItemId) => void;
 }
