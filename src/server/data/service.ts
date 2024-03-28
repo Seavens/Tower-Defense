@@ -1,7 +1,10 @@
+import { COLLECTION_KEY, COLLECTION_NAME } from "./constants";
 import { DATA_TEMPLATE } from "shared/data/constants";
 import { Events } from "server/network";
+import { IS_EDIT, USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/core-constants";
 import { Service } from "@flamework/core";
 import { Signal } from "@rbxts/beacon";
+import { attemptDataWipe } from "./utils";
 import { createCollection } from "@rbxts/lapis";
 import { createListener } from "shared/utils/create-listener";
 import { isData } from "shared/data/types";
@@ -23,7 +26,7 @@ const dataLoaded = createListener<OnDataLoaded>();
 export class DataService implements OnPlayerAdded, OnPlayerRemoving {
 	public static readonly onDataLoaded = new Signal<Entity>();
 
-	public static readonly collection = createCollection("Data|#1", {
+	public static readonly collection = createCollection(COLLECTION_NAME, {
 		defaultData: DATA_TEMPLATE,
 		validate: isData,
 	});
@@ -37,10 +40,14 @@ export class DataService implements OnPlayerAdded, OnPlayerRemoving {
 	}
 
 	public async onPlayerAdded(entity: Entity): Promise<void> {
+		if (USE_MOCK_DATA && WIPE_MOCK_DATA && entity.isPlayer()) {
+			const { player } = entity;
+			await attemptDataWipe(player);
+		}
 		const { onDataLoaded, collection, documents, loaded } = DataService;
 		const { user, id } = entity;
 		const bin = entity.getBin();
-		const index = `Player|#${id}`;
+		const index = `${COLLECTION_KEY}${id}`;
 		try {
 			const document = await collection.load(index, [id]);
 			const data = document.read();

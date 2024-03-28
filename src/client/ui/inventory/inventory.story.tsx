@@ -1,4 +1,4 @@
-import { CreateReactStory } from "@rbxts/ui-labs";
+import { Boolean, CreateReactStory } from "@rbxts/ui-labs";
 import { Inventory } from "./inventory";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utils";
@@ -20,14 +20,18 @@ export = CreateReactStory(
 		cleanup: (): void => {
 			store.resetState();
 		},
+		controls: {
+			visible: Boolean(true),
+		},
 	},
-	(): Element => {
+	({ controls }): Element => {
+		const { visible } = controls;
 		store.inventoryAddItems({ items: items });
 		store.profileAdjustCoins({ isAdd: true, coins: 5465653468 });
 		store.profileAdjustGems({ isAdd: true, gems: 8338 });
 		return (
 			<ReflexProvider producer={store}>
-				<Inventory visable={true} />
+				<Inventory visible={visible} />
 			</ReflexProvider>
 		);
 	},

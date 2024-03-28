@@ -1,12 +1,13 @@
-import { FONTS } from "client/ui/constants";
+import { FONTS, SPRINGS } from "client/ui/constants";
 import { Frame, Group } from "../components";
 import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
+import { map } from "@rbxts/pretty-react-hooks";
 import { useItemDefinition, useRarityDefinition } from "./utils";
-import { usePx } from "../hooks";
-import React, { useMemo } from "@rbxts/react";
+import { useMotion, usePx } from "../hooks";
+import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
@@ -16,11 +17,13 @@ export interface ItemSlotProps extends Partial<Item> {
 	onClick?: (id: ItemId) => void;
 }
 
-export function ItemSlot({ id, order, onClick }: ItemSlotProps): Element {
+export function ItemSlot({ id, selected, order, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
 	const definition = useItemDefinition(id);
 	const rarity = useRarityDefinition(id);
+
+	const [outline, outlineMotion] = useMotion(1);
 
 	const cost = useMemo((): Option<number> => {
 		if (definition === undefined) {
@@ -35,6 +38,10 @@ export function ItemSlot({ id, order, onClick }: ItemSlotProps): Element {
 	}, [definition]);
 
 	const color = rarity?.color ?? Latte.Base;
+
+	useEffect((): void => {
+		outlineMotion.spring(selected ? 0 : 1, SPRINGS.gentle);
+	}, [selected]);
 
 	return (
 		<Frame
@@ -131,6 +138,7 @@ export function ItemSlot({ id, order, onClick }: ItemSlotProps): Element {
 			<uistroke
 				Color={Latte.Base}
 				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+				Transparency={outline.map((value: number): number => map(value, 0, 1, 0.25, 1))}
 				Thickness={1}
 				key={"slot-outline"}
 			/>

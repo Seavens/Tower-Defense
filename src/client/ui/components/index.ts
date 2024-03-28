@@ -11,6 +11,7 @@ import { InputCapture } from "./input-capture";
 import { Layer } from "./layer";
 import { Text } from "./text";
 import { TextField } from "./text-field";
+import { Transition } from "./transition";
 
 export {
 	Button,
@@ -26,4 +27,5 @@ export {
 	Text,
 	TextField,
 	DropDown,
+	Transition,
 };

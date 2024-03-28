@@ -1,9 +1,8 @@
 import { Players } from "@rbxts/services";
 
-//  !! Have to make not Async
-export function idToName(id: number): string {
-	const user = Players.GetNameFromUserIdAsync(id);
-	if (user === undefined) {
+export async function idToName(id: number): Promise<string> {
+	const [success, user] = pcall(() => Players.GetNameFromUserIdAsync(id));
+	if (!success || user === undefined) {
 		return "Unknown";
 	}
 	return user;

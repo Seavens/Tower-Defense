@@ -14,5 +14,5 @@ export function InventoryApp(): Element {
 		setToggled((value: boolean): boolean => !value);
 	}, [tab]);
 
-	return <Inventory visable={toggled} onClose={(): void => setToggled((value: boolean): boolean => !value)} />;
+	return <Inventory visible={toggled} onClose={(): void => setToggled((value: boolean): boolean => !value)} />;
 }
