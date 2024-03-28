@@ -1,5 +1,6 @@
 import { Button, Frame, Group, Image, Text } from "../components";
-import { Darken, Lighten } from "@rbxts/colour-utils";
+import { Darken, Lighten, Palette } from "@rbxts/colour-utils";
+import { DropMenu } from "../components/drop-menu";
 import { FONTS } from "../constants";
 import {
 	INVENTORY_COLUMN_COUNT,
@@ -120,7 +121,24 @@ export function Inventory(props: InventoryProps): Element {
 						SortOrder={Enum.SortOrder.LayoutOrder}
 						Padding={new UDim(0, px(5))}
 					/>
-					<Button
+					<DropMenu
+						key={"filter-kind-relic"}
+						size={UDim2.fromScale(0.08, 0.8)}
+						position={UDim2.fromScale(0.1, 0.5)}
+						anchorPoint={new Vector2(0.5, 0.5)}
+						cornerRadius={new UDim(0, px(4))}
+						backgroundColor={Mocha.Blue}
+						backgroundTransparency={0}
+						onClick={(): void => {
+							setFiltering((value: ItemFiltering): ItemFiltering => {
+								if (value === ItemFiltering.Relic) {
+									return ItemFiltering.All;
+								}
+								return ItemFiltering.Relic;
+							});
+						}}
+					/>
+					{/* <Button
 						text={""}
 						key={"filter-kind-relic"}
 						size={UDim2.fromScale(0.08, 0.8)}
@@ -146,8 +164,8 @@ export function Inventory(props: InventoryProps): Element {
 							anchorPoint={new Vector2(0.5, 0.5)}
 							image={"rbxassetid://7964618035"}
 						/>
-					</Button>
-					<Button
+					</Button> */}
+					{/* <Button
 						text={""}
 						key={"filter-rarity"}
 						size={UDim2.fromScale(0.08, 0.8)}
@@ -254,7 +272,7 @@ export function Inventory(props: InventoryProps): Element {
 							anchorPoint={new Vector2(0.5, 0.5)}
 							image={"rbxassetid://6088994136"}
 						/>
-					</Button>
+					</Button> */}
 					<TextField
 						key={"search"}
 						size={UDim2.fromScale(0.515, 0.8)}
