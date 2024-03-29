@@ -18,24 +18,24 @@ export function truncateNumber(decimals: number, number: number): string {
 // }
 
 export function formatStats(item: Item, size: number, owner: string): string {
-	const { id, props } = item;
+	const { id, unique } = item;
 	const { name: itemName, desc, rarity, kind } = itemDefinitions[id];
 	const { name: rarityName, color } = rarityDefinitions[rarity];
 
 	const base = `<font size="${size}">${itemName}</font>\n<font color="#${color.ToHex()}">${rarityName} ${
-		ITEM_KIND_DISPLAYS[props.kind]
+		ITEM_KIND_DISPLAYS[unique.kind]
 	}</font>\n${desc}\n\nStats:\n\t`;
-	if (props.kind === ItemKind.Tower && kind.kind === ItemKind.Tower) {
+	if (unique.kind === ItemKind.Tower && kind.kind === ItemKind.Tower) {
 		const { damage: baseDamage, range: baseRange, cooldown: baseCooldown, cost, damageKind, targeting } = kind;
-		const { damage, range, cooldown, level, locked } = props;
+		const { damage, range, cooldown, level, locked } = unique;
 		return `${base}Level: ${truncateNumber(0, level)}\n\tCost: $${truncateNumber(0, cost)}\n\tDamage Kind: ${
 			MOB_DAMAGE_DISPLAY[damageKind]
 		}\n\tDamage: ${truncateNumber(2, baseDamage * damage)}\n\tRange: ${truncateNumber(
 			2,
 			baseRange * range,
 		)}\n\tCooldown: ${truncateNumber(2, baseCooldown * cooldown)}\n\tLocked: ${locked}\n\tOriginal Owner: ${owner}`;
-	} else if (props.kind === ItemKind.Relic) {
-		const { multiplier } = props;
+	} else if (unique.kind === ItemKind.Relic) {
+		const { multiplier } = unique;
 		return `${base}Multiplier: ${truncateNumber(2, multiplier)}`;
 	} else {
 		return "";

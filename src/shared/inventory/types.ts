@@ -64,7 +64,7 @@ export interface ItemKinds {
 export interface Item {
 	id: ItemId;
 	uuid: UUID;
-	props: ItemKinds[ItemKind];
+	unique: ItemKinds[ItemKind];
 }
 
 export const isItemRarity = Flamework.createGuard<ItemRarity>();
@@ -79,5 +79,5 @@ export const isRelicItemId = Flamework.createGuard<RelicItemId>();
 export const isItem: t.check<Item> = t.strictInterface({
 	id: isItemId,
 	uuid: isUUID,
-	props: t.union(isItemTowerClass, isItemRelicClass),
+	unique: t.union(isItemTowerClass, isItemRelicClass),
 });

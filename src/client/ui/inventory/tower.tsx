@@ -1,36 +1,19 @@
-import { Button, DelayRender, DropDown, Frame, Group, Image, Text, Transition } from "../components";
+import { Button, Frame, Group, Image } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
-import { FONTS, PALETTE, SPRINGS } from "../constants";
-import {
-	INVENTORY_COLUMN_COUNT,
-	INVENTORY_SIZE,
-	ITEM_SLOT_SIZE,
-	RARITY_ORDERS,
-	TOWER_SIZE,
-	TRANSPARENCY_GRADIENT,
-} from "./constants";
-import { ItemFiltering } from "shared/inventory/types";
-import { ItemKind } from "shared/inventory/types";
-import { ItemSlot } from "./item-slot";
+import { TOWER_SIZE } from "./constants";
+
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
-import { TextField } from "../components/text-field";
-import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
-import { idToName } from "shared/utils/id-to-name";
-import { itemDefinitions } from "shared/inventory/items";
-import { map, useAsync } from "@rbxts/pretty-react-hooks";
-import { selectInventoryData } from "client/inventory/selectors";
-import { selectProfileData } from "client/profile/selectors";
-import { useButtonAnimation } from "../hooks/use-button-animation";
-import { useButtonState } from "../hooks/use-button-state";
-import { useMotion, usePx } from "../hooks";
-import { useSelector } from "@rbxts/react-reflex";
+
+import { type Item, type ItemId, ItemKind } from "shared/inventory/types";
+import { usePx } from "../hooks";
 import Abbreviator from "@rbxts/abbreviate";
-import React, { useEffect, useMemo, useState } from "@rbxts/react";
+import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Item, ItemId } from "shared/inventory/types";
+import type { ItemTowerClass, TowerItemId } from "shared/inventory/types";
 
 interface TowerProps {
+	unique: ItemTowerClass;
+	id: TowerItemId;
 	onClick?: (id: ItemId) => void;
 }
 
@@ -40,7 +23,7 @@ const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 4;
 const TEXTCOLOR = Latte.Base;
 
-export function Tower(): Element {
+export function Tower({ onClick, id, unique }: TowerProps): Element {
 	const px = usePx();
 	const abbreviator = new Abbreviator();
 
@@ -60,14 +43,26 @@ export function Tower(): Element {
 				key={"tower-frame"}
 			>
 				<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
-				<Frame
+				<Image
 					size={UDim2.fromOffset(px(200), px(200))}
 					cornerRadius={new UDim(0, 12)}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0.025, 0.5)}
+					// image={tower?.image}
 				>
 					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
-				</Frame>
+					<Button
+						size={UDim2.fromScale(1, 1)}
+						onClick={() => {
+							if (onClick) {
+								if (item.unique.kind !== ItemKind.Tower) {
+									return;
+								}
+								onClick(item.id);
+							}
+						}}
+					></Button>
+				</Image>
 			</Frame>
 		</Group>
 	);

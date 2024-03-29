@@ -74,7 +74,7 @@ export namespace ItemUtility {
 		const uuid = createUUID();
 		if (itemKind === ItemKind.Relic) {
 			const multiplier = getMultiplier();
-			const props: ItemRelicClass = {
+			const unique: ItemRelicClass = {
 				kind: ItemKind.Relic,
 				multiplier,
 				locked: false,
@@ -82,14 +82,14 @@ export namespace ItemUtility {
 			const item: Item = {
 				id,
 				uuid,
-				props,
+				unique,
 			};
 			return item;
 		}
 		const cooldown = getMultiplier();
 		const damage = getMultiplier();
 		const range = getMultiplier();
-		const props: ItemTowerClass = {
+		const unique: ItemTowerClass = {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
@@ -101,7 +101,7 @@ export namespace ItemUtility {
 		const item: Item = {
 			id,
 			uuid,
-			props,
+			unique,
 		};
 		return item;
 	}

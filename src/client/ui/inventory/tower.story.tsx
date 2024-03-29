@@ -1,5 +1,7 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 
+import { ItemKind } from "shared/inventory/types";
+import { ItemUtility } from "shared/inventory/utils";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { Tower } from "./tower";
 import { store } from "client/state/store";
@@ -17,10 +19,12 @@ export = CreateReactStory(
 		},
 	},
 	({ controls }): Element => {
-		const { visible } = controls;
+		const items = ItemUtility.createItems(1, 5, ItemKind.Tower);
+		const [item] = items;
+
 		return (
 			<ReflexProvider producer={store}>
-				<Tower />
+				<Tower {...(item as never)} onClick={} />
 			</ReflexProvider>
 		);
 	},

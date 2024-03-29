@@ -29,7 +29,7 @@ import React, { useEffect, useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item } from "shared/inventory/types";
 
-interface InventoryProps {
+interface Inventoryunique {
 	visible: boolean;
 	onClose?: () => void;
 }
@@ -42,7 +42,7 @@ const TEXTCOLOR = Latte.Base;
 
 const DEV_TRANSPARENT = 0;
 
-export function Inventory({ visible, onClose }: InventoryProps): Element {
+export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const { stored } = useSelector(selectInventoryData);
 	const { coins, gems } = useSelector(selectProfileData);
 
@@ -63,11 +63,11 @@ export function Inventory({ visible, onClose }: InventoryProps): Element {
 		return stored.get(selected);
 	}, [stored, selected]);
 	const [owner] = useAsync(async (): Promise<string> => {
-		const props = item?.props;
-		if (item === undefined || props === undefined || props.kind !== ItemKind.Tower) {
+		const unique = item?.unique;
+		if (item === undefined || unique === undefined || unique.kind !== ItemKind.Tower) {
 			return "";
 		}
-		const { owner } = props;
+		const { owner } = unique;
 		return idToName(owner);
 	}, [item]);
 
@@ -86,15 +86,15 @@ export function Inventory({ visible, onClose }: InventoryProps): Element {
 			if (item === undefined) {
 				continue;
 			}
-			const { id, props } = item;
-			if (filtered === ItemFiltering.Locked && !props.locked) {
+			const { id, unique } = item;
+			if (filtered === ItemFiltering.Locked && !unique.locked) {
 				continue;
 			}
 			// !! NEEDS TO BE SORTED BY KIND IN GROUPS, NOT JUST ONE GROUP
-			if (filtered === ItemFiltering.Relic && props.kind !== ItemKind.Relic) {
+			if (filtered === ItemFiltering.Relic && unique.kind !== ItemKind.Relic) {
 				continue;
 			}
-			if (filtered === ItemFiltering.Tower && props.kind !== ItemKind.Tower) {
+			if (filtered === ItemFiltering.Tower && unique.kind !== ItemKind.Tower) {
 				continue;
 			}
 
@@ -102,8 +102,8 @@ export function Inventory({ visible, onClose }: InventoryProps): Element {
 			const order =
 				filtered === ItemFiltering.Rarity
 					? RARITY_ORDERS[rarity]
-					: filtered === ItemFiltering.Level && props.kind === ItemKind.Tower
-						? MAXIMUM_TOWER_LEVEL - props.level
+					: filtered === ItemFiltering.Level && unique.kind === ItemKind.Tower
+						? MAXIMUM_TOWER_LEVEL - unique.level
 						: undefined;
 			elements.push(
 				<ItemSlot

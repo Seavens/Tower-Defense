@@ -36,10 +36,10 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			result = item;
 			break;
 		}
-		if (result === undefined || !isTowerItemId(result.id) || result.props.kind !== ItemKind.Tower) {
+		if (result === undefined || !isTowerItemId(result.id) || result.unique.kind !== ItemKind.Tower) {
 			return;
 		}
-		const { id, props } = result;
+		const { id, unique } = result;
 
 		const { towerLimits } = mapDefinitions[map];
 		const limit = towerLimits[id];
@@ -58,7 +58,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		const [targeting] = allowed;
 		const index = placed + 1;
 		const cframe = new CFrame(position);
-		const tower = new Tower(id, uuid, index, cframe, user, props);
+		const tower = new Tower(id, uuid, index, cframe, user, unique);
 		const key = tower.getKey();
 
 		store.placeTower({ id, uuid, index, key, position, targeting }, { user, broadcast: true });
