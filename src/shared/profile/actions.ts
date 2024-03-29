@@ -2,24 +2,17 @@ import type { DataActions } from "shared/data/actions";
 import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 
 export type ProfileActions<S> = {
-	profileAdjustLevel: (state: S, payload: ProfileAdjustLevel, metadata: EntityMetadata & ReplicationMetadata) => S;
-	profileAdjustExperience: (
+	profileAddExperience: (
 		state: S,
-		payload: ProfileAdjustExperience,
+		payload: ProfileAddExperience,
 		metadata: EntityMetadata & ReplicationMetadata,
 	) => S;
-	profileAdjustCoins: (state: S, payload: ProfileAdjustCoins, metadata: EntityMetadata & ReplicationMetadata) => S;
 	profileAdjustGems: (state: S, payload: ProfileAdjustGems, metadata: EntityMetadata & ReplicationMetadata) => S;
+	profileAdjustCoins: (state: S, payload: ProfileAdjustCoins, metadata: EntityMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
-export interface ProfileAdjustLevel {
-	level: number;
-	isAdd: boolean;
-}
-
-export interface ProfileAdjustExperience {
+export interface ProfileAddExperience {
 	experience: number;
-	isAdd: boolean;
 }
 
 export interface ProfileAdjustCoins {
@@ -29,9 +22,4 @@ export interface ProfileAdjustCoins {
 export interface ProfileAdjustGems {
 	gems: number;
 	isAdd: boolean;
-}
-
-export interface ProfileAdjustDailyRewards {
-	streak: number;
-	date: string;
 }

@@ -3,16 +3,15 @@ import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 
 import { DATA_TEMPLATE } from "shared/data/constants";
-import { levelDown, levelUp } from "shared/profile/utility";
+import { calculateIncrease } from "shared/profile/utility";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/replication/metadata";
 import type {
 	ProfileActions,
+	ProfileAddExperience,
 	ProfileAdjustCoins,
-	ProfileAdjustExperience,
 	ProfileAdjustGems,
-	ProfileAdjustLevel,
 } from "shared/profile/actions";
 import type { ProfileData } from "shared/data/types";
 
@@ -25,48 +24,22 @@ const state: ProfileState = {
 };
 
 export const profileSlice = createProducer<ProfileState, ExcludeMetadata<ProfileActions<ProfileState>>>(state, {
-	profileAdjustLevel: (state: ProfileState, payload: ProfileAdjustLevel): ProfileState => {
-		const { level, isAdd } = payload;
-		if (isAdd) {
-			return produce(state, (draft: Draft<ProfileState>): void => {
-				levelUp(draft.data.level, level);
-			});
-		} else {
-			return produce(state, (draft: Draft<ProfileState>): void => {
-				levelDown(draft.data.level, level);
-			});
-		}
-	},
-	profileAdjustExperience: (state: ProfileState, payload: ProfileAdjustExperience): ProfileState => {
-		const { experience, isAdd } = payload;
-		if (isAdd) {
-			return produce(state, (draft: Draft<ProfileState>): void => {
-				draft.data.experience += experience;
-			});
-		} else {
-			return produce(state, (draft: Draft<ProfileState>): void => {
-				draft.data.experience -= experience;
-			});
-		}
+	profileAddExperience: (state: ProfileState, payload: ProfileAddExperience): ProfileState => {
+		const { experience } = payload;
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			calculateIncrease(draft.data.level, experience);
+		});
 	},
 	profileAdjustCoins: (state: ProfileState, payload: ProfileAdjustCoins): ProfileState => {
 		const { coins, isAdd } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			if (isAdd) {
-				draft.data.coins += coins;
-			} else {
-				draft.data.coins -= coins;
-			}
+			draft.data.coins += isAdd ? coins : -coins;
 		});
 	},
 	profileAdjustGems: (state: ProfileState, payload: ProfileAdjustGems): ProfileState => {
 		const { isAdd, gems } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			if (isAdd) {
-				draft.data.gems += gems;
-			} else {
-				draft.data.gems -= gems;
-			}
+			draft.data.gems += isAdd ? gems : -gems;
 		});
 	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {

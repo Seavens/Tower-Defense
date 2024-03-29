@@ -3,6 +3,7 @@ import { Events } from "client/network";
 import { Mob } from "client/mob/class";
 import { PlacementController } from "client/placement/controller";
 import { Tower } from "client/tower/class";
+import { UserInputService, Workspace } from "@rbxts/services";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectPlacedTowers } from "shared/tower/selectors";
 import { selectPlacementState } from "client/placement/selectors";
@@ -10,8 +11,34 @@ import { store } from "client/state/store";
 import type { OnStart, OnTick } from "@flamework/core";
 import type { ReplicatedTower } from "shared/tower/types";
 
+const { debris, characters, mobs } = Workspace;
+
+const camera = Workspace.CurrentCamera;
+
+const params = new RaycastParams();
+params.AddToFilter([debris, characters, mobs]);
+params.FilterType = Enum.RaycastFilterType.Exclude;
+
 @Controller({})
 export class TowerController implements OnStart, OnTick {
+	protected cframe = CFrame.identity;
+
+	public getCFrame(): CFrame {
+		if (camera === undefined) {
+			return CFrame.identity;
+		}
+		const location = UserInputService.GetMouseLocation();
+		const ray = camera.ViewportPointToRay(location.X, location.Y);
+		const origin = ray.Origin;
+		const direction = ray.Direction.mul(100);
+		const raycast = Workspace.Raycast(origin, direction, params);
+		if (raycast === undefined) {
+			return new CFrame(origin.add(direction));
+		}
+		const position = raycast.Position;
+		return new CFrame(position);
+	}
+
 	public onStart(): void {
 		PlacementController.onPlaced(async (placing: string, asset: Model): Promise<void> => {
 			const { slot } = store.getState(selectPlacementState);
@@ -57,5 +84,7 @@ export class TowerController implements OnStart, OnTick {
 		// !! Consider allowing for hotkey'ing to towers, ie; pressing `1` would select the 1st tower and begin placement.
 	}
 
-	public onTick(): void {}
+	public onTick(): void {
+		// warn(this.getCFrame());
+	}
 }

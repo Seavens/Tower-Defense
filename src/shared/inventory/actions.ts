@@ -5,39 +5,28 @@ import type { Item } from "./types";
 
 export type InventoryActions<S> = {
 	inventoryAddItem: (state: S, payload: InventoryAddItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryAddItems: (state: S, payload: InventoryAddItems, metadata: EntityMetadata & ReplicationMetadata) => S;
 	inventoryRemoveItem: (state: S, payload: InventoryRemoveItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryRemoveItems: (
+	inventoryEquipItem: (state: S, payload: InventoryEquipItem, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryUnequipItem: (
 		state: S,
-		payload: InventoryRemoveItems,
+		payload: InventoryUnequipItem,
 		metadata: EntityMetadata & ReplicationMetadata,
 	) => S;
-	inventoryEquipItem: (state: S, payload: InventoryEquipItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryEquipItems: (state: S, payload: InventoryEquipItems, metadata: EntityMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
+// Multiple item actions
 export interface InventoryAddItem {
-	item: Item;
-	slot: Slot;
-}
-
-export interface InventoryAddItems {
 	items: Array<Item>;
 }
 
 export interface InventoryRemoveItem {
-	slot: Slot;
-}
-
-export interface InventoryRemoveItems {
 	slots: Array<Slot>;
 }
 
 export interface InventoryEquipItem {
-	item: Item;
-	slot: Slot;
+	items: Array<Item>;
 }
 
-export interface InventoryEquipItems {
-	items: Array<Item>;
+export interface InventoryUnequipItem {
+	slots: Array<Slot>;
 }

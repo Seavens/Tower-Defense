@@ -49,7 +49,6 @@ export class PlacementController implements OnStart, OnTick {
 		if (placeable === undefined) {
 			return false;
 		}
-		// !! Bug.
 		const origin = cframe.Position.add(Vector3.yAxis.mul(5));
 		const direction = Vector3.yAxis.mul(-15);
 		const raycast = Workspace.Raycast(origin, direction, placeable);
