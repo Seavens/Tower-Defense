@@ -30,9 +30,12 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
 			if (player === undefined) {
+				warn(user);
 				return;
 			}
-			calculateIncrease(player.data.level, experience);
+			const [level, leftover] = calculateIncrease(player.data.level, experience);
+			player.data.level = level;
+			player.data.experience = leftover;
 		});
 	},
 	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: EntityMetadata): State => {
@@ -40,10 +43,11 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 		const { coins } = payload;
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
-			if (player === undefined || player.data.coins <= 0) {
+			if (player === undefined) {
 				return;
 			}
-			draft.data.data.coins += coins;
+			const { data } = player;
+			data.coins = math.max(data.coins + coins, 0);
 		});
 	},
 	profileAdjustGems: (state: State, payload: ProfileAdjustGems, metadata: EntityMetadata) => {
@@ -51,10 +55,11 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 		const { gems } = payload;
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
-			if (player === undefined || player.data.coins <= 0) {
+			if (player === undefined) {
 				return;
 			}
-			draft.data.data.coins += gems;
+			const { data } = player;
+			data.gems = math.max(data.gems + gems, 0);
 		});
 	},
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {

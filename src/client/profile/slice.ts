@@ -27,7 +27,9 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 	profileAddExperience: (state: ProfileState, payload: ProfileAddExperience): ProfileState => {
 		const { experience } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			calculateIncrease(draft.data.level, experience);
+			const [level, leftover] = calculateIncrease(draft.data.level, experience);
+			draft.data.level = level;
+			draft.data.experience = leftover;
 		});
 	},
 	profileAdjustCoins: (state: ProfileState, payload: ProfileAdjustCoins): ProfileState => {

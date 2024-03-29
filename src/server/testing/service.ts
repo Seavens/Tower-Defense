@@ -2,9 +2,9 @@ import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utils";
 import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
 import { Service } from "@flamework/core";
+import { USE_MOCK_DATA } from "shared/core/core-constants";
 import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";
-import { useSelector } from "@rbxts/react-reflex";
 import type { Entity } from "server/player/class";
 import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { OnDataLoaded } from "../data/service";
@@ -12,12 +12,13 @@ import type { OnDataLoaded } from "../data/service";
 @Service({})
 export class TestService implements OnDataLoaded {
 	public async onDataLoaded(entity: Entity): Promise<void> {
-		task.wait(3);
-
-		// Mock Data
+		const a = await entity.getData();
+		warn(a);
+		if (!USE_MOCK_DATA) {
+			return;
+		}
 		const { user, id } = entity;
 		const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
-
 		for (const _ of $range(1, MAXIMUM_STORED)) {
 			const item = ItemUtility.createItem(id, ItemKind.Tower);
 			store.inventoryAddItem({ items: [item] }, metadata);
@@ -36,10 +37,12 @@ export class TestService implements OnDataLoaded {
 
 		warn("Added 100000 experience, coins, and gems to player.\n");
 		warn(store.getState(selectProfileData(user)));
+		task.wait();
 		store.profileAdjustCoins({ coins: -1000000 }, metadata);
 		store.profileAdjustGems({ gems: -1000000 }, metadata);
 
 		warn("Removed 1000000 coins and gems from player.\n");
+		task.wait();
 		warn(store.getState(selectProfileData(user)));
 	}
 }
