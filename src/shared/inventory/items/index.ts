@@ -21,6 +21,8 @@ interface TowerDefinition {
 	count: number;
 	cost: number;
 
+	upgrades: Array<[upgrade: number, multiplier: number, cost: number]>;
+
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
 }
 

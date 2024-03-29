@@ -24,6 +24,15 @@ export const enternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation,
 		count: 3,
 		cost: 1000,
 
+		upgrades: [
+			[1, 1.06, 1000],
+			[2, 1.12, 2000],
+			[3, 1.24, 4000],
+			[4, 1.48, 8000],
+			[5, 1.64, 16000],
+			[6, 1.8, 32000],
+		],
+
 		targeting: [
 			TowerTargeting.First,
 			TowerTargeting.Last,

@@ -24,6 +24,13 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 		count: 3,
 		cost: 500,
 
+		upgrades: [
+			[1, 1.04, 1000],
+			[2, 1.08, 2000],
+			[3, 1.16, 4000],
+			[4, 1.32, 8000],
+		],
+
 		targeting: [
 			TowerTargeting.First,
 			TowerTargeting.Last,

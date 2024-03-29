@@ -24,6 +24,14 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		count: 1,
 		cost: 700,
 
+		upgrades: [
+			[1, 1.05, 1000],
+			[2, 1.1, 2000],
+			[3, 1.2, 4000],
+			[4, 1.4, 8000],
+			[5, 1.8, 16000],
+		],
+
 		targeting: [
 			// TowerTargeting.First,
 			// TowerTargeting.Last,

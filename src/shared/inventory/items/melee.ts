@@ -24,6 +24,13 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		count: 5,
 		cost: 100,
 
+		upgrades: [
+			[1, 1.03, 150],
+			[2, 1.06, 200],
+			[3, 1.12, 400],
+			[4, 1.24, 800],
+		],
+
 		targeting: [
 			TowerTargeting.First,
 			TowerTargeting.Last,

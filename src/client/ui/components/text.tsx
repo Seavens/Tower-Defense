@@ -12,6 +12,8 @@ export interface TextProps<T extends Instance = TextLabel> extends FrameProps<T>
 	textColor?: BindingOrValue<Color3>;
 	textSize?: BindingOrValue<number>;
 	textTransparency?: BindingOrValue<number>;
+	textStrokeTransparency?: BindingOrValue<number>;
+	textStrokeColor?: BindingOrValue<Color3>;
 	textWrapped?: BindingOrValue<boolean>;
 	textXAlignment?: InferEnumNames<Enum.TextXAlignment>;
 	textYAlignment?: InferEnumNames<Enum.TextYAlignment>;
@@ -54,6 +56,8 @@ export const Text = forwardRef(
 			textYAlignment,
 			visible,
 			zIndex,
+			textStrokeTransparency,
+			textStrokeColor,
 		}: TextProps,
 		ref: Ref<TextLabel>,
 	): Element => {
@@ -88,6 +92,8 @@ export const Text = forwardRef(
 				LayoutOrder={layoutOrder}
 				Change={change}
 				Event={event}
+				TextStrokeColor3={textStrokeColor}
+				TextStrokeTransparency={textStrokeTransparency}
 			>
 				{children}
 				{cornerRadius !== undefined && <uicorner CornerRadius={cornerRadius} />}
