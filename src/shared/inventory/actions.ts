@@ -14,7 +14,6 @@ export type InventoryActions<S> = {
 	) => S;
 } & DataActions<S>;
 
-// Multiple item actions
 export interface InventoryAddItem {
 	items: Array<Item>;
 }

@@ -37,24 +37,24 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 	},
 	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: EntityMetadata): State => {
 		const { user } = metadata;
-		const { coins, isAdd } = payload;
+		const { coins } = payload;
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
 			if (player === undefined || player.data.coins <= 0) {
 				return;
 			}
-			draft.data.data.coins += isAdd ? coins : -coins;
+			draft.data.data.coins += coins;
 		});
 	},
 	profileAdjustGems: (state: State, payload: ProfileAdjustGems, metadata: EntityMetadata) => {
 		const { user } = metadata;
-		const { gems, isAdd } = payload;
+		const { gems } = payload;
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
 			if (player === undefined || player.data.coins <= 0) {
 				return;
 			}
-			draft.data.data.coins += isAdd ? gems : -gems;
+			draft.data.data.coins += gems;
 		});
 	},
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {

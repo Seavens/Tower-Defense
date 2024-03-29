@@ -31,15 +31,15 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 		});
 	},
 	profileAdjustCoins: (state: ProfileState, payload: ProfileAdjustCoins): ProfileState => {
-		const { coins, isAdd } = payload;
+		const { coins } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			draft.data.coins += isAdd ? coins : -coins;
+			draft.data.coins += coins;
 		});
 	},
 	profileAdjustGems: (state: ProfileState, payload: ProfileAdjustGems): ProfileState => {
-		const { isAdd, gems } = payload;
+		const { gems } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			draft.data.gems += isAdd ? gems : -gems;
+			draft.data.gems += gems;
 		});
 	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {

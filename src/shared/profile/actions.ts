@@ -14,12 +14,9 @@ export type ProfileActions<S> = {
 export interface ProfileAddExperience {
 	experience: number;
 }
-
 export interface ProfileAdjustCoins {
 	coins: number;
-	isAdd: boolean;
 }
 export interface ProfileAdjustGems {
 	gems: number;
-	isAdd: boolean;
 }

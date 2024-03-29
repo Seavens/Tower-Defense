@@ -27,8 +27,8 @@ export = CreateReactStory(
 	({ controls }): Element => {
 		const { visible } = controls;
 		store.inventoryAddItem({ items: items });
-		store.profileAdjustCoins({ isAdd: true, coins: 5465653468 });
-		store.profileAdjustGems({ isAdd: true, gems: 8338 });
+		store.profileAdjustCoins({ coins: 5465653468 });
+		store.profileAdjustGems({ gems: 8338 });
 		return (
 			<ReflexProvider producer={store}>
 				<Inventory visible={visible} />
