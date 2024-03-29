@@ -12,8 +12,7 @@ import type { OnDataLoaded } from "../data/service";
 @Service({})
 export class TestService implements OnDataLoaded {
 	public async onDataLoaded(entity: Entity): Promise<void> {
-		const a = await entity.getData();
-		warn(a);
+		await entity.getData();
 		if (!USE_MOCK_DATA) {
 			return;
 		}

@@ -8,6 +8,7 @@ import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
+import type { Item, ItemTowerClass, TowerItemId } from "shared/inventory/types";
 
 export = CreateReactStory(
 	{
@@ -19,12 +20,11 @@ export = CreateReactStory(
 		},
 	},
 	({ controls }): Element => {
-		const items = ItemUtility.createItems(1, 5, ItemKind.Tower);
-		const [item] = items;
+		const item = ItemUtility.createItem(1, ItemKind.Tower) as Item & { id: TowerItemId; unique: ItemTowerClass };
 
 		return (
 			<ReflexProvider producer={store}>
-				<Tower {...(item as never)} onClick={} />
+				<Tower {...item} onClick={warn} />
 			</ReflexProvider>
 		);
 	},

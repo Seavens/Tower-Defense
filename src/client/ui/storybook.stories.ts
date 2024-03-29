@@ -1,0 +1,3 @@
+export = {
+	storyRoots: [script.Parent],
+};

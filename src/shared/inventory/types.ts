@@ -30,7 +30,7 @@ export const enum ItemId {
 	Melee = "item_id:melee",
 	Blunt = "item_id:blunt",
 	God = "item_id:god",
-	EnternalDamnation = "item_id:enternal_damnation",
+	EternalDamnation = "item_id:eternal_damnation",
 	Chalice = "item_id:chalice",
 }
 type KindItemIds<K extends ItemKind> = {
@@ -56,15 +56,15 @@ export interface ItemRelicClass {
 	locked: boolean;
 }
 
-export interface ItemKinds {
+export type ItemUnique<T extends ItemKind = ItemKind> = {
 	[ItemKind.Tower]: ItemTowerClass;
 	[ItemKind.Relic]: ItemRelicClass;
-}
+}[T];
 
 export interface Item {
 	id: ItemId;
 	uuid: UUID;
-	unique: ItemKinds[ItemKind];
+	unique: ItemUnique;
 }
 
 export const isItemRarity = Flamework.createGuard<ItemRarity>();

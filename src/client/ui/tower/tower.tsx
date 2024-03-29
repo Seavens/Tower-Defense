@@ -1,15 +1,12 @@
 import { Button, Frame, Group, Image } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
-import { TOWER_SIZE } from "./constants";
-
 import { Latte, Mocha } from "@rbxts/catppuccin";
-
-import { type Item, type ItemId, ItemKind } from "shared/inventory/types";
-import { usePx } from "../hooks";
-import Abbreviator from "@rbxts/abbreviate";
+import { TOWER_SIZE } from "../inventory/constants";
+import { useAbbreviator, usePx } from "../hooks";
+import { useTowerDefintion } from "./hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemTowerClass, TowerItemId } from "shared/inventory/types";
+import type { ItemId, ItemTowerClass, TowerItemId } from "shared/inventory/types";
 
 interface TowerProps {
 	unique: ItemTowerClass;
@@ -25,7 +22,8 @@ const TEXTCOLOR = Latte.Base;
 
 export function Tower({ onClick, id, unique }: TowerProps): Element {
 	const px = usePx();
-	const abbreviator = new Abbreviator();
+	const abbreviator = useAbbreviator();
+	const definition = useTowerDefintion(id);
 
 	return (
 		<Group
@@ -48,20 +46,10 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 					cornerRadius={new UDim(0, 12)}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0.025, 0.5)}
-					// image={tower?.image}
+					image={definition.image}
 				>
 					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
-					<Button
-						size={UDim2.fromScale(1, 1)}
-						onClick={() => {
-							if (onClick) {
-								if (item.unique.kind !== ItemKind.Tower) {
-									return;
-								}
-								onClick(item.id);
-							}
-						}}
-					></Button>
+					<Button size={UDim2.fromScale(1, 1)} onClick={() => onClick?.(id)}></Button>
 				</Image>
 			</Frame>
 		</Group>

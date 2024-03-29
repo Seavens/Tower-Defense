@@ -47,13 +47,18 @@ export interface ItemDefinition<I extends ItemId, C extends ItemKind> {
 
 type InferClass<T> = T extends ItemDefinition<ItemId, infer C> ? C : never;
 export type AnyItemDefinition = (typeof itemDefinitions)[ItemId];
+export type KindItemDefinition<K extends ItemKind> = {
+	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, K>
+		? ItemDefinition<I, K>
+		: never;
+}[ItemId];
 
 export const itemDefinitions = {
 	[ItemId.Sniper]: sniperTowerItem,
 	[ItemId.Melee]: meleeTowerItem,
 	[ItemId.Blunt]: bluntTowerItem,
 	[ItemId.God]: godTowerItem,
-	[ItemId.EnternalDamnation]: enternalDamnationTowerItem,
+	[ItemId.EternalDamnation]: enternalDamnationTowerItem,
 	[ItemId.Chalice]: chaliceRelicItem,
 } as const;
 itemDefinitions satisfies { [I in ItemId]: ItemDefinition<I, InferClass<(typeof itemDefinitions)[I]>> };

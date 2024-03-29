@@ -106,6 +106,19 @@ export namespace ItemUtility {
 		return item;
 	}
 
+	export function createItems<T extends Option<ItemKind>>(owner: number, count: number, kind?: T): Array<Item>;
+
+	export function createItems<T extends Option<ItemKind>>(
+		owner: number,
+		count: number,
+		kind: T,
+	): T extends ItemKind.Tower ? Array<ItemTowerClass> : Array<Item>;
+	export function createItems<T extends Option<ItemKind>>(
+		owner: number,
+		count: number,
+		kind: T,
+	): T extends ItemKind.Relic ? Array<ItemRelicClass> : Array<Item>;
+
 	export function createItems<T extends Option<ItemKind>>(owner: number, count: number, kind?: T): Array<Item> {
 		const items = new Array<Item>();
 		for (const _ of $range(1, count)) {

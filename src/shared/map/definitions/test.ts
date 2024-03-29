@@ -27,7 +27,7 @@ export const testMap: MapDefinition<MapId.Test> = {
 		[ItemId.God]: 3,
 		[ItemId.Melee]: 6,
 		[ItemId.Sniper]: 6,
-		[ItemId.EnternalDamnation]: 2,
+		[ItemId.EternalDamnation]: 2,
 	},
 	baseHealth: math.huge,
 };
