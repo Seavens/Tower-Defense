@@ -10,7 +10,7 @@ import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mobs/types";
 import type { TowerTargeting } from "shared/tower/types";
 
-export type TowerUpgradeInfo = [upgrade: number, multiplier: number, cost: number];
+export type TowerUpgradeInfo = [upgrade: number, multiplier: [damage: number, range: number, cooldown: number], cost: number];
 
 interface TowerDefinition {
 	kind: ItemKind.Tower;
