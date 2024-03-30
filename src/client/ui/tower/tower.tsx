@@ -77,18 +77,18 @@ export function Tower({ tower }: TowerProps): Element {
 				backgroundColor={BACKGROUND}
 				anchorPoint={new Vector2(0.5, 0.5)}
 				position={UDim2.fromScale(0.5, 0.5)}
-				cornerRadius={new UDim(0, 12)}
+				cornerRadius={new UDim(0, CORNER_RADIUS)}
 				key={"tower-frame"}
 			>
 				<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 				<Image
-					size={UDim2.fromOffset(px(212), px(212))}
+					size={UDim2.fromOffset(px(212), px(210))}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0.01, 0.57)}
 					backgroundColor={darkRarity ?? TEXTCOLOR}
 					backgroundTransparency={0}
 					image={definition.image}
-					cornerRadius={new UDim(0, 12)}
+					cornerRadius={new UDim(0, CORNER_RADIUS)}
 					key={"tower-image"}
 				>
 					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
@@ -117,10 +117,10 @@ export function Tower({ tower }: TowerProps): Element {
 					anchorPoint={new Vector2(0.5, 0.5)}
 					backgroundColor={BACKGROUND_LIGHT}
 					backgroundTransparency={1}
-					cornerRadius={new UDim(0, 12)}
+					cornerRadius={new UDim(0, CORNER_RADIUS)}
 				>
 					<uilistlayout
-						Padding={new UDim(0, 8)}
+						Padding={new UDim(0, px(6))}
 						FillDirection={Enum.FillDirection.Vertical}
 						HorizontalAlignment={Enum.HorizontalAlignment.Center}
 						SortOrder={Enum.SortOrder.LayoutOrder}
@@ -132,7 +132,7 @@ export function Tower({ tower }: TowerProps): Element {
 						key={"tower-upgrades"}
 					>
 						<uilistlayout
-							Padding={new UDim(0, 8)}
+							Padding={new UDim(0, px(6))}
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
 							SortOrder={Enum.SortOrder.LayoutOrder}
@@ -245,7 +245,7 @@ export function Tower({ tower }: TowerProps): Element {
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 					</Text>
 					<Button
-						size={UDim2.fromOffset(px(192), px(60))}
+						size={UDim2.fromOffset(px(192), px(63))}
 						backgroundColor={PALETTE.green}
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-upgrade"}
@@ -266,7 +266,7 @@ export function Tower({ tower }: TowerProps): Element {
 					</Button>
 					<Group size={UDim2.fromOffset(px(192), px(35))} key={"tower-buttons"}>
 						<uilistlayout
-							Padding={new UDim(0.005, 8)}
+							Padding={new UDim(px(0.005), px(6))}
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
 							SortOrder={Enum.SortOrder.LayoutOrder}
@@ -298,7 +298,7 @@ export function Tower({ tower }: TowerProps): Element {
 								size={UDim2.fromOffset(px(70), px(35))}
 								anchorPoint={new Vector2(0.5, 0.5)}
 								position={UDim2.fromScale(0.5, 0.5)}
-								textSize={px(TEXT_SIZE + 5)}
+								textSize={px(TEXT_SIZE) - 1}
 								textColor={PALETTE.accent}
 								text={`Target: ${TOWER_TARGETING_DISPLAY[targeting]}`}
 								textStrokeColor={OUTLINE}

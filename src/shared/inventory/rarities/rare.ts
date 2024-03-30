@@ -7,5 +7,5 @@ export const rareRarity: RarityDefinition<ItemRarity.Rare> = {
 	name: "Rare",
 	desc: "A rare rarity.",
 	weight: RARITY_WEIGHTS[ItemRarity.Rare],
-	color: Color3.fromRGB(152, 193, 217),
+	color: Color3.fromRGB(69, 110, 194),
 };

@@ -28,8 +28,8 @@ export function TowerApp(): Element {
 		<DelayRender shouldRender={selected !== undefined} unmountDelay={1}>
 			<Transition
 				size={UDim2.fromOffset(px(TOWER_SIZE.X), px(TOWER_SIZE.Y))}
-				position={new UDim2(1, -px(5), 0.5, 0)}
-				anchorPoint={new Vector2(1, 0.5)}
+				position={new UDim2(0, px(10), 0.5, 0)}
+				anchorPoint={new Vector2(0, 0.5)}
 				groupTransparency={transparency}
 				key={"tower-app"}
 			>

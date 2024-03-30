@@ -128,7 +128,7 @@ export function ItemSlot({ id, selected, order, onClick }: ItemSlotProps): Eleme
 							ApplyStrokeMode={Enum.ApplyStrokeMode.Contextual}
 							Color={GetPerceivedBrightness(color) < 0.235 ? Latte.Base : Mocha.Crust}
 							Transparency={0.25}
-							Thickness={2}
+							Thickness={1}
 							key={"text-stroke"}
 						/>
 					</textlabel>

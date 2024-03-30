@@ -79,7 +79,7 @@ export function Hotbar(): Element {
 				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING)}
 			>
 				<uistroke
-					Color={Latte.Base}
+					Color={Darken(Mocha.Blue, .5)}
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 					Thickness={1}
 					key={"level-outline"}
@@ -89,14 +89,14 @@ export function Hotbar(): Element {
 					size={UDim2.fromScale(experience / max, 1)}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0, 0.5)}
-					backgroundColor={Macchiato.Yellow}
+					backgroundColor={Mocha.Blue}
 					cornerRadius={new UDim(0, px(5))}
 				/>
 				<textlabel
 					key={"experience-text"}
 					Size={UDim2.fromScale(0.5, 1)}
 					AnchorPoint={new Vector2(0, 0.5)}
-					Position={new UDim2(0, px(5), 0.5, 0)}
+					Position={new UDim2(0, px(7), 0.5, 0)}
 					BackgroundTransparency={1}
 					TextColor3={Latte.Base}
 					Text={`${abbreviator.numberToString(experience)}/${abbreviator.numberToString(max)}`}
@@ -110,19 +110,21 @@ export function Hotbar(): Element {
 				size={UDim2.fromOffset(px(EXP_BAR_SIZE_Y + HOTBAR_PADDING), px(EXP_BAR_SIZE_Y + HOTBAR_PADDING))}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING / 2)}
-				backgroundColor={Latte.Overlay0} // temp
+				backgroundColor={Mocha.Teal}
 			>
 				<textlabel
 					key={"level-value"}
 					Size={UDim2.fromOffset(0, px(12))}
 					AnchorPoint={Vector2.one.mul(0.5)}
 					Position={UDim2.fromScale(0.5, 0.5)}
-					BackgroundColor3={Latte.Overlay0} // temp
+					BackgroundColor3={Mocha.Teal}
 					TextColor3={Latte.Base}
 					Text={truncateNumber(0, level)}
-					TextSize={px(10)}
+					TextSize={px(16)}
 					FontFace={FONTS.inter.bold}
 					AutomaticSize={Enum.AutomaticSize.X}
+					TextStrokeColor3={Mocha.Base}
+					TextStrokeTransparency={0}
 				>
 					<uipadding
 						PaddingBottom={new UDim(0, px(5))}
@@ -133,6 +135,12 @@ export function Hotbar(): Element {
 					/>
 					<uicorner CornerRadius={new UDim(0, px(3))} key={"level-corner"} />
 				</textlabel>
+				<uistroke
+						Color={Darken(Mocha.Blue, .5)}
+						ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+						Thickness={1}
+						key={"level-outline"}
+						/>
 				<uicorner CornerRadius={new UDim(1, 0)} key={"level-corner"} />
 			</Frame>
 		</Group>
