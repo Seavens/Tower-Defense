@@ -85,7 +85,7 @@ export class Tower extends API {
 		const { range: base, upgrades } = kind;
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
-		const radius = range * base * multiplier;
+		const radius = range * base * multiplier[1];
 		// Pivot because it'll be at the base of the tower.
 		const cframe = instance.GetPivot();
 		const circle = new Instance("Part");

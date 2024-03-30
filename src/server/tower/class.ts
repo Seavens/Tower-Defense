@@ -109,8 +109,8 @@ export class Tower extends API {
 		const [, upgradeMulti] = upgrades[upgradeIndex - 1];
 		const { cooldown: cooldownMulti, damage: damageMulti } = unique;
 		const { cooldown: baseCooldown, damage: baseDamage } = kind;
-		const cooldown = baseCooldown * cooldownMulti * upgradeMulti;
-		const damage = baseDamage * damageMulti * upgradeMulti;
+		const cooldown = baseCooldown * cooldownMulti * upgradeMulti[2];
+		const damage = baseDamage * damageMulti * upgradeMulti[1];
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;

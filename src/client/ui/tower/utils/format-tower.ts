@@ -7,10 +7,11 @@ const abbreviator = new Abbreviator();
 
 export function formatUpgrade(currentUpgrade: TowerUpgradeInfo, nextUpgrade: Option<TowerUpgradeInfo>): string {
 	const [index] = currentUpgrade;
+	warn(index);
 	if (nextUpgrade === undefined) {
 		return `Upgrade [${index}]: MAX`;
 	}
-	const [_, multiplier] = nextUpgrade;
+	const [_, [multiplier]] = nextUpgrade;
 	return `Upgrade [${index}] → [<font color="#${PALETTE.positive}">+${multiplier}x</font>]`;
 }
 
@@ -32,13 +33,13 @@ export function formatRange(
 	const { kind } = definition;
 	const { range: base } = kind;
 	const [_1, currentMultiplier] = currentUpgrade;
-	const currentRange = base * range * currentMultiplier;
+	const currentRange = base * range * currentMultiplier[1];
 	let text = `Range: ${abbreviator.numberToString(currentRange)}`;
 	if (nextUpgrade === undefined) {
 		return text;
 	}
 	const [_2, nextMultiplier] = nextUpgrade;
-	const nextRange = base * range * nextMultiplier;
+	const nextRange = base * range * nextMultiplier[0];
 	const increased = nextRange > currentRange;
 	text += `→ [<font color="#${increased ? PALETTE.positive : PALETTE.negative}">${abbreviator.numberToString(nextRange)}</font>]`;
 	return text;
@@ -54,13 +55,13 @@ export function formatDamage(
 	const { kind } = definition;
 	const { damage: base } = kind;
 	const [_1, currentMultiplier] = currentUpgrade;
-	const currentDamage = base * damage * currentMultiplier;
+	const currentDamage = base * damage * currentMultiplier[0];
 	let text = `Damage: ${abbreviator.numberToString(currentDamage)}`;
 	if (nextUpgrade === undefined) {
 		return text;
 	}
 	const [_2, nextMultiplier] = nextUpgrade;
-	const nextDamage = base * damage * nextMultiplier;
+	const nextDamage = base * damage * nextMultiplier[0];
 	const increased = nextDamage > currentDamage;
 	text += `→ [<font color="#${increased ? PALETTE.positive : PALETTE.negative}">${abbreviator.numberToString(nextDamage)}</font>]`;
 	return text;
@@ -76,13 +77,13 @@ export function formatCooldown(
 	const { kind } = definition;
 	const { cooldown: base } = kind;
 	const [_1, currentMultiplier] = currentUpgrade;
-	const currentCooldown = base * cooldown * currentMultiplier;
+	const currentCooldown = base * cooldown * currentMultiplier[2];
 	let text = `Cooldown: ${abbreviator.numberToString(currentCooldown)}`;
 	if (nextUpgrade === undefined) {
 		return text;
 	}
 	const [_2, nextMultiplier] = nextUpgrade;
-	const nextCooldown = base * cooldown * nextMultiplier;
+	const nextCooldown = base * cooldown * nextMultiplier[2];
 	const increased = nextCooldown > currentCooldown;
 	text += `→ [<font color="#${increased ? PALETTE.negative : PALETTE.positive}">${abbreviator.numberToString(nextCooldown)}</font>]`;
 	return text;
