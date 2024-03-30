@@ -10,6 +10,9 @@ export const FONTS = {
 	robotoMono: {
 		regular: Font.fromEnum(Enum.Font.RobotoMono),
 	},
+	nunito: {
+		regular: Font.fromEnum(Enum.Font.Nunito),
+	},
 };
 
 export const SPRINGS = {

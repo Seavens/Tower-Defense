@@ -1,22 +1,21 @@
 import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { Events } from "client/network";
+import { FONTS, PALETTE, SPRINGS } from "../constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { PALETTE, SPRINGS } from "../constants";
 import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerImpl } from "client/tower/impl";
 import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
-import { useAbbreviator, useMotion, usePx } from "../hooks";
 import { useButtonAnimation } from "../hooks/use-button-animation";
 import { useButtonState } from "../hooks/use-button-state";
+import { useMotion, usePx } from "../hooks";
 import { useRarityDefinition } from "../inventory/utils";
 import { useTowerDefintion } from "./hooks";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { Item, ItemTowerUnique } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerUpgradeInfo } from "shared/inventory/items";
 
@@ -25,7 +24,7 @@ const OUTLINE = Darken(BACKGROUND, 0.25);
 const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 2;
 const TEXTCOLOR = Latte.Base;
-const FONT = new Font(Enum.Font.Nunito.Name, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+const FONT = FONTS.nunito.regular;
 const TEXT_SIZE = 19;
 const CORNER_RADIUS = 10;
 const TEXT_STROKE_TRANSPARENCY = 0.25;
@@ -330,14 +329,12 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							onClick={(): void => {
 								const { key } = tower;
-								const { kind } = definition;
-								const { targeting: valid } = kind;
-								let index = valid.indexOf(tower.targeting);
-								if (index >= valid.size()) {
-									index = 0;
+
+								if (nextUpgrade === undefined) {
+									return;
 								}
-								const targeting = valid[(index + 1) % valid.size()];
-								Events.tower.targeting(key, targeting);
+
+								TowerImpl.changeTargeting(key);
 							}}
 							key={"tower-target"}
 						>
@@ -367,8 +364,12 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							key={"tower-sell"}
 							onClick={(): void => {
 								const { key } = tower;
-								Events.tower.sell(key);
-								store.deselectTower({});
+
+								if (tower === undefined) {
+									return;
+								}
+
+								TowerImpl.sellTower(key);
 							}}
 						>
 							<uistroke

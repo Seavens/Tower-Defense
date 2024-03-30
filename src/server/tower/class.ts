@@ -2,6 +2,7 @@ import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { Mob } from "../mob/class";
 import { RunService } from "@rbxts/services";
+import { SELL_RATIO } from "shared/tower/constants";
 import { TowerTargeting } from "shared/tower/types";
 import { itemDefinitions } from "shared/inventory/items";
 import { reuseThread } from "shared/utils/reuse-thread";
@@ -80,6 +81,29 @@ export class Tower extends API {
 		return upgrades;
 	}
 
+	public getSellCost(): number {
+		const { id, key } = this;
+		const tower = store.getState(selectSpecificTower(key));
+		if (tower === undefined) {
+			const { kind } = itemDefinitions[id];
+			const { cost } = kind;
+			return cost;
+		}
+		const { kind } = itemDefinitions[id];
+		const { cost } = kind;
+		const upgradeIndex = this.getUpgrades();
+		const { upgrades } = kind;
+
+		let upgradeValue = 0;
+		for (const index of $range(1, upgradeIndex)) {
+			const [, , sell] = upgrades[index];
+			upgradeValue += sell * SELL_RATIO;
+		}
+
+		const value = upgradeValue + cost * SELL_RATIO;
+		return value;
+	}
+
 	public getTarget(): Option<Mob> {
 		const { cframe, unique } = this;
 		const { range: rangeMulti } = unique;
@@ -121,7 +145,6 @@ export class Tower extends API {
 		currentTarget.takeDamage(damage, damageKind);
 	}
 
-	// Set Functions
 	public setTargeting(targeting: TowerTargeting): void {
 		if (!this.isTargetingValid(targeting)) {
 			return;
@@ -137,6 +160,9 @@ export class Tower extends API {
 
 	public sellTower(): void {
 		const { key, owner } = this;
+		const cost = this.getSellCost();
+
+		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
 		store.sellTower({ key }, { user: owner, broadcast: true });
 	}
 

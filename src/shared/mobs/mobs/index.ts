@@ -10,6 +10,8 @@ export interface MobDefinition<I extends MobId> {
 	speed: number;
 	resistances: Array<MobDamage>;
 	health: number;
+
+	reward: number;
 }
 
 export const mobDefinitions: { [I in MobId]: MobDefinition<I> } = {

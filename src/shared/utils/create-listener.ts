@@ -20,9 +20,6 @@ export function createListener<T>(index?: Modding.Many<keyof T>, id?: Modding.Ge
 	const connected = new Set<T>();
 	const resolving = new Array<ListenerReturn<T>>();
 
-	Modding.onListenerAdded<T>((object: T): Set<T> => connected.add(object), id);
-	Modding.onListenerRemoved<T>((object: T): boolean => connected.delete(object), id);
-
 	const listener: Listener<T> = {
 		fire: (...args: ListenerParameters<T>): Array<ListenerReturn<T>> => {
 			const promises = table.clone(resolving);
@@ -62,5 +59,9 @@ export function createListener<T>(index?: Modding.Many<keyof T>, id?: Modding.Ge
 		},
 	};
 	setmetatable(listener, metatable as never);
+
+	Modding.onListenerAdded<T>((object: T): Set<T> => connected.add(object), id);
+	Modding.onListenerRemoved<T>((object: T): boolean => connected.delete(object), id);
+
 	return listener;
 }

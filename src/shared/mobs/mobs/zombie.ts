@@ -9,4 +9,6 @@ export const zombieMob: MobDefinition<MobId.Zombie> = {
 	speed: 5,
 	resistances: [],
 	health: 10,
+
+	reward: 10,
 };

@@ -5,6 +5,7 @@ import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type {
 	GameActions,
+	GameAddCurrency,
 	GameBaseDamage,
 	GameChangeMap,
 	GameEndRound,
@@ -21,6 +22,7 @@ export interface GameState {
 	map?: MapId;
 	health: number;
 	max: number;
+	currency: number;
 }
 
 const gameState: GameState = {
@@ -29,6 +31,7 @@ const gameState: GameState = {
 	map: undefined,
 	health: 100,
 	max: 100,
+	currency: 0,
 };
 
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {
@@ -103,6 +106,17 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 			}
 			draft.status = GameStatus.Ended;
 			draft.wave = -1;
+			return draft;
+		});
+	},
+	gameAddCurrency: (state: GameState, payload: GameAddCurrency): GameState => {
+		const { amount } = payload;
+		return produce(state, (draft: Draft<GameState>): GameState => {
+			const { status } = draft;
+			if (status === GameStatus.None) {
+				return original(draft);
+			}
+			draft.currency += amount;
 			return draft;
 		});
 	},

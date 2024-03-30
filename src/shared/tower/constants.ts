@@ -10,3 +10,5 @@ export const TOWER_TARGETING_DISPLAY: { [T in TowerTargeting]: string } = {
 } as const;
 
 export const MAXIMUM_TOWER_LEVEL = 10;
+
+export const SELL_RATIO = 0.5;

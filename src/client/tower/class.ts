@@ -2,6 +2,7 @@ import { Tower as API } from "shared/tower/api";
 import { Collision, setCollision } from "shared/utils/collision";
 import { ComponentTag } from "shared/components/types";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { SELL_RATIO } from "shared/tower/constants";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectSpecificTower } from "shared/tower/selectors";
@@ -108,7 +109,7 @@ export class Tower extends API {
 		if (range === undefined) {
 			return;
 		}
-		const { id, unique } = this;
+		const { id } = this;
 		const { range: base, upgrades } = itemDefinitions[id].kind;
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
@@ -127,6 +128,29 @@ export class Tower extends API {
 		const position = cframe.Position;
 		const pivot = CFrame.lookAt(position, target, Vector3.yAxis);
 		instance.PivotTo(pivot);
+	}
+
+	public getSellCost(): number {
+		const { id, key } = this;
+		const tower = store.getState(selectSpecificTower(key));
+		if (tower === undefined) {
+			const { kind } = itemDefinitions[id];
+			const { cost } = kind;
+			return cost;
+		}
+		const { kind } = itemDefinitions[id];
+		const { cost } = kind;
+		const upgradeIndex = this.getUpgrades();
+		const { upgrades } = kind;
+
+		let upgradeValue = 0;
+		for (const index of $range(1, upgradeIndex)) {
+			const [, , sell] = upgrades[index];
+			upgradeValue += sell * SELL_RATIO;
+		}
+
+		const value = upgradeValue + cost * SELL_RATIO;
+		return value;
 	}
 
 	public destroy(): void {

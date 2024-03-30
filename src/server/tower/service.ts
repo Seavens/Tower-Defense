@@ -1,5 +1,6 @@
 import { Events } from "server/network";
 import { ItemKind, ItemTowerUnique, TowerItemId, isTowerItemId } from "shared/inventory/types";
+import { SELL_RATIO } from "shared/tower/constants";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
@@ -112,7 +113,6 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			store.setTowerTargeting({ key, targeting }, { user, broadcast: true });
 		});
 		Events.tower.upgrade.connect((player: Player, key: string): void => {
-			warn("upgrade");
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
@@ -123,21 +123,20 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 				return;
 			}
 			store.upgradeTower({ key }, { user, broadcast: true });
-			warn("upgraded");
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {
-			warn("sell");
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;
 			}
+
 			const { owner } = tower;
 			if (user !== owner) {
 				return;
 			}
+
 			store.sellTower({ key }, { user, broadcast: true });
-			warn("sold");
 		});
 	}
 }
