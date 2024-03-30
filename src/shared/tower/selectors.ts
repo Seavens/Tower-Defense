@@ -13,8 +13,11 @@ export function selectPlacedTowers(state: SharedState): Map<string, ReplicatedTo
 	return placed;
 }
 
-export function selectSpecificTower(key: string): (state: SharedState) => Option<ReplicatedTower> {
+export function selectSpecificTower(key: Option<string>): (state: SharedState) => Option<ReplicatedTower> {
 	return function (state: SharedState): Option<ReplicatedTower> {
+		if (key === undefined) {
+			return undefined;
+		}
 		const placed = selectPlacedTowers(state);
 		return placed.get(key);
 	};

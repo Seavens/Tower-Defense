@@ -1,7 +1,8 @@
-import { type Element, useEffect, useState } from "@rbxts/react";
 import { Inventory } from "client/ui/inventory/inventory";
+import { useEffect, useState } from "@rbxts/react";
 import { useKeyPress } from "@rbxts/pretty-react-hooks";
 import React from "@rbxts/react";
+import type { Element } from "@rbxts/react";
 
 export function InventoryApp(): Element {
 	const tab = useKeyPress(["Tab"]);

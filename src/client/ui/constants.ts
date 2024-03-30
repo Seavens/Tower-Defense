@@ -35,6 +35,6 @@ export const PALETTE = {
 	black: Color3.fromRGB(0, 0, 0),
 	white: Color3.fromRGB(255, 255, 255),
 
-	additional: Color3.fromRGB(232, 191, 10).ToHex(),
-	subtract: Color3.fromRGB(255, 0, 0).ToHex(),
+	positive: Color3.fromRGB(232, 191, 10).ToHex(),
+	negative: Color3.fromRGB(255, 0, 0).ToHex(),
 };

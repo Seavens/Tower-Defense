@@ -4,28 +4,32 @@ import type { EntityMetadata, ReplicationMetadata } from "shared/replication/met
 import type { Item } from "./types";
 
 export type InventoryActions<S> = {
-	inventoryAddItem: (state: S, payload: InventoryAddItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryRemoveItem: (state: S, payload: InventoryRemoveItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryEquipItem: (state: S, payload: InventoryEquipItem, metadata: EntityMetadata & ReplicationMetadata) => S;
-	inventoryUnequipItem: (
+	inventoryAddItems: (state: S, payload: InventoryAddItems, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryRemoveItems: (
 		state: S,
-		payload: InventoryUnequipItem,
+		payload: InventoryRemoveItems,
+		metadata: EntityMetadata & ReplicationMetadata,
+	) => S;
+	inventoryEquipSlot: (state: S, payload: InventoryEquipSlot, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryUnequipSlot: (
+		state: S,
+		payload: InventoryUnequipSlot,
 		metadata: EntityMetadata & ReplicationMetadata,
 	) => S;
 } & DataActions<S>;
 
-export interface InventoryAddItem {
+export interface InventoryAddItems {
 	items: Array<Item>;
 }
 
-export interface InventoryRemoveItem {
+export interface InventoryRemoveItems {
 	slots: Array<Slot>;
 }
 
-export interface InventoryEquipItem {
-	items: Array<Item>;
+export interface InventoryEquipSlot {
+	slot: Slot;
 }
 
-export interface InventoryUnequipItem {
-	slots: Array<Slot>;
+export interface InventoryUnequipSlot {
+	slot: Slot;
 }

@@ -1,45 +1,66 @@
 import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
-import { ItemFiltering, type ItemId, ItemKind, type ItemTowerClass, type TowerItemId } from "shared/inventory/types";
+import { Events } from "client/network";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { PALETTE } from "../constants";
-import { TOWER_SIZE } from "../inventory/constants";
+import { TOWER_SIZE } from "./constants";
+import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
+import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
-import { useAbbreviator, useMotion, usePx } from "../hooks";
+import { store } from "client/state/store";
+import { useAbbreviator, usePx } from "../hooks";
 import { useButtonAnimation } from "../hooks/use-button-animation";
 import { useButtonState } from "../hooks/use-button-state";
 import { useRarityDefinition } from "../inventory/utils";
 import { useTowerDefintion } from "./hooks";
-import React, { useState } from "@rbxts/react";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-
-interface TowerProps {
-	unique: ItemTowerClass;
-	id: TowerItemId;
-	onClick?: (id: ItemId) => void;
-}
+import type { Item, ItemTowerUnique } from "shared/inventory/types";
+import type { ReplicatedTower } from "shared/tower/types";
+import type { TowerUpgradeInfo } from "shared/inventory/items";
 
 const BACKGROUND = Mocha.Base;
 const OUTLINE = Darken(BACKGROUND, 0.25);
 const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 2;
 const TEXTCOLOR = Latte.Base;
-const font = new Font(Enum.Font.Nunito.Name, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
-const textSize = 19;
-const cornerRadius = 10;
+const FONT = new Font(Enum.Font.Nunito.Name, Enum.FontWeight.Regular, Enum.FontStyle.Normal);
+const TEXT_SIZE = 19;
+const CORNER_RADIUS = 10;
+const TEXT_STROKE_TRANSPARENCY = 0.25;
 
-export function Tower({ onClick, id, unique }: TowerProps): Element {
+interface TowerProps {
+	tower: ReplicatedTower;
+}
+
+export function Tower({ tower }: TowerProps): Element {
+	const { id, upgrades, targeting } = tower;
+	const { unique } = tower;
+
 	const px = usePx();
-	const abbreviator = useAbbreviator();
 	const definition = useTowerDefintion(id);
 	const rarity = useRarityDefinition(id);
 	const darkRarity = Darken(rarity!.color, 0.5);
-	const textStrokeTransparency = 0.25;
 
-	// 100% not accessing the values right 💀💀💀💀
-	const { upgrades } = definition.kind;
-	const currentUpgrade = 0;
-	const targeting = "First";
+	const [currentUpgrade, nextUpgrade] = useMemo((): [TowerUpgradeInfo, Option<TowerUpgradeInfo>] => {
+		const { kind } = definition;
+		const { upgrades: upgradeInfo } = kind;
+		const currentUpgrade = upgradeInfo[upgrades - 1];
+		// We don't have to add 1 since roblox-ts thinks we're using 0 based indices (we're not.)
+		const nextUpgrade = upgradeInfo[upgrades];
+		return [currentUpgrade, nextUpgrade];
+	}, [definition, upgrades]);
+
+	const upgradeText = useMemo((): string => {
+		return formatUpgrade(currentUpgrade, nextUpgrade);
+	}, [currentUpgrade, nextUpgrade]);
+
+	const [damageText, rangeText, cooldownText] = useMemo((): [string, string, string] => {
+		const damageText = formatDamage(unique, definition, currentUpgrade, nextUpgrade);
+		const rangeText = formatRange(unique, definition, currentUpgrade, nextUpgrade);
+		const cooldownText = formatCooldown(unique, definition, currentUpgrade, nextUpgrade);
+		return [damageText, rangeText, cooldownText];
+	}, [unique, definition, currentUpgrade, nextUpgrade]);
 
 	const [pressed, hovering, events] = useButtonState();
 	const { hover } = useButtonAnimation(pressed, hovering);
@@ -74,18 +95,18 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 				</Image>
 				<Text
 					size={UDim2.fromOffset(px(212), px(30))}
-					textSize={px(textSize + 5)}
+					textSize={px(TEXT_SIZE + 5)}
 					position={UDim2.fromScale(0.01, 0.135)}
 					anchorPoint={new Vector2(0, 1)}
 					textColor={rarity?.color ?? TEXTCOLOR}
 					textXAlignment="Center"
 					text={definition.name}
-					font={font}
-					textStrokeTransparency={textStrokeTransparency}
+					font={FONT}
+					textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 					textStrokeColor={darkRarity}
 					backgroundColor={BACKGROUND_LIGHT}
 					backgroundTransparency={0}
-					cornerRadius={new UDim(0, cornerRadius)}
+					cornerRadius={new UDim(0, CORNER_RADIUS)}
 					key={"tower-name"}
 				>
 					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
@@ -118,19 +139,19 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 						/>
 						<Text
 							size={UDim2.fromScale(0.81, 1)}
-							textSize={px(textSize)}
+							textSize={px(TEXT_SIZE)}
 							position={UDim2.fromScale(0.01, 0.135)}
 							anchorPoint={new Vector2(0, 1)}
 							textColor={TEXTCOLOR}
 							textXAlignment="Center"
 							richText={true}
-							text={`Upgrade [${upgrades[0][0]}] → [<font color="#${PALETTE.additional}">+${upgrades[currentUpgrade][1]}x</font>]`}
-							font={font}
-							textStrokeTransparency={textStrokeTransparency}
+							text={upgradeText}
+							font={FONT}
+							textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 							textStrokeColor={OUTLINE}
 							backgroundColor={BACKGROUND_LIGHT}
 							backgroundTransparency={0}
-							cornerRadius={new UDim(0, cornerRadius)}
+							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							key={"tower-upgrades"}
 						>
 							<uistroke
@@ -141,19 +162,22 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 						</Text>
 						<Button
 							size={UDim2.fromOffset(px(30), px(30))}
-							cornerRadius={new UDim(0, px(cornerRadius - 2))}
+							cornerRadius={new UDim(0, px(CORNER_RADIUS - 2))}
 							backgroundColor={hover.map(
 								(value: number): Color3 => PALETTE.error.Lerp(PALETTE.accent, value / 3),
 							)}
 							rotation={hover.map((value: number): number => map(value, 0, 1, 0, 15))}
 							backgroundTransparency={0}
+							onClick={(): void => {
+								store.deselectTower({});
+							}}
 							{...events}
 							key={"inventory-close"}
 						>
 							<uistroke
 								Color={OUTLINE}
 								Thickness={THICKNESS}
-								Transparency={textStrokeTransparency}
+								Transparency={TEXT_STROKE_TRANSPARENCY}
 								ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							/>
 							<Text
@@ -171,52 +195,51 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 					</Group>
 					<Text
 						size={UDim2.fromOffset(px(192), px(30))}
-						textSize={px(textSize)}
+						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
 						richText={true}
-						text={`Damage: ${abbreviator.numberToString(unique.damage * definition.kind.damage)} → [<font color="#${PALETTE.additional}">${abbreviator.numberToString(upgrades[currentUpgrade][1] * unique.damage * definition.kind.damage)}</font>]`}
-						font={font}
-						textStrokeTransparency={textStrokeTransparency}
+						text={damageText}
+						font={FONT}
+						textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 						textStrokeColor={OUTLINE}
 						backgroundColor={BACKGROUND_LIGHT}
 						backgroundTransparency={0}
-						cornerRadius={new UDim(0, cornerRadius)}
+						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-damage"}
 					>
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 					</Text>
 					<Text
 						size={UDim2.fromOffset(px(192), px(30))}
-						textSize={px(textSize)}
+						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
 						richText={true}
-						text={`Range: ${abbreviator.numberToString(unique.range * definition.kind.range)} → [<font color="#${PALETTE.additional}">${abbreviator.numberToString(upgrades[currentUpgrade][1] * unique.range * definition.kind.range)}</font>]`}
-						font={font}
-						textStrokeTransparency={textStrokeTransparency}
+						text={rangeText}
+						font={FONT}
+						textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 						textStrokeColor={OUTLINE}
 						backgroundColor={BACKGROUND_LIGHT}
 						backgroundTransparency={0}
-						cornerRadius={new UDim(0, cornerRadius)}
+						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-range"}
 					>
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 					</Text>
 					<Text
 						size={UDim2.fromOffset(px(192), px(30))}
-						textSize={px(textSize)}
+						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
 						richText={true}
-						// !! Ideally, increase in time will be read and decrease will be green
-						text={`Cooldown: ${abbreviator.numberToString(unique.cooldown * definition.kind.cooldown)} → [<font color="#${PALETTE.subtract}">${abbreviator.numberToString(upgrades[currentUpgrade][1] * unique.cooldown * definition.kind.cooldown)}</font>]`}
-						font={font}
-						textStrokeTransparency={textStrokeTransparency}
+						text={cooldownText}
+						font={FONT}
+						textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 						textStrokeColor={OUTLINE}
 						backgroundColor={BACKGROUND_LIGHT}
 						backgroundTransparency={0}
-						cornerRadius={new UDim(0, cornerRadius)}
+						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-cooldown"}
 					>
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
@@ -224,7 +247,7 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 					<Button
 						size={UDim2.fromOffset(px(192), px(60))}
 						backgroundColor={PALETTE.green}
-						cornerRadius={new UDim(0, cornerRadius)}
+						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-upgrade"}
 					>
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
@@ -233,12 +256,12 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 							anchorPoint={new Vector2(0.5, 0.5)}
 							position={UDim2.fromScale(0.5, 0.48)}
 							textColor={PALETTE.accent}
-							textSize={px(textSize) + 10}
-							text={`Upgrade: $${abbreviator.numberToString(upgrades[currentUpgrade][2])}`}
+							textSize={px(TEXT_SIZE) + 10}
+							text={formatCost(nextUpgrade)}
 							textStrokeColor={OUTLINE}
-							textStrokeTransparency={textStrokeTransparency}
-							font={font}
-							key={"tower-sell-text"}
+							textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
+							font={FONT}
+							key={"upgrade-cost-text"}
 						/>
 					</Button>
 					<Group size={UDim2.fromOffset(px(192), px(35))} key={"tower-buttons"}>
@@ -251,7 +274,19 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 						<Button
 							size={UDim2.fromOffset(px(115), px(35))}
 							backgroundColor={PALETTE.lightBlue}
-							cornerRadius={new UDim(0, cornerRadius)}
+							cornerRadius={new UDim(0, CORNER_RADIUS)}
+							onClick={(): void => {
+								// !! This is a test, implement this better
+								const { key } = tower;
+								const { kind } = definition;
+								const { targeting: valid } = kind;
+								let index = valid.indexOf(tower.targeting);
+								if (index >= valid.size()) {
+									index = 0;
+								}
+								const targeting = valid[(index + 1) % valid.size()];
+								Events.replicateTowerTargeting(key, targeting);
+							}}
 							key={"tower-target"}
 						>
 							<uistroke
@@ -263,19 +298,19 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 								size={UDim2.fromOffset(px(70), px(35))}
 								anchorPoint={new Vector2(0.5, 0.5)}
 								position={UDim2.fromScale(0.5, 0.5)}
-								textSize={px(textSize + 5)}
+								textSize={px(TEXT_SIZE + 5)}
 								textColor={PALETTE.accent}
-								text={`Target: ${targeting}`}
+								text={`Target: ${TOWER_TARGETING_DISPLAY[targeting]}`}
 								textStrokeColor={OUTLINE}
-								textStrokeTransparency={textStrokeTransparency}
-								font={font}
+								textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
+								font={FONT}
 								key={"tower-sell-text"}
 							/>
 						</Button>
 						<Button
 							size={UDim2.fromOffset(px(70), px(35))}
 							backgroundColor={PALETTE.lightRed}
-							cornerRadius={new UDim(0, cornerRadius)}
+							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							key={"tower-sell"}
 						>
 							<uistroke
@@ -285,12 +320,12 @@ export function Tower({ onClick, id, unique }: TowerProps): Element {
 							/>
 							<Text
 								size={UDim2.fromOffset(px(70), px(35))}
-								textSize={px(textSize + 5)}
+								textSize={px(TEXT_SIZE + 5)}
 								textColor={PALETTE.accent}
 								text="Sell"
 								textStrokeColor={OUTLINE}
-								textStrokeTransparency={textStrokeTransparency}
-								font={font}
+								textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
+								font={FONT}
 								key={"tower-sell-text"}
 							/>
 						</Button>

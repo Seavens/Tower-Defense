@@ -17,9 +17,7 @@ import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 
-interface HotbarProps {}
-
-export function Hotbar(props: HotbarProps): Element {
+export function Hotbar(): Element {
 	const abbreviator = new Abbreviator();
 	const px = usePx();
 
@@ -38,7 +36,9 @@ export function Hotbar(props: HotbarProps): Element {
 			elements.push(
 				<ItemSlot
 					{...tower}
+					selected={true}
 					onClick={(placing: ItemId): void => {
+						warn(placing);
 						store.beginPlacement({ placing, slot });
 					}}
 				/>,

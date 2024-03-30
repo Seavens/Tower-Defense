@@ -5,10 +5,10 @@ import { MobDamage } from "shared/mobs/types";
 import { TowerTargeting } from "shared/tower/types";
 import type { ItemDefinition } from ".";
 
-export const enternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, ItemKind.Tower> = {
+export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, ItemKind.Tower> = {
 	id: ItemId.EternalDamnation,
-	name: "Enternal Damnation Tower",
-	desc: "An enternal tower that attacks enemies from everything.",
+	name: "Eternal Damnation Tower",
+	desc: "An eternal tower that attacks enemies from everything.",
 
 	rarity: ItemRarity.Secret,
 	image: `rbxassetid://11714891100`,

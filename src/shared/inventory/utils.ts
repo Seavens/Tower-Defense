@@ -4,7 +4,7 @@ import { Modding } from "@flamework/core";
 import { createUUID } from "shared/utils/create-uuid";
 import { itemDefinitions } from "./items";
 import { rarityDefinitions } from "shared/inventory/rarities";
-import type { Item, ItemId, ItemRelicClass, ItemTowerClass, RelicItemId, TowerItemId } from "shared/inventory/types";
+import type { Item, ItemId, ItemRelicUnique, ItemTowerUnique, RelicItemId, TowerItemId } from "shared/inventory/types";
 
 const allItemIds = Modding.inspect<Array<ItemId>>();
 const towerItemIds = Modding.inspect<Array<TowerItemId>>();
@@ -51,11 +51,11 @@ export namespace ItemUtility {
 	export function createItem<T extends Option<ItemKind>>(
 		owner: number,
 		kind: T,
-	): T extends ItemKind.Tower ? ItemTowerClass : Item;
+	): T extends ItemKind.Tower ? ItemTowerUnique : Item;
 	export function createItem<T extends Option<ItemKind>>(
 		owner: number,
 		kind: T,
-	): T extends ItemKind.Relic ? ItemRelicClass : Item;
+	): T extends ItemKind.Relic ? ItemRelicUnique : Item;
 
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item {
 		let id: ItemId;
@@ -74,7 +74,7 @@ export namespace ItemUtility {
 		const uuid = createUUID();
 		if (itemKind === ItemKind.Relic) {
 			const multiplier = getMultiplier();
-			const unique: ItemRelicClass = {
+			const unique: ItemRelicUnique = {
 				kind: ItemKind.Relic,
 				multiplier,
 				locked: false,
@@ -89,7 +89,7 @@ export namespace ItemUtility {
 		const cooldown = getMultiplier();
 		const damage = getMultiplier();
 		const range = getMultiplier();
-		const unique: ItemTowerClass = {
+		const unique: ItemTowerUnique = {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
@@ -112,12 +112,12 @@ export namespace ItemUtility {
 		owner: number,
 		count: number,
 		kind: T,
-	): T extends ItemKind.Tower ? Array<ItemTowerClass> : Array<Item>;
+	): T extends ItemKind.Tower ? Array<ItemTowerUnique> : Array<Item>;
 	export function createItems<T extends Option<ItemKind>>(
 		owner: number,
 		count: number,
 		kind: T,
-	): T extends ItemKind.Relic ? Array<ItemRelicClass> : Array<Item>;
+	): T extends ItemKind.Relic ? Array<ItemRelicUnique> : Array<Item>;
 
 	export function createItems<T extends Option<ItemKind>>(owner: number, count: number, kind?: T): Array<Item> {
 		const items = new Array<Item>();

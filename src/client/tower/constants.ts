@@ -1,0 +1,1 @@
+export const TOWER_KEY_ATTRIBUTE = "TOWER_KEY";

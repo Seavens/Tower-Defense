@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { ItemKind, ItemTowerClass, TowerItemId, isTowerItemId } from "shared/inventory/types";
+import { ItemKind, ItemTowerUnique, TowerItemId, isTowerItemId } from "shared/inventory/types";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
@@ -14,7 +14,7 @@ import type { Item, ItemId } from "shared/inventory/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
-import type { TowerTargeting } from "shared/tower/types";
+import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
@@ -57,11 +57,20 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		const { targeting: allowed } = definition.kind;
 		const [targeting] = allowed;
 		const index = placed + 1;
-		const cframe = new CFrame(position);
-		const tower = new Tower(id, uuid, index, cframe, user, unique);
-		const key = tower.getKey();
-
-		store.placeTower({ id, uuid, index, key, position, targeting }, { user, broadcast: true });
+		const key = `${uuid}_${index}`;
+		const tower: ReplicatedTower = {
+			id,
+			uuid,
+			index,
+			key,
+			position,
+			targeting,
+			unique,
+			owner: user,
+			upgrades: 1,
+		};
+		new Tower(tower);
+		store.placeTower({ id, uuid, index, key, position, targeting, unique }, { user, broadcast: true });
 		placedTowers.set(id, index);
 	}
 
@@ -102,5 +111,6 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			}
 			store.setTowerTargeting({ key, targeting }, { user, broadcast: true });
 		});
+		// !! Implement tower upgrading!
 	}
 }

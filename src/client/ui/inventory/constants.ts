@@ -25,5 +25,3 @@ export const RARITY_ORDERS: { [R in ItemRarity]: number } = {
 	[ItemRarity.Mythical]: 2,
 	[ItemRarity.Secret]: 1,
 };
-
-export const TOWER_SIZE = new Vector2(419, 255);

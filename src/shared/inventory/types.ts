@@ -40,7 +40,7 @@ type KindItemIds<K extends ItemKind> = {
 export type RelicItemId = KindItemIds<ItemKind.Relic>;
 export type TowerItemId = KindItemIds<ItemKind.Tower>;
 
-export interface ItemTowerClass {
+export interface ItemTowerUnique {
 	kind: ItemKind.Tower;
 	damage: number;
 	range: number;
@@ -50,15 +50,15 @@ export interface ItemTowerClass {
 	locked: boolean;
 }
 
-export interface ItemRelicClass {
+export interface ItemRelicUnique {
 	kind: ItemKind.Relic;
 	multiplier: number;
 	locked: boolean;
 }
 
 export type ItemUnique<T extends ItemKind = ItemKind> = {
-	[ItemKind.Tower]: ItemTowerClass;
-	[ItemKind.Relic]: ItemRelicClass;
+	[ItemKind.Tower]: ItemTowerUnique;
+	[ItemKind.Relic]: ItemRelicUnique;
 }[T];
 
 export interface Item {
@@ -68,8 +68,8 @@ export interface Item {
 }
 
 export const isItemRarity = Flamework.createGuard<ItemRarity>();
-export const isItemTowerClass = Flamework.createGuard<ItemTowerClass>();
-export const isItemRelicClass = Flamework.createGuard<ItemRelicClass>();
+export const isItemTowerUnique = Flamework.createGuard<ItemTowerUnique>();
+export const isItemRelicUnique = Flamework.createGuard<ItemRelicUnique>();
 
 export const isItemClass = Flamework.createGuard<ItemKind>();
 export const isItemId = Flamework.createGuard<ItemId>();
@@ -79,5 +79,5 @@ export const isRelicItemId = Flamework.createGuard<RelicItemId>();
 export const isItem: t.check<Item> = t.strictInterface({
 	id: isItemId,
 	uuid: isUUID,
-	unique: t.union(isItemTowerClass, isItemRelicClass),
+	unique: t.union(isItemTowerUnique, isItemRelicUnique),
 });

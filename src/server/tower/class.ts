@@ -8,7 +8,8 @@ import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "server/tower/targeting";
-import type { ItemTowerClass, TowerItemId } from "shared/inventory/types";
+import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
+import type { ReplicatedTower } from "shared/tower/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
@@ -17,9 +18,10 @@ export class Tower extends API {
 	public declare readonly uuid: string;
 	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
+	public declare readonly owner: string;
 
-	public readonly owner: string;
-	public readonly props: ItemTowerClass;
+	protected declare readonly key: string;
+	protected declare readonly unique: ItemTowerUnique;
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
@@ -35,20 +37,11 @@ export class Tower extends API {
 		});
 	}
 
-	public constructor(
-		id: TowerItemId,
-		uuid: string,
-		index: number,
-		cframe: CFrame,
-		owner: string,
-		props: ItemTowerClass,
-	) {
+	public constructor(tower: ReplicatedTower) {
+		super(tower);
 		const { towers } = Tower;
-		super(id, uuid, index, cframe);
 		const { key } = this;
 		towers.set(key, this);
-		this.owner = owner;
-		this.props = props;
 	}
 
 	public static getTower(key: string): Option<Tower> {
@@ -85,9 +78,19 @@ export class Tower extends API {
 		return tower.targeting;
 	}
 
+	public getUpgrades(): number {
+		const { key } = this;
+		const tower = store.getState(selectSpecificTower(key));
+		if (tower === undefined) {
+			return 1;
+		}
+		const { upgrades } = tower;
+		return upgrades;
+	}
+
 	public getTarget(): Option<Mob> {
-		const { cframe, props } = this;
-		const { range: rangeMulti } = props;
+		const { cframe, unique } = this;
+		const { range: rangeMulti } = unique;
 		const defRange = itemDefinitions[this.id].kind.range;
 		const range = defRange * rangeMulti;
 		const position = cframe.Position;
@@ -99,12 +102,15 @@ export class Tower extends API {
 	}
 
 	public attackTarget(delta: number): void {
-		const { id, key, props, lastAttack, lastTarget } = this;
-		const definition = itemDefinitions[id];
-		const { cooldown: cooldownMulti, damage: damageMulti } = props;
-		const { cooldown: baseCooldown, damage: baseDamage } = definition.kind;
-		const cooldown = baseCooldown * cooldownMulti;
-		const damage = baseDamage * damageMulti;
+		const { id, key, unique, lastAttack, lastTarget } = this;
+		const { kind } = itemDefinitions[id];
+		const { upgrades } = kind;
+		const upgradeIndex = this.getUpgrades();
+		const [, upgradeMulti] = upgrades[upgradeIndex - 1];
+		const { cooldown: cooldownMulti, damage: damageMulti } = unique;
+		const { cooldown: baseCooldown, damage: baseDamage } = kind;
+		const cooldown = baseCooldown * cooldownMulti * upgradeMulti;
+		const damage = baseDamage * damageMulti * upgradeMulti;
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
@@ -119,18 +125,13 @@ export class Tower extends API {
 		if (currentTarget === undefined) {
 			return;
 		}
-		const { damageKind: kind } = definition.kind;
-		currentTarget.takeDamage(damage, kind);
+		const { damageKind } = kind;
+		currentTarget.takeDamage(damage, damageKind);
 	}
 
-	public upgradeTower(multiplier: number): void {
-		// const { key, base, owner } = this;
-		// const stats = { ...base };
-		// for (const [key, stat] of pairs(stats)) {
-		// 	stats[key] = stat * multiplier;
-		// }
-		// this.stats = stats;
-		// store.upgradeTower({ key }, { user: owner, broadcast: true });
+	public upgradeTower(): void {
+		const { key, owner } = this;
+		store.upgradeTower({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

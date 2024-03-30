@@ -16,7 +16,7 @@ const towerState: TowerState = {
 export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(towerState, {
 	placeTower: (
 		state: TowerState,
-		{ id, uuid, index, key, position, targeting }: TowerPlace,
+		{ id, uuid, index, key, position, targeting, unique }: TowerPlace,
 		{ user }: EntityMetadata,
 	): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
@@ -25,10 +25,11 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 				uuid,
 				position,
 				owner: user,
-				upgrades: 0,
+				upgrades: 1,
 				index,
 				targeting,
 				key,
+				unique,
 			};
 			placed.set(key, tower);
 		}),

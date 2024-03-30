@@ -26,7 +26,7 @@ export = CreateReactStory(
 	},
 	({ controls }): Element => {
 		const { visible } = controls;
-		store.inventoryAddItem({ items: items });
+		store.inventoryAddItems({ items: items });
 		store.profileAdjustCoins({ coins: 5465653468 });
 		store.profileAdjustGems({ gems: 8338 });
 		return (

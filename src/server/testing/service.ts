@@ -18,17 +18,14 @@ export class TestService implements OnDataLoaded {
 		}
 		const { user, id } = entity;
 		const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
-		for (const _ of $range(1, MAXIMUM_STORED)) {
-			const item = ItemUtility.createItem(id, ItemKind.Tower);
-			store.inventoryAddItem({ items: [item] }, metadata);
+		const items = ItemUtility.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
+		store.inventoryAddItems({ items }, metadata);
+		task.wait();
+		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+			const slot: Slot = `${index}`;
+			store.inventoryEquipSlot({ slot }, metadata);
 		}
-		warn(`Added ${MAXIMUM_STORED} items to ${user}.\n`);
-
-		for (const _ of $range(1, MAXIMUM_EQUIPPED)) {
-			const item = ItemUtility.createItem(id, ItemKind.Tower);
-			store.inventoryAddItem({ items: [item] }, metadata);
-		}
-		warn(`Added ${MAXIMUM_EQUIPPED} items to ${user}.\n`);
+		warn(`Added ${MAXIMUM_STORED} items to ${user}.\n`, store.getState());
 
 		store.profileAddExperience({ experience: 100000 }, metadata);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);

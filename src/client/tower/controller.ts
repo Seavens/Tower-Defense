@@ -1,42 +1,100 @@
+import { CollectionService, ContextActionService, Players, UserInputService, Workspace } from "@rbxts/services";
+import { ComponentTag } from "shared/components/types";
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "client/mob/class";
 import { PlacementController } from "client/placement/controller";
+import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { Tower } from "client/tower/class";
-import { UserInputService, Workspace } from "@rbxts/services";
+import { getUser } from "shared/player/utility";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectPlacedTowers } from "shared/tower/selectors";
 import { selectPlacementState } from "client/placement/selectors";
+import { selectSelectedTower } from "./selectors";
 import { store } from "client/state/store";
-import type { OnStart, OnTick } from "@flamework/core";
+import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower } from "shared/tower/types";
 
-const { debris, characters, mobs } = Workspace;
+const { placed } = Workspace;
 
+const player = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
 
 const params = new RaycastParams();
-params.AddToFilter([debris, characters, mobs]);
-params.FilterType = Enum.RaycastFilterType.Exclude;
+params.AddToFilter([placed]);
+params.FilterType = Enum.RaycastFilterType.Include;
 
 @Controller({})
-export class TowerController implements OnStart, OnTick {
+export class TowerController implements OnStart {
 	protected cframe = CFrame.identity;
 
-	public getCFrame(): CFrame {
+	public getSelected(): Option<string> {
+		const selected = store.getState(selectSelectedTower);
+		return selected;
+	}
+
+	public getMouseRaycast(): Option<RaycastResult> {
 		if (camera === undefined) {
-			return CFrame.identity;
+			return undefined;
 		}
 		const location = UserInputService.GetMouseLocation();
 		const ray = camera.ViewportPointToRay(location.X, location.Y);
 		const origin = ray.Origin;
 		const direction = ray.Direction.mul(100);
-		const raycast = Workspace.Raycast(origin, direction, params);
-		if (raycast === undefined) {
-			return new CFrame(origin.add(direction));
+		const results = Workspace.Raycast(origin, direction, params);
+		return results;
+	}
+
+	public getTowerAncestor(descendant: BasePart): Option<Model> {
+		const towers = CollectionService.GetTagged(ComponentTag.Tower);
+		let result: Option<Model>;
+		for (const tower of towers) {
+			if (!tower.IsA("Model") || !descendant.IsDescendantOf(tower)) {
+				continue;
+			}
+			result = tower;
+			break;
 		}
-		const position = raycast.Position;
-		return new CFrame(position);
+		return result;
+	}
+
+	public selectTower(): void {
+		const results = this.getMouseRaycast();
+		const current = this.getSelected();
+		if (results === undefined) {
+			this.deselectTower();
+			return;
+		}
+		const instance = results.Instance;
+		if (!instance.IsA("BasePart")) {
+			this.deselectTower();
+			return;
+		}
+		const model = this.getTowerAncestor(instance);
+		const key = model?.GetAttribute(TOWER_KEY_ATTRIBUTE);
+		if (model === undefined || key === undefined || !typeIs(key, "string")) {
+			this.deselectTower();
+			return;
+		}
+		if (key === current) {
+			return;
+		}
+		// This may be faster than a state selection?
+		const tower = Tower.getTower(key);
+		if (tower === undefined || tower.owner !== getUser(player)) {
+			this.deselectTower();
+			return;
+		}
+		tower.enableRange();
+		store.selectTower({ key });
+	}
+
+	public deselectTower(): void {
+		const current = this.getSelected();
+		if (current === undefined) {
+			return;
+		}
+		store.deselectTower({});
 	}
 
 	public onStart(): void {
@@ -60,14 +118,20 @@ export class TowerController implements OnStart, OnTick {
 		store.observe(
 			selectPlacedTowers,
 			(_: ReplicatedTower, key: string): defined => key,
-			({ id, uuid, index, owner, position, upgrades }: ReplicatedTower, key: string): (() => void) => {
-				const cframe = new CFrame(position);
-				const tower = new Tower(id, uuid, index, cframe, upgrades);
+			(replicated: ReplicatedTower): (() => void) => {
+				const tower = new Tower(replicated);
 				return (): void => {
 					tower.destroy();
 				};
 			},
 		);
+		store.subscribe(selectSelectedTower, (selected: Option<string>, previous: Option<string>): void => {
+			if (previous === undefined || selected === previous) {
+				return;
+			}
+			const tower = Tower.getTower(previous);
+			tower?.disableRange();
+		});
 		Events.replicateTowerTarget.connect((key: string, target?: number): void => {
 			if (target === undefined) {
 				return;
@@ -81,10 +145,17 @@ export class TowerController implements OnStart, OnTick {
 			const position = cframe.Position;
 			tower.rotateToTarget(position);
 		});
+		UserInputService.InputBegan.Connect((input: InputObject, processed: boolean): void => {
+			if (processed) {
+				return;
+			}
+			const inputType = input.UserInputType;
+			const inputState = input.UserInputState;
+			if (inputType !== Enum.UserInputType.MouseButton1 || inputState !== Enum.UserInputState.Begin) {
+				return;
+			}
+			this.selectTower();
+		});
 		// !! Consider allowing for hotkey'ing to towers, ie; pressing `1` would select the 1st tower and begin placement.
-	}
-
-	public onTick(): void {
-		// warn(this.getCFrame());
 	}
 }

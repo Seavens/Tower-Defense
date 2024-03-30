@@ -1,5 +1,5 @@
 import type { BroadcastMetadata, EntityMetadata } from "shared/replication/metadata";
-import type { TowerItemId } from "shared/inventory/types";
+import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { TowerTargeting } from "./types";
 
 export type TowerActions<S> = {
@@ -16,6 +16,7 @@ export interface TowerPlace {
 	key: string;
 	position: Vector3;
 	targeting: TowerTargeting;
+	unique: ItemTowerUnique;
 }
 
 export interface TowerUpgrade {
