@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { ItemKind, ItemTowerUnique, TowerItemId, isTowerItemId } from "shared/inventory/types";
+import { ItemKind, ItemTowerUnique, isTowerItemId } from "shared/inventory/types";
 import { SELL_RATIO } from "shared/tower/constants";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
@@ -11,7 +11,7 @@ import { selectInventoryData } from "server/inventory/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "server/player/class";
-import type { Item, ItemId } from "shared/inventory/types";
+import type { Item, ItemId, TowerItemId } from "shared/inventory/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
@@ -19,7 +19,7 @@ import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
-	protected placedTowers = new Map<ItemId, number>();
+	protected placedTowers = new Map<TowerItemId, number>();
 
 	public onPlaceTower(player: Player, uuid: string, position: Vector3): void {
 		const user = getUser(player);
@@ -125,17 +125,21 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			store.upgradeTower({ key }, { user, broadcast: true });
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {
+			const { placedTowers } = this;
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;
 			}
-
-			const { owner } = tower;
+			const { id, owner } = tower;
 			if (user !== owner) {
 				return;
 			}
-
+			const placed = placedTowers.get(id) ?? 0;
+			if (placed <= 0) {
+				return;
+			}
+			placedTowers.set(id, placed - 1);
 			store.sellTower({ key }, { user, broadcast: true });
 		});
 	}
