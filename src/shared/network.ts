@@ -12,21 +12,21 @@ interface ClientToServerEvents {
 	tower: {
 		place(uuid: string, position: Vector3): void;
 		targeting(key: string, targeting: TowerTargeting): void;
+		upgrade(key: string): void;
+		sell(key: string): void;
 	};
 }
 
 interface ServerToClientEvents {
-
 	state: {
 		hydrate(state: defined): void;
 		actions(actions: Array<BroadcastAction>): void;
 	};
-	
+
 	player: {
 		loaded: Networking.Unreliable<() => void>;
-	
-	}
-	
+	};
+
 	character: {
 		add(user: string, rig: Model): void;
 		remove(user: string): void;
@@ -44,9 +44,7 @@ interface ServerToClientEvents {
 		statusAdded: Networking.Unreliable<(data: Vector2int16, status: MobStatus, timestamp: number) => void>;
 		statusRemoved: Networking.Unreliable<(index: number, status: MobStatus) => void>;
 		indexReset: Networking.Unreliable<(index: number) => void>;
-	}
-
-	
+	};
 }
 
 interface ClientToServerFunctions {

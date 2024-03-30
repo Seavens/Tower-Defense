@@ -111,6 +111,33 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			}
 			store.setTowerTargeting({ key, targeting }, { user, broadcast: true });
 		});
-		// !! Implement tower upgrading!
+		Events.tower.upgrade.connect((player: Player, key: string): void => {
+			warn("upgrade");
+			const user = getUser(player);
+			const tower = Tower.getTower(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { owner } = tower;
+			if (user !== owner) {
+				return;
+			}
+			store.upgradeTower({ key }, { user, broadcast: true });
+			warn("upgraded");
+		});
+		Events.tower.sell.connect((player: Player, key: string): void => {
+			warn("sell");
+			const user = getUser(player);
+			const tower = Tower.getTower(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { owner } = tower;
+			if (user !== owner) {
+				return;
+			}
+			store.sellTower({ key }, { user, broadcast: true });
+			warn("sold");
+		});
 	}
 }

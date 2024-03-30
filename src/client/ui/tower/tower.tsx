@@ -5,6 +5,7 @@ import { Latte, Mocha } from "@rbxts/catppuccin";
 import { PALETTE } from "../constants";
 import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
+import { TowerImpl } from "client/tower/utility";
 import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
@@ -249,6 +250,15 @@ export function Tower({ tower }: TowerProps): Element {
 						backgroundColor={PALETTE.green}
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-upgrade"}
+						onClick={(): void => {
+							const { key } = tower;
+
+							if (nextUpgrade === undefined) {
+								return;
+							}
+
+							TowerImpl.upgradeTower(key);
+						}}
 					>
 						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 						<Text
@@ -276,7 +286,6 @@ export function Tower({ tower }: TowerProps): Element {
 							backgroundColor={PALETTE.lightBlue}
 							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							onClick={(): void => {
-								// !! This is a test, implement this better
 								const { key } = tower;
 								const { kind } = definition;
 								const { targeting: valid } = kind;
@@ -312,6 +321,11 @@ export function Tower({ tower }: TowerProps): Element {
 							backgroundColor={PALETTE.lightRed}
 							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							key={"tower-sell"}
+							onClick={(): void => {
+								const { key } = tower;
+								Events.tower.sell(key);
+								store.deselectTower({});
+							}}
 						>
 							<uistroke
 								Color={OUTLINE}

@@ -58,14 +58,6 @@ export class Tower extends API {
 		return true;
 	}
 
-	public setTargeting(targeting: TowerTargeting): void {
-		if (!this.isTargetingValid(targeting)) {
-			return;
-		}
-		const { key, owner } = this;
-		store.setTowerTargeting({ key, targeting }, { user: owner, broadcast: true });
-	}
-
 	public getTargeting(): TowerTargeting {
 		const { id, key } = this;
 		const tower = store.getState(selectSpecificTower(key));
@@ -129,9 +121,23 @@ export class Tower extends API {
 		currentTarget.takeDamage(damage, damageKind);
 	}
 
+	// Set Functions
+	public setTargeting(targeting: TowerTargeting): void {
+		if (!this.isTargetingValid(targeting)) {
+			return;
+		}
+		const { key, owner } = this;
+		store.setTowerTargeting({ key, targeting }, { user: owner, broadcast: true });
+	}
+
 	public upgradeTower(): void {
 		const { key, owner } = this;
 		store.upgradeTower({ key }, { user: owner, broadcast: true });
+	}
+
+	public sellTower(): void {
+		const { key, owner } = this;
+		store.sellTower({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

@@ -86,6 +86,7 @@ export class Tower extends API {
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
 		const radius = range * base * multiplier[1];
+
 		// Pivot because it'll be at the base of the tower.
 		const cframe = instance.GetPivot();
 		const circle = new Instance("Part");
@@ -100,6 +101,20 @@ export class Tower extends API {
 		circle.CanCollide = false;
 		circle.Parent = debris;
 		this.range = circle;
+	}
+
+	public upgradeRange(): void {
+		const { range } = this;
+		if (range === undefined) {
+			return;
+		}
+		const { id, unique } = this;
+		const { range: base, upgrades } = itemDefinitions[id].kind;
+		const index = this.getUpgrades();
+		const [_, multiplier] = upgrades[index - 1];
+		const radius = range.Size.X / 2;
+		const newRadius = radius * base * multiplier[1];
+		range.Size = new Vector3(newRadius * 2, newRadius * 2, newRadius * 2);
 	}
 
 	public disableRange(): void {
