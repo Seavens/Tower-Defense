@@ -1,4 +1,4 @@
-import { Choose, CreateReactStory, Number } from "@rbxts/ui-labs";
+import { Boolean, Choose, CreateReactStory, Number } from "@rbxts/ui-labs";
 import { ItemKind } from "shared/inventory/types";
 import { Modding } from "@flamework/core";
 import { ReflexProvider } from "@rbxts/react-reflex";
@@ -33,13 +33,14 @@ export = CreateReactStory(
 			id: Choose(allTowerItemIds, 1),
 			targeting: Choose(allTowerTargetings, 1),
 			upgrades: Number(1, 1, math.huge, 1),
+			visible: Boolean(true),
 		},
 		cleanup: (): void => {
 			store.resetState();
 		},
 	},
 	({ controls }): Element => {
-		const { id, targeting, upgrades } = controls;
+		const { id, targeting, upgrades, visible } = controls;
 		const uuid = createUUID();
 		const tower: ReplicatedTower = {
 			id,
@@ -55,7 +56,7 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<Tower tower={tower} />
+				<Tower tower={tower} visible={visible} />
 			</ReflexProvider>
 		);
 	},

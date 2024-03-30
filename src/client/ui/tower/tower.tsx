@@ -2,19 +2,19 @@ import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { Events } from "client/network";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { PALETTE } from "../constants";
+import { PALETTE, SPRINGS } from "../constants";
 import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
-import { TowerImpl } from "client/tower/utility";
+import { TowerImpl } from "client/tower/impl";
 import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
-import { useAbbreviator, usePx } from "../hooks";
+import { useAbbreviator, useMotion, usePx } from "../hooks";
 import { useButtonAnimation } from "../hooks/use-button-animation";
 import { useButtonState } from "../hooks/use-button-state";
 import { useRarityDefinition } from "../inventory/utils";
 import { useTowerDefintion } from "./hooks";
-import React, { useMemo } from "@rbxts/react";
+import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemTowerUnique } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -32,9 +32,10 @@ const TEXT_STROKE_TRANSPARENCY = 0.25;
 
 interface TowerProps {
 	tower: ReplicatedTower;
+	visible: boolean;
 }
 
-export function Tower({ tower }: TowerProps): Element {
+export function Tower({ tower, visible }: TowerProps): Element {
 	const { id, upgrades, targeting } = tower;
 	const { unique } = tower;
 
@@ -66,6 +67,12 @@ export function Tower({ tower }: TowerProps): Element {
 	const [pressed, hovering, events] = useButtonState();
 	const { hover } = useButtonAnimation(pressed, hovering);
 
+	const [transparency, transparencyMotion] = useMotion(1);
+
+	useEffect((): void => {
+		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.responsive);
+	}, [visible]);
+
 	return (
 		<Group
 			size={UDim2.fromOffset(px(TOWER_SIZE.X), px(TOWER_SIZE.Y))}
@@ -81,7 +88,12 @@ export function Tower({ tower }: TowerProps): Element {
 				cornerRadius={new UDim(0, CORNER_RADIUS)}
 				key={"tower-frame"}
 			>
-				<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+				<uistroke
+					Color={OUTLINE}
+					Thickness={THICKNESS}
+					Transparency={transparency}
+					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+				/>
 				<Image
 					size={UDim2.fromOffset(px(212), px(210))}
 					anchorPoint={new Vector2(0, 0.5)}
@@ -92,7 +104,12 @@ export function Tower({ tower }: TowerProps): Element {
 					cornerRadius={new UDim(0, CORNER_RADIUS)}
 					key={"tower-image"}
 				>
-					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+					<uistroke
+						Color={OUTLINE}
+						Thickness={THICKNESS}
+						Transparency={transparency}
+						ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+					/>
 				</Image>
 				<Text
 					size={UDim2.fromOffset(px(212), px(30))}
@@ -110,7 +127,12 @@ export function Tower({ tower }: TowerProps): Element {
 					cornerRadius={new UDim(0, CORNER_RADIUS)}
 					key={"tower-name"}
 				>
-					<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+					<uistroke
+						Color={OUTLINE}
+						Thickness={THICKNESS}
+						Transparency={transparency}
+						ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+					/>
 				</Text>
 				<Frame
 					size={UDim2.fromOffset(px(190), px(210))}
@@ -158,6 +180,7 @@ export function Tower({ tower }: TowerProps): Element {
 							<uistroke
 								Color={OUTLINE}
 								Thickness={THICKNESS}
+								Transparency={transparency}
 								ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							/>
 						</Text>
@@ -178,7 +201,7 @@ export function Tower({ tower }: TowerProps): Element {
 							<uistroke
 								Color={OUTLINE}
 								Thickness={THICKNESS}
-								Transparency={TEXT_STROKE_TRANSPARENCY}
+								Transparency={transparency}
 								ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							/>
 							<Text
@@ -209,7 +232,12 @@ export function Tower({ tower }: TowerProps): Element {
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-damage"}
 					>
-						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+						<uistroke
+							Color={OUTLINE}
+							Thickness={THICKNESS}
+							Transparency={transparency}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+						/>
 					</Text>
 					<Text
 						size={UDim2.fromOffset(px(192), px(30))}
@@ -226,7 +254,12 @@ export function Tower({ tower }: TowerProps): Element {
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-range"}
 					>
-						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+						<uistroke
+							Color={OUTLINE}
+							Thickness={THICKNESS}
+							Transparency={transparency}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+						/>
 					</Text>
 					<Text
 						size={UDim2.fromOffset(px(192), px(30))}
@@ -243,7 +276,12 @@ export function Tower({ tower }: TowerProps): Element {
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-cooldown"}
 					>
-						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+						<uistroke
+							Color={OUTLINE}
+							Thickness={THICKNESS}
+							Transparency={transparency}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+						/>
 					</Text>
 					<Button
 						size={UDim2.fromOffset(px(192), px(63))}
@@ -260,7 +298,12 @@ export function Tower({ tower }: TowerProps): Element {
 							TowerImpl.upgradeTower(key);
 						}}
 					>
-						<uistroke Color={OUTLINE} Thickness={THICKNESS} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
+						<uistroke
+							Color={OUTLINE}
+							Thickness={THICKNESS}
+							Transparency={transparency}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+						/>
 						<Text
 							size={UDim2.fromOffset(px(70), px(35))}
 							anchorPoint={new Vector2(0.5, 0.5)}
@@ -301,6 +344,7 @@ export function Tower({ tower }: TowerProps): Element {
 							<uistroke
 								Color={OUTLINE}
 								Thickness={THICKNESS}
+								Transparency={transparency}
 								ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							/>
 							<Text
@@ -330,6 +374,7 @@ export function Tower({ tower }: TowerProps): Element {
 							<uistroke
 								Color={OUTLINE}
 								Thickness={THICKNESS}
+								Transparency={transparency}
 								ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							/>
 							<Text

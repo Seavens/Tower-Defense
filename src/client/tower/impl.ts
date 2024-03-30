@@ -1,7 +1,6 @@
 import { Events } from "client/network";
 import { Tower } from "./class";
 import { itemDefinitions } from "shared/inventory/items";
-import { useTowerDefintion } from "client/ui/tower/hooks";
 
 export namespace TowerImpl {
 	export function upgradeTower(key: string): void {
@@ -9,11 +8,11 @@ export namespace TowerImpl {
 		if (tower === undefined) {
 			return;
 		}
-
-		const upgrades = tower.getUpgrades();
-		const { kind } = itemDefinitions[tower.id];
-
-		if (upgrades >= kind.upgrades.size()) {
+		const { id } = tower;
+		const index = tower.getUpgrades();
+		const { kind } = itemDefinitions[id];
+		const { upgrades } = kind;
+		if (index >= upgrades.size()) {
 			warn("TowerImpl.upgradeTower: Upgrades exceed maximum.");
 			return;
 		}

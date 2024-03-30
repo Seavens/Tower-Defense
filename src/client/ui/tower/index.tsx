@@ -27,14 +27,15 @@ export function TowerApp(): Element {
 	return (
 		<DelayRender shouldRender={selected !== undefined} unmountDelay={1}>
 			<Transition
-				size={UDim2.fromOffset(px(TOWER_SIZE.X), px(TOWER_SIZE.Y))}
+				size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
 				position={new UDim2(0, px(10), 0.5, 0)}
 				anchorPoint={new Vector2(0, 0.5)}
 				groupTransparency={transparency}
+				clipsDescendants={false}
 				key={"tower-app"}
 			>
 				{tower !== undefined || (tower === undefined && previous !== undefined) ? (
-					<Tower tower={(tower === undefined ? previous : tower)!} />
+					<Tower tower={(tower === undefined ? previous : tower)!} visible={visible} />
 				) : undefined}
 			</Transition>
 		</DelayRender>
