@@ -119,7 +119,7 @@ export class Tower extends API {
 		const currentTarget = this.getTarget();
 		if (currentTarget !== lastTarget) {
 			const target = currentTarget?.index;
-			Events.replicateTowerTarget.broadcast(key, target);
+			Events.tower.target.broadcast(key, target);
 		}
 		this.lastTarget = currentTarget;
 		if (currentTarget === undefined) {

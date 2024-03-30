@@ -96,10 +96,10 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			const { placedTowers } = this;
 			placedTowers.clear();
 		});
-		Events.replicatePlaceTower.connect((player: Player, uuid: string, position: Vector3): void =>
+		Events.tower.place.connect((player: Player, uuid: string, position: Vector3): void =>
 			this.onPlaceTower(player, uuid, position),
 		);
-		Events.replicateTowerTargeting.connect((player: Player, key: string, targeting: TowerTargeting): void => {
+		Events.tower.targeting.connect((player: Player, key: string, targeting: TowerTargeting): void => {
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {

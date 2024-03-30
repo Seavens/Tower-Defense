@@ -8,12 +8,12 @@ export function receiverMiddleware(): ProducerMiddleware {
 		return () => (dispatch) => dispatch;
 	}
 	const receiver = createBroadcastReceiver({
-		start: () => Events.replicateReady(),
+		start: () => Events.state.ready(),
 	});
-	Events.replicateActions.connect((actions: Array<BroadcastAction>): void => {
+	Events.state.actions.connect((actions: Array<BroadcastAction>): void => {
 		receiver.dispatch(actions);
 	});
-	Events.replicateHydration.connect((state: defined) => {
+	Events.state.hydrate.connect((state: defined) => {
 		warn(state);
 		receiver.hydrate(state);
 	});

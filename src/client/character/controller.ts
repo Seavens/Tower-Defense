@@ -29,14 +29,14 @@ export class CharacterController implements OnStart {
 	}
 
 	public onStart(): void {
-		Events.replicateCharacterAdded.connect((user: string, rig: Model): void => {
+		Events.character.add.connect((user: string, rig: Model): void => {
 			const character = Character.getCharacter(user);
 			if (character === undefined) {
 				return;
 			}
 			new Character(user, rig);
 		});
-		Events.replicateCharacterRemoved.connect((user: string): void => {
+		Events.character.remove.connect((user: string): void => {
 			const character = Character.getCharacter(user);
 			if (character === undefined) {
 				return;

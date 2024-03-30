@@ -39,7 +39,7 @@ export class Character extends API {
 			bin.add(animator);
 		}
 		if (!this.isPlayer()) {
-			Events.replicateCharacterAdded.broadcast(user, instance);
+			Events.character.add.broadcast(user, instance);
 		}
 	}
 
@@ -98,7 +98,7 @@ export class Character extends API {
 			return;
 		}
 		if (!this.isPlayer()) {
-			Events.replicateCharacterRemoved.broadcast(user);
+			Events.character.remove.broadcast(user);
 		}
 		characters.delete(user);
 		onCharacterRemoved.FireDeferred(this);

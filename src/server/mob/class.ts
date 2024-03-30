@@ -89,13 +89,13 @@ export class Mob extends API {
 
 	public onDied(): void {
 		const { index } = this;
-		Events.replicateMobDeath.broadcast(index);
+		Events.mob.death.broadcast(index);
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {
 		const { index } = this;
 		const data = new Vector2int16(index, damage);
-		Events.replicateMobDamage.broadcast(data, kind);
+		Events.mob.damage.broadcast(data, kind);
 	}
 
 	public onWaypoint(): void {
@@ -103,7 +103,7 @@ export class Mob extends API {
 		const { current, target } = this;
 		const first = new Vector2int16(index, current);
 		const second = new Vector2int16(target, 0);
-		Events.replicateMobResync.broadcast(first, second);
+		Events.mob.resync.broadcast(first, second);
 	}
 
 	public onMovement(): void {
@@ -124,11 +124,11 @@ export class Mob extends API {
 		const { index } = this;
 		const timestamp = Workspace.GetServerTimeNow();
 		if (!added) {
-			Events.replicateMobStatusRemoved.broadcast(index, status);
+			Events.mob.statusRemoved.broadcast(index, status);
 			return;
 		}
 		const data = new Vector2int16(index, duration);
-		Events.replicateMobStatusAdded.broadcast(data, status, timestamp);
+		Events.mob.statusAdded.broadcast(data, status, timestamp);
 	}
 
 	public onEnd(): void {
@@ -142,7 +142,7 @@ export class Mob extends API {
 		const alpha = this.getAlpha();
 		const first = new Vector2int16(index, current);
 		const second = new Vector2int16(target, alpha * 1000);
-		Events.replicateMobResync.broadcast(first, second);
+		Events.mob.resync.broadcast(first, second);
 	}
 
 	public destroy(): void {

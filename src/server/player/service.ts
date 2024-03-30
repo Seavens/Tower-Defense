@@ -92,6 +92,6 @@ export class PlayerService implements OnStart {
 			reuseThread((): void => this.onPlayerAdded(player));
 		}
 		game.BindToClose((): void => this.onGameClosed());
-		Events.replicateReady.connect((player: Player): void => this.onPlayerReady(player));
+		Events.state.ready.connect((player: Player): void => this.onPlayerReady(player));
 	}
 }

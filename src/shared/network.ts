@@ -5,36 +5,54 @@ import type { TowerItemId } from "./inventory/types";
 import type { TowerTargeting } from "./tower/types";
 
 interface ClientToServerEvents {
-	replicateReady(): void;
+	state: {
+		ready(): void;
+	};
 
-	replicatePlaceTower(uuid: string, position: Vector3): void;
-	replicateTowerTargeting(key: string, targeting: TowerTargeting): void;
+	tower: {
+		place(uuid: string, position: Vector3): void;
+		targeting(key: string, targeting: TowerTargeting): void;
+	};
 }
 
 interface ServerToClientEvents {
-	replicateTowerTarget: Networking.Unreliable<(tower: string, target?: number) => void>;
-	replicateMobResync: Networking.Unreliable<(first: Vector2int16, second: Vector2int16) => void>;
 
-	replicateDataLoaded(): void;
+	state: {
+		hydrate(state: defined): void;
+		actions(actions: Array<BroadcastAction>): void;
+	};
+	
+	player: {
+		loaded: Networking.Unreliable<() => void>;
+	
+	}
+	
+	character: {
+		add(user: string, rig: Model): void;
+		remove(user: string): void;
+	};
 
-	replicateHydration(state: defined): void;
-	replicateActions(actions: Array<BroadcastAction>): void;
+	tower: {
+		target: Networking.Unreliable<(key: string, target?: number) => void>;
+		place: Networking.Unreliable<(uuid: string, position: Vector3) => void>;
+	};
 
-	replicateCharacterAdded(user: string, rig: Model): void;
-	replicateCharacterRemoved(user: string): void;
+	mob: {
+		resync: Networking.Unreliable<(first: Vector2int16, second: Vector2int16) => void>;
+		damage: Networking.Unreliable<(data: Vector2int16, kind: MobDamage) => void>;
+		death: Networking.Unreliable<(index: number) => void>;
+		statusAdded: Networking.Unreliable<(data: Vector2int16, status: MobStatus, timestamp: number) => void>;
+		statusRemoved: Networking.Unreliable<(index: number, status: MobStatus) => void>;
+		indexReset: Networking.Unreliable<(index: number) => void>;
+	}
 
-	replicateMobDamage(data: Vector2int16, kind: MobDamage): void;
-	replicateMobDeath(index: number): void;
-	replicateMobStatusAdded(data: Vector2int16, status: MobStatus, timestamp: number): void;
-	replicateMobStatusRemoved(index: number, status: MobStatus): void;
-
-	replicateIndexReset(index: number): void;
-
-	replicateTowerPlacement(uuid: string, id: TowerItemId, position: Vector3): void;
+	
 }
 
 interface ClientToServerFunctions {
-	requestResetCharacter(): void;
+	character: {
+		requestReset(): void;
+	};
 }
 
 interface ServerToClientFunctions {}

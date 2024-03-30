@@ -70,7 +70,7 @@ export class DataService implements OnPlayerAdded, OnPlayerRemoving {
 			return;
 		}
 		const { player } = entity;
-		Events.replicateDataLoaded(player);
+		Events.player.loaded(player);
 	}
 
 	public async onPlayerRemoving(entity: Entity): Promise<void> {

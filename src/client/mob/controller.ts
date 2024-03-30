@@ -48,10 +48,10 @@ export class MobController implements OnStart {
 		Mob.onMobDied.Connect((mob: Mob): void => {
 			mobDied.fire(mob);
 		});
-		Events.replicateIndexReset.connect((index: number): void => {
+		Events.mob.indexReset.connect((index: number): void => {
 			setMobIndex(index);
 		});
-		Events.replicateMobDamage.connect((data: Vector2int16, kind: MobDamage): void => {
+		Events.mob.damage.connect((data: Vector2int16, kind: MobDamage): void => {
 			const index = data.X;
 			const damage = data.Y;
 			const mob = Mob.getMob(index);
@@ -60,14 +60,14 @@ export class MobController implements OnStart {
 			}
 			mob.takeDamage(damage, kind);
 		});
-		Events.replicateMobDeath.connect((index: number): void => {
+		Events.mob.death.connect((index: number): void => {
 			const mob = Mob.getMob(index);
 			if (mob === undefined) {
 				return;
 			}
 			mob.forceKill();
 		});
-		Events.replicateMobStatusAdded.connect((data: Vector2int16, status: MobStatus, timestamp: number): void => {
+		Events.mob.statusAdded.connect((data: Vector2int16, status: MobStatus, timestamp: number): void => {
 			const index = data.X;
 			const duration = data.Y;
 			const mob = Mob.getMob(index);
@@ -78,14 +78,14 @@ export class MobController implements OnStart {
 			const delta = now - timestamp;
 			mob.applyStatus(status, duration - delta);
 		});
-		Events.replicateMobStatusRemoved.connect((index: number, status: MobStatus): void => {
+		Events.mob.statusRemoved.connect((index: number, status: MobStatus): void => {
 			const mob = Mob.getMob(index);
 			if (mob === undefined) {
 				return;
 			}
 			mob.removeStatus(status);
 		});
-		Events.replicateMobResync.connect((first: Vector2int16, second: Vector2int16): void => {
+		Events.mob.resync.connect((first: Vector2int16, second: Vector2int16): void => {
 			const index = first.X;
 			const current = first.Y;
 			const target = second.X;

@@ -61,12 +61,12 @@ export class CharacterService implements OnStart, OnPlayerAdded {
 		const { characters } = Character;
 		for (const [user, character] of characters) {
 			const instance = character.getInstance();
-			Events.replicateCharacterAdded(player, user, instance);
+			Events.character.add(player, user, instance);
 		}
 	}
 
 	public onStart(): void {
-		Functions.requestResetCharacter.setCallback((player: Player): void => {
+		Functions.character.requestReset.setCallback((player: Player): void => {
 			const entity = Entity.fromPlayer(player);
 			if (!entity.isRespawnable() || !entity.canRespawn()) {
 				return;

@@ -93,7 +93,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 			return;
 		}
 		const { player } = entity;
-		Events.replicateIndexReset(player, getMobIndex(false));
+		Events.mob.indexReset(player, getMobIndex(false));
 	}
 
 	public onStart(): void {

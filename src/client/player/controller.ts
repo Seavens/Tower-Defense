@@ -35,7 +35,7 @@ export class PlayerController implements OnStart {
 		}
 		this.loaded = true;
 		resetBindable.Event.Connect((): void => {
-			Functions.requestResetCharacter().await();
+			Functions.character.requestReset().await();
 		});
 		for (const _ of $range(1, 10)) {
 			const [success] = pcall((): void => {
@@ -80,14 +80,14 @@ export class PlayerController implements OnStart {
 		// 10 seconds to load data (or the client loads in
 		// after the "replicateDataLoaded" event has fired.)
 		const thread = task.delay(10, (): void => {
-			Events.replicateReady();
+			Events.state.ready();
 			pcall((): void => {
 				connection.Disconnect();
 			});
 			this.onDataLoaded();
 		});
-		const connection = Events.replicateDataLoaded.connect((): void => {
-			Events.replicateReady();
+		const connection = Events.player.loaded.connect((): void => {
+			Events.state.ready();
 			pcall((): void => {
 				connection.Disconnect();
 				task.cancel(thread);

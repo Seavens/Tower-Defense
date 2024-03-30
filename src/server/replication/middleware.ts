@@ -81,10 +81,10 @@ export function broadcastMiddleware(slices: SharedSlices & ServerSlices, filtere
 			return hydration;
 		},
 		dispatch: (player: Player, actions: Array<BroadcastAction>): void => {
-			Events.replicateActions(player, actions);
+			Events.state.actions(player, actions);
 		},
 	});
-	Events.replicateReady.connect((player: Player): void => {
+	Events.state.ready.connect((player: Player): void => {
 		broadcaster.start(player);
 	});
 	const { middleware } = broadcaster;

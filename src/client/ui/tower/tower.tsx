@@ -285,7 +285,7 @@ export function Tower({ tower }: TowerProps): Element {
 									index = 0;
 								}
 								const targeting = valid[(index + 1) % valid.size()];
-								Events.replicateTowerTargeting(key, targeting);
+								Events.tower.targeting(key, targeting);
 							}}
 							key={"tower-target"}
 						>

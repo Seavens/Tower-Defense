@@ -112,7 +112,7 @@ export class TowerController implements OnStart {
 			const cframe = asset.GetPivot();
 			const position = cframe.Position;
 			// !! Raycast downward to confirm valid placement location
-			Events.replicatePlaceTower(uuid, position);
+			Events.tower.place(uuid, position);
 			store.endPlacement({});
 		});
 		store.observe(
@@ -132,7 +132,7 @@ export class TowerController implements OnStart {
 			const tower = Tower.getTower(previous);
 			tower?.disableRange();
 		});
-		Events.replicateTowerTarget.connect((key: string, target?: number): void => {
+		Events.tower.target.connect((key: string, target?: number): void => {
 			if (target === undefined) {
 				return;
 			}
