@@ -2,6 +2,8 @@ import { PALETTE } from "client/ui/constants";
 import { TowerUtil } from "shared/tower/util";
 import { itemDefinitions } from "shared/inventory/items";
 import Abbreviator from "@rbxts/abbreviate";
+import type { ItemKind, ItemTowerUnique } from "shared/inventory/types";
+import type { KindItemDefinition, TowerUpgradeInfo } from "shared/inventory/items";
 import type { ReplicatedTower } from "shared/tower/types";
 
 const abbreviator = new Abbreviator();

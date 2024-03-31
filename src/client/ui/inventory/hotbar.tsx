@@ -1,7 +1,7 @@
-import { Darken } from "@rbxts/colour-utils";
+import { Darken, Palette } from "@rbxts/colour-utils";
 import { EXP_BAR_SIZE_Y, HOTBAR_PADDING, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "./constants";
-import { FONTS } from "client/ui/constants";
-import { Frame, Group } from "../components";
+import { FONTS, PALETTE } from "client/ui/constants";
+import { Frame, Group, Text } from "../components";
 import { ItemSlot } from "./item-slot";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
@@ -36,8 +36,6 @@ export function Hotbar(): Element {
 		return getMaxExp(level);
 	}, [level]);
 
-	warn(currency);
-
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
@@ -65,6 +63,21 @@ export function Hotbar(): Element {
 			anchorPoint={new Vector2(0.5, 1)}
 			position={UDim2.fromScale(0.5, 1)}
 		>
+			<Text
+				key={"currency-text"}
+				size={UDim2.fromOffset(px(100), px(20))}
+				anchorPoint={new Vector2(0.5, 1)}
+				position={UDim2.fromScale(0.5, -0.05)}
+				backgroundTransparency={1}
+				textSize={px(14)}
+				font={FONTS.inter.bold}
+				textColor={Macchiato.Base}
+				textStrokeColor={PALETTE.accent}
+				textStrokeTransparency={0.25}
+				text={
+					currency === undefined ? `Undefined` : `$${abbreviator.stringToNumber(truncateNumber(0, currency))}`
+				}
+			/>
 			<Frame
 				key={"item-group"}
 				size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(ITEM_SLOT_SIZE.Y))}

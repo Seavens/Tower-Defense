@@ -1,11 +1,18 @@
 import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "server/mob/class";
+import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { getMobIndex, setMobIndex } from "shared/mobs/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mobs/mobs";
-import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
+import {
+	selectCurrentMap,
+	selectCurrentWave,
+	selectGameData,
+	selectGameStatus,
+	selectReward,
+} from "shared/game/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "shared/player/api";
 import type { MapId } from "shared/map/types";
@@ -55,20 +62,37 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		});
 	}
 
+	// !! MAP PROGRESS
 	public onMobRemoved(): void {
 		const count = Mob.getMobCount();
 		const status = store.getState(selectGameStatus);
+		const wave = store.getState(selectCurrentWave);
+		const mapId = store.getState(selectCurrentMap);
+		if (mapId === undefined) {
+			return;
+		}
+		const { waves } = mapDefinitions[mapId];
+		const delay = waves[wave - 1]["mob_id:zombie"];
+		if (delay === undefined) {
+			return;
+		}
+		const loading = delay.delay;
+
 		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
 			return;
 		}
 		store.gameEndWave({}, { broadcast: true });
-		warn("Wave ended.");
+		const reward = store.getState(selectReward);
+		for (const player of Players.GetPlayers()) {
+			store.gameAddCurrency({ amount: reward }, { user: player.Name, broadcast: true });
+		}
 		// !! Reward players with currency
 		// Temporary...
 		// We'll change this later to start after
 		// either 30 seconds or whenever all players
 		// vote to start the wave early.
-		task.wait(3);
+		warn(loading);
+		task.wait(loading);
 		warn("Wave started.");
 		store.gameStartWave({}, { broadcast: true });
 	}

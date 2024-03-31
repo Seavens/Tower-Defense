@@ -1,3 +1,4 @@
+import { mapDefinitions } from "shared/map/definitions";
 import type { GameState } from "./slice";
 import type { GameStatus } from "./types";
 import type { MapId } from "shared/map/types";
@@ -28,4 +29,18 @@ export function selectCurrency(user: string): (state: SharedState) => number {
 		const { currency } = selectGameData(state);
 		return currency.get(user) ?? 0;
 	};
+}
+export function selectReward(state: SharedState): number {
+	const { map } = selectGameData(state);
+	if (map === undefined) {
+		return 0;
+	}
+	const { waves } = mapDefinitions[map];
+	const wave = selectCurrentWave(state);
+	const definition = waves[wave - 1];
+	let reward = 0;
+	for (const [, { count, reward: value }] of pairs(definition)) {
+		reward += count * value;
+	}
+	return reward;
 }
