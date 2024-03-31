@@ -142,7 +142,7 @@ export class Tower extends API {
 			return;
 		}
 		const { damageKind } = kind;
-		currentTarget.takeDamage(damage, damageKind);
+		currentTarget.takeDamage(damage, damageKind, key);
 	}
 
 	public setTargeting(targeting: TowerTargeting): void {

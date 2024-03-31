@@ -111,17 +111,17 @@ export abstract class Mob {
 		const timestamp = os.clock() + duration;
 		statuses.set(status, timestamp);
 		this.onStatus(status, duration, true);
-		warn(status, "Added");
+		// warn(status, "Added");
 	}
 
 	public removeStatus(status: MobStatus): void {
 		const { statuses } = this;
 		statuses.delete(status);
 		this.onStatus(status, 0, false);
-		warn(status, "Removed");
+		// warn(status, "Removed");
 	}
 
-	public takeDamage(damage: number, kind: MobDamage): void {
+	public takeDamage(damage: number, kind: MobDamage, towerKey?: string): void {
 		if (damage <= 0) {
 			return;
 		}
@@ -134,7 +134,7 @@ export abstract class Mob {
 		warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
-			this.onDied();
+			this.onDied(towerKey);
 			this.destroy();
 			return;
 		}
@@ -165,7 +165,7 @@ export abstract class Mob {
 			return;
 		}
 		if (this.isDead()) {
-			warn(this.index, "|", "Dead past tick.");
+			// warn(this.index, "|", "Dead past tick.");
 			this.onDied();
 			this.destroy();
 			return;
@@ -202,17 +202,17 @@ export abstract class Mob {
 
 	public destroy(): void {
 		if (this.isDestroyed()) {
-			warn(this.index, "|", "Failed to destroy.");
+			// warn(this.index, "|", "Failed to destroy.");
 			return;
 		}
-		warn(this.index, "|", "Successfully destroyed.");
+		// warn(this.index, "|", "Successfully destroyed.");
 		const { bin } = this;
 		bin.destroy();
 		this.destroyed = true;
 		this.started = false;
 	}
 
-	public abstract onDied(): void;
+	public abstract onDied(towerKey?: string): void;
 	public abstract onDamage(damage: number, kind: MobDamage): void;
 	public abstract onMovement(): void;
 	public abstract onWaypoint(index: number): void;

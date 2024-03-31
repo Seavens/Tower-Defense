@@ -3,7 +3,9 @@ import { Events } from "server/network";
 import { MOB_POSITION_UPDATE } from "shared/core/core-constants";
 import { RunService, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
+import { Tower } from "server/tower/class";
 import { reuseThread } from "shared/utils/reuse-thread";
+import { store } from "client/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mobs/types";
@@ -15,7 +17,7 @@ export class Mob extends API {
 	public static readonly onMobAdded = new Signal<Mob>();
 	public static readonly onMobRemoved = new Signal<Mob>();
 	public static readonly onMobEnded = new Signal<Mob>();
-	public static readonly onMobDied = new Signal<Mob>();
+	public static readonly onMobDied = new Signal<[mob: Mob, tower: string]>();
 
 	protected static octree = new Octree<Mob>();
 
@@ -87,9 +89,18 @@ export class Mob extends API {
 		}
 	}
 
-	public onDied(): void {
+	public onDied(towerKey?: string): void {
 		const { index } = this;
+
 		Events.mob.death.broadcast(index);
+
+		if (towerKey === undefined) {
+			return;
+		}
+
+		const tower = Tower.getTower(towerKey);
+		const user = tower?.getUnique().owner; // Saved as the inital oweners ID - so just pass in towerOwner?: string as onDied property
+		// store.gameAddCurrency({ amount: 1 }, {user: , broadcast: true});
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {
