@@ -121,7 +121,7 @@ export abstract class Mob {
 		// warn(status, "Removed");
 	}
 
-	public takeDamage(damage: number, kind: MobDamage, towerKey?: string): void {
+	public takeDamage(damage: number, kind: MobDamage, tower?: string): void {
 		if (damage <= 0) {
 			return;
 		}
@@ -134,7 +134,7 @@ export abstract class Mob {
 		warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
-			this.onDied(towerKey);
+			this.onDied(tower);
 			this.destroy();
 			return;
 		}
@@ -212,7 +212,7 @@ export abstract class Mob {
 		this.started = false;
 	}
 
-	public abstract onDied(towerKey?: string): void;
+	public abstract onDied(tower?: string): void;
 	public abstract onDamage(damage: number, kind: MobDamage): void;
 	public abstract onMovement(): void;
 	public abstract onWaypoint(index: number): void;

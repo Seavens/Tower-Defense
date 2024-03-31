@@ -18,6 +18,7 @@ import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
 import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { map, useAsync } from "@rbxts/pretty-react-hooks";
+import { selectCurrency } from "shared/game/selectors";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { useButtonAnimation } from "../hooks/use-button-animation";
@@ -70,6 +71,9 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 		const { owner } = unique;
 		return idToName(owner);
 	}, [item]);
+
+	const currency = useSelector(selectCurrency);
+	warn(currency);
 
 	const stats = useMemo((): Option<string> => {
 		if (item === undefined) {

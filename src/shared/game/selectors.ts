@@ -22,3 +22,8 @@ export function selectCurrentWave(state: SharedState): number {
 	const { wave } = selectGame(state);
 	return wave;
 }
+
+export function selectCurrency(state: SharedState): number {
+	const { currency } = selectGame(state);
+	return currency;
+}
