@@ -25,11 +25,11 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 		cost: 500,
 
 		upgrades: [
-			[1, [1.04, 1.02, 0.98], 1000],
-			[2, [1.08, 1.04, 0.96], 2000],
-			[3, [1.16, 1.08, 0.92], 4000],
-			[4, [1.28, 1.16, 0.84], 8000],
-			[5, [1.44, 1.24, 0.76], 16000],
+			[1, { damage: 1.04, range: 1.02, cooldown: 0.98 }, 1000],
+			[2, { damage: 1.08, range: 1.04, cooldown: 0.96 }, 2000],
+			[3, { damage: 1.16, range: 1.08, cooldown: 0.92 }, 4000],
+			[4, { damage: 1.28, range: 1.16, cooldown: 0.84 }, 8000],
+			[5, { damage: 1.44, range: 1.24, cooldown: 0.76 }, 16000],
 		],
 
 		targeting: [

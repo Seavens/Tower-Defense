@@ -26,16 +26,16 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 
 		// lol
 		upgrades: [
-			[1, [1.06, 1.04, 0.98], 1000],
-			[2, [1.12, 1.08, 0.96], 2000],
-			[3, [1.24, 1.16, 0.88], 4000],
-			[4, [1.48, 1.32, 0.76], 8000],
-			[5, [1.96, 1.64, 0.52], 16000],
-			[6, [2.72, 2.08, 0.28], 32000],
-			[7, [3.84, 2.72, 0.12], 64000],
-			[8, [5.44, 3.52, 0.04], 128000],
-			[9, [7.68, 4.48, 0.02], 256000],
-			[10, [10.88, 5.76, 0.01], 512000],
+			[1, { damage: 1.06, range: 1.04, cooldown: 0.98 }, 1000],
+			[2, { damage: 1.12, range: 1.08, cooldown: 0.96 }, 2000],
+			[3, { damage: 1.24, range: 1.16, cooldown: 0.88 }, 4000],
+			[4, { damage: 1.48, range: 1.32, cooldown: 0.76 }, 8000],
+			[5, { damage: 1.96, range: 1.64, cooldown: 0.52 }, 16000],
+			[6, { damage: 2.72, range: 2.08, cooldown: 0.28 }, 32000],
+			[7, { damage: 3.84, range: 2.72, cooldown: 0.12 }, 64000],
+			[8, { damage: 5.44, range: 3.52, cooldown: 0.04 }, 128000],
+			[9, { damage: 7.68, range: 4.48, cooldown: 0.02 }, 256000],
+			[10, { damage: 10.88, range: 5.76, cooldown: 0.01 }, 512000],
 		],
 
 		targeting: [

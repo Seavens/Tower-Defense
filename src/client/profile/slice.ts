@@ -16,7 +16,7 @@ import type {
 import type { ProfileData } from "shared/data/types";
 
 export interface ProfileState {
-	data: ProfileData;
+	readonly data: Readonly<ProfileData>;
 }
 
 const state: ProfileState = {

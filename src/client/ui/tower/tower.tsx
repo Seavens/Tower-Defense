@@ -1,23 +1,22 @@
 import { Button, Frame, Group, Image, Text } from "../components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
-import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "../constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerImpl } from "client/tower/impl";
-import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
+import { TowerUtil } from "shared/tower/util";
+import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
+import { useAbbreviator, useMotion, usePx } from "../hooks";
 import { useButtonAnimation } from "../hooks/use-button-animation";
 import { useButtonState } from "../hooks/use-button-state";
-import { useMotion, usePx } from "../hooks";
 import { useRarityDefinition } from "../inventory/utils";
 import { useTowerDefintion } from "./hooks";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ReplicatedTower } from "shared/tower/types";
-import type { TowerUpgradeInfo } from "shared/inventory/items";
 
 const BACKGROUND = Mocha.Base;
 const OUTLINE = Darken(BACKGROUND, 0.25);
@@ -35,33 +34,29 @@ interface TowerProps {
 }
 
 export function Tower({ tower, visible }: TowerProps): Element {
-	const { id, upgrades, targeting } = tower;
-	const { unique } = tower;
+	const { id, targeting } = tower;
 
 	const px = usePx();
 	const definition = useTowerDefintion(id);
 	const rarity = useRarityDefinition(id);
 	const darkRarity = Darken(rarity!.color, 0.5);
-
-	const [currentUpgrade, nextUpgrade] = useMemo((): [TowerUpgradeInfo, Option<TowerUpgradeInfo>] => {
-		const { kind } = definition;
-		const { upgrades: upgradeInfo } = kind;
-		const currentUpgrade = upgradeInfo[upgrades - 1];
-		// We don't have to add 1 since roblox-ts thinks we're using 0 based indices (we're not.)
-		const nextUpgrade = upgradeInfo[upgrades];
-		return [currentUpgrade, nextUpgrade];
-	}, [definition, upgrades]);
+	const abbreviator = useAbbreviator();
 
 	const upgradeText = useMemo((): string => {
-		return formatUpgrade(currentUpgrade, nextUpgrade);
-	}, [currentUpgrade, nextUpgrade]);
+		return formatUpgrade(tower);
+	}, [tower]);
 
 	const [damageText, rangeText, cooldownText] = useMemo((): [string, string, string] => {
-		const damageText = formatDamage(unique, definition, currentUpgrade, nextUpgrade);
-		const rangeText = formatRange(unique, definition, currentUpgrade, nextUpgrade);
-		const cooldownText = formatCooldown(unique, definition, currentUpgrade, nextUpgrade);
+		const damageText = formatDamage(tower);
+		const rangeText = formatRange(tower);
+		const cooldownText = formatCooldown(tower);
 		return [damageText, rangeText, cooldownText];
-	}, [unique, definition, currentUpgrade, nextUpgrade]);
+	}, [tower]);
+	const [upgradeCost, sellPrice] = useMemo((): [number, number] => {
+		const upgradeCost = TowerUtil.getUpgradeCost(tower);
+		const sellPrice = TowerUtil.getSellPrice(tower);
+		return [upgradeCost, sellPrice];
+	}, [tower]);
 
 	const [pressed, hovering, events] = useButtonState();
 	const { hover } = useButtonAnimation(pressed, hovering);
@@ -289,11 +284,6 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						key={"tower-upgrade"}
 						onClick={(): void => {
 							const { key } = tower;
-
-							if (nextUpgrade === undefined) {
-								return;
-							}
-
 							TowerImpl.upgradeTower(key);
 						}}
 					>
@@ -309,7 +299,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							position={UDim2.fromScale(0.5, 0.48)}
 							textColor={PALETTE.accent}
 							textSize={px(TEXT_SIZE) + 10}
-							text={formatCost(nextUpgrade)}
+							text={`Upgrade: $${abbreviator.numberToString(upgradeCost)}`}
 							textStrokeColor={OUTLINE}
 							textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 							font={FONT}
@@ -359,11 +349,6 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							key={"tower-sell"}
 							onClick={(): void => {
 								const { key } = tower;
-
-								if (tower === undefined) {
-									return;
-								}
-
 								TowerImpl.sellTower(key);
 							}}
 						>
@@ -377,7 +362,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 								size={UDim2.fromOffset(px(70), px(35))}
 								textSize={px(TEXT_SIZE + 5)}
 								textColor={PALETTE.accent}
-								text="Sell"
+								text={`Sell: $${sellPrice}`}
 								textStrokeColor={OUTLINE}
 								textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 								font={FONT}

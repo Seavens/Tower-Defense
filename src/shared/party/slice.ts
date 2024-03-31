@@ -18,9 +18,9 @@ import type {
 import type { PlayerAdded, PlayerRemoved } from "shared/replication/actions";
 
 export interface PartyState {
-	parties: Map<string, Party>; // Map<{Party Owner}, Party>
-	invites: Map<string, Map<string, PartyInvite>>; // Map<{User}, Map<{Party Id}, Invite>>
-	users: Map<string, string>; // Map<{User in a party}, {Party Id}>
+	readonly parties: Map<string, Readonly<Party>>; // Map<{Party Owner}, Party>
+	readonly invites: Map<string, Map<string, Readonly<PartyInvite>>>; // Map<{User}, Map<{Party Id}, Invite>>
+	readonly users: Map<string, string>; // Map<{User in a party}, {Party Id}>
 }
 
 const partyState: PartyState = {

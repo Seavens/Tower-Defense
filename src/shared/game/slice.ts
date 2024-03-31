@@ -19,12 +19,12 @@ import type { MapId } from "shared/map/types";
 import type { PlayerAdded, PlayerRemoved } from "shared/replication/actions";
 
 export interface GameState {
-	status: GameStatus;
-	wave: number;
-	map?: MapId;
-	health: number;
-	max: number;
-	currency: Map<string, number>;
+	readonly status: GameStatus;
+	readonly wave: number;
+	readonly map?: MapId;
+	readonly health: number;
+	readonly max: number;
+	readonly currency: Map<string, number>;
 }
 
 const gameState: GameState = {

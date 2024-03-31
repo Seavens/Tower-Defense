@@ -6,11 +6,11 @@ import type { ReplicatedTower } from "./types";
 import type { TowerActions, TowerPlace, TowerSell, TowerSetTargeting, TowerUpgrade } from "./actions";
 
 export interface TowerState {
-	placed: Map<string, ReplicatedTower>; // Map<{{Tower UUID}_{Tower Index}}, ReplicatedTower>;
+	readonly placed: Map<string, Readonly<ReplicatedTower>>; // Map<{{Tower UUID}_{Tower Index}}, Readonly<ReplicatedTower>>;
 }
 
 const towerState: TowerState = {
-	placed: new Map<string, ReplicatedTower>(),
+	placed: new Map<string, Readonly<ReplicatedTower>>(),
 };
 
 export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(towerState, {

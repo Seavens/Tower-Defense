@@ -2,7 +2,7 @@ import { createProducer } from "@rbxts/reflex";
 import type { TowerUIActions, TowerUIDeselect, TowerUISelect } from "./actions";
 
 export interface TowerUIState {
-	key: Option<string>;
+	readonly key: Option<string>;
 }
 
 const towerUIState: TowerUIState = {

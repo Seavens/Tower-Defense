@@ -1,7 +1,7 @@
 import { ItemId } from "../types";
 import { bluntTowerItem } from "./blunt";
 import { chaliceRelicItem } from "./chalice";
-import { eternalDamnationTowerItem } from "./enternal-damnation";
+import { eternalDamnationTowerItem } from "./eternal-damnation";
 import { godTowerItem } from "./god";
 import { meleeTowerItem } from "./melee";
 import { sniperTowerItem } from "./sniper";
@@ -12,7 +12,11 @@ import type { TowerTargeting } from "shared/tower/types";
 
 export type TowerUpgradeInfo = [
 	upgrade: number,
-	multiplier: [damage: number, range: number, cooldown: number],
+	multiplier: {
+		damage: number;
+		range: number;
+		cooldown: number;
+	},
 	cost: number,
 ];
 

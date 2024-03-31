@@ -25,10 +25,10 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		cost: 100,
 
 		upgrades: [
-			[1, [1.03, 1.02, 0.99], 150],
-			[2, [1.06, 1.04, 0.98], 300],
-			[3, [1.09, 1.06, 0.97], 600],
-			[4, [1.12, 1.08, 0.96], 1200],
+			[1, { damage: 1.03, range: 1.02, cooldown: 0.99 }, 150],
+			[2, { damage: 1.06, range: 1.04, cooldown: 0.98 }, 300],
+			[3, { damage: 1.09, range: 1.06, cooldown: 0.97 }, 600],
+			[4, { damage: 1.12, range: 1.08, cooldown: 0.96 }, 1200],
 		],
 
 		targeting: [

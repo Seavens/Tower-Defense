@@ -14,11 +14,11 @@ import type {
 import type { InventoryData } from "shared/data/types";
 
 export interface InventoryState {
-	data: InventoryData;
+	readonly data: Readonly<InventoryData>;
 }
 
 interface State {
-	[user: string]: InventoryState;
+	readonly [user: string]: InventoryState;
 }
 
 const state: State = {};

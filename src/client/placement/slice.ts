@@ -4,8 +4,8 @@ import type { Draft } from "@rbxts/immut/src/types-external";
 import type { PlacementActions, PlacementBegin, PlacementEnd } from "./actions";
 
 export interface PlacementState {
-	placing: Option<string>;
-	slot: Option<Slot>;
+	readonly placing: Option<string>;
+	readonly slot: Option<Slot>;
 }
 
 const placementState: PlacementState = {

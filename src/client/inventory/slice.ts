@@ -16,7 +16,7 @@ import type {
 import type { InventoryData } from "shared/data/types";
 
 export interface InventoryState {
-	data: InventoryData;
+	readonly data: Readonly<InventoryData>;
 }
 
 const state: InventoryState = {

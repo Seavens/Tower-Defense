@@ -1,9 +1,9 @@
 import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { Mob } from "../mob/class";
-import { RunService } from "@rbxts/services";
-import { SELL_RATIO } from "shared/tower/constants";
 import { TowerTargeting } from "shared/tower/types";
+import { TowerUtil } from "shared/tower/util";
+import { createSchedule } from "shared/utils/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
@@ -28,13 +28,17 @@ export class Tower extends API {
 	protected lastTarget: Option<Mob>;
 
 	static {
-		RunService.Heartbeat.Connect((delta: number): void => {
-			const { towers } = this;
-			for (const [_, tower] of towers) {
-				reuseThread((): void => {
-					tower.attackTarget(delta);
-				});
-			}
+		createSchedule({
+			name: "TowerTick",
+			tick: 1 / 20,
+			onTick: (delta: number): void => {
+				const { towers } = this;
+				for (const [_, tower] of towers) {
+					reuseThread((): void => {
+						tower.attackTarget(delta);
+					});
+				}
+			},
 		});
 	}
 
@@ -59,49 +63,22 @@ export class Tower extends API {
 		return true;
 	}
 
-	public getTargeting(): TowerTargeting {
-		const { id, key } = this;
-		const tower = store.getState(selectSpecificTower(key));
-		if (tower === undefined) {
-			const {
-				targeting: [targeting],
-			} = itemDefinitions[id].kind;
-			return targeting;
+	public setTargeting(targeting: TowerTargeting): void {
+		if (!this.isTargetingValid(targeting)) {
+			return;
 		}
-		return tower.targeting;
+		const { key, owner } = this;
+		store.setTowerTargeting({ key, targeting }, { user: owner, broadcast: true });
 	}
 
-	public getUpgrades(): number {
+	public getReplicated(): ReplicatedTower {
 		const { key } = this;
 		const tower = store.getState(selectSpecificTower(key));
 		if (tower === undefined) {
-			return 1;
+			// Unreachable under normal circumstances.
+			throw "Tower does not exist!";
 		}
-		const { upgrades } = tower;
-		return upgrades;
-	}
-
-	public getSellCost(): number {
-		const { id, key } = this;
-		const tower = store.getState(selectSpecificTower(key));
-		if (tower === undefined) {
-			const { kind } = itemDefinitions[id];
-			const { cost } = kind;
-			return cost;
-		}
-		const { kind } = itemDefinitions[id];
-		const { cost } = kind;
-		const upgradeIndex = this.getUpgrades();
-		const { upgrades } = kind;
-
-		let upgradeValue = 0;
-		for (const index of $range(1, upgradeIndex)) {
-			const [, , sell] = upgrades[index - 1];
-			upgradeValue += sell * SELL_RATIO;
-		}
-
-		const value = upgradeValue + cost * SELL_RATIO;
-		return value;
+		return tower;
 	}
 
 	public getTarget(): Option<Mob> {
@@ -118,15 +95,11 @@ export class Tower extends API {
 	}
 
 	public attackTarget(delta: number): void {
-		const { id, key, unique, lastAttack, lastTarget } = this;
+		const { id, key, lastAttack, lastTarget } = this;
 		const { kind } = itemDefinitions[id];
-		const { upgrades } = kind;
-		const upgradeIndex = this.getUpgrades();
-		const [, upgradeMulti] = upgrades[upgradeIndex - 1];
-		const { cooldown: cooldownMulti, damage: damageMulti } = unique;
-		const { cooldown: baseCooldown, damage: baseDamage } = kind;
-		const cooldown = baseCooldown * cooldownMulti * upgradeMulti[2];
-		const damage = baseDamage * damageMulti * upgradeMulti[1];
+		const replicated = this.getReplicated();
+		const damage = TowerUtil.getTotalDamage(replicated);
+		const cooldown = TowerUtil.getTotalDamage(replicated);
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
@@ -145,24 +118,18 @@ export class Tower extends API {
 		currentTarget.takeDamage(damage, damageKind, key);
 	}
 
-	public setTargeting(targeting: TowerTargeting): void {
-		if (!this.isTargetingValid(targeting)) {
-			return;
-		}
+	public sellTower(): void {
 		const { key, owner } = this;
-		store.setTowerTargeting({ key, targeting }, { user: owner, broadcast: true });
+		const tower = this.getReplicated();
+		const cost = TowerUtil.getSellPrice(tower);
+		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
+		store.sellTower({ key }, { user: owner, broadcast: true });
+		this.destroy();
 	}
 
 	public upgradeTower(): void {
 		const { key, owner } = this;
 		store.upgradeTower({ key }, { user: owner, broadcast: true });
-	}
-
-	public sellTower(): void {
-		const { key, owner } = this;
-		const cost = this.getSellCost();
-		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
-		store.sellTower({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

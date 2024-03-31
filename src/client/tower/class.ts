@@ -1,10 +1,11 @@
 import { Tower as API } from "shared/tower/api";
 import { Collision, setCollision } from "shared/utils/collision";
 import { ComponentTag } from "shared/components/types";
+import { Events } from "client/network";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
-import { SELL_RATIO } from "shared/tower/constants";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
+import { TowerUtil } from "shared/tower/util";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
@@ -59,6 +60,16 @@ export class Tower extends API {
 		return towers.get(key);
 	}
 
+	public getReplicated(): ReplicatedTower {
+		const { key } = this;
+		const tower = store.getState(selectSpecificTower(key));
+		if (tower === undefined) {
+			// Unreachable under normal circumstances.
+			throw "Tower does not exist!";
+		}
+		return tower;
+	}
+
 	public getGround(): number {
 		const { spawn } = map;
 		if (spawn === undefined) {
@@ -80,55 +91,44 @@ export class Tower extends API {
 		return tower.targeting;
 	}
 
-	public getUpgrades(): number {
-		const { key } = this;
-		const tower = store.getState(selectSpecificTower(key));
-		if (tower === undefined) {
-			return 1;
+	public getRange(offset = 0): number {
+		const replicated = this.getReplicated();
+		const range = TowerUtil.getTotalRange(replicated);
+		const ground = this.getGround();
+		const displacement = ground - offset;
+		const chord = 2 * math.sqrt(range ** 2 - displacement ** 2);
+		return chord;
+	}
+
+	public upgradeTower(): void {
+		const { instance, key, sphere, circle } = this;
+		if (sphere !== undefined) {
+			const size = this.getRange();
+			sphere.Size = Vector3.one.mul(size);
 		}
-		const { upgrades } = tower;
-		return upgrades;
+		if (circle !== undefined) {
+			const ground = this.getGround();
+			const cframe = instance.GetPivot();
+			const position = cframe.Position;
+			const offset = ground - position.Y;
+			const size = this.getRange(offset);
+			circle.Size = new Vector3(0.1, size, size);
+		}
+		Events.tower.upgrade(key);
 	}
 
-	public getSphereSize(): Vector3 {
-		const { id, unique } = this;
-		const { range } = unique;
-		const { kind } = itemDefinitions[id];
-		const { range: base, upgrades } = kind;
-		const index = this.getUpgrades();
-		const [_, multiplier] = upgrades[index - 1];
-		const radius = range * base * multiplier[1];
-		const diameter = radius * 2;
-		return new Vector3(diameter, diameter, diameter);
-	}
-
-	public getCircleSize(): Vector3 {
-		const { instance, id, unique } = this;
-		const { range } = unique;
-		const { kind } = itemDefinitions[id];
-		const { range: base, upgrades } = kind;
-		const index = this.getUpgrades();
-		const [_, multiplier] = upgrades[index - 1];
-		const radius = range * base * multiplier[1];
-		const position = instance.GetPivot().Position;
-		const y = this.getGround();
-		const distance = y - position.Y;
-		const chord = 2 * math.sqrt(radius ** 2 - distance ** 2);
-		return new Vector3(0.1, chord, chord);
-	}
-
-	public enableRange(): void {
+	public enableVisuals(): void {
 		const { instance } = this;
-		const size = instance.GetExtentsSize().div(2);
+		const offset = instance.GetExtentsSize().div(2);
+		const cframe = instance.GetPivot();
+		const position = cframe.PointToWorldSpace(offset).add(Vector3.yAxis.mul(offset.Y * -2));
 
-		const pivot = instance.GetPivot();
-		const cframe = new CFrame(pivot.PointToWorldSpace(size).add(Vector3.yAxis.mul(size.Y * -2)));
 		const sphere = new Instance("Part");
 		sphere.Shape = Enum.PartType.Ball;
-		sphere.Size = this.getSphereSize();
+		sphere.Size = Vector3.one.mul(this.getRange());
 		sphere.CastShadow = false;
 		sphere.Anchored = true;
-		sphere.CFrame = cframe;
+		sphere.Position = position;
 		sphere.Material = Enum.Material.ForceField;
 		sphere.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
 		sphere.Transparency = 0.5;
@@ -136,14 +136,14 @@ export class Tower extends API {
 		sphere.Parent = debris;
 		this.sphere = sphere;
 
-		const y = this.getGround();
-		const ground = new CFrame(cframe.Position.X, y, cframe.Position.Z);
+		const ground = this.getGround();
+		const size = this.getRange(ground - cframe.Position.Y);
 		const circle = new Instance("Part");
 		circle.Shape = Enum.PartType.Cylinder;
-		circle.Size = this.getCircleSize();
+		circle.Size = new Vector3(0.1, size, size);
 		circle.CastShadow = false;
 		circle.Anchored = true;
-		circle.CFrame = ground.mul(new CFrame(0, 0.05, 0)).mul(CFrame.Angles(0, 0, math.rad(90)));
+		circle.CFrame = new CFrame(position).mul(CFrame.Angles(0, math.rad(90), math.rad(90)));
 		circle.Material = Enum.Material.SmoothPlastic;
 		circle.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
 		circle.Transparency = 0.75;
@@ -152,16 +152,7 @@ export class Tower extends API {
 		this.circle = circle;
 	}
 
-	public upgradeRange(): void {
-		const { sphere, circle } = this;
-		if (sphere === undefined || circle === undefined) {
-			return;
-		}
-		sphere.Size = this.getSphereSize();
-		circle.Size = this.getCircleSize();
-	}
-
-	public disableRange(): void {
+	public disableVisuals(): void {
 		const { sphere, circle } = this;
 		sphere?.Destroy();
 		circle?.Destroy();
@@ -172,29 +163,6 @@ export class Tower extends API {
 		const position = cframe.Position;
 		const pivot = CFrame.lookAt(position, new Vector3(target.X, position.Y, target.Z), Vector3.yAxis);
 		instance.PivotTo(pivot);
-	}
-
-	public getSellCost(): number {
-		const { id, key } = this;
-		const tower = store.getState(selectSpecificTower(key));
-		if (tower === undefined) {
-			const { kind } = itemDefinitions[id];
-			const { cost } = kind;
-			return cost;
-		}
-		const { kind } = itemDefinitions[id];
-		const { cost } = kind;
-		const upgradeIndex = this.getUpgrades();
-		const { upgrades } = kind;
-
-		let upgradeValue = 0;
-		for (const index of $range(1, upgradeIndex)) {
-			const [, , sell] = upgrades[index];
-			upgradeValue += sell * SELL_RATIO;
-		}
-
-		const value = upgradeValue + cost * SELL_RATIO;
-		return value;
 	}
 
 	public destroy(): void {

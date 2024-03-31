@@ -1,7 +1,6 @@
+import { calculateIncrease } from "shared/profile/utility";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
-
-import { calculateIncrease } from "shared/profile/utility";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata } from "shared/replication/metadata";
@@ -14,11 +13,11 @@ import type {
 import type { ProfileData } from "shared/data/types";
 
 export interface ProfileState {
-	data: ProfileData;
+	readonly data: Readonly<ProfileData>;
 }
 
 interface State {
-	[user: string]: ProfileState;
+	readonly [user: string]: ProfileState;
 }
 
 const state: State = {};

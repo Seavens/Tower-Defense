@@ -1,5 +1,5 @@
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
-import type { ReplicatedTower, TowerTargeting } from "./types";
+import type { ReplicatedTower } from "./types";
 
 export abstract class Tower {
 	public readonly id: TowerItemId;
@@ -27,12 +27,11 @@ export abstract class Tower {
 		return key;
 	}
 
-	public getUnique(): ItemTowerUnique {
+	public getUnique(): Readonly<ItemTowerUnique> {
 		const { unique } = this;
 		return unique;
 	}
 
-	public abstract getTargeting(): TowerTargeting;
-	public abstract getUpgrades(): number;
+	public abstract getReplicated(): ReplicatedTower;
 	public abstract destroy(): void;
 }

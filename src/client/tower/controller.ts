@@ -85,7 +85,7 @@ export class TowerController implements OnStart {
 			this.deselectTower();
 			return;
 		}
-		tower.enableRange();
+		tower.enableVisuals();
 		store.selectTower({ key });
 	}
 
@@ -130,7 +130,7 @@ export class TowerController implements OnStart {
 				return;
 			}
 			const tower = Tower.getTower(previous);
-			tower?.disableRange();
+			tower?.disableVisuals();
 		});
 		Events.tower.target.connect((key: string, target?: number): void => {
 			if (target === undefined) {

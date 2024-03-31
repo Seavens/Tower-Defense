@@ -1,6 +1,7 @@
 import { Events } from "client/network";
 import { Players } from "@rbxts/services";
 import { Tower } from "./class";
+import { TowerUtil } from "shared/tower/util";
 import { getUser } from "shared/player/utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
@@ -16,22 +17,28 @@ export namespace TowerImpl {
 		if (tower === undefined) {
 			return;
 		}
-
-		const def = itemDefinitions[tower.id];
-		if (def === undefined || currency < def.kind.cost) {
+		const replicated = tower.getReplicated();
+		const cost = TowerUtil.getUpgradeCost(replicated);
+		if (cost > currency) {
 			return;
 		}
+		tower.upgradeTower();
 
-		const { id } = tower;
-		const index = tower.getUpgrades();
-		const { kind } = itemDefinitions[id];
-		const { upgrades } = kind;
-		if (index >= upgrades.size()) {
-			return;
-		}
+		// const def = itemDefinitions[tower.id];
+		// if (def === undefined || currency < def.kind.cost) {
+		// 	return;
+		// }
 
-		tower.upgradeRange();
-		Events.tower.upgrade(key);
+		// const { id } = tower;
+		// const index = tower.getUpgrades();
+		// const { kind } = itemDefinitions[id];
+		// const { upgrades } = kind;
+		// if (index >= upgrades.size()) {
+		// 	return;
+		// }
+
+		// tower.upgradeRange();
+		// Events.tower.upgrade(key);
 	}
 
 	export function changeTargeting(key: string): void {
@@ -41,14 +48,13 @@ export namespace TowerImpl {
 		}
 
 		const { kind } = itemDefinitions[tower.id];
-		const { targeting: valid } = kind;
+		const { targeting: allowed } = kind;
 
-		let index = valid.indexOf(tower.getTargeting());
-		if (index >= valid.size()) {
+		let index = allowed.indexOf(tower.getTargeting());
+		if (index >= allowed.size()) {
 			index = 0;
 		}
-
-		const targeting = valid[(index + 1) % valid.size()];
+		const targeting = allowed[(index + 1) % allowed.size()];
 		Events.tower.targeting(key, targeting);
 	}
 
@@ -57,7 +63,6 @@ export namespace TowerImpl {
 		if (tower === undefined) {
 			return;
 		}
-
 		Events.tower.sell(key);
 		store.deselectTower({});
 	}
