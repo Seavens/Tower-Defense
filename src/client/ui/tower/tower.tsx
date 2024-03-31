@@ -7,6 +7,7 @@ import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerImpl } from "client/tower/impl";
 import { formatCooldown, formatCost, formatDamage, formatRange, formatUpgrade } from "./utils";
+import { formatSell } from "./utils/format-tower";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
 import { useButtonAnimation } from "../hooks/use-button-animation";
@@ -28,6 +29,7 @@ const FONT = FONTS.nunito.regular;
 const TEXT_SIZE = 19;
 const CORNER_RADIUS = 10;
 const TEXT_STROKE_TRANSPARENCY = 0.25;
+const PADDING = 5;
 
 interface TowerProps {
 	tower: ReplicatedTower;
@@ -94,9 +96,9 @@ export function Tower({ tower, visible }: TowerProps): Element {
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 				/>
 				<Image
-					size={UDim2.fromOffset(px(212), px(210))}
+					size={UDim2.fromOffset(px(168), px(168))}
 					anchorPoint={new Vector2(0, 0.5)}
-					position={UDim2.fromScale(0.01, 0.57)}
+					position={UDim2.fromScale(0.01, 0.485)}
 					backgroundColor={darkRarity ?? TEXTCOLOR}
 					backgroundTransparency={0}
 					image={definition.image}
@@ -111,7 +113,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 					/>
 				</Image>
 				<Text
-					size={UDim2.fromOffset(px(212), px(30))}
+					size={UDim2.fromOffset(px(168), px(30))}
 					textSize={px(TEXT_SIZE + 5)}
 					position={UDim2.fromScale(0.01, 0.135)}
 					anchorPoint={new Vector2(0, 1)}
@@ -134,33 +136,33 @@ export function Tower({ tower, visible }: TowerProps): Element {
 					/>
 				</Text>
 				<Frame
-					size={UDim2.fromOffset(px(190), px(210))}
-					position={UDim2.fromScale(0.76, 0.43)}
-					anchorPoint={new Vector2(0.5, 0.5)}
+					size={UDim2.fromOffset(px(237), px(210))}
+					position={UDim2.fromScale(0.423, 0.43)}
+					anchorPoint={new Vector2(0, 0.5)}
 					backgroundColor={BACKGROUND_LIGHT}
 					backgroundTransparency={1}
 					cornerRadius={new UDim(0, CORNER_RADIUS)}
 				>
 					<uilistlayout
-						Padding={new UDim(0, px(6))}
+						Padding={new UDim(0, px(PADDING))}
 						FillDirection={Enum.FillDirection.Vertical}
 						HorizontalAlignment={Enum.HorizontalAlignment.Center}
 						SortOrder={Enum.SortOrder.LayoutOrder}
 					/>
 					<Group
-						size={UDim2.fromOffset(px(192), px(30))}
+						size={UDim2.fromOffset(px(220), px(30))}
 						position={UDim2.fromScale(0.01, 0.135)}
 						anchorPoint={new Vector2(0, 1)}
 						key={"tower-upgrades"}
 					>
 						<uilistlayout
-							Padding={new UDim(0, px(6))}
+							Padding={new UDim(0, px(PADDING))}
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
 							SortOrder={Enum.SortOrder.LayoutOrder}
 						/>
 						<Text
-							size={UDim2.fromScale(0.81, 1)}
+							size={UDim2.fromScale(0.915, 1)}
 							textSize={px(TEXT_SIZE)}
 							position={UDim2.fromScale(0.01, 0.135)}
 							anchorPoint={new Vector2(0, 1)}
@@ -217,7 +219,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						</Button>
 					</Group>
 					<Text
-						size={UDim2.fromOffset(px(192), px(30))}
+						size={UDim2.fromOffset(px(237), px(30))}
 						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
@@ -239,7 +241,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						/>
 					</Text>
 					<Text
-						size={UDim2.fromOffset(px(192), px(30))}
+						size={UDim2.fromOffset(px(237), px(30))}
 						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
@@ -261,7 +263,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						/>
 					</Text>
 					<Text
-						size={UDim2.fromOffset(px(192), px(30))}
+						size={UDim2.fromOffset(px(237), px(30))}
 						textSize={px(TEXT_SIZE)}
 						textColor={TEXTCOLOR}
 						textXAlignment="Center"
@@ -283,7 +285,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						/>
 					</Text>
 					<Button
-						size={UDim2.fromOffset(px(192), px(60))}
+						size={UDim2.fromOffset(px(237), px(60))}
 						backgroundColor={PALETTE.green}
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-upgrade"}
@@ -316,9 +318,9 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							key={"upgrade-cost-text"}
 						/>
 					</Button>
-					<Group size={UDim2.fromOffset(px(192), px(35))} key={"tower-buttons"}>
+					<Group size={UDim2.fromOffset(px(237), px(35))} key={"tower-buttons"}>
 						<uilistlayout
-							Padding={new UDim(px(0.005), px(6))}
+							Padding={new UDim(px(0.005), px(PADDING))}
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
 							SortOrder={Enum.SortOrder.LayoutOrder}
@@ -353,7 +355,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							/>
 						</Button>
 						<Button
-							size={UDim2.fromOffset(px(70), px(35))}
+							size={UDim2.fromOffset(px(118), px(35))}
 							backgroundColor={PALETTE.lightRed}
 							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							key={"tower-sell"}
@@ -375,11 +377,14 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							/>
 							<Text
 								size={UDim2.fromOffset(px(70), px(35))}
+								anchorPoint={new Vector2(0.5, 0.5)}
+								position={UDim2.fromScale(0.5, 0.5)}
 								textSize={px(TEXT_SIZE + 5)}
 								textColor={PALETTE.accent}
-								text="Sell"
+								text={formatSell(tower)}
 								textStrokeColor={OUTLINE}
 								textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
+								richText={true}
 								font={FONT}
 								key={"tower-sell-text"}
 							/>

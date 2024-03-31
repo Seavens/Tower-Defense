@@ -18,7 +18,7 @@ export namespace TowerImpl {
 		}
 
 		const def = itemDefinitions[tower.id];
-		if (def === undefined || currency < def.kind.cost) {
+		if (def === undefined || currency <= def.kind.cost) {
 			return;
 		}
 
@@ -26,7 +26,7 @@ export namespace TowerImpl {
 		const index = tower.getUpgrades();
 		const { kind } = itemDefinitions[id];
 		const { upgrades } = kind;
-		if (index >= upgrades.size()) {
+		if (index >= upgrades.size() || currency <= upgrades[index][2]) {
 			return;
 		}
 

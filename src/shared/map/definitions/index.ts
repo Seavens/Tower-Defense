@@ -9,6 +9,7 @@ export type WaveDefinition = {
 		count: number;
 		wait: number;
 		delay: number;
+		reward: number;
 	};
 };
 
@@ -18,7 +19,6 @@ export interface MapDefinition<I extends MapId> {
 	desc: string;
 	difficulty: MapDifficulty;
 	waves: Array<WaveDefinition>;
-	// towerLimits: { [T in TowerItemId]: number };
 	baseHealth: number;
 }
 

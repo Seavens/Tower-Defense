@@ -1,7 +1,9 @@
 import { PALETTE } from "client/ui/constants";
+import { Tower } from "client/tower/class";
 import Abbreviator from "@rbxts/abbreviate";
 import type { ItemKind, ItemTowerUnique } from "shared/inventory/types";
 import type { KindItemDefinition, TowerUpgradeInfo } from "shared/inventory/items";
+import type { ReplicatedTower } from "shared/tower/types";
 
 const abbreviator = new Abbreviator();
 
@@ -20,6 +22,14 @@ export function formatCost(nextUpgrade: Option<TowerUpgradeInfo>): string {
 	}
 	const [_1, _2, cost] = nextUpgrade;
 	return `Upgrade: $${abbreviator.numberToString(cost)}`;
+}
+
+export function formatSell(tower: ReplicatedTower): string {
+	const towernew = Tower.getTower(tower.key);
+	if (towernew === undefined) {
+		return "Undefined";
+	}
+	return `Sell: $${abbreviator.numberToString(towernew.getSellCost())}`;
 }
 
 export function formatRange(
