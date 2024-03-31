@@ -1,6 +1,7 @@
 import { Tower as API } from "shared/tower/api";
 import { Collision, setCollision } from "shared/utils/collision";
 import { ComponentTag } from "shared/components/types";
+import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { SELL_RATIO } from "shared/tower/constants";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
@@ -27,6 +28,9 @@ export class Tower extends API {
 
 	public readonly instance: Model;
 	public range: Option<BasePart>;
+	public rangeBottom: Option<BasePart>;
+
+	public Y = Workspace.map.spawnLocation.CFrame.Position.Y;
 
 	protected declare readonly key: string;
 	protected declare readonly unique: ItemTowerUnique;
@@ -88,7 +92,6 @@ export class Tower extends API {
 		const [_, multiplier] = upgrades[index - 1];
 		const radius = range * base * multiplier[1];
 
-		// Pivot because it'll be at the base of the tower.
 		const cframe = instance.GetPivot();
 		const circle = new Instance("Part");
 		circle.Shape = Enum.PartType.Ball;
@@ -97,30 +100,46 @@ export class Tower extends API {
 		circle.Anchored = true;
 		circle.CFrame = cframe;
 		circle.Material = Enum.Material.ForceField;
-		circle.Color = new Color3(1, 1, 1);
+		circle.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
 		circle.Transparency = 0.5;
 		circle.CanCollide = false;
 		circle.Parent = debris;
 		this.range = circle;
+
+		const cframeBottom = instance.GetPivot();
+		const circleBottom = new Instance("Part");
+		circleBottom.Shape = Enum.PartType.Cylinder;
+		circleBottom.Size = new Vector3(0.5, radius * 2, radius * 2);
+		circleBottom.CastShadow = false;
+		circleBottom.Anchored = true;
+		circleBottom.CFrame = cframeBottom.mul(CFrame.Angles(0, this.Y, math.pi / 2));
+		circleBottom.Material = Enum.Material.SmoothPlastic;
+		circleBottom.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
+		circleBottom.Transparency = 0.75;
+		circleBottom.CanCollide = false;
+		circleBottom.Parent = debris;
+		this.rangeBottom = circleBottom;
 	}
 
 	public upgradeRange(): void {
-		const { range } = this;
-		if (range === undefined) {
+		const { range: circle, rangeBottom: circle2 } = this;
+		const { range: rangeUpgrade } = this.unique;
+		if (rangeUpgrade === undefined || circle === undefined || circle2 === undefined) {
 			return;
 		}
 		const { id } = this;
 		const { range: base, upgrades } = itemDefinitions[id].kind;
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
-		const radius = range.Size.X / 2;
-		const newRadius = radius * base * multiplier[1];
-		range.Size = new Vector3(newRadius * 2, newRadius * 2, newRadius * 2);
+		const radius = rangeUpgrade * base * multiplier[1];
+		circle.Size = new Vector3(radius * 2, radius * 2, radius * 2);
+		circle2.Size = new Vector3(1, radius * 2, radius * 2);
 	}
 
 	public disableRange(): void {
-		const { range } = this;
+		const { range, rangeBottom } = this;
 		range?.Destroy();
+		rangeBottom?.Destroy();
 	}
 
 	public rotateToTarget(target: Vector3): void {
