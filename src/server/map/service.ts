@@ -37,10 +37,10 @@ export class MapService implements OnStart {
 	}
 
 	private setTags(): void {
-		const { placeable, spawnLocation } = map;
+		const { placeable, spawn } = map;
 
-		spawnLocation.AddTag(ComponentTag.SpawnLocation);
-		spawnLocation.CollisionGroup = Collision.Spawn;
+		spawn.AddTag(ComponentTag.SpawnLocation);
+		spawn.CollisionGroup = Collision.Spawn;
 
 		for (const instance of placeable.GetChildren()) {
 			instance.AddTag(ComponentTag.Placeable);

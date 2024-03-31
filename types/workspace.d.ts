@@ -3,7 +3,7 @@ interface Workspace {
 
 	map: Folder & {
 		waypoints: Folder;
-		spawnLocation: SpawnLocation;
+		spawn: SpawnLocation;
 		placeable: Folder;
 	};
 	mobs: Folder;
