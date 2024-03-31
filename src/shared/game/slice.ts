@@ -3,6 +3,7 @@ import { createProducer } from "@rbxts/reflex";
 import { getWaveCount } from "shared/map/utility";
 import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
+import type { EntityMetadata } from "shared/replication/metadata";
 import type {
 	GameActions,
 	GameAddCurrency,
@@ -15,6 +16,7 @@ import type {
 	GameStartWave,
 } from "./actions";
 import type { MapId } from "shared/map/types";
+import type { PlayerAdded, PlayerRemoved } from "shared/replication/actions";
 
 export interface GameState {
 	status: GameStatus;
@@ -22,7 +24,7 @@ export interface GameState {
 	map?: MapId;
 	health: number;
 	max: number;
-	currency: number;
+	currency: Map<string, number>;
 }
 
 const gameState: GameState = {
@@ -31,10 +33,20 @@ const gameState: GameState = {
 	map: undefined,
 	health: 100,
 	max: 100,
-	currency: 1000,
+	currency: new Map<string, number>(),
 };
 
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {
+	playerAdded: (state: GameState, payload: PlayerAdded, { user }: EntityMetadata): GameState => {
+		return produce(state, ({ currency }: Draft<GameState>): void => {
+			currency.set(user, 1000);
+		});
+	},
+	playerRemoved: (state: GameState, payload: PlayerRemoved, { user }: EntityMetadata): GameState => {
+		return produce(state, ({ currency }: Draft<GameState>): void => {
+			currency.delete(user);
+		});
+	},
 	gameStartRound: (state: GameState, payload: GameStartRound): GameState => {
 		const { health } = payload;
 		return produce(state, (draft: Draft<GameState>): void => {
@@ -109,15 +121,14 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 			return draft;
 		});
 	},
-	gameAddCurrency: (state: GameState, payload: GameAddCurrency): GameState => {
+	gameAddCurrency: (state: GameState, payload: GameAddCurrency, { user }: EntityMetadata): GameState => {
 		const { amount } = payload;
-		return produce(state, (draft: Draft<GameState>): GameState => {
-			const { status } = draft;
+		return produce(state, ({ currency, status }: Draft<GameState>): void => {
 			if (status === GameStatus.None) {
-				return original(draft);
+				return;
 			}
-			draft.currency += amount;
-			return draft;
+			const current = currency.get(user) ?? 1000;
+			currency.set(user, current + amount);
 		});
 	},
 });

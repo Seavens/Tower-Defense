@@ -3,27 +3,29 @@ import type { GameStatus } from "./types";
 import type { MapId } from "shared/map/types";
 import type { SharedState } from "shared/state/slices";
 
-export function selectGame(state: SharedState): GameState {
+export function selectGameData(state: SharedState): GameState {
 	const gameState = state.game;
 	return gameState;
 }
 
 export function selectGameStatus(state: SharedState): GameStatus {
-	const { status } = selectGame(state);
+	const { status } = selectGameData(state);
 	return status;
 }
 
 export function selectCurrentMap(state: SharedState): Option<MapId> {
-	const { map } = selectGame(state);
+	const { map } = selectGameData(state);
 	return map;
 }
 
 export function selectCurrentWave(state: SharedState): number {
-	const { wave } = selectGame(state);
+	const { wave } = selectGameData(state);
 	return wave;
 }
 
-export function selectCurrency(state: SharedState): number {
-	const { currency } = selectGame(state);
-	return currency;
+export function selectCurrency(user: string): (state: SharedState) => number {
+	return function (state: SharedState): number {
+		const { currency } = selectGameData(state);
+		return currency.get(user) ?? 0;
+	};
 }

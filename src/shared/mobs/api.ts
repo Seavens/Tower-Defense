@@ -133,7 +133,7 @@ export abstract class Mob {
 			return;
 		}
 		this.attacker ??= tower;
-		warn(this.index, "|", health, health - damage);
+		// warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
 			this.onDied(tower);
@@ -146,10 +146,10 @@ export abstract class Mob {
 
 	public forceKill(): void {
 		if (this.isDead() || this.isDestroyed()) {
-			warn(this.index, "|", "Failed to forcekill.");
+			// warn(this.index, "|", "Failed to forcekill.");
 			return;
 		}
-		warn(this.index, "|", "Forcekilled");
+		// warn(this.index, "|", "Forcekilled");
 		this.onDied(this.attacker);
 		this.destroy();
 	}

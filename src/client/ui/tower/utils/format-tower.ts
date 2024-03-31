@@ -7,7 +7,6 @@ const abbreviator = new Abbreviator();
 
 export function formatUpgrade(currentUpgrade: TowerUpgradeInfo, nextUpgrade: Option<TowerUpgradeInfo>): string {
 	const [index] = currentUpgrade;
-	warn(index);
 	if (nextUpgrade === undefined) {
 		return `Upgrade [${index}]: MAX`;
 	}

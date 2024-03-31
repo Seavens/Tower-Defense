@@ -13,8 +13,10 @@ import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
+import { Players } from "@rbxts/services";
 import { TextField } from "../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
+import { getUser } from "shared/player/utility";
 import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { map, useAsync } from "@rbxts/pretty-react-hooks";
@@ -40,8 +42,10 @@ const OUTLINE = Darken(BACKGROUND, 0.25);
 const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 6;
 const TEXTCOLOR = Latte.Base;
+const TRANSPARENCY = 0;
 
-const DEV_TRANSPARENT = 0;
+const player = Players.LocalPlayer;
+const user = getUser(player);
 
 export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const { stored } = useSelector(selectInventoryData);
@@ -71,9 +75,6 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 		const { owner } = unique;
 		return idToName(owner);
 	}, [item]);
-
-	const currency = useSelector(selectCurrency);
-	warn(currency);
 
 	const stats = useMemo((): Option<string> => {
 		if (item === undefined) {
@@ -200,7 +201,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										textColor={TEXTCOLOR}
 										textScaled={true}
 										backgroundColor={BACKGROUND_LIGHT}
-										backgroundTransparency={DEV_TRANSPARENT}
+										backgroundTransparency={TRANSPARENCY}
 										textXAlignment="Left"
 										textYAlignment="Center"
 										cornerRadius={new UDim(0, px(4))}
@@ -227,7 +228,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										textColor={TEXTCOLOR}
 										textScaled={true}
 										backgroundColor={BACKGROUND_LIGHT}
-										backgroundTransparency={DEV_TRANSPARENT}
+										backgroundTransparency={TRANSPARENCY}
 										textXAlignment="Left"
 										textYAlignment="Center"
 										cornerRadius={new UDim(0, px(4))}

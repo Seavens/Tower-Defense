@@ -5,47 +5,57 @@ import { Frame, Group } from "../components";
 import { ItemSlot } from "./item-slot";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
+import { Players } from "@rbxts/services";
 import { getMaxExp } from "shared/profile/utility";
+import { getTowerCost } from "./utils/get-tower-cost";
+import { getUser } from "shared/player/utility";
+import { selectCurrency, selectGameData } from "shared/game/selectors";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { store } from "client/state/store";
 import { truncateNumber } from "./utils/format-stats";
-import { usePx } from "../hooks";
+import { useAbbreviator, usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
-import Abbreviator from "@rbxts/abbreviate";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 
+const player = Players.LocalPlayer;
+const user = getUser(player);
+
 export function Hotbar(): Element {
-	const abbreviator = new Abbreviator();
+	const abbreviator = useAbbreviator();
 	const px = usePx();
 
 	const { equipped } = useSelector(selectInventoryData);
 	const { experience, level } = useSelector(selectProfileData);
+	const { status } = useSelector(selectGameData);
+	const currency = useSelector(selectCurrency(user));
 
 	const max = useMemo((): number => {
 		return getMaxExp(level);
 	}, [level]);
-
+	warn(currency);
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 			const slot: Slot = `${index}`;
 			const tower = equipped.get(slot);
+			const cost = getTowerCost(tower?.id);
+
 			elements.push(
 				<ItemSlot
+					affordable={currency >= cost}
 					{...tower}
 					selected={true}
 					onClick={(placing: ItemId): void => {
-						warn(placing);
 						store.beginPlacement({ placing, slot });
 					}}
 				/>,
 			);
 		}
 		return elements;
-	}, [equipped]);
+	}, [equipped, currency, status]);
 
 	return (
 		<Group
@@ -79,7 +89,7 @@ export function Hotbar(): Element {
 				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING)}
 			>
 				<uistroke
-					Color={Darken(Mocha.Blue, .5)}
+					Color={Darken(Mocha.Blue, 0.5)}
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 					Thickness={1}
 					key={"level-outline"}
@@ -136,11 +146,11 @@ export function Hotbar(): Element {
 					<uicorner CornerRadius={new UDim(0, px(3))} key={"level-corner"} />
 				</textlabel>
 				<uistroke
-						Color={Darken(Mocha.Blue, .5)}
-						ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-						Thickness={1}
-						key={"level-outline"}
-						/>
+					Color={Darken(Mocha.Blue, 0.5)}
+					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+					Thickness={1}
+					key={"level-outline"}
+				/>
 				<uicorner CornerRadius={new UDim(1, 0)} key={"level-corner"} />
 			</Frame>
 		</Group>

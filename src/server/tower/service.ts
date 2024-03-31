@@ -5,7 +5,7 @@ import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
 import { isUUID } from "shared/guards";
 import { itemDefinitions } from "shared/inventory/items";
-import { selectCurrentMap } from "shared/game/selectors";
+import { selectCurrency, selectCurrentMap } from "shared/game/selectors";
 import { selectInventoryData } from "server/inventory/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
@@ -23,6 +23,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
 		const user = getUser(player);
 		const { equipped } = store.getState(selectInventoryData(user));
+		const currency = store.getState(selectCurrency(user));
 		let result: Option<Item>;
 		for (const [_, item] of equipped) {
 			if (item.uuid !== uuid) {
@@ -39,8 +40,8 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		const { placed } = this;
 		const count = placed.get(uuid) ?? 0;
 		const { kind } = itemDefinitions[id];
-		const { limit } = kind;
-		if (count >= limit) {
+		const { limit, cost } = kind;
+		if (currency < cost || count >= limit) {
 			return;
 		}
 		const { targeting: allowed } = kind;
@@ -59,6 +60,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			upgrades: 1,
 		};
 		new Tower(tower);
+		store.gameAddCurrency({ amount: -cost }, { user, broadcast: true });
 		store.placeTower({ id, uuid, index, key, position, targeting, unique }, { user, broadcast: true });
 		placed.set(uuid, index);
 	}
@@ -101,7 +103,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			if (user !== owner || !tower.isTargetingValid(targeting)) {
 				return;
 			}
-			store.setTowerTargeting({ key, targeting }, { user, broadcast: true });
+			tower.setTargeting(targeting);
 		});
 		Events.tower.upgrade.connect((player: Player, key: string): void => {
 			const user = getUser(player);
@@ -113,7 +115,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			if (user !== owner) {
 				return;
 			}
-			store.upgradeTower({ key }, { user, broadcast: true });
+			tower.upgradeTower();
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {
 			const { placed: placedTowers } = this;
@@ -131,7 +133,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 				return;
 			}
 			placedTowers.set(uuid, placed - 1);
-			store.sellTower({ key }, { user, broadcast: true });
+			tower.sellTower();
 		});
 	}
 }

@@ -283,7 +283,7 @@ export function Tower({ tower, visible }: TowerProps): Element {
 						/>
 					</Text>
 					<Button
-						size={UDim2.fromOffset(px(192), px(63))}
+						size={UDim2.fromOffset(px(192), px(60))}
 						backgroundColor={PALETTE.green}
 						cornerRadius={new UDim(0, CORNER_RADIUS)}
 						key={"tower-upgrade"}

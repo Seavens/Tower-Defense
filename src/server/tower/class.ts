@@ -96,7 +96,7 @@ export class Tower extends API {
 
 		let upgradeValue = 0;
 		for (const index of $range(1, upgradeIndex)) {
-			const [, , sell] = upgrades[index];
+			const [, , sell] = upgrades[index - 1];
 			upgradeValue += sell * SELL_RATIO;
 		}
 
@@ -159,9 +159,10 @@ export class Tower extends API {
 	}
 
 	public sellTower(): void {
+		warn("sellTower");
 		const { key, owner } = this;
 		const cost = this.getSellCost();
-
+		warn(cost);
 		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
 		store.sellTower({ key }, { user: owner, broadcast: true });
 	}

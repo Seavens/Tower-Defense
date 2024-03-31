@@ -1,6 +1,7 @@
 import type { BroadcastMetadata, EntityMetadata } from "shared/replication/metadata";
 import type { GameStatus } from "./types";
 import type { MapId } from "shared/map/types";
+import type { PlayerActions } from "shared/replication/actions";
 
 export type GameActions<S> = {
 	gameStartRound: (state: S, payload: GameStartRound, metadata: BroadcastMetadata) => S;
@@ -11,7 +12,7 @@ export type GameActions<S> = {
 	gameSetStatus: (state: S, payload: GameSetStatus, metadata: BroadcastMetadata) => S;
 	gameBaseDamage: (state: S, payload: GameBaseDamage, metadata: BroadcastMetadata) => S;
 	gameAddCurrency: (state: S, payload: GameAddCurrency, metadata: EntityMetadata & BroadcastMetadata) => S;
-};
+} & PlayerActions<S>;
 
 export interface GameStartRound {
 	health: number;

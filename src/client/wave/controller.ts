@@ -3,7 +3,7 @@ import { GameStatus } from "shared/game/types";
 import { Mob } from "client/mob/class";
 import { getMobIndex, setMobIndex } from "shared/mobs/utility";
 import { mapDefinitions } from "shared/map/definitions";
-import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/game/selectors";
+import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "client/state/store";
 import type { MapId } from "shared/map/types";
 import type { OnMobEnded, OnMobRemoved } from "client/mob/controller";
@@ -45,7 +45,7 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 	}
 
 	public onMobEnded(mob: Mob): void {
-		const { status } = store.getState(selectGame);
+		const { status } = store.getState(selectGameData);
 		if (status !== GameStatus.Ended) {
 			return;
 		}

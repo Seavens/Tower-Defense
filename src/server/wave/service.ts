@@ -5,7 +5,7 @@ import { Service } from "@flamework/core";
 import { getMobIndex, setMobIndex } from "shared/mobs/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mobs/mobs";
-import { selectCurrentMap, selectCurrentWave, selectGame, selectGameStatus } from "shared/game/selectors";
+import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "shared/player/api";
 import type { MapId } from "shared/map/types";
@@ -80,7 +80,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		const { health } = mobDefinitions[id];
 		const damage = current ** 2 / (health * 2);
 		store.gameBaseDamage({ damage }, { broadcast: true });
-		const { health: baseHealth, status } = store.getState(selectGame);
+		const { health: baseHealth, status } = store.getState(selectGameData);
 		warn(`Base: ${baseHealth} | Damage: -${damage} | Mobs: ${Mob.getMobCount()}`);
 		if (status !== GameStatus.Ended) {
 			return;

@@ -1,5 +1,5 @@
 import { FONTS, SPRINGS } from "client/ui/constants";
-import { Frame, Group } from "../components";
+import { Frame, Group, Image } from "../components";
 import { GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
@@ -12,12 +12,13 @@ import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
 export interface ItemSlotProps extends Partial<Item> {
+	affordable?: boolean;
 	selected?: boolean;
 	order?: number;
 	onClick?: (id: ItemId) => void;
 }
 
-export function ItemSlot({ id, selected, order, onClick }: ItemSlotProps): Element {
+export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
 	const definition = useItemDefinition(id);
@@ -62,6 +63,17 @@ export function ItemSlot({ id, selected, order, onClick }: ItemSlotProps): Eleme
 				zIndex={2}
 				key={"slot-upper"}
 			>
+				<Image
+					size={UDim2.fromScale(1, 1)}
+					anchorPoint={new Vector2(0.5, 0.5)}
+					position={UDim2.fromScale(0.5, 0.5)}
+					image={"rbxassetid://4772171909"}
+					key={"locked-image"}
+					backgroundColor={new Color3(0.27, 0.27, 0.27)}
+					backgroundTransparency={affordable ? 1 : 0.5}
+					imageTransparency={affordable ? 1 : 0.5}
+					zIndex={15}
+				/>
 				<Group
 					size={UDim2.fromScale(1, 1)}
 					anchorPoint={Vector2.zero}
@@ -78,7 +90,7 @@ export function ItemSlot({ id, selected, order, onClick }: ItemSlotProps): Eleme
 						ScaleType={Enum.ScaleType.Fit}
 						Event={{
 							MouseButton1Click: (): void => {
-								if (id === undefined) {
+								if (id === undefined || !affordable) {
 									return;
 								}
 								onClick?.(id);

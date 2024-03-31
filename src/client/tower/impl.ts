@@ -1,14 +1,27 @@
 import { Events } from "client/network";
+import { Players } from "@rbxts/services";
 import { Tower } from "./class";
+import { getUser } from "shared/player/utility";
 import { itemDefinitions } from "shared/inventory/items";
+import { selectCurrency } from "shared/game/selectors";
 import { store } from "client/state/store";
+
+const player = Players.LocalPlayer;
+const user = getUser(player);
 
 export namespace TowerImpl {
 	export function upgradeTower(key: string): void {
 		const tower = Tower.getTower(key);
+		const currency = store.getState(selectCurrency(user));
 		if (tower === undefined) {
 			return;
 		}
+
+		const def = itemDefinitions[tower.id];
+		if (def === undefined || currency < def.kind.cost) {
+			return;
+		}
+
 		const { id } = tower;
 		const index = tower.getUpgrades();
 		const { kind } = itemDefinitions[id];

@@ -25,20 +25,9 @@ export class TestService implements OnDataLoaded {
 			const slot: Slot = `${index}`;
 			store.inventoryEquipSlot({ slot }, metadata);
 		}
-		warn(`Added ${MAXIMUM_STORED} items to ${user}.\n`, store.getState());
 
 		store.profileAddExperience({ experience: 100000 }, metadata);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
-
-		warn("Added 100000 experience, coins, and gems to player.\n");
-		warn(store.getState(selectProfileData(user)));
-		task.wait();
-		store.profileAdjustCoins({ coins: -1000000 }, metadata);
-		store.profileAdjustGems({ gems: -1000000 }, metadata);
-
-		warn("Removed 1000000 coins and gems from player.\n");
-		task.wait();
-		warn(store.getState(selectProfileData(user)));
 	}
 }
