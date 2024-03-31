@@ -31,7 +31,7 @@ const gameState: GameState = {
 	map: undefined,
 	health: 100,
 	max: 100,
-	currency: 0,
+	currency: 1000,
 };
 
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {

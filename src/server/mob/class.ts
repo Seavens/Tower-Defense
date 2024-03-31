@@ -3,8 +3,8 @@ import { Events } from "server/network";
 import { MOB_POSITION_UPDATE } from "shared/core/core-constants";
 import { RunService, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
-import { Tower } from "server/tower/class";
 import { reuseThread } from "shared/utils/reuse-thread";
+import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
@@ -91,20 +91,17 @@ export class Mob extends API {
 
 	public onDied(key?: string): void {
 		const { index } = this;
-
 		Events.mob.death.broadcast(index);
-
+		warn(key);
 		if (key === undefined) {
 			return;
 		}
-
-		const tower = Tower.getTower(key);
-		const user = tower?.owner;
-
+		const replicated = store.getState(selectSpecificTower(key));
+		const user = replicated?.owner;
 		if (user === undefined) {
 			return;
 		}
-		store.gameAddCurrency({ amount: 1 }, { user: user, broadcast: true });
+		store.gameAddCurrency({ amount: 1 }, { user, broadcast: true });
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {

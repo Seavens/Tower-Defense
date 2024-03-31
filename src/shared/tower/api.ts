@@ -1,4 +1,4 @@
-import type { ItemId, ItemTowerUnique, TowerItemId } from "shared/inventory/types";
+import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower, TowerTargeting } from "./types";
 
 export abstract class Tower {

@@ -18,7 +18,7 @@ export interface MapDefinition<I extends MapId> {
 	desc: string;
 	difficulty: MapDifficulty;
 	waves: Array<WaveDefinition>;
-	towerLimits: { [T in TowerItemId]: number };
+	// towerLimits: { [T in TowerItemId]: number };
 	baseHealth: number;
 }
 

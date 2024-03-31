@@ -25,6 +25,7 @@ export abstract class Mob {
 	protected destroyed = false;
 	protected last = CFrame.identity;
 	protected started = false;
+	protected attacker: Option<string>;
 
 	public constructor(index: number, id: MobId) {
 		const waypoints = getMapWaypoints();
@@ -131,6 +132,7 @@ export abstract class Mob {
 			warn(this.index, "|", "Resisted damage.");
 			return;
 		}
+		this.attacker ??= tower;
 		warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
@@ -148,7 +150,7 @@ export abstract class Mob {
 			return;
 		}
 		warn(this.index, "|", "Forcekilled");
-		this.onDied();
+		this.onDied(this.attacker);
 		this.destroy();
 	}
 
@@ -166,7 +168,7 @@ export abstract class Mob {
 		}
 		if (this.isDead()) {
 			// warn(this.index, "|", "Dead past tick.");
-			this.onDied();
+			this.onDied(this.attacker);
 			this.destroy();
 			return;
 		}
