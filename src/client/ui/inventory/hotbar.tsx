@@ -35,7 +35,9 @@ export function Hotbar(): Element {
 	const max = useMemo((): number => {
 		return getMaxExp(level);
 	}, [level]);
+
 	warn(currency);
+
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {

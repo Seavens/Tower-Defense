@@ -11,11 +11,9 @@ export function receiverMiddleware(): ProducerMiddleware {
 		start: () => Events.state.ready(),
 	});
 	Events.state.actions.connect((actions: Array<BroadcastAction>): void => {
-		warn(actions);
 		receiver.dispatch(actions);
 	});
 	Events.state.hydrate.connect((state: defined) => {
-		warn(state);
 		receiver.hydrate(state);
 	});
 	const { middleware } = receiver;

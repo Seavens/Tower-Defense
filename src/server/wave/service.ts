@@ -52,7 +52,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		}
 		task.delay(longestDuration, (): void => {
 			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
-			warn(Mob.getMobCount());
 		});
 	}
 

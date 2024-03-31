@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { ItemKind, isTowerItemId } from "shared/inventory/types";
+import { ItemKind, isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
@@ -15,15 +15,17 @@ import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
+import type { ServerState } from "server/state/store";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
 	protected placed = new Map<UUID, number>(); // Map<{Tower UUID}, number>;
 
 	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
+		const { placed } = this;
 		const user = getUser(player);
-		const { equipped } = store.getState(selectInventoryData(user));
 		const currency = store.getState(selectCurrency(user));
+		const { equipped } = store.getState(selectInventoryData(user));
 		let result: Option<Item>;
 		for (const [_, item] of equipped) {
 			if (item.uuid !== uuid) {
@@ -32,37 +34,37 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			result = item;
 			break;
 		}
-		if (result === undefined || !isTowerItemId(result.id) || result.unique.kind !== ItemKind.Tower) {
+		if (result === undefined || currency <= 0) {
 			return;
 		}
-		const { id, unique } = result;
-		// !! Temporary, validate position.
-		const { placed } = this;
-		const count = placed.get(uuid) ?? 0;
+		const item = result;
+		const { id, unique } = item;
+		if (!isTowerItemId(id) || !isItemTowerUnique(unique)) {
+			return;
+		}
 		const { kind } = itemDefinitions[id];
-		const { limit, cost } = kind;
-		if (currency < cost || count >= limit) {
+		const { cost, limit, targeting } = kind;
+		const count = placed.get(uuid) ?? 0;
+		if (count >= limit || cost > currency) {
 			return;
 		}
-		const { targeting: allowed } = kind;
-		const [targeting] = allowed;
 		const index = count + 1;
 		const key = `${uuid}_${index}`;
 		const tower: ReplicatedTower = {
 			id,
-			uuid,
 			index,
 			key,
-			position,
-			targeting,
-			unique,
 			owner: user,
+			position,
+			targeting: targeting[0],
+			unique,
 			upgrades: 1,
+			uuid,
 		};
 		new Tower(tower);
-		store.gameAddCurrency({ amount: -cost }, { user, broadcast: true });
-		store.placeTower({ id, uuid, index, key, position, targeting, unique }, { user, broadcast: true });
 		placed.set(uuid, index);
+		store.placeTower(tower, { user, broadcast: true });
+		store.gameAddCurrency({ amount: -cost }, { user, broadcast: true });
 	}
 
 	public onPlayerRemoving(entity: Entity): void {

@@ -124,10 +124,10 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 	gameAddCurrency: (state: GameState, payload: GameAddCurrency, { user }: EntityMetadata): GameState => {
 		const { amount } = payload;
 		return produce(state, ({ currency, status }: Draft<GameState>): void => {
-			if (status === GameStatus.None) {
+			const current = currency.get(user) ?? 0;
+			if (current === undefined) {
 				return;
 			}
-			const current = currency.get(user) ?? 1000;
 			currency.set(user, current + amount);
 		});
 	},

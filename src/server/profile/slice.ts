@@ -30,7 +30,6 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
 			if (player === undefined) {
-				warn(user);
 				return;
 			}
 			const [level, leftover] = calculateIncrease(player.data.level, experience);

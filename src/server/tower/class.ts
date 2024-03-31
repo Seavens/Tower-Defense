@@ -159,10 +159,8 @@ export class Tower extends API {
 	}
 
 	public sellTower(): void {
-		warn("sellTower");
 		const { key, owner } = this;
 		const cost = this.getSellCost();
-		warn(cost);
 		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
 		store.sellTower({ key }, { user: owner, broadcast: true });
 	}
