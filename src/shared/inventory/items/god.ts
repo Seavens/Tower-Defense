@@ -21,7 +21,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		cooldown: 4,
 
 		damageKind: MobDamage.Magic,
-		count: 1,
+		limit: 1,
 		cost: 700,
 
 		upgrades: [

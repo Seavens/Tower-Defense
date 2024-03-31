@@ -21,7 +21,7 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		cooldown: 3,
 
 		damageKind: MobDamage.Sharp,
-		count: 5,
+		limit: 5,
 		cost: 100,
 
 		upgrades: [

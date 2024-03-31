@@ -24,7 +24,7 @@ interface TowerDefinition {
 	cooldown: number;
 
 	damageKind: MobDamage;
-	count: number;
+	limit: number;
 	cost: number;
 
 	upgrades: Array<TowerUpgradeInfo>;

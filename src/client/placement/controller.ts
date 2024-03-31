@@ -24,7 +24,7 @@ type PlacementCallback = (placing: string, asset: Model) => void;
 export class PlacementController implements OnStart, OnTick {
 	protected static listeners = new Set<PlacementCallback>();
 
-	protected cframe = CFrame.identity;
+	protected position = Vector3.zero;
 	protected placing: Option<string>;
 	protected prefab: Option<Model>;
 	protected previous: Option<string>;
@@ -43,13 +43,13 @@ export class PlacementController implements OnStart, OnTick {
 		return placing !== undefined;
 	}
 
-	public isValidCFrame(cframe: CFrame): boolean {
+	public isValidPosition(position: Vector3): boolean {
 		const { placeable } = this;
 
 		if (placeable === undefined) {
 			return false;
 		}
-		const origin = cframe.Position.add(Vector3.yAxis.mul(5));
+		const origin = position.add(Vector3.yAxis.mul(5));
 		const direction = Vector3.yAxis.mul(-15);
 		const raycast = Workspace.Raycast(origin, direction, placeable);
 
@@ -64,6 +64,23 @@ export class PlacementController implements OnStart, OnTick {
 		return true;
 	}
 
+	public getPosition(model: Option<Model>): Vector3 {
+		const { placeable } = this;
+		if (model === undefined) {
+			return Vector3.zero;
+		}
+		const mouse = getMouseCFrame(params);
+		const size = model.GetExtentsSize().div(2);
+		const position = mouse.PointToWorldSpace(size);
+		const origin = position.add(Vector3.yAxis.mul(5));
+		const direction = Vector3.yAxis.mul(-15);
+		const raycast = Workspace.Raycast(origin, direction, placeable);
+		if (raycast === undefined) {
+			return position;
+		}
+		return raycast.Position.add(Vector3.yAxis.mul(size.Y));
+	}
+
 	public getAsset(name: string, ghost = true): Option<Model> {
 		const asset = towers.FindFirstChild(name);
 		if (asset === undefined || !asset.IsA("Model")) {
@@ -71,13 +88,13 @@ export class PlacementController implements OnStart, OnTick {
 		}
 		const cloned = asset.Clone();
 		if (ghost) {
+			const position = this.getPosition(cloned);
+			const valid = this.isValidPosition(position);
 			for (const instance of cloned.GetDescendants()) {
 				if (!instance.IsA("BasePart")) {
 					continue;
 				}
 				instance.Material = Enum.Material.ForceField;
-				const cframe = getMouseCFrame(params);
-				const valid = this.isValidCFrame(cframe);
 				instance.Color = new Color3(valid ? 0 : 1, valid ? 1 : 0, 0);
 			}
 		}
@@ -111,19 +128,19 @@ export class PlacementController implements OnStart, OnTick {
 			return;
 		}
 		const { placing, previous, valid: wasValid } = this;
-		let { prefab, cframe: last } = this;
+		let { prefab, position: last } = this;
 		if (prefab === undefined || placing !== previous) {
 			prefab?.Destroy();
 			prefab = this.getAsset(placing, true);
-			last = getMouseCFrame(params);
+			last = this.getPosition(prefab);
 			this.prefab = prefab;
 			this.previous = placing;
 		}
-		const cframe = getMouseCFrame(params);
-		const interpolated = last.Lerp(cframe, 0.25);
+		const position = this.getPosition(prefab);
+		const interpolated = last.Lerp(position, 0.25);
 		// !! It's likely more ideal to check if the cframe is valid here rather than
 		// !! another function calling raycast, just for now though, it's like this.
-		const valid = this.isValidCFrame(interpolated);
+		const valid = this.isValidPosition(interpolated);
 		if (wasValid !== valid) {
 			this.valid = valid;
 			if (valid) {
@@ -132,8 +149,8 @@ export class PlacementController implements OnStart, OnTick {
 				this.setAssetColor(new Color3(1, 0, 0));
 			}
 		}
-		prefab?.PivotTo(interpolated);
-		this.cframe = interpolated;
+		prefab?.PivotTo(new CFrame(interpolated));
+		this.position = interpolated;
 	}
 
 	public onStart(): void {

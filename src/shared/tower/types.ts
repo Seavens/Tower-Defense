@@ -1,5 +1,6 @@
 import { Flamework } from "@flamework/core";
 import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
+import { isUUID } from "shared/guards";
 import { t } from "@rbxts/t";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 
@@ -14,7 +15,7 @@ export const enum TowerTargeting {
 
 export interface ReplicatedTower {
 	id: TowerItemId;
-	uuid: string;
+	uuid: UUID;
 	owner: string;
 	position: Vector3;
 	upgrades: number;
@@ -28,7 +29,7 @@ export const isTowerTargeting = Flamework.createGuard<TowerTargeting>();
 
 export const isReplicatedTower: t.check<ReplicatedTower> = t.strictInterface({
 	id: isTowerItemId,
-	uuid: t.string,
+	uuid: isUUID,
 	owner: t.string,
 	position: t.Vector3,
 	upgrades: t.number,

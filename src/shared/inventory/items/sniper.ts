@@ -21,7 +21,7 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 		cooldown: 6,
 
 		damageKind: MobDamage.Projectile,
-		count: 3,
+		limit: 3,
 		cost: 500,
 
 		upgrades: [

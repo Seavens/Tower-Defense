@@ -3,7 +3,7 @@ import type { ReplicatedTower, TowerTargeting } from "./types";
 
 export abstract class Tower {
 	public readonly id: TowerItemId;
-	public readonly uuid: string;
+	public readonly uuid: UUID;
 	public readonly index: number;
 	public readonly cframe: CFrame;
 	public readonly owner: string;

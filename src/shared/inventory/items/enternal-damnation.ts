@@ -21,7 +21,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 		cooldown: 0.5,
 
 		damageKind: MobDamage.Magic,
-		count: 3,
+		limit: 3,
 		cost: 1000,
 
 		// lol

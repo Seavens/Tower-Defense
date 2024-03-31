@@ -11,7 +11,7 @@ export type TowerActions<S> = {
 
 export interface TowerPlace {
 	id: TowerItemId;
-	uuid: string;
+	uuid: UUID;
 	index: number;
 	key: string;
 	position: Vector3;

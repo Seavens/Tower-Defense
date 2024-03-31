@@ -16,7 +16,7 @@ export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
 
 	public declare readonly id: TowerItemId;
-	public declare readonly uuid: string;
+	public declare readonly uuid: UUID;
 	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
 	public declare readonly owner: string;

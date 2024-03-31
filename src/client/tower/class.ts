@@ -21,14 +21,14 @@ export class Tower extends API {
 	public static towers = new Map<string, Tower>();
 
 	public declare readonly id: TowerItemId;
-	public declare readonly uuid: string;
+	public declare readonly uuid: UUID;
 	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
 	public declare readonly owner: string;
 
 	public readonly instance: Model;
-	public range: Option<BasePart>;
-	public rangeBottom: Option<BasePart>;
+	public sphere: Option<BasePart>;
+	public circle: Option<BasePart>;
 
 	public Y = Workspace.map.spawnLocation.CFrame.Position.Y;
 
@@ -91,40 +91,45 @@ export class Tower extends API {
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
 		const radius = range * base * multiplier[1];
+		const size = instance.GetExtentsSize().div(2);
 
-		const cframe = instance.GetPivot();
+		const cframe = new CFrame(
+			instance
+				.GetPivot()
+				.PointToWorldSpace(size)
+				.add(Vector3.yAxis.mul(size.Y * -2)),
+		);
+		const sphere = new Instance("Part");
+		sphere.Shape = Enum.PartType.Ball;
+		sphere.Size = new Vector3(radius * 2, radius * 2, radius * 2);
+		sphere.CastShadow = false;
+		sphere.Anchored = true;
+		sphere.CFrame = cframe;
+		sphere.Material = Enum.Material.ForceField;
+		sphere.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
+		sphere.Transparency = 0.5;
+		sphere.CanCollide = false;
+		sphere.Parent = debris;
+		this.sphere = sphere;
+
 		const circle = new Instance("Part");
-		circle.Shape = Enum.PartType.Ball;
-		circle.Size = new Vector3(radius * 2, radius * 2, radius * 2);
+		circle.Shape = Enum.PartType.Cylinder;
+		circle.Size = new Vector3(0.1, radius * 2, radius * 2);
 		circle.CastShadow = false;
 		circle.Anchored = true;
-		circle.CFrame = cframe;
-		circle.Material = Enum.Material.ForceField;
+		circle.CFrame = cframe.mul(new CFrame(0, 0.05, 0)).mul(CFrame.Angles(0, 0, math.rad(90)));
+		circle.Material = Enum.Material.SmoothPlastic;
 		circle.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
-		circle.Transparency = 0.5;
+		circle.Transparency = 0.75;
 		circle.CanCollide = false;
 		circle.Parent = debris;
-		this.range = circle;
-
-		const cframeBottom = instance.GetPivot();
-		const circleBottom = new Instance("Part");
-		circleBottom.Shape = Enum.PartType.Cylinder;
-		circleBottom.Size = new Vector3(0.5, radius * 2, radius * 2);
-		circleBottom.CastShadow = false;
-		circleBottom.Anchored = true;
-		circleBottom.CFrame = cframeBottom.mul(CFrame.Angles(0, this.Y, math.pi / 2));
-		circleBottom.Material = Enum.Material.SmoothPlastic;
-		circleBottom.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
-		circleBottom.Transparency = 0.75;
-		circleBottom.CanCollide = false;
-		circleBottom.Parent = debris;
-		this.rangeBottom = circleBottom;
+		this.circle = circle;
 	}
 
 	public upgradeRange(): void {
-		const { range: circle, rangeBottom: circle2 } = this;
+		const { sphere, circle } = this;
 		const { range: rangeUpgrade } = this.unique;
-		if (rangeUpgrade === undefined || circle === undefined || circle2 === undefined) {
+		if (rangeUpgrade === undefined || sphere === undefined || circle === undefined) {
 			return;
 		}
 		const { id } = this;
@@ -132,14 +137,14 @@ export class Tower extends API {
 		const index = this.getUpgrades();
 		const [_, multiplier] = upgrades[index - 1];
 		const radius = rangeUpgrade * base * multiplier[1];
-		circle.Size = new Vector3(radius * 2, radius * 2, radius * 2);
-		circle2.Size = new Vector3(1, radius * 2, radius * 2);
+		sphere.Size = new Vector3(radius * 2, radius * 2, radius * 2);
+		circle.Size = new Vector3(0.1, radius * 2, radius * 2);
 	}
 
 	public disableRange(): void {
-		const { range, rangeBottom } = this;
-		range?.Destroy();
-		rangeBottom?.Destroy();
+		const { sphere, circle } = this;
+		sphere?.Destroy();
+		circle?.Destroy();
 	}
 
 	public rotateToTarget(target: Vector3): void {
@@ -174,9 +179,10 @@ export class Tower extends API {
 
 	public destroy(): void {
 		const { towers } = Tower;
-		const { instance, range, key } = this;
+		const { instance, sphere, circle, key } = this;
 		towers.delete(key);
 		instance.Destroy();
-		range?.Destroy();
+		sphere?.Destroy();
+		circle?.Destroy();
 	}
 }

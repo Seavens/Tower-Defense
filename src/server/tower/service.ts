@@ -1,17 +1,16 @@
 import { Events } from "server/network";
-import { ItemKind, ItemTowerUnique, isTowerItemId } from "shared/inventory/types";
-import { SELL_RATIO } from "shared/tower/constants";
+import { ItemKind, isTowerItemId } from "shared/inventory/types";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { getUser } from "shared/player/utility";
+import { isUUID } from "shared/guards";
 import { itemDefinitions } from "shared/inventory/items";
-import { mapDefinitions } from "shared/map/definitions";
 import { selectCurrentMap } from "shared/game/selectors";
 import { selectInventoryData } from "server/inventory/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "server/player/class";
-import type { Item, ItemId, TowerItemId } from "shared/inventory/types";
+import type { Item } from "shared/inventory/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
@@ -19,17 +18,12 @@ import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
-	protected placedTowers = new Map<TowerItemId, number>();
+	protected placed = new Map<UUID, number>(); // Map<{Tower UUID}, number>;
 
-	public onPlaceTower(player: Player, uuid: string, position: Vector3): void {
+	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
 		const user = getUser(player);
 		const { equipped } = store.getState(selectInventoryData(user));
-		const map = store.getState(selectCurrentMap);
-		if (map === undefined) {
-			return;
-		}
-		let result: Option<Item> = undefined;
-		// !! Rename this shit (`i`).
+		let result: Option<Item>;
 		for (const [_, item] of equipped) {
 			if (item.uuid !== uuid) {
 				continue;
@@ -41,23 +35,17 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			return;
 		}
 		const { id, unique } = result;
-
-		const { towerLimits } = mapDefinitions[map];
-		const limit = towerLimits[id];
 		// !! Temporary, validate position.
-		const { placedTowers } = this;
-		const placed = placedTowers.get(id) ?? 0;
-
-		const definition = itemDefinitions[id];
-		const { kind } = definition.kind;
-
-		if (placed >= limit || kind !== ItemKind.Tower) {
+		const { placed } = this;
+		const count = placed.get(uuid) ?? 0;
+		const { kind } = itemDefinitions[id];
+		const { limit } = kind;
+		if (count >= limit) {
 			return;
 		}
-
-		const { targeting: allowed } = definition.kind;
+		const { targeting: allowed } = kind;
 		const [targeting] = allowed;
-		const index = placed + 1;
+		const index = count + 1;
 		const key = `${uuid}_${index}`;
 		const tower: ReplicatedTower = {
 			id,
@@ -72,7 +60,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		};
 		new Tower(tower);
 		store.placeTower({ id, uuid, index, key, position, targeting, unique }, { user, broadcast: true });
-		placedTowers.set(id, index);
+		placed.set(uuid, index);
 	}
 
 	public onPlayerRemoving(entity: Entity): void {
@@ -81,25 +69,28 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		if (towers.isEmpty()) {
 			return;
 		}
-		const { placedTowers } = this;
-		for (const { id, key } of towers) {
-			const placed = placedTowers.get(id) ?? 0;
+		const { placed } = this;
+		for (const { uuid, key } of towers) {
+			const count = placed.get(uuid) ?? 0;
 			store.sellTower({ key }, { user, broadcast: true });
-			if (placed <= 0) {
+			if (count <= 0) {
 				continue;
 			}
-			placedTowers.set(id, placed - 1);
+			placed.set(uuid, count - 1);
 		}
 	}
 
 	public onStart(): void {
 		store.subscribe(selectCurrentMap, (map: Option<MapId>): void => {
-			const { placedTowers } = this;
+			const { placed: placedTowers } = this;
 			placedTowers.clear();
 		});
-		Events.tower.place.connect((player: Player, uuid: string, position: Vector3): void =>
-			this.onPlaceTower(player, uuid, position),
-		);
+		Events.tower.place.connect((player: Player, uuid: string, position: Vector3): void => {
+			if (!isUUID(uuid)) {
+				return;
+			}
+			this.onPlaceTower(player, uuid, position);
+		});
 		Events.tower.targeting.connect((player: Player, key: string, targeting: TowerTargeting): void => {
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
@@ -125,21 +116,21 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			store.upgradeTower({ key }, { user, broadcast: true });
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {
-			const { placedTowers } = this;
+			const { placed: placedTowers } = this;
 			const user = getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;
 			}
-			const { id, owner } = tower;
+			const { uuid, owner } = tower;
 			if (user !== owner) {
 				return;
 			}
-			const placed = placedTowers.get(id) ?? 0;
+			const placed = placedTowers.get(uuid) ?? 0;
 			if (placed <= 0) {
 				return;
 			}
-			placedTowers.set(id, placed - 1);
+			placedTowers.set(uuid, placed - 1);
 			store.sellTower({ key }, { user, broadcast: true });
 		});
 	}

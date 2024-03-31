@@ -16,5 +16,11 @@ export function getMouseCFrame(params: RaycastParams): CFrame {
 		return new CFrame(origin.add(direction));
 	}
 	const position = raycast.Position;
-	return new CFrame(position);
+	const normal = raycast.Normal;
+	const normalized = CFrame.lookAlong(position, normal);
+	const relative = normalized.PointToObjectSpace(position);
+	const xVector = normalized.VectorToWorldSpace(Vector3.xAxis.mul(-math.sign(relative.X)));
+	const yVector = normalized.VectorToWorldSpace(Vector3.yAxis.mul(-math.sign(relative.Y)));
+	const cframe = CFrame.fromMatrix(position, xVector, yVector, normal);
+	return cframe.mul(CFrame.Angles(math.rad(90), 0, 0));
 }
