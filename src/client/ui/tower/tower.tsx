@@ -329,11 +329,6 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							cornerRadius={new UDim(0, CORNER_RADIUS)}
 							onClick={(): void => {
 								const { key } = tower;
-
-								if (nextUpgrade === undefined) {
-									return;
-								}
-
 								TowerImpl.changeTargeting(key);
 							}}
 							key={"tower-target"}
