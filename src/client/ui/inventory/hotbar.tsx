@@ -42,7 +42,6 @@ export function Hotbar(): Element {
 			const slot: Slot = `${index}`;
 			const tower = equipped.get(slot);
 			const cost = getTowerCost(tower?.id);
-
 			elements.push(
 				<ItemSlot
 					affordable={currency >= cost}
