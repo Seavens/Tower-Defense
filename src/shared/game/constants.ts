@@ -1,0 +1,1 @@
+export const STARTING_CURRENCY = 1000;

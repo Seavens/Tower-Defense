@@ -70,7 +70,7 @@ export class Tower extends API {
 			return;
 		}
 		const { key, owner } = this;
-		store.setTowerTargeting({ key, targeting }, { user: owner, broadcast: true });
+		store.towerSetTargeting({ key, targeting }, { user: owner, broadcast: true });
 	}
 
 	public getReplicated(): ReplicatedTower {
@@ -126,13 +126,13 @@ export class Tower extends API {
 		const tower = this.getReplicated();
 		const cost = TowerUtil.getSellPrice(tower);
 		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
-		store.sellTower({ key }, { user: owner, broadcast: true });
+		store.towerSell({ key }, { user: owner, broadcast: true });
 		this.destroy();
 	}
 
 	public upgradeTower(): void {
 		const { key, owner } = this;
-		store.upgradeTower({ key }, { user: owner, broadcast: true });
+		store.towerUpgrade({ key }, { user: owner, broadcast: true });
 	}
 
 	public destroy(): void {

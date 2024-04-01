@@ -1,6 +1,6 @@
 import { GameStatus } from "./types";
-import { IS_STUDIO } from "shared/core/core-constants";
 import { MapUtil } from "shared/map/utils";
+import { STARTING_CURRENCY } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
@@ -40,7 +40,7 @@ const gameState: GameState = {
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {
 	playerAdded: (state: GameState, payload: PlayerAdded, { user }: EntityMetadata): GameState => {
 		return produce(state, ({ currency }: Draft<GameState>): void => {
-			currency.set(user, IS_STUDIO ? 1e10 : 1000);
+			currency.set(user, STARTING_CURRENCY);
 		});
 	},
 	playerRemoved: (state: GameState, payload: PlayerRemoved, { user }: EntityMetadata): GameState => {

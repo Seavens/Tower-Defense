@@ -5,9 +5,9 @@ import type { MobId } from "shared/mob/types";
 
 export type WaveDefinition = {
 	[I in MobId]?: {
-		count: number;
-		wait: number;
-		delay: number;
+		count: number; // Number of mobs to spawn
+		delay: number; // Time to wait before starting to spawn mobs
+		wait: number; // Time to wait between each mob spawn
 	};
 };
 
@@ -16,7 +16,7 @@ export interface MapDefinition<I extends MapId> {
 	name: string;
 	desc: string;
 	difficulty: MapDifficulty;
-	waves: Array<[WaveDefinition, number]>;
+	waves: Array<[WaveDefinition, bounty: number, experience: number]>;
 	baseHealth: number;
 }
 

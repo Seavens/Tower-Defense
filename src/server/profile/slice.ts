@@ -25,15 +25,17 @@ const state: State = {};
 export const profileSlice = createProducer<State, ProfileActions<State>>(state, {
 	profileAddExperience: (state: State, payload: ProfileAddExperience, metadata: EntityMetadata): State => {
 		const { user } = metadata;
-		const { experience } = payload;
+		const { amount } = payload;
 		return produce(state, (draft: Draft<State>): void => {
 			const player = draft[user];
 			if (player === undefined) {
 				return;
 			}
-			const [level, leftover] = LevelUtil.calculateIncrease(player.data.level, experience);
-			player.data.level = level;
-			player.data.experience = leftover;
+			const { data } = player;
+			const { level } = data;
+			const [newLevel, newExperience] = LevelUtil.calculateIncrease(level, amount);
+			player.data.level = newLevel;
+			player.data.experience += newExperience;
 		});
 	},
 	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: EntityMetadata): State => {

@@ -3,10 +3,11 @@ import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { TowerTargeting } from "./types";
 
 export type TowerActions<S> = {
-	placeTower: (state: S, payload: TowerPlace, metadata: EntityMetadata & BroadcastMetadata) => S;
-	upgradeTower: (state: S, payload: TowerUpgrade, metadata: EntityMetadata & BroadcastMetadata) => S;
-	sellTower: (state: S, payload: TowerSell, metadata: EntityMetadata & BroadcastMetadata) => S;
-	setTowerTargeting: (state: S, payload: TowerSetTargeting, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerPlace: (state: S, payload: TowerPlace, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerUpgrade: (state: S, payload: TowerUpgrade, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerSell: (state: S, payload: TowerSell, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerSetTargeting: (state: S, payload: TowerSetTargeting, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerAddExperience: (state: S, payload: TowerAddExperience, metadata: BroadcastMetadata) => S;
 };
 
 export interface TowerPlace {
@@ -30,4 +31,9 @@ export interface TowerSell {
 export interface TowerSetTargeting {
 	key: string;
 	targeting: TowerTargeting;
+}
+
+export interface TowerAddExperience {
+	key: string;
+	amount: number;
 }

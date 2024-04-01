@@ -24,9 +24,9 @@ const state: ProfileState = {
 
 export const profileSlice = createProducer<ProfileState, ExcludeMetadata<ProfileActions<ProfileState>>>(state, {
 	profileAddExperience: (state: ProfileState, payload: ProfileAddExperience): ProfileState => {
-		const { experience } = payload;
+		const { amount } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			const [level, leftover] = LevelUtil.calculateIncrease(draft.data.level, experience);
+			const [level, leftover] = LevelUtil.calculateIncrease(draft.data.level, amount);
 			draft.data.level = level;
 			draft.data.experience = leftover;
 		});

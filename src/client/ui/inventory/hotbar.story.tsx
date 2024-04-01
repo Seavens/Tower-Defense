@@ -22,7 +22,7 @@ export = CreateReactStory(
 	},
 	(): Element => {
 		store.inventoryAddItems({ items: items });
-		store.profileAddExperience({ experience: 10000000 });
+		store.profileAddExperience({ amount: 10000000 });
 		task.defer((): void => {
 			for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 				const slot: Slot = `${index}`;

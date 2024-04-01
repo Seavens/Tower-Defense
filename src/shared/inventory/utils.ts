@@ -94,6 +94,7 @@ export namespace ItemUtil {
 			cooldown,
 			damage,
 			level: 1,
+			experience: 1,
 			locked: false,
 			owner,
 			range,

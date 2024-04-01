@@ -13,7 +13,7 @@ import { selectCurrency, selectGameData } from "shared/game/selectors";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { store } from "client/state/store";
-import { truncateNumber } from "./utils/format-stats";
+import { truncateNumber } from "shared/utils/truncate-number";
 import { useAbbreviator, usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
@@ -74,7 +74,9 @@ export function Hotbar(): Element {
 				textColor={Macchiato.Base}
 				textStrokeColor={PALETTE.accent}
 				textStrokeTransparency={0.25}
-				text={currency === undefined ? `Undefined` : `$${abbreviator.numberToString(currency)}`}
+				text={
+					currency === undefined ? `Undefined` : `$${abbreviator.stringToNumber(truncateNumber(currency, 0))}`
+				}
 			/>
 			<Frame
 				key={"item-group"}

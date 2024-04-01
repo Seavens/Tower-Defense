@@ -19,6 +19,7 @@ const unique: ItemTowerUnique = {
 	damage: 1.15,
 	kind: ItemKind.Tower,
 	level: 1,
+	experience: 0,
 	locked: false,
 	owner: 1,
 	range: 1.15,

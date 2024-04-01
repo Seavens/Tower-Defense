@@ -1,9 +1,17 @@
+import { LevelUtil } from "shared/profile/utils";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata } from "shared/replication/metadata";
 import type { ReplicatedTower } from "./types";
-import type { TowerActions, TowerPlace, TowerSell, TowerSetTargeting, TowerUpgrade } from "./actions";
+import type {
+	TowerActions,
+	TowerAddExperience,
+	TowerPlace,
+	TowerSell,
+	TowerSetTargeting,
+	TowerUpgrade,
+} from "./actions";
 
 export interface TowerState {
 	readonly placed: Map<string, Readonly<ReplicatedTower>>; // Map<{{Tower UUID}_{Tower Index}}, Readonly<ReplicatedTower>>;
@@ -14,7 +22,7 @@ const towerState: TowerState = {
 };
 
 export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(towerState, {
-	placeTower: (
+	towerPlace: (
 		state: TowerState,
 		{ id, uuid, index, key, position, targeting, unique }: TowerPlace,
 		{ user }: EntityMetadata,
@@ -33,7 +41,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			};
 			placed.set(key, tower);
 		}),
-	sellTower: (state: TowerState, { key }: TowerSell, { user }: EntityMetadata): TowerState =>
+	towerSell: (state: TowerState, { key }: TowerSell, { user }: EntityMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
 			const owner = tower?.owner;
@@ -42,7 +50,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			}
 			placed.delete(key);
 		}),
-	setTowerTargeting: (
+	towerSetTargeting: (
 		state: TowerState,
 		{ key, targeting }: TowerSetTargeting,
 		{ user }: EntityMetadata,
@@ -55,7 +63,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			}
 			tower.targeting = targeting;
 		}),
-	upgradeTower: (state: TowerState, { key }: TowerUpgrade, { user }: EntityMetadata): TowerState =>
+	towerUpgrade: (state: TowerState, { key }: TowerUpgrade, { user }: EntityMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
 			const owner = tower?.owner;
@@ -63,5 +71,16 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 				return;
 			}
 			tower.upgrades += 1;
+		}),
+	towerAddExperience: (state: TowerState, { key, amount }: TowerAddExperience): TowerState =>
+		produce(state, ({ placed }: Draft<TowerState>): void => {
+			const tower = placed.get(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { level } = tower.unique;
+			const [newLevel, newExperience] = LevelUtil.calculateIncrease(level, amount, true);
+			tower.unique.level = newLevel;
+			tower.unique.experience += newExperience;
 		}),
 });

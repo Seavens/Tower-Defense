@@ -2,6 +2,9 @@ import { MapDifficulty, MapId } from "../types";
 import { MobId } from "shared/mob/types";
 import type { MapDefinition } from ".";
 
+const experience = 50;
+const waveBounty = 1000;
+
 export const testMap: MapDefinition<MapId.Test> = {
 	id: MapId.Test,
 	name: "Test",
@@ -10,34 +13,38 @@ export const testMap: MapDefinition<MapId.Test> = {
 	waves: [
 		[
 			{
-				// [MobId.Zombie]: { count: 5, delay: 5, wait: 1, reward: 500 },
-				[MobId.Zombie]: { count: 500, delay: 1, wait: 0.1 },
+				[MobId.Zombie]: { count: 5, delay: 3, wait: 2 },
 			},
-			500,
+			waveBounty,
+			experience,
 		],
 		[
 			{
-				[MobId.Zombie]: { count: 10, delay: 5, wait: 0.5 },
+				[MobId.Zombie]: { count: 10, delay: 3, wait: 1.9 },
 			},
-			500,
+			waveBounty,
+			experience,
 		],
 		[
 			{
-				[MobId.Zombie]: { count: 15, delay: 5, wait: 0.3 },
+				[MobId.Zombie]: { count: 15, delay: 3, wait: 1.8 },
 			},
-			500,
+			waveBounty,
+			experience,
 		],
 		[
 			{
-				[MobId.Zombie]: { count: 25, delay: 5, wait: 0.3 },
+				[MobId.Zombie]: { count: 25, delay: 3, wait: 1.7 },
 			},
-			500,
+			waveBounty,
+			experience,
 		],
 		[
 			{
-				[MobId.Zombie]: { count: 35, delay: 5, wait: 0.3 },
+				[MobId.Zombie]: { count: 35, delay: 3, wait: 1.6 },
 			},
-			500,
+			waveBounty,
+			experience,
 		],
 	],
 	baseHealth: math.huge,

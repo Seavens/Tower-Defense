@@ -1,5 +1,6 @@
 import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
+import { INTERMISSION_TIME } from "./constants";
 import { Mob } from "server/mob/class";
 import { MobUtil } from "shared/mob/utils";
 import { Players } from "@rbxts/services";
@@ -7,11 +8,12 @@ import { Service } from "@flamework/core";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/mobs";
 import {
+	selectBounty,
 	selectCurrentMap,
 	selectCurrentWave,
+	selectExperience,
 	selectGameData,
 	selectGameStatus,
-	selectReward,
 } from "shared/game/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "shared/player/api";
@@ -79,24 +81,31 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		});
 	}
 
-	// !! MAP PROGRESS
+	// Map Timeline
 	public onMobRemoved(): void {
+		// Check if all mobs are dead
 		const count = Mob.getMobCount();
 		const status = store.getState(selectGameStatus);
 		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
 			return;
 		}
+		warn("Wave ended.");
 		store.gameEndWave({}, { broadcast: true });
-		const reward = store.getState(selectReward);
+
+		// Reward all players with the bounty and experience
+		const bounty = store.getState(selectBounty);
+		const experience = store.getState(selectExperience);
 		for (const player of Players.GetPlayers()) {
-			store.gameAddCurrency({ amount: reward }, { user: player.Name, broadcast: true });
+			store.gameAddCurrency({ amount: bounty }, { user: player.Name, broadcast: true });
+			store.profileAddExperience({ amount: experience }, { user: player.Name, replicate: true });
 		}
-		// !! Reward players with currency
-		// Temporary...
-		// We'll change this later to start after
-		// either 30 seconds or whenever all players
-		// vote to start the wave early.
-		task.wait(5);
+		warn(`Bounty: ${bounty} | Experience: ${experience}`);
+
+		// Wait for intermission time before starting the next wave
+		for (const index of $range(1, INTERMISSION_TIME)) {
+			warn(wait(index));
+		}
+
 		warn("Wave started.");
 		store.gameStartWave({}, { broadcast: true });
 	}

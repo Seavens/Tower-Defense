@@ -12,9 +12,7 @@ import { ItemFiltering } from "shared/inventory/types";
 import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
-import { PlayerUtil } from "shared/player/utils";
-import { Players } from "@rbxts/services";
+import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { TextField } from "../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
 import { idToName } from "shared/utils/id-to-name";
@@ -42,9 +40,6 @@ const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 6;
 const TEXTCOLOR = Latte.Base;
 const TRANSPARENCY = 0;
-
-const player = Players.LocalPlayer;
-const user = PlayerUtil.getUser(player);
 
 export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const { stored } = useSelector(selectInventoryData);
@@ -107,7 +102,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 				filtered === ItemFiltering.Rarity
 					? RARITY_ORDERS[rarity]
 					: filtered === ItemFiltering.Level && unique.kind === ItemKind.Tower
-						? MAXIMUM_TOWER_LEVEL - unique.level
+						? MAX_TOWER_LEVEL - unique.level
 						: undefined;
 			elements.push(
 				<ItemSlot

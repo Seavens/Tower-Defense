@@ -2,11 +2,8 @@ import { ITEM_KIND_DISPLAYS, MOB_DAMAGE_DISPLAY } from "shared/inventory/constan
 import { ItemKind } from "shared/inventory/types";
 import { itemDefinitions } from "shared/inventory/items";
 import { rarityDefinitions } from "shared/inventory/rarities";
+import { truncateNumber } from "shared/utils/truncate-number";
 import type { Item } from "shared/inventory/types";
-
-export function truncateNumber(number: number, decimals: number): string {
-	return string.format(`%.${decimals}f`, number);
-}
 
 // function formatTargeting(targeting: Array<TowerTargeting>): string {
 // 	let result = "";

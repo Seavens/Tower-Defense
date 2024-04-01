@@ -47,6 +47,7 @@ export interface ItemTowerUnique {
 	cooldown: number;
 	owner: number;
 	level: number;
+	experience: number;
 	locked: boolean;
 }
 

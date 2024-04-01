@@ -5,7 +5,9 @@ import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
 import { mobDefinitions } from "shared/mob/mobs";
+import { profileSlice } from "server/profile/slice";
 import { reuseThread } from "shared/utils/reuse-thread";
+import { selectProfileData } from "server/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
@@ -98,19 +100,47 @@ export class Mob extends API {
 
 	public onDied(key?: string): void {
 		const { index } = this;
+
 		Events.mob.death.broadcast(index);
 		if (key === undefined) {
 			return;
 		}
+
 		const replicated = store.getState(selectSpecificTower(key));
+		if (replicated === undefined) {
+			return;
+		}
+
 		const user = replicated?.owner;
 		if (user === undefined) {
 			return;
 		}
 
+		const profile = store.getState(selectProfileData(user));
+		if (profile === undefined) {
+			return;
+		}
+
 		const mobDef = mobDefinitions[this.id];
-		const { reward } = mobDef;
-		store.gameAddCurrency({ amount: reward }, { user, broadcast: true });
+		const { bounty, experience } = mobDef;
+
+		// Add currency to the tower
+		store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
+		// store.profileAddExperience({ amount: experience }, { user: user, replicate: true });
+		store.towerAddExperience(
+			{
+				amount: experience,
+				key: key,
+			},
+			{ broadcast: true },
+		);
+
+		warn(
+			"Profile: Level: " + profile.level,
+			"Profile: Experience: " + profile.experience,
+			"Tower: Level: " + replicated.unique.level,
+			"Tower: Experience: " + replicated.unique.experience,
+		);
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {

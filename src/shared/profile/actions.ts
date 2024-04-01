@@ -12,7 +12,7 @@ export type ProfileActions<S> = {
 } & DataActions<S>;
 
 export interface ProfileAddExperience {
-	experience: number;
+	amount: number;
 }
 export interface ProfileAdjustCoins {
 	coins: number;
