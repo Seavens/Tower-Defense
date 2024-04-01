@@ -1,6 +1,6 @@
 import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "shared/inventory/constants";
+import { MAX_TOWER_LEVEL, SELL_RATIO, TOWER_GRADE_RANGES, TOWER_LEVEL_MULTIPLIER } from "./constants";
 import { Modding } from "@flamework/core";
-import { SELL_RATIO, TOWER_GRADE_RANGES } from "./constants";
 import { TowerGrade } from "./types";
 import { itemDefinitions } from "shared/inventory/items";
 import type { ItemTowerUnique } from "shared/inventory/types";
@@ -45,8 +45,9 @@ export namespace TowerUtil {
 		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
+		const level = getLevelMultiplier(unique);
 		const [_, { damage: multiplier }] = definitions[upgrades - 1];
-		const total = base * damage * multiplier;
+		const total = base * damage * multiplier * level;
 		return total;
 	}
 
@@ -58,8 +59,9 @@ export namespace TowerUtil {
 		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
+		const level = getLevelMultiplier(unique);
 		const [_, { range: multiplier }] = definitions[upgrades - 1];
-		const total = range * base * multiplier;
+		const total = range * base * multiplier * level;
 		return total;
 	}
 
@@ -71,8 +73,9 @@ export namespace TowerUtil {
 		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
+		const level = getLevelMultiplier(unique);
 		const [_, { cooldown: multiplier }] = definitions[upgrades - 1];
-		const total = base * cooldown * multiplier;
+		const total = base * cooldown * multiplier * level;
 		return total;
 	}
 
@@ -109,5 +112,10 @@ export namespace TowerUtil {
 			break;
 		}
 		return result;
+	}
+
+	export function getLevelMultiplier(unique: ItemTowerUnique): number {
+		const { level } = unique;
+		return TOWER_LEVEL_MULTIPLIER * (level / MAX_TOWER_LEVEL);
 	}
 }
