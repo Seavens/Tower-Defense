@@ -1,5 +1,6 @@
 import { Choose, CreateReactStory, Number } from "@rbxts/ui-labs";
 import { ItemKind } from "shared/inventory/types";
+import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { Tower } from ".";
@@ -34,14 +35,18 @@ export = CreateReactStory(
 			id: Choose(allTowerItemIds, 1),
 			targeting: Choose(allTowerTargetings, 1),
 			upgrades: Number(1, 1, math.huge, 1),
+			level: Number(1, 1, MAX_TOWER_LEVEL, 1),
+			experience: Number(1, 1, math.huge, 1),
 		},
 		cleanup: (): void => {
 			store.resetState();
 		},
 	},
 	({ controls }): Element => {
-		const { id, targeting, upgrades } = controls;
+		const { id, targeting, upgrades, level, experience } = controls;
 		const uuid = createUUID();
+		unique.level = level;
+		unique.experience = experience;
 		const tower: ReplicatedTower = {
 			id,
 			index: 1,
@@ -56,7 +61,7 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<Tower tower={tower} side={"Right"} />
+				<Tower tower={tower} />
 			</ReflexProvider>
 		);
 	},

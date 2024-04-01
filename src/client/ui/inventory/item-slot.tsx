@@ -1,6 +1,6 @@
+import { Darken, GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { FONTS, SPRINGS } from "client/ui/constants";
-import { Frame, Group, Image } from "../components";
-import { GetPerceivedBrightness } from "@rbxts/colour-utils";
+import { Frame, Group, Image, Text } from "../components";
 import { ITEM_SLOT_SIZE } from "./constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
@@ -14,11 +14,11 @@ import type { Item, ItemId } from "shared/inventory/types";
 export interface ItemSlotProps extends Partial<Item> {
 	affordable?: boolean;
 	selected?: boolean;
-	order?: number;
+	layoutOrder?: number;
 	onClick?: (id: ItemId) => void;
 }
 
-export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotProps): Element {
+export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClick }: ItemSlotProps): Element {
 	const px = usePx();
 
 	const definition = useItemDefinition(id);
@@ -45,116 +45,134 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 	}, [selected]);
 
 	return (
-		<Frame
+		<Group
 			size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
-			cornerRadius={new UDim(0, px(5))}
-			backgroundColor={color}
-			backgroundTransparency={0.65}
-			clipsDescendants={true}
+			// backgroundTransparency={0.65}
+			// clipsDescendants={true}
+			layoutOrder={layoutOrder}
 			key={"item-slot"}
-			layoutOrder={order}
 		>
-			<Group
-				size={UDim2.fromScale(1, 0.8)}
-				anchorPoint={Vector2.zero}
-				position={UDim2.fromScale(0, 0)}
-				clipsDescendants={true}
-				zIndex={2}
-				key={"slot-upper"}
+			<Frame
+				size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(2) * 2, px(ITEM_SLOT_SIZE.Y) - px(2) * 2)}
+				anchorPoint={Vector2.one.mul(0.5)}
+				position={UDim2.fromScale(0.5, 0.5)}
+				cornerRadius={new UDim(0, px(5))}
+				backgroundColor={Darken(color, 0.25)}
+				key={"slot-group"}
 			>
-				<Image
-					size={UDim2.fromScale(1, 1)}
-					anchorPoint={new Vector2(0.5, 0.5)}
-					position={UDim2.fromScale(0.5, 0.5)}
-					cornerRadius={new UDim(0, px(5))}
-					image={"rbxassetid://4772171909"}
-					key={"locked-image"}
-					backgroundColor={new Color3(0.27, 0.27, 0.27)}
-					backgroundTransparency={affordable ? 1 : 0.5}
-					imageTransparency={affordable ? 1 : 0.5}
-					zIndex={15}
-				/>
 				<Group
-					size={UDim2.fromScale(1, 1)}
+					size={UDim2.fromScale(1, 0.8)}
 					anchorPoint={Vector2.zero}
 					position={UDim2.fromScale(0, 0)}
-					key={"image-group"}
+					clipsDescendants={true}
+					zIndex={2}
+					key={"slot-upper"}
 				>
-					<imagebutton
-						Size={UDim2.fromScale(1, 1)}
-						AnchorPoint={Vector2.one.mul(0.5)}
-						Position={UDim2.fromScale(0.5, 0.5)}
-						BackgroundTransparency={1}
-						Image={definition?.image}
-						ImageTransparency={definition === undefined ? 1 : 0}
-						ScaleType={Enum.ScaleType.Fit}
-						Event={{
-							MouseButton1Click: (): void => {
-								if (id === undefined || !affordable) {
-									return;
-								}
-								onClick?.(id);
-							},
-						}}
-						key={"slot-image"}
+					<Image
+						size={UDim2.fromScale(1, 1)}
+						anchorPoint={new Vector2(0.5, 0.5)}
+						position={UDim2.fromScale(0.5, 0.5)}
+						cornerRadius={new UDim(0, px(5))}
+						image={"rbxassetid://4772171909"}
+						key={"locked-image"}
+						backgroundColor={new Color3(0.27, 0.27, 0.27)}
+						backgroundTransparency={affordable ? 1 : 0.5}
+						imageTransparency={affordable ? 1 : 0.5}
+						zIndex={15}
 					/>
+					<Group
+						size={UDim2.fromScale(1, 1)}
+						anchorPoint={Vector2.zero}
+						position={UDim2.fromScale(0, 0)}
+						key={"image-group"}
+					>
+						<imagebutton
+							Size={UDim2.fromScale(1, 1)}
+							AnchorPoint={Vector2.one.mul(0.5)}
+							Position={UDim2.fromScale(0.5, 0.5)}
+							BackgroundTransparency={1}
+							Image={definition?.image}
+							ImageTransparency={definition === undefined ? 1 : 0}
+							ScaleType={Enum.ScaleType.Fit}
+							Event={{
+								MouseButton1Click: (): void => {
+									if (id === undefined || !affordable) {
+										return;
+									}
+									onClick?.(id);
+								},
+							}}
+							key={"slot-image"}
+						>
+							<Text
+								size={new UDim2(1, 0, 0, px(12))}
+								position={new UDim2(0, px(4), 1, 0)}
+								anchorPoint={new Vector2(0, 1)}
+								backgroundTransparency={1}
+								text={
+									unique !== undefined && unique.kind === ItemKind.Tower ? `Lv: ${unique.level}` : ""
+								}
+								textStrokeColor={Mocha.Base}
+								textStrokeTransparency={0.75}
+								textXAlignment={"Left"}
+								textColor={Latte.Base}
+								textSize={px(10)}
+								font={FONTS.nunito.regular}
+								zIndex={1}
+								key={"tower-level"}
+							/>
+						</imagebutton>
+					</Group>
 				</Group>
-			</Group>
-			<Group
-				size={UDim2.fromScale(1, 0.2)}
-				anchorPoint={Vector2.one}
-				position={UDim2.fromScale(1, 1)}
-				clipsDescendants={true}
-				zIndex={1}
-				key={"slot-lower"}
-			>
-				<Frame
-					size={UDim2.fromScale(1, 1)}
+				<Group
+					size={UDim2.fromScale(1, 0.2)}
 					anchorPoint={Vector2.one}
 					position={UDim2.fromScale(1, 1)}
-					backgroundColor={color}
-					key={"lower-color"}
+					clipsDescendants={true}
+					zIndex={1}
+					key={"slot-lower"}
 				>
 					<Frame
-						size={UDim2.fromScale(1, 0.5)}
+						size={UDim2.fromScale(1, 1)}
 						anchorPoint={Vector2.one}
-						position={UDim2.fromScale(1, 0.25)}
+						position={UDim2.fromScale(1, 1)}
 						cornerRadius={new UDim(0, px(5))}
-						backgroundColor={color}
-						key={"lower-color-top"}
-						zIndex={1}
-					/>
-					<textlabel
-						Size={UDim2.fromScale(1, 1)}
-						AnchorPoint={Vector2.one}
-						Position={UDim2.fromScale(1, 1)}
-						BackgroundTransparency={1}
-						TextColor3={GetPerceivedBrightness(color) >= 0.235 ? Latte.Base : Mocha.Crust}
-						Text={definition === undefined ? "" : `$${cost}`}
-						TextSize={px(10)}
-						FontFace={FONTS.inter.bold}
-						key={"tower-cost"}
+						backgroundColor={Darken(color, 0.45)}
+						key={"lower-color"}
 					>
-						<uistroke
-							LineJoinMode={Enum.LineJoinMode.Round}
-							ApplyStrokeMode={Enum.ApplyStrokeMode.Contextual}
-							Color={GetPerceivedBrightness(color) < 0.235 ? Latte.Base : Mocha.Crust}
-							Transparency={0.25}
-							Thickness={1}
-							key={"text-stroke"}
+						<Frame
+							size={UDim2.fromScale(1, 0.5)}
+							anchorPoint={Vector2.one}
+							position={UDim2.fromScale(1, 0.25)}
+							cornerRadius={new UDim(0, px(5))}
+							backgroundColor={Darken(color, 0.45)}
+							key={"lower-color-top"}
+							zIndex={1}
 						/>
-					</textlabel>
-				</Frame>
-			</Group>
-			<uistroke
-				Color={Latte.Base}
-				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-				Transparency={outline.map((value: number): number => map(value, 0, 1, 0.25, 1))}
-				Thickness={1}
-				key={"slot-outline"}
-			/>
-		</Frame>
+						<Text
+							size={UDim2.fromScale(1, 1)}
+							anchorPoint={Vector2.one}
+							position={UDim2.fromScale(1, 1)}
+							textStrokeColor={Mocha.Crust}
+							textStrokeTransparency={0.75}
+							textColor={Latte.Base}
+							text={definition === undefined ? "" : `$${cost}`}
+							textSize={px(10)}
+							font={FONTS.inter.bold}
+							key={"tower-cost"}
+						/>
+					</Frame>
+				</Group>
+				<uistroke
+					Color={Darken(Mocha.Base, 0.25)}
+					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+					Transparency={outline.map((value: number): number => map(value, 0, 1, 0.25, 1))}
+					Thickness={px(2)}
+					key={"slot-outline"}
+				/>
+			</Frame>
+		</Group>
 	);
 }

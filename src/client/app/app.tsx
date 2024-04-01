@@ -14,7 +14,7 @@ export function App(): Element {
 			<Layer key={"app"}>
 				<HotbarApp />
 				<InventoryApp />
-				<TowerAppSeavens />
+				{/* <TowerAppSeavens /> */}
 				<TowerAppIntrinsic />
 			</Layer>
 		</ReflexProvider>

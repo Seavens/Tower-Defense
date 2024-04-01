@@ -1,10 +1,10 @@
 import { Button, Frame, Group, Image, Text } from "client/ui/components";
 import { Darken } from "@rbxts/colour-utils";
 import { FONTS, PALETTE } from "client/ui/constants";
-import { IS_EDIT } from "shared/core/core-constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
+import { LevelUtil } from "shared/profile/utils";
+import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TOWER_IMAGE_SIZE, TOWER_OUTLINE, TOWER_SIZE } from "../constants";
-import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerAction } from "./action";
 import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
@@ -22,11 +22,10 @@ import type { ReplicatedTower } from "shared/tower/types";
 
 interface TowerProps {
 	tower: ReplicatedTower;
-	side: "Left" | "Right";
 }
 
-export function Tower({ tower, side }: TowerProps): Element {
-	const { id } = tower;
+export function Tower({ tower }: TowerProps): Element {
+	const { id, unique } = tower;
 
 	const px = usePx();
 	const abbreviator = useAbbreviator();
@@ -42,20 +41,16 @@ export function Tower({ tower, side }: TowerProps): Element {
 	const price = useMemo((): number => {
 		return TowerUtil.getSellPrice(tower);
 	}, [tower]);
+	const max = useMemo((): number => {
+		const { level } = unique;
+		const max = LevelUtil.getMaxExp(level, true);
+		return max;
+	}, [unique]);
 
 	return (
 		<Group
-			// size={UDim2.fromScale(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
-			// anchorPoint={new Vector2(IS_EDIT ? 0.5 : side === "Left" ? 0 : 1, 0.5)}
-			// position={
-			// 	new UDim2(
-			// 		IS_EDIT ? 0.5 : side === "Left" ? 0.5 : 0.5,
-			// 		(IS_EDIT ? 0 : side === "Left" ? -1 : 1) * px(10),
-			// 		0.5,
-			// 		0,
-			// 	)
-			// }
-			anchorPoint={new Vector2(0.5, 0.5)}
+			size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
+			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
 			key={"tower-group"}
 		>
@@ -68,7 +63,7 @@ export function Tower({ tower, side }: TowerProps): Element {
 				key={"tower-frame"}
 			>
 				<Group
-					size={new UDim2(1, 0, 0, px(TOWER_IMAGE_SIZE.Y) + px(4) * 2)}
+					size={new UDim2(1, 0, 0, px(TOWER_IMAGE_SIZE.Y) + px(4))}
 					anchorPoint={Vector2.zero}
 					position={UDim2.fromScale(0, 0)}
 					key={"tower-upper"}
@@ -89,7 +84,53 @@ export function Tower({ tower, side }: TowerProps): Element {
 							backgroundTransparency={0}
 							image={definition.image}
 							key={"tower-image"}
-						/>
+						>
+							{unique.level < MAX_TOWER_LEVEL && (
+								<Frame
+									size={new UDim2(1, 0, 0, px(18))}
+									position={UDim2.fromScale(0, 1)}
+									anchorPoint={new Vector2(0, 1)}
+									cornerRadius={new UDim(0, px(3))}
+									backgroundColor={Darken(rarity, 0.45)}
+									backgroundTransparency={0.5}
+									clipsDescendants={true}
+									key={"tower-level-bar"}
+								>
+									<Frame
+										size={UDim2.fromScale(unique.experience / max, 1)}
+										position={UDim2.fromScale(0, 0)}
+										anchorPoint={Vector2.zero}
+										cornerRadius={new UDim(0, px(3))}
+										backgroundColor={rarity}
+										backgroundTransparency={0}
+										key={"tower-level-progress"}
+									/>
+								</Frame>
+							)}
+							<Text
+								size={new UDim2(1, 0, 0, px(20))}
+								position={new UDim2(0, px(4), 1, 0)}
+								anchorPoint={new Vector2(0, 1)}
+								backgroundTransparency={1}
+								text={`Level: ${unique.level}`}
+								textStrokeColor={Mocha.Base}
+								textStrokeTransparency={0.75}
+								textXAlignment={"Left"}
+								textYAlignment={"Bottom"}
+								textColor={Latte.Base}
+								textSize={px(16)}
+								font={FONTS.nunito.regular}
+								zIndex={1}
+								key={"tower-level"}
+							/>
+							<uipadding
+								PaddingBottom={new UDim(0, px(4))}
+								PaddingLeft={new UDim(0, px(4))}
+								PaddingRight={new UDim(0, px(4))}
+								PaddingTop={new UDim(0, px(4))}
+								key={"tower-padding"}
+							/>
+						</Image>
 					</Group>
 					<Group
 						size={UDim2.fromOffset(
@@ -115,7 +156,7 @@ export function Tower({ tower, side }: TowerProps): Element {
 									size={new UDim2(1, -px(4), 1, 0)}
 									position={UDim2.fromScale(1, 0)}
 									anchorPoint={new Vector2(1, 0)}
-									text={definition.name}
+									text={`${definition.name}`}
 									textColor={Latte.Base}
 									textSize={px(18)}
 									font={FONTS.nunito.regular}
@@ -155,7 +196,7 @@ export function Tower({ tower, side }: TowerProps): Element {
 							</Button>
 						</Group>
 						<Frame
-							size={new UDim2(1, -px(3), 0, px(20 * 4))}
+							size={new UDim2(1, -px(4), 0, px(20 * 4))}
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							cornerRadius={new UDim(0, px(3))}
@@ -208,12 +249,13 @@ export function Tower({ tower, side }: TowerProps): Element {
 						}}
 					/>
 					<Group
-						size={new UDim2(0, px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(11), 1, 0)}
+						size={new UDim2(0, px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(4) * 3, 1, 0)}
 						position={UDim2.fromScale(1, 1)}
 						anchorPoint={Vector2.one}
 						key={"tower-actions-group"}
 					>
 						<TowerAction
+							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2 + 1, 1, 0)}
 							position={UDim2.fromScale(0, 0)}
 							anchorPoint={Vector2.zero}
 							backgroundColor={PALETTE.lightBlue}
@@ -226,6 +268,7 @@ export function Tower({ tower, side }: TowerProps): Element {
 							}}
 						/>
 						<TowerAction
+							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2, 1, 0)}
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							backgroundColor={PALETTE.lightRed}
@@ -237,6 +280,14 @@ export function Tower({ tower, side }: TowerProps): Element {
 								TowerImpl.sellTower(key);
 							}}
 						/>
+						<uilistlayout
+							FillDirection={"Horizontal"}
+							HorizontalAlignment={"Center"}
+							VerticalAlignment={"Center"}
+							Padding={new UDim(0, px(4))}
+							SortOrder={"LayoutOrder"}
+							key={"tower-layout"}
+						/>
 					</Group>
 					<uipadding
 						PaddingBottom={new UDim(0, px(4))}
@@ -246,7 +297,7 @@ export function Tower({ tower, side }: TowerProps): Element {
 						key={"tower-padding"}
 					/>
 				</Group>
-				<uistroke ApplyStrokeMode={"Border"} Color={TOWER_OUTLINE} Thickness={2} key={"tower-outline"} />
+				<uistroke ApplyStrokeMode={"Border"} Color={TOWER_OUTLINE} Thickness={px(2)} key={"tower-outline"} />
 			</Frame>
 		</Group>
 	);

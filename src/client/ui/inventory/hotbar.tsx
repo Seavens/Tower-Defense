@@ -1,5 +1,5 @@
 import { Darken } from "@rbxts/colour-utils";
-import { EXP_BAR_SIZE_Y, HOTBAR_PADDING, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "./constants";
+import { EXP_BAR_SIZE_Y, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "./constants";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Frame, Group, Text } from "../components";
 import { ItemSlot } from "./item-slot";
@@ -44,8 +44,8 @@ export function Hotbar(): Element {
 			const cost = getTowerCost(tower?.id);
 			elements.push(
 				<ItemSlot
-					affordable={currency >= cost}
 					{...tower}
+					affordable={currency >= cost}
 					selected={true}
 					onClick={(placing: ItemId): void => {
 						store.beginPlacement({ placing, slot });
@@ -59,7 +59,7 @@ export function Hotbar(): Element {
 	return (
 		<Group
 			key={"hotbar-group"}
-			size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y))}
+			size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y) + px(4))}
 			anchorPoint={new Vector2(0.5, 1)}
 			position={UDim2.fromScale(0.5, 1)}
 		>
@@ -85,14 +85,14 @@ export function Hotbar(): Element {
 				position={UDim2.fromScale(0.5, 0)}
 				backgroundTransparency={1}
 			>
+				{elements}
 				<uilistlayout
 					key={"item-layout"}
 					FillDirection={Enum.FillDirection.Horizontal}
 					HorizontalAlignment={Enum.HorizontalAlignment.Center}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
-					Padding={new UDim(0, px(HOTBAR_PADDING))}
+					Padding={new UDim(0, 0)}
 				/>
-				{elements}
 			</Frame>
 			<Frame
 				key={"level-frame"}
@@ -100,17 +100,17 @@ export function Hotbar(): Element {
 				backgroundColor={Darken(Mocha.Mauve, 0.75)}
 				cornerRadius={new UDim(0, px(5))}
 				anchorPoint={new Vector2(0.5, 1)}
-				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING)}
+				position={UDim2.fromScale(0.5, 1)}
 			>
 				<uistroke
 					Color={Darken(Mocha.Blue, 0.5)}
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-					Thickness={1}
+					Thickness={px(1)}
 					key={"level-outline"}
 				/>
 				<Frame
 					key={"level-bar"}
-					size={UDim2.fromScale(experience / max, 1)}
+					size={UDim2.fromScale(math.min(experience / max, 1), 1)}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0, 0.5)}
 					backgroundColor={Mocha.Blue}
@@ -131,10 +131,11 @@ export function Hotbar(): Element {
 			</Frame>
 			<Frame
 				key={"level-holder"}
-				size={UDim2.fromOffset(px(EXP_BAR_SIZE_Y + HOTBAR_PADDING), px(EXP_BAR_SIZE_Y + HOTBAR_PADDING))}
+				size={UDim2.fromOffset(px(EXP_BAR_SIZE_Y), px(EXP_BAR_SIZE_Y))}
 				anchorPoint={new Vector2(0.5, 1)}
-				position={new UDim2(0.5, 0, 1, -HOTBAR_PADDING / 2)}
+				position={UDim2.fromScale(0.5, 1)}
 				backgroundColor={Mocha.Teal}
+				zIndex={2}
 			>
 				<textlabel
 					key={"level-value"}
@@ -159,12 +160,6 @@ export function Hotbar(): Element {
 					/>
 					<uicorner CornerRadius={new UDim(0, px(3))} key={"level-corner"} />
 				</textlabel>
-				<uistroke
-					Color={Darken(Mocha.Blue, 0.5)}
-					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-					Thickness={1}
-					key={"level-outline"}
-				/>
 				<uicorner CornerRadius={new UDim(1, 0)} key={"level-corner"} />
 			</Frame>
 		</Group>

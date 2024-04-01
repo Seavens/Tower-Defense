@@ -106,8 +106,9 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 						: undefined;
 			elements.push(
 				<ItemSlot
-					order={order}
 					{...item}
+					affordable={true}
+					layoutOrder={order}
 					onClick={(): void => {
 						setSelected(slot);
 					}}
