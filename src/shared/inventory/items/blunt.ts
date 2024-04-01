@@ -17,7 +17,7 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 32,
-		range: 15,
+		range: 5,
 		cooldown: 4,
 
 		damageKind: MobDamage.Blunt,

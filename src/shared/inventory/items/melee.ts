@@ -17,7 +17,7 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 24,
-		range: 18,
+		range: 8,
 		cooldown: 3,
 
 		damageKind: MobDamage.Sharp,

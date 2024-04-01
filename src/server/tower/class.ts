@@ -84,11 +84,10 @@ export class Tower extends API {
 	}
 
 	public getTarget(): Option<Mob> {
-		const { cframe, unique } = this;
-		const { range: rangeMulti } = unique;
-		const defRange = itemDefinitions[this.id].kind.range;
-		const range = defRange * rangeMulti;
+		const { cframe } = this;
 		const position = cframe.Position;
+		const replicated = this.getReplicated();
+		const range = TowerUtil.getTotalRange(replicated);
 		const mobs = Mob.getMobsInRadius(position, range);
 		const targeting = TowerTargeting.First;
 		const module = targetingModules[targeting];

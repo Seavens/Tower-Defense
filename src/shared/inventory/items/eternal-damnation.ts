@@ -17,7 +17,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 		kind: ItemKind.Tower,
 
 		damage: 95,
-		range: 65,
+		range: 55,
 		cooldown: 0.5,
 
 		damageKind: MobDamage.Magic,

@@ -28,6 +28,11 @@ export class TestService implements OnStart, OnDataLoaded {
 		task.wait();
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 			const slot: Slot = `${index}`;
+			const item = items[index - 1];
+			warn(
+				TowerUtil.getOverallGrade(item.unique as ItemTowerUnique),
+				TowerUtil.getGrade(item.unique as ItemTowerUnique, "range"),
+			);
 			store.inventoryEquipSlot({ slot }, metadata);
 		}
 
