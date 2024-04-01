@@ -8,7 +8,7 @@ import { PlayerUtil } from "shared/player/utils";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { Tower } from "client/tower/class";
 import { selectInventoryData } from "client/inventory/selectors";
-import { selectPlacedTowers } from "shared/tower/selectors";
+import { selectPlacedTowers, selectSpecificTower } from "shared/tower/selectors";
 import { selectPlacementState } from "client/placement/selectors";
 import { selectSelectedTower } from "./selectors";
 import { store } from "client/state/store";
@@ -118,10 +118,25 @@ export class TowerController implements OnStart {
 		store.observe(
 			selectPlacedTowers,
 			(_: ReplicatedTower, key: string): defined => key,
-			(replicated: ReplicatedTower): (() => void) => {
+			(replicated: ReplicatedTower, key: string): (() => void) => {
 				const tower = new Tower(replicated);
+				const unsubscribe = store.subscribe(
+					selectSpecificTower(key),
+					(state: Option<ReplicatedTower>, previous: Option<ReplicatedTower>): void => {
+						if (state === undefined || previous === undefined) {
+							return;
+						}
+						const { upgrades } = state;
+						const last = previous.upgrades;
+						if (upgrades <= last) {
+							return;
+						}
+						tower?.upgradeTower();
+					},
+				);
 				return (): void => {
 					tower.destroy();
+					unsubscribe();
 				};
 			},
 		);

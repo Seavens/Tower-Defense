@@ -44,6 +44,9 @@ export namespace TowerUtil {
 			return math.huge;
 		}
 		const level = getLevelMultiplier(unique);
+		if (upgrades === 0) {
+			return base * (damage + level);
+		}
 		const [_, { damage: multiplier }] = definitions[upgrades - 1];
 		const total = base * (damage + multiplier + level);
 		return total;
@@ -58,6 +61,9 @@ export namespace TowerUtil {
 			return math.huge;
 		}
 		const level = getLevelMultiplier(unique);
+		if (upgrades === 0) {
+			return base * (range + level);
+		}
 		const [_, { range: multiplier }] = definitions[upgrades - 1];
 		const total = base * (range + multiplier + level);
 		return total;
@@ -72,6 +78,9 @@ export namespace TowerUtil {
 			return math.huge;
 		}
 		const level = getLevelMultiplier(unique);
+		if (upgrades === 0) {
+			return base * (cooldown + level);
+		}
 		const [_, { cooldown: multiplier }] = definitions[upgrades - 1];
 		const total = base * (cooldown + multiplier + level);
 		return total;

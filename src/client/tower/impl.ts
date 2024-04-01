@@ -22,7 +22,7 @@ export namespace TowerImpl {
 		if (cost > currency) {
 			return;
 		}
-		tower.upgradeTower();
+		Events.tower.upgrade(key);
 
 		// const def = itemDefinitions[tower.id];
 		// if (def === undefined || currency < def.kind.cost) {

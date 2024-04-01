@@ -19,7 +19,8 @@ export function formatUpgrade(replicated: ReplicatedTower): string {
 
 export function formatRange(replicated: ReplicatedTower): string {
 	const currentRange = TowerUtil.getTotalRange(replicated);
-	const nextRange = TowerUtil.getTotalRange({ ...replicated, upgrades: replicated.upgrades + 1 });
+	const { upgrades } = replicated;
+	const nextRange = TowerUtil.getTotalRange({ ...replicated, upgrades: upgrades + 1 });
 	let text = `${abbreviator.numberToString(currentRange)}`;
 	if (nextRange >= math.huge) {
 		return text;
