@@ -17,7 +17,7 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 53,
-		range: 37,
+		range: 20,
 		cooldown: 6,
 
 		damageKind: MobDamage.Projectile,

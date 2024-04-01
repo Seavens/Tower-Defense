@@ -15,8 +15,6 @@ export namespace TowerUtil {
 		const { id, upgrades } = tower;
 		const { kind } = itemDefinitions[id];
 		const { upgrades: definitions } = kind;
-		// We don't have to -1 since roblox-ts does it for us,
-		// thinking we're using 0 based indices.
 		const upgrade = definitions[upgrades];
 		if (upgrade === undefined) {
 			return math.huge;

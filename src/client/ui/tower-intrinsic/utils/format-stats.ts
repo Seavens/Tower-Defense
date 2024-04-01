@@ -13,7 +13,6 @@ export function formatUpgrade(replicated: ReplicatedTower): string {
 	if (upgrades >= definitions.size()) {
 		return `MAX`;
 	}
-	// roblox-ts assumes we're using 0 based indices, so we don't need a + 1.
 	const [index] = definitions[upgrades];
 	return `[${upgrades}] → [<font color="#${PALETTE.positive}">${index}</font>]`;
 }

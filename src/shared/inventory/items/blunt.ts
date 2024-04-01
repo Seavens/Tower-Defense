@@ -17,7 +17,7 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 32,
-		range: 5,
+		range: 8,
 		cooldown: 4,
 
 		damageKind: MobDamage.Blunt,
@@ -25,11 +25,11 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 		cost: 500,
 
 		upgrades: [
-			[1, { damage: 1.05, range: 1.04, cooldown: 0.98 }, 1000],
-			[2, { damage: 1.08, range: 1.06, cooldown: 0.96 }, 2000],
-			[3, { damage: 1.12, range: 1.08, cooldown: 0.94 }, 4000],
-			[4, { damage: 1.16, range: 1.1, cooldown: 0.92 }, 8000],
-			[5, { damage: 1.2, range: 1.12, cooldown: 0.9 }, 16000],
+			[1, { damage: 1.2, range: 1.2, cooldown: 0.98 }, 1000],
+			[2, { damage: 1.5, range: 1.5, cooldown: 0.94 }, 2000],
+			[3, { damage: 1.7, range: 1.8, cooldown: 0.87 }, 4000],
+			[4, { damage: 1.9, range: 2.2, cooldown: 0.83 }, 8000],
+			[5, { damage: 2.2, range: 2.6, cooldown: 0.76 }, 16000],
 		],
 
 		targeting: [

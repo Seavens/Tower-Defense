@@ -8,8 +8,8 @@ import { TowerUtil } from "shared/tower/utils";
 import { USE_MOCK_DATA } from "shared/core/core-constants";
 import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";
+import type { BroadcastMetadata, EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { Entity } from "server/player/class";
-import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { ItemTowerUnique } from "shared/inventory/types";
 import type { OnDataLoaded } from "../data/service";
 import type { OnStart } from "@flamework/core";
@@ -23,6 +23,7 @@ export class TestService implements OnStart, OnDataLoaded {
 		}
 		const { user, id } = entity;
 		const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
+		const broadcast: EntityMetadata & BroadcastMetadata = { user, broadcast: true };
 		const items = ItemUtil.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
 		store.inventoryAddItems({ items }, metadata);
 		task.wait();
@@ -36,6 +37,7 @@ export class TestService implements OnStart, OnDataLoaded {
 			store.inventoryEquipSlot({ slot }, metadata);
 		}
 
+		store.gameAddCurrency({ amount: 100000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
 	}

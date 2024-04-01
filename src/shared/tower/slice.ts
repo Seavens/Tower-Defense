@@ -33,7 +33,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 				uuid,
 				position,
 				owner: user,
-				upgrades: 1,
+				upgrades: 0,
 				index,
 				targeting,
 				key,

@@ -17,7 +17,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 84,
-		range: 20,
+		range: 16,
 		cooldown: 4,
 
 		damageKind: MobDamage.Magic,
