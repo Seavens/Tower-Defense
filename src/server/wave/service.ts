@@ -22,17 +22,37 @@ import type { OnStart } from "@flamework/core";
 
 @Service({})
 export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerAdded {
+	public getSpawnDuration(map: MapId, wave: number): number {
+		const { waves } = mapDefinitions[map];
+		const [definition] = waves[wave - 1];
+		let longest = 0;
+		// eslint-disable-next-line roblox-ts/no-array-pairs
+		for (const [_, { count, delay, wait }] of pairs(definition)) {
+			if (count <= 0) {
+				continue;
+			}
+			// Duration = Initial Delay + (Spawn Delay Per * Mob Count);
+			const duration = delay + wait * count;
+			if (duration <= longest) {
+				continue;
+			}
+			// All spawn happen asynchronously, we only need to wait
+			// as long as the longest duration for all mobs to be spawned
+			longest = duration;
+		}
+		return longest;
+	}
+
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = mapDefinitions[map];
-		const definition = waves[wave - 1];
-		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		const [definition] = waves[wave - 1];
 		setMobIndex(0);
-		let longestDuration = 0;
+		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		const longest = this.getSpawnDuration(map, wave);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
 				continue;
 			}
-			const duration = delay + count * wait;
 			task.delay(delay, (): void => {
 				let status = store.getState(selectGameStatus);
 				for (const _ of $range(1, count)) {
@@ -49,15 +69,12 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 					status = store.getState(selectGameStatus);
 				}
 			});
-			if (duration > longestDuration) {
-				longestDuration = duration;
-			}
 			const status = store.getState(selectGameStatus);
 			if (status === GameStatus.Ended) {
 				break;
 			}
 		}
-		task.delay(longestDuration, (): void => {
+		task.delay(longest, (): void => {
 			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
 		});
 	}
@@ -66,18 +83,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 	public onMobRemoved(): void {
 		const count = Mob.getMobCount();
 		const status = store.getState(selectGameStatus);
-		const wave = store.getState(selectCurrentWave);
-		const mapId = store.getState(selectCurrentMap);
-		if (mapId === undefined) {
-			return;
-		}
-		const { waves } = mapDefinitions[mapId];
-		const delay = waves[wave - 1]["mob_id:zombie"];
-		if (delay === undefined) {
-			return;
-		}
-		const loading = delay.delay;
-
 		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
 			return;
 		}
@@ -91,8 +96,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		// We'll change this later to start after
 		// either 30 seconds or whenever all players
 		// vote to start the wave early.
-		warn(loading);
-		task.wait(loading);
+		task.wait(5);
 		warn("Wave started.");
 		store.gameStartWave({}, { broadcast: true });
 	}

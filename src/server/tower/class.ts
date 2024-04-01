@@ -1,5 +1,6 @@
 import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
+import { GAME_TICK_RATE } from "shared/core/core-constants";
 import { Mob } from "../mob/class";
 import { TowerTargeting } from "shared/tower/types";
 import { TowerUtil } from "shared/tower/util";
@@ -30,7 +31,8 @@ export class Tower extends API {
 	static {
 		createSchedule({
 			name: "TowerTick",
-			tick: 1 / 20,
+			tick: GAME_TICK_RATE,
+			phase: 0,
 			onTick: (delta: number): void => {
 				const { towers } = this;
 				for (const [_, tower] of towers) {
@@ -99,7 +101,7 @@ export class Tower extends API {
 		const { kind } = itemDefinitions[id];
 		const replicated = this.getReplicated();
 		const damage = TowerUtil.getTotalDamage(replicated);
-		const cooldown = TowerUtil.getTotalDamage(replicated);
+		const cooldown = TowerUtil.getTotalCooldown(replicated);
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
@@ -112,6 +114,7 @@ export class Tower extends API {
 		}
 		this.lastTarget = currentTarget;
 		if (currentTarget === undefined) {
+			this.lastAttack = 0;
 			return;
 		}
 		const { damageKind } = kind;

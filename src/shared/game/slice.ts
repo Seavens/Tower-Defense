@@ -1,4 +1,5 @@
 import { GameStatus } from "./types";
+import { IS_STUDIO } from "shared/core/core-constants";
 import { createProducer } from "@rbxts/reflex";
 import { getWaveCount } from "shared/map/utility";
 import { original, produce } from "@rbxts/immut";
@@ -39,7 +40,7 @@ const gameState: GameState = {
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {
 	playerAdded: (state: GameState, payload: PlayerAdded, { user }: EntityMetadata): GameState => {
 		return produce(state, ({ currency }: Draft<GameState>): void => {
-			currency.set(user, 1000);
+			currency.set(user, IS_STUDIO ? 1e10 : 1000);
 		});
 	},
 	playerRemoved: (state: GameState, payload: PlayerRemoved, { user }: EntityMetadata): GameState => {

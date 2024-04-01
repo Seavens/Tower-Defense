@@ -15,7 +15,6 @@ import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
-import type { ServerState } from "server/state/store";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
@@ -75,11 +74,12 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		}
 		const { placed } = this;
 		for (const { uuid, key } of towers) {
-			const count = placed.get(uuid) ?? 0;
-			store.sellTower({ key }, { user, broadcast: true });
-			if (count <= 0) {
+			const count = placed.get(uuid);
+			if (count === undefined) {
 				continue;
 			}
+			const tower = Tower.getTower(key);
+			tower?.sellTower();
 			placed.set(uuid, count - 1);
 		}
 	}

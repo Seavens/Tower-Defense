@@ -199,7 +199,7 @@ export abstract class Mob {
 			this.nextWaypoint(target, final);
 			this.onResync?.();
 		}
-		this.onMovement();
+		this.onMovement(delta);
 	}
 
 	public destroy(): void {
@@ -216,7 +216,7 @@ export abstract class Mob {
 
 	public abstract onDied(tower?: string): void;
 	public abstract onDamage(damage: number, kind: MobDamage): void;
-	public abstract onMovement(): void;
+	public abstract onMovement(delta: number): void;
 	public abstract onWaypoint(index: number): void;
 	public abstract onStatus(status: MobStatus, duration: number, added: boolean): void;
 	public abstract onEnd(): void;

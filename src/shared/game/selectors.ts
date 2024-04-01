@@ -37,10 +37,6 @@ export function selectReward(state: SharedState): number {
 	}
 	const { waves } = mapDefinitions[map];
 	const wave = selectCurrentWave(state);
-	const definition = waves[wave - 1];
-	let reward = 0;
-	for (const [, { count, reward: value }] of pairs(definition)) {
-		reward += count * value;
-	}
+	const [_, reward] = waves[wave - 1];
 	return reward;
 }

@@ -4,7 +4,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Item } from "shared/inventory/types";
 
-export function truncateNumber(decimals: number, number: number): string {
+export function truncateNumber(number: number, decimals: number): string {
 	return string.format(`%.${decimals}f`, number);
 }
 
@@ -28,15 +28,15 @@ export function formatStats(item: Item, size: number, owner: string): string {
 	if (unique.kind === ItemKind.Tower && kind.kind === ItemKind.Tower) {
 		const { damage: baseDamage, range: baseRange, cooldown: baseCooldown, cost, damageKind, targeting } = kind;
 		const { damage, range, cooldown, level, locked } = unique;
-		return `${base}Level: ${truncateNumber(0, level)}\n\tCost: $${truncateNumber(0, cost)}\n\tDamage Kind: ${
+		return `${base}Level: ${truncateNumber(level, 0)}\n\tCost: $${truncateNumber(cost, 0)}\n\tDamage Kind: ${
 			MOB_DAMAGE_DISPLAY[damageKind]
-		}\n\tDamage: ${truncateNumber(2, baseDamage * damage)}\n\tRange: ${truncateNumber(
+		}\n\tDamage: ${truncateNumber(baseDamage * damage, 2)}\n\tRange: ${truncateNumber(
 			2,
 			baseRange * range,
-		)}\n\tCooldown: ${truncateNumber(2, baseCooldown * cooldown)}\n\tLocked: ${locked}\n\tOriginal Owner: ${owner}`;
+		)}\n\tCooldown: ${truncateNumber(baseCooldown * cooldown, 2)}\n\tLocked: ${locked}\n\tOriginal Owner: ${owner}`;
 	} else if (unique.kind === ItemKind.Relic) {
 		const { multiplier } = unique;
-		return `${base}Multiplier: ${truncateNumber(2, multiplier)}`;
+		return `${base}Multiplier: ${truncateNumber(multiplier, 2)}`;
 	} else {
 		return "";
 	}

@@ -1,8 +1,9 @@
 import { Mob as API } from "shared/mobs/api";
 import { Events } from "server/network";
-import { MOB_POSITION_UPDATE } from "shared/core/core-constants";
-import { RunService, Workspace } from "@rbxts/services";
+import { GAME_TICK_RATE } from "shared/core/core-constants";
 import { Signal } from "@rbxts/beacon";
+import { Workspace } from "@rbxts/services";
+import { createSchedule } from "shared/utils/create-schedule";
 import { mobDefinitions } from "shared/mobs/mobs";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
@@ -43,13 +44,18 @@ export class Mob extends API {
 	protected movement = os.clock();
 
 	static {
-		RunService.Heartbeat.Connect((delta: number): void => {
-			const { mobs } = this;
-			for (const [_, mob] of mobs) {
-				reuseThread((): void => {
-					mob.onTick(delta);
-				});
-			}
+		createSchedule({
+			name: "MobTick",
+			tick: GAME_TICK_RATE,
+			phase: 0.33 * GAME_TICK_RATE,
+			onTick: (delta: number): void => {
+				const { mobs } = this;
+				for (const [_, mob] of mobs) {
+					reuseThread((): void => {
+						mob.onTick(delta);
+					});
+				}
+			},
 		});
 	}
 
@@ -126,7 +132,7 @@ export class Mob extends API {
 		const { node, movement } = this;
 		const now = os.clock();
 		// Optimization, octree position changes can potentially be expensive.
-		if (now - movement < MOB_POSITION_UPDATE) {
+		if (now - movement < GAME_TICK_RATE) {
 			return;
 		}
 		this.movement = now;

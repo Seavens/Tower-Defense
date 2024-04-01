@@ -23,7 +23,8 @@ export function getMapWaypoints(): Array<BasePart> {
 
 export function getMobWave(map: MapId, wave: number): Option<WaveDefinition> {
 	const { waves } = mapDefinitions[map];
-	return waves[wave];
+	const definition = waves[wave];
+	return definition[0];
 }
 
 export function getWaveCount(map: MapId): number {

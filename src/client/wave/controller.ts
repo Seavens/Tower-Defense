@@ -11,11 +11,33 @@ import type { OnStart } from "@flamework/core";
 
 @Controller({})
 export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
+	public getSpawnDuration(map: MapId, wave: number): number {
+		const { waves } = mapDefinitions[map];
+		const [definition] = waves[wave - 1];
+		let longest = 0;
+		// eslint-disable-next-line roblox-ts/no-array-pairs
+		for (const [_, { count, delay, wait }] of pairs(definition)) {
+			if (count <= 0) {
+				continue;
+			}
+			// Duration = Initial Delay + (Spawn Delay Per * Mob Count);
+			const duration = delay + wait * count;
+			if (duration <= longest) {
+				continue;
+			}
+			// All spawn happen asynchronously, we only need to wait
+			// as long as the longest duration for all mobs to be spawned
+			longest = duration;
+		}
+		return longest;
+	}
+
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = mapDefinitions[map];
-		const definition = waves[wave - 1];
-		Mob.removeAllMobs();
+		const [definition] = waves[wave - 1];
 		setMobIndex(0);
+		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		const longest = this.getSpawnDuration(map, wave);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
 				continue;
@@ -29,19 +51,21 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 					const index = getMobIndex();
 					const mob = new Mob(index, id);
 					mob.start();
-					task.wait(wait);
 					if (wait < 0) {
 						continue;
 					}
+					task.wait(wait);
 					status = store.getState(selectGameStatus);
 				}
 			});
 			const status = store.getState(selectGameStatus);
 			if (status === GameStatus.Ended) {
-				Mob.removeAllMobs();
 				break;
 			}
 		}
+		task.delay(longest, (): void => {
+			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
+		});
 	}
 
 	public onMobEnded(mob: Mob): void {

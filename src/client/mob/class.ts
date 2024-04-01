@@ -1,6 +1,8 @@
 import { Mob as API } from "shared/mobs/api";
+import { GAME_TICK_RATE } from "shared/core/core-constants";
 import { RunService, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
+import { createSchedule } from "shared/utils/create-schedule";
 import { getMobModel } from "shared/mobs/utility";
 import { reuseThread } from "shared/utils/reuse-thread";
 import type { Bin } from "@rbxts/bin";
@@ -32,13 +34,18 @@ export class Mob extends API {
 	protected readonly instance: Model;
 
 	static {
-		RunService.Heartbeat.Connect((delta: number): void => {
-			const { mobs } = this;
-			for (const [_, mob] of mobs) {
-				reuseThread((): void => {
-					mob.onTick(delta);
-				});
-			}
+		createSchedule({
+			name: "MobTick",
+			tick: GAME_TICK_RATE,
+			phase: 0.33 * GAME_TICK_RATE,
+			onTick: (delta: number): void => {
+				const { mobs } = this;
+				for (const [_, mob] of mobs) {
+					reuseThread((): void => {
+						mob.onTick(delta);
+					});
+				}
+			},
 		});
 	}
 
@@ -85,7 +92,7 @@ export class Mob extends API {
 		//
 	}
 
-	public onMovement(): void {
+	public onMovement(delta: number): void {
 		const { instance } = this;
 		const cframe = this.getCFrame();
 		instance.PivotTo(cframe);

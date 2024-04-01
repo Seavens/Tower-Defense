@@ -34,7 +34,7 @@ export namespace TowerUtil {
 		const { damage } = unique;
 		const { kind } = itemDefinitions[id];
 		const { upgrades: definitions, damage: base } = kind;
-		if (upgrades >= definitions.size()) {
+		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
 		const [_, { damage: multiplier }] = definitions[upgrades - 1];
@@ -43,15 +43,15 @@ export namespace TowerUtil {
 	}
 
 	export function getTotalRange(tower: ReplicatedTower): number {
-		const { id, upgrades, unique } = tower;
+		const { id, unique, upgrades } = tower;
 		const { range } = unique;
 		const { kind } = itemDefinitions[id];
 		const { upgrades: definitions, range: base } = kind;
-		if (upgrades >= definitions.size()) {
+		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
 		const [_, { range: multiplier }] = definitions[upgrades - 1];
-		const total = base * range * multiplier;
+		const total = range * base * multiplier;
 		return total;
 	}
 
@@ -60,7 +60,7 @@ export namespace TowerUtil {
 		const { cooldown } = unique;
 		const { kind } = itemDefinitions[id];
 		const { upgrades: definitions, cooldown: base } = kind;
-		if (upgrades >= definitions.size()) {
+		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
 		const [_, { cooldown: multiplier }] = definitions[upgrades - 1];

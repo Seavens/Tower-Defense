@@ -74,9 +74,7 @@ export function Hotbar(): Element {
 				textColor={Macchiato.Base}
 				textStrokeColor={PALETTE.accent}
 				textStrokeTransparency={0.25}
-				text={
-					currency === undefined ? `Undefined` : `$${abbreviator.stringToNumber(truncateNumber(0, currency))}`
-				}
+				text={currency === undefined ? `Undefined` : `$${abbreviator.numberToString(currency)}`}
 			/>
 			<Frame
 				key={"item-group"}
@@ -143,7 +141,7 @@ export function Hotbar(): Element {
 					Position={UDim2.fromScale(0.5, 0.5)}
 					BackgroundColor3={Mocha.Teal}
 					TextColor3={Latte.Base}
-					Text={truncateNumber(0, level)}
+					Text={truncateNumber(level, 0)}
 					TextSize={px(16)}
 					FontFace={FONTS.inter.bold}
 					AutomaticSize={Enum.AutomaticSize.X}

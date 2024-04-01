@@ -91,11 +91,11 @@ export class Tower extends API {
 		return tower.targeting;
 	}
 
-	public getRange(offset = 0): number {
+	public getRange(origin = this.getGround()): number {
 		const replicated = this.getReplicated();
 		const range = TowerUtil.getTotalRange(replicated);
 		const ground = this.getGround();
-		const displacement = ground - offset;
+		const displacement = origin - ground;
 		const chord = 2 * math.sqrt(range ** 2 - displacement ** 2);
 		return chord;
 	}
@@ -107,10 +107,9 @@ export class Tower extends API {
 			sphere.Size = Vector3.one.mul(size);
 		}
 		if (circle !== undefined) {
-			const ground = this.getGround();
 			const cframe = instance.GetPivot();
 			const position = cframe.Position;
-			const offset = ground - position.Y;
+			const offset = position.Y;
 			const size = this.getRange(offset);
 			circle.Size = new Vector3(0.1, size, size);
 		}
@@ -120,15 +119,15 @@ export class Tower extends API {
 	public enableVisuals(): void {
 		const { instance } = this;
 		const offset = instance.GetExtentsSize().div(2);
-		const cframe = instance.GetPivot();
-		const position = cframe.PointToWorldSpace(offset).add(Vector3.yAxis.mul(offset.Y * -2));
+		const pivot = instance.GetPivot();
+		const relative = new CFrame(pivot.PointToWorldSpace(offset).add(Vector3.yAxis.mul(offset.Y * -2)));
 
 		const sphere = new Instance("Part");
 		sphere.Shape = Enum.PartType.Ball;
 		sphere.Size = Vector3.one.mul(this.getRange());
 		sphere.CastShadow = false;
 		sphere.Anchored = true;
-		sphere.Position = position;
+		sphere.CFrame = relative;
 		sphere.Material = Enum.Material.ForceField;
 		sphere.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
 		sphere.Transparency = 0.5;
@@ -137,13 +136,16 @@ export class Tower extends API {
 		this.sphere = sphere;
 
 		const ground = this.getGround();
-		const size = this.getRange(ground - cframe.Position.Y);
+		const position = pivot.Position;
+		const size = this.getRange(position.Y);
 		const circle = new Instance("Part");
 		circle.Shape = Enum.PartType.Cylinder;
 		circle.Size = new Vector3(0.1, size, size);
 		circle.CastShadow = false;
 		circle.Anchored = true;
-		circle.CFrame = new CFrame(position).mul(CFrame.Angles(0, math.rad(90), math.rad(90)));
+		circle.CFrame = new CFrame(relative.Position.X, ground, relative.Position.Z)
+			.mul(new CFrame(0, 0.05, 0))
+			.mul(CFrame.Angles(0, 0, math.rad(90)));
 		circle.Material = Enum.Material.SmoothPlastic;
 		circle.Color = new Color3(PALETTE.green.R, PALETTE.green.G, PALETTE.green.B);
 		circle.Transparency = 0.75;
