@@ -13,14 +13,13 @@ import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAXIMUM_TOWER_LEVEL } from "shared/tower/constants";
+import { PlayerUtil } from "shared/player/utils";
 import { Players } from "@rbxts/services";
 import { TextField } from "../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
-import { getUser } from "shared/player/utility";
 import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { map, useAsync } from "@rbxts/pretty-react-hooks";
-import { selectCurrency } from "shared/game/selectors";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { useButtonAnimation } from "../hooks/use-button-animation";
@@ -45,7 +44,7 @@ const TEXTCOLOR = Latte.Base;
 const TRANSPARENCY = 0;
 
 const player = Players.LocalPlayer;
-const user = getUser(player);
+const user = PlayerUtil.getUser(player);
 
 export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const { stored } = useSelector(selectInventoryData);

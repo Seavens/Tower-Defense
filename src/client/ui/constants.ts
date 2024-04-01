@@ -24,13 +24,15 @@ export const SPRINGS = {
 } satisfies { [config: string]: SpringOptions };
 
 export const PALETTE = {
-	error: Color3.fromRGB(255, 0, 0),
-	accent: Color3.fromRGB(0, 255, 255),
+	error: Color3.fromRGB(247, 87, 87),
+	accent: Color3.fromRGB(255, 255, 255),
 
+	gray: Color3.fromRGB(100, 100, 100),
 	red: Color3.fromRGB(255, 0, 0),
 	green: Color3.fromRGB(0, 158, 0),
 	blue: Color3.fromRGB(0, 0, 255),
 
+	lightWhite: Color3.fromRGB(199, 199, 199),
 	lightBlue: Color3.fromRGB(51, 153, 255),
 	lightGreen: Color3.fromRGB(102, 255, 102),
 	lightRed: Color3.fromRGB(230, 51, 51),

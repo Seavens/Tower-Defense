@@ -5,7 +5,7 @@ import { Events } from "client/network";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
-import { TowerUtil } from "shared/tower/util";
+import { TowerUtil } from "shared/tower/utils";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";

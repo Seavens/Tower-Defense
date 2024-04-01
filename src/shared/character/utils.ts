@@ -29,41 +29,43 @@ if (animator === undefined) {
 	);
 }
 
-export function getCharacterRig(user?: string): Model {
-	if (user === undefined) {
-		setCollision(base, Collision.Character, true);
-		return base;
+export namespace CharacterUtil {
+	export function getCharacterRig(user?: string): Model {
+		if (user === undefined) {
+			setCollision(base, Collision.Character, true);
+			return base;
+		}
+		const rig = characters.FindFirstChild(user);
+		if (rig === undefined || !rig.IsA("Model")) {
+			setCollision(base, Collision.Character, true);
+			return base;
+		}
+		setCollision(rig, Collision.Character, true);
+		return rig;
 	}
-	const rig = characters.FindFirstChild(user);
-	if (rig === undefined || !rig.IsA("Model")) {
-		setCollision(base, Collision.Character, true);
-		return base;
-	}
-	setCollision(rig, Collision.Character, true);
-	return rig;
-}
 
-export function getSpawnLocation(): CFrame {
-	const spawns = CollectionService.GetTagged(ComponentTag.SpawnLocation);
-	const max = spawns.size();
-	if (max <= 0) {
-		warn(`Expected >=1 spawn location(s), got 0! Defaulting to "CFrame.identity" as the spawn location!`);
-		return CFrame.identity;
-	}
-	const index = math.random(1, spawns.size());
-	const instance = spawns[index - 1];
-	if (instance === undefined || !instance.IsA("BasePart")) {
-		warn(
-			`${instance.GetFullName()} is not a BasePart! Instances tagged with ${
-				ComponentTag.SpawnLocation
-			} are expected to be of class BasePart! Defaulting to "CFrame.identity" as the spawn location!`,
+	export function getSpawnLocation(): CFrame {
+		const spawns = CollectionService.GetTagged(ComponentTag.SpawnLocation);
+		const max = spawns.size();
+		if (max <= 0) {
+			warn(`Expected >=1 spawn location(s), got 0! Defaulting to "CFrame.identity" as the spawn location!`);
+			return CFrame.identity;
+		}
+		const index = math.random(1, spawns.size());
+		const instance = spawns[index - 1];
+		if (instance === undefined || !instance.IsA("BasePart")) {
+			warn(
+				`${instance.GetFullName()} is not a BasePart! Instances tagged with ${
+					ComponentTag.SpawnLocation
+				} are expected to be of class BasePart! Defaulting to "CFrame.identity" as the spawn location!`,
+			);
+			return CFrame.identity;
+		}
+		const size = instance.Size;
+		const random = new Vector3(math.random(-size.X / 2, size.X / 2), 0, math.random(-size.Z / 2, size.Z / 2)).mul(
+			math.random(),
 		);
-		return CFrame.identity;
+		const cframe = instance.GetPivot();
+		return cframe.add(random);
 	}
-	const size = instance.Size;
-	const random = new Vector3(math.random(-size.X / 2, size.X / 2), 0, math.random(-size.Z / 2, size.Z / 2)).mul(
-		math.random(),
-	);
-	const cframe = instance.GetPivot();
-	return cframe.add(random);
 }

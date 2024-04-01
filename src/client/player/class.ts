@@ -1,9 +1,9 @@
 import { Entity as API } from "shared/player/api";
 import { Bin } from "@rbxts/bin";
 import { Character } from "client/character/class";
+import { PlayerUtil } from "shared/player/utils";
 import { Players, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
-import { getUser } from "shared/player/utility";
 
 const camera = Workspace.CurrentCamera;
 const localPlayer = Players.LocalPlayer;
@@ -71,7 +71,7 @@ export class Entity extends API<Character> {
 
 	public isLocal(): boolean {
 		const { user } = this;
-		const localUser = getUser(localPlayer);
+		const localUser = PlayerUtil.getUser(localPlayer);
 		return user === localUser;
 	}
 

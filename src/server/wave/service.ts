@@ -1,9 +1,9 @@
 import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "server/mob/class";
+import { MobUtil } from "shared/mobs/utils";
 import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
-import { getMobIndex, setMobIndex } from "shared/mobs/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mobs/mobs";
 import {
@@ -46,7 +46,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
-		setMobIndex(0);
+		MobUtil.setMobIndex(0);
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		const longest = this.getSpawnDuration(map, wave);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
@@ -59,7 +59,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 					if (status === GameStatus.Ended) {
 						break;
 					}
-					const index = getMobIndex();
+					const index = MobUtil.getMobIndex();
 					const mob = new Mob(index, id);
 					mob.start();
 					if (wait < 0) {
@@ -121,7 +121,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 			return;
 		}
 		const { player } = entity;
-		Events.mob.indexReset(player, getMobIndex(false));
+		Events.mob.indexReset(player, MobUtil.getMobIndex(false));
 	}
 
 	public onStart(): void {

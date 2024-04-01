@@ -1,8 +1,8 @@
 import { Events } from "server/network";
-import { ItemKind, isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
+import { PlayerUtil } from "shared/player/utils";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
-import { getUser } from "shared/player/utility";
+import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
 import { isUUID } from "shared/guards";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency, selectCurrentMap } from "shared/game/selectors";
@@ -22,7 +22,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 
 	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
 		const { placed } = this;
-		const user = getUser(player);
+		const user = PlayerUtil.getUser(player);
 		const currency = store.getState(selectCurrency(user));
 		const { equipped } = store.getState(selectInventoryData(user));
 		let result: Option<Item>;
@@ -96,7 +96,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			this.onPlaceTower(player, uuid, position);
 		});
 		Events.tower.targeting.connect((player: Player, key: string, targeting: TowerTargeting): void => {
-			const user = getUser(player);
+			const user = PlayerUtil.getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;
@@ -108,7 +108,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			tower.setTargeting(targeting);
 		});
 		Events.tower.upgrade.connect((player: Player, key: string): void => {
-			const user = getUser(player);
+			const user = PlayerUtil.getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;
@@ -121,7 +121,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {
 			const { placed: placedTowers } = this;
-			const user = getUser(player);
+			const user = PlayerUtil.getUser(player);
 			const tower = Tower.getTower(key);
 			if (tower === undefined) {
 				return;

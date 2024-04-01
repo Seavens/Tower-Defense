@@ -3,7 +3,7 @@ import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/core-constants";
 import { Mob } from "../mob/class";
 import { TowerTargeting } from "shared/tower/types";
-import { TowerUtil } from "shared/tower/util";
+import { TowerUtil } from "shared/tower/utils";
 import { createSchedule } from "shared/utils/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
 import { reuseThread } from "shared/utils/reuse-thread";

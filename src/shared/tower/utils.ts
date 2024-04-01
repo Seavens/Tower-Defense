@@ -1,6 +1,14 @@
-import { SELL_RATIO } from "./constants";
+import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "shared/inventory/constants";
+import { Modding } from "@flamework/core";
+import { SELL_RATIO, TOWER_GRADE_RANGES } from "./constants";
+import { TowerGrade } from "./types";
 import { itemDefinitions } from "shared/inventory/items";
+import type { ItemTowerUnique } from "shared/inventory/types";
 import type { ReplicatedTower } from "./types";
+
+type TowerGradedStats = "damage" | "range" | "cooldown";
+
+const gradedStats = Modding.inspect<Array<TowerGradedStats>>();
 
 export namespace TowerUtil {
 	export function getUpgradeCost(tower: ReplicatedTower): number {
@@ -66,5 +74,40 @@ export namespace TowerUtil {
 		const [_, { cooldown: multiplier }] = definitions[upgrades - 1];
 		const total = base * cooldown * multiplier;
 		return total;
+	}
+
+	export function getGrade(unique: ItemTowerUnique, stat: TowerGradedStats): TowerGrade {
+		const value = unique[stat];
+		const max = ITEM_RNG_MAX - ITEM_RNG_MIN;
+		const alpha = (value - ITEM_RNG_MIN) / max;
+		let result = TowerGrade.D;
+		for (const [grade, [max, min]] of pairs(TOWER_GRADE_RANGES)) {
+			if (alpha <= min || alpha > max) {
+				continue;
+			}
+			result = grade;
+			break;
+		}
+		return result;
+	}
+
+	export function getOverallGrade(unique: ItemTowerUnique): TowerGrade {
+		let total = 0;
+		for (const stat of gradedStats) {
+			const value = unique[stat];
+			const max = ITEM_RNG_MAX - ITEM_RNG_MIN;
+			const alpha = (value - ITEM_RNG_MIN) / max;
+			total += alpha;
+		}
+		total /= 3;
+		let result = TowerGrade.D;
+		for (const [grade, [max, min]] of pairs(TOWER_GRADE_RANGES)) {
+			if (total <= min || total > max) {
+				continue;
+			}
+			result = grade;
+			break;
+		}
+		return result;
 	}
 }

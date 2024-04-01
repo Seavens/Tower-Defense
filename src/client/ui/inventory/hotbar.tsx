@@ -1,14 +1,14 @@
-import { Darken, Palette } from "@rbxts/colour-utils";
+import { Darken } from "@rbxts/colour-utils";
 import { EXP_BAR_SIZE_Y, HOTBAR_PADDING, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "./constants";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Frame, Group, Text } from "../components";
 import { ItemSlot } from "./item-slot";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
+import { LevelUtil } from "shared/profile/utils";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
+import { PlayerUtil } from "shared/player/utils";
 import { Players } from "@rbxts/services";
-import { getMaxExp } from "shared/profile/utility";
 import { getTowerCost } from "./utils/get-tower-cost";
-import { getUser } from "shared/player/utility";
 import { selectCurrency, selectGameData } from "shared/game/selectors";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
@@ -21,7 +21,7 @@ import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 
 const player = Players.LocalPlayer;
-const user = getUser(player);
+const user = PlayerUtil.getUser(player);
 
 export function Hotbar(): Element {
 	const abbreviator = useAbbreviator();
@@ -33,7 +33,7 @@ export function Hotbar(): Element {
 	const currency = useSelector(selectCurrency(user));
 
 	const max = useMemo((): number => {
-		return getMaxExp(level);
+		return LevelUtil.getMaxExp(level);
 	}, [level]);
 
 	const elements = useMemo(() => {

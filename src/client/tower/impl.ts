@@ -1,14 +1,14 @@
 import { Events } from "client/network";
+import { PlayerUtil } from "shared/player/utils";
 import { Players } from "@rbxts/services";
 import { Tower } from "./class";
-import { TowerUtil } from "shared/tower/util";
-import { getUser } from "shared/player/utility";
+import { TowerUtil } from "shared/tower/utils";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { store } from "client/state/store";
 
 const player = Players.LocalPlayer;
-const user = getUser(player);
+const user = PlayerUtil.getUser(player);
 
 export namespace TowerImpl {
 	export function upgradeTower(key: string): void {

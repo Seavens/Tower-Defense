@@ -1,4 +1,4 @@
-import { calculateIncrease } from "shared/profile/utility";
+import { LevelUtil } from "shared/profile/utils";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
@@ -31,7 +31,7 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			if (player === undefined) {
 				return;
 			}
-			const [level, leftover] = calculateIncrease(player.data.level, experience);
+			const [level, leftover] = LevelUtil.calculateIncrease(player.data.level, experience);
 			player.data.level = level;
 			player.data.experience = leftover;
 		});

@@ -1,7 +1,7 @@
 import { GameStatus } from "./types";
 import { IS_STUDIO } from "shared/core/core-constants";
+import { MapUtil } from "shared/map/utils";
 import { createProducer } from "@rbxts/reflex";
-import { getWaveCount } from "shared/map/utility";
 import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata } from "shared/replication/metadata";
@@ -69,7 +69,7 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 			if (map === undefined || status !== GameStatus.Waiting) {
 				return original(draft);
 			}
-			const waveCount = getWaveCount(map);
+			const waveCount = MapUtil.getWaveCount(map);
 			const nextWave = math.clamp(wave + 1, 1, waveCount);
 			draft.status = GameStatus.Ongoing;
 			draft.wave = nextWave;

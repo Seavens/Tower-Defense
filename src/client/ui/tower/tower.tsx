@@ -5,7 +5,7 @@ import { Latte, Mocha } from "@rbxts/catppuccin";
 import { TOWER_SIZE } from "./constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerImpl } from "client/tower/impl";
-import { TowerUtil } from "shared/tower/util";
+import { TowerUtil } from "shared/tower/utils";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "./utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";

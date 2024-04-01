@@ -1,12 +1,12 @@
-import { CollectionService, ContextActionService, Players, UserInputService, Workspace } from "@rbxts/services";
+import { CollectionService, Players, UserInputService, Workspace } from "@rbxts/services";
 import { ComponentTag } from "shared/components/types";
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "client/mob/class";
 import { PlacementController } from "client/placement/controller";
+import { PlayerUtil } from "shared/player/utils";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { Tower } from "client/tower/class";
-import { getUser } from "shared/player/utility";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectPlacedTowers } from "shared/tower/selectors";
 import { selectPlacementState } from "client/placement/selectors";
@@ -81,7 +81,7 @@ export class TowerController implements OnStart {
 		}
 		// This may be faster than a state selection?
 		const tower = Tower.getTower(key);
-		if (tower === undefined || tower.owner !== getUser(player)) {
+		if (tower === undefined || tower.owner !== PlayerUtil.getUser(player)) {
 			this.deselectTower();
 			return;
 		}

@@ -1,7 +1,7 @@
 import { Controller } from "@flamework/core";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "client/mob/class";
-import { getMobIndex, setMobIndex } from "shared/mobs/utility";
+import { MobUtil } from "shared/mobs/utils";
 import { mapDefinitions } from "shared/map/definitions";
 import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "client/state/store";
@@ -35,7 +35,7 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
-		setMobIndex(0);
+		MobUtil.setMobIndex(0);
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		const longest = this.getSpawnDuration(map, wave);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
@@ -48,7 +48,7 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 					if (status === GameStatus.Ended) {
 						break;
 					}
-					const index = getMobIndex();
+					const index = MobUtil.getMobIndex();
 					const mob = new Mob(index, id);
 					mob.start();
 					if (wait < 0) {

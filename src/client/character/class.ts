@@ -1,9 +1,9 @@
 import { Character as API } from "shared/character/api";
 import { Animator } from "shared/character/animator";
 import { CHARACTER_ANIMATIONS } from "shared/character/constants";
+import { PlayerUtil } from "shared/player/utils";
 import { Players } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
-import { getUser } from "shared/player/utility";
 import { isCharacterAnimation } from "shared/character/types";
 import type { Bin } from "@rbxts/bin";
 import type { CharacterAnimation } from "shared/character/types";
@@ -47,7 +47,7 @@ export class Character extends API {
 
 	public static localCharacter(): Option<Character> {
 		const localPlayer = Players.LocalPlayer;
-		const user = getUser(localPlayer);
+		const user = PlayerUtil.getUser(localPlayer);
 		return this.getCharacter(user);
 	}
 

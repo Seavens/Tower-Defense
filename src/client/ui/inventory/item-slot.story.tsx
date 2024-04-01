@@ -1,14 +1,14 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
-import { ItemUtility } from "shared/inventory/utils";
+import { ItemUtil } from "shared/inventory/utils";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
 
-const item = ItemUtility.createItem(1, ItemKind.Tower);
+const item = ItemUtil.createItem(1, ItemKind.Tower);
 
 export = CreateReactStory(
 	{

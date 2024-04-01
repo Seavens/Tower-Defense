@@ -1,7 +1,7 @@
 import { Events } from "server/network";
 import { IS_EDIT } from "shared/core/core-constants";
+import { PlayerUtil } from "shared/player/utils";
 import { createBroadcaster } from "@rbxts/reflex";
-import { getUser } from "shared/player/utility";
 import { isBroadcastMetadata, isEntityMetadata, isReplicationMetadata } from "shared/replication/metadata";
 import { selectState } from "./selector";
 import type { BroadcastAction, ProducerMiddleware } from "@rbxts/reflex";
@@ -50,7 +50,7 @@ function createFilter(filtered: Set<string>): (player: Player, actions: Broadcas
 		if (broadcast !== undefined && broadcast) {
 			return true;
 		}
-		if (user === getUser(player)) {
+		if (user === PlayerUtil.getUser(player)) {
 			return true;
 		}
 		return false;
@@ -70,7 +70,7 @@ export function broadcastMiddleware(slices: SharedSlices & ServerSlices, filtere
 			return allowed ? action : undefined;
 		},
 		beforeHydrate: (player: Player, state: ServerState): Partial<ServerState> => {
-			const user = getUser(player);
+			const user = PlayerUtil.getUser(player);
 			const selector = selectState(user);
 			const selected = selector(state);
 			const hydration: Writable<Partial<ServerState>> = {

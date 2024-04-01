@@ -1,9 +1,8 @@
+import { DATA_TEMPLATE } from "shared/data/constants";
+import { LevelUtil } from "shared/profile/utils";
 import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
-
-import { DATA_TEMPLATE } from "shared/data/constants";
-import { calculateIncrease } from "shared/profile/utility";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/replication/metadata";
@@ -27,7 +26,7 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 	profileAddExperience: (state: ProfileState, payload: ProfileAddExperience): ProfileState => {
 		const { experience } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			const [level, leftover] = calculateIncrease(draft.data.level, experience);
+			const [level, leftover] = LevelUtil.calculateIncrease(draft.data.level, experience);
 			draft.data.level = level;
 			draft.data.experience = leftover;
 		});

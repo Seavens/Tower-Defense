@@ -1,9 +1,9 @@
 import { Controller } from "@flamework/core";
 import { Entity } from "./class";
 import { Events, Functions } from "client/network";
+import { PlayerUtil } from "shared/player/utils";
 import { Players, ReplicatedStorage, StarterGui } from "@rbxts/services";
 import { createListener } from "shared/utils/create-listener";
-import { getUser } from "shared/player/utility";
 import { reuseThread } from "shared/utils/reuse-thread";
 import type { OnStart } from "@flamework/core";
 
@@ -59,7 +59,7 @@ export class PlayerController implements OnStart {
 	}
 
 	public onPlayerRemoved(player: Player): void {
-		const user = getUser(player);
+		const user = PlayerUtil.getUser(player);
 		const entity = Entity.getEntity(user);
 		if (entity === undefined) {
 			return;

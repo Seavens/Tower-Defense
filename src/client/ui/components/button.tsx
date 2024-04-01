@@ -37,6 +37,7 @@ export function Button(props: ButtonProps): Element {
 			BackgroundTransparency={props.backgroundTransparency}
 			ClipsDescendants={props.clipsDescendants}
 			Visible={props.visible}
+			Rotation={props.rotation}
 			ZIndex={props.zIndex}
 			LayoutOrder={props.layoutOrder}
 			BorderSizePixel={0}

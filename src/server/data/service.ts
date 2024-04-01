@@ -1,10 +1,10 @@
 import { COLLECTION_KEY, COLLECTION_NAME } from "./constants";
 import { DATA_TEMPLATE } from "shared/data/constants";
+import { DataUtil } from "./utils";
 import { Events } from "server/network";
-import { IS_EDIT, USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/core-constants";
 import { Service } from "@flamework/core";
 import { Signal } from "@rbxts/beacon";
-import { attemptDataWipe } from "./utils";
+import { USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/core-constants";
 import { createCollection } from "@rbxts/lapis";
 import { createListener } from "shared/utils/create-listener";
 import { isData } from "shared/data/types";
@@ -42,7 +42,7 @@ export class DataService implements OnPlayerAdded, OnPlayerRemoving {
 	public async onPlayerAdded(entity: Entity): Promise<void> {
 		if (USE_MOCK_DATA && WIPE_MOCK_DATA && entity.isPlayer()) {
 			const { player } = entity;
-			await attemptDataWipe(player);
+			await DataUtil.attemptDataWipe(player);
 		}
 		const { onDataLoaded, collection, documents, loaded } = DataService;
 		const { user, id } = entity;

@@ -49,6 +49,7 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 			size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
+			cornerRadius={new UDim(0, px(5))}
 			backgroundColor={color}
 			backgroundTransparency={0.65}
 			clipsDescendants={true}
@@ -67,6 +68,7 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 					size={UDim2.fromScale(1, 1)}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					position={UDim2.fromScale(0.5, 0.5)}
+					cornerRadius={new UDim(0, px(5))}
 					image={"rbxassetid://4772171909"}
 					key={"locked-image"}
 					backgroundColor={new Color3(0.27, 0.27, 0.27)}
@@ -98,7 +100,6 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 						}}
 						key={"slot-image"}
 					/>
-					<uicorner CornerRadius={new UDim(0, px(5))} key={"image-corner"} />
 				</Group>
 			</Group>
 			<Group
@@ -120,6 +121,7 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 						size={UDim2.fromScale(1, 0.5)}
 						anchorPoint={Vector2.one}
 						position={UDim2.fromScale(1, 0.25)}
+						cornerRadius={new UDim(0, px(5))}
 						backgroundColor={color}
 						key={"lower-color-top"}
 						zIndex={1}
@@ -144,7 +146,6 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 							key={"text-stroke"}
 						/>
 					</textlabel>
-					<uicorner CornerRadius={new UDim(0, px(5))} key={"lower-corner"} />
 				</Frame>
 			</Group>
 			<uistroke
@@ -154,7 +155,6 @@ export function ItemSlot({ affordable, id, selected, order, onClick }: ItemSlotP
 				Thickness={1}
 				key={"slot-outline"}
 			/>
-			<uicorner CornerRadius={new UDim(0, px(5))} key={"slot-corner"} />
 		</Frame>
 	);
 }

@@ -1,9 +1,9 @@
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "./class";
+import { MobUtil } from "shared/mobs/utils";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utils/create-listener";
-import { setMobIndex } from "shared/mobs/utility";
 import type { MobDamage, MobStatus } from "shared/mobs/types";
 import type { OnStart } from "@flamework/core";
 
@@ -48,7 +48,7 @@ export class MobController implements OnStart {
 			mobDied.fire(mob);
 		});
 		Events.mob.indexReset.connect((index: number): void => {
-			setMobIndex(index);
+			MobUtil.setMobIndex(index);
 		});
 		Events.mob.damage.connect((data: Vector2int16, kind: MobDamage): void => {
 			const index = data.X;

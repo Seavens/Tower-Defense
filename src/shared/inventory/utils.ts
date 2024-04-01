@@ -1,5 +1,5 @@
+import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "./constants";
 import { ItemKind, ItemRarity } from "shared/inventory/types";
-import { MAX_RANGE, MIN_RANGE } from "./constants";
 import { Modding } from "@flamework/core";
 import { createUUID } from "shared/utils/create-uuid";
 import { itemDefinitions } from "./items";
@@ -14,7 +14,7 @@ const mappedItemIds = {
 	[ItemKind.Relic]: relicItemIds,
 };
 
-export namespace ItemUtility {
+export namespace ItemUtil {
 	export function getRarity(): ItemRarity {
 		const randomValue = math.random();
 		let cumulative = 0;
@@ -43,7 +43,7 @@ export namespace ItemUtility {
 	}
 
 	export function getMultiplier(): number {
-		return math.min(math.random() + MIN_RANGE, MAX_RANGE);
+		return math.random() * (ITEM_RNG_MAX - ITEM_RNG_MIN) + ITEM_RNG_MIN;
 	}
 
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;

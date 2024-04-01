@@ -1,9 +1,9 @@
 import { Mob as API } from "shared/mobs/api";
 import { GAME_TICK_RATE } from "shared/core/core-constants";
-import { RunService, Workspace } from "@rbxts/services";
+import { MobUtil } from "shared/mobs/utils";
 import { Signal } from "@rbxts/beacon";
+import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
-import { getMobModel } from "shared/mobs/utility";
 import { reuseThread } from "shared/utils/reuse-thread";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mobs/types";
@@ -53,7 +53,7 @@ export class Mob extends API {
 		super(index, id);
 		const { mobs, onMobAdded } = Mob;
 		const { bin } = this;
-		const model = getMobModel(id);
+		const model = MobUtil.getMobModel(id);
 		model.Parent = Workspace.mobs;
 		this.instance = model;
 		model.Name = `${model.Name}_${index}`;
