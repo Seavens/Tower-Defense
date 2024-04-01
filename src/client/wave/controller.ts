@@ -1,7 +1,7 @@
 import { Controller } from "@flamework/core";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "client/mob/class";
-import { MobUtil } from "shared/mobs/utils";
+import { MobUtil } from "shared/mob/utils";
 import { mapDefinitions } from "shared/map/definitions";
 import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "client/state/store";

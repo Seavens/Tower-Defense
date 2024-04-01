@@ -1,16 +1,16 @@
-import { Mob as API } from "shared/mobs/api";
+import { Mob as API } from "shared/mob/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/core-constants";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
-import { mobDefinitions } from "shared/mobs/mobs";
+import { mobDefinitions } from "shared/mob/mobs";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
-import type { MobDamage, MobId, MobStatus } from "shared/mobs/types";
+import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 import type { Node } from "@rbxts/octo-tree";
 
 export class Mob extends API {

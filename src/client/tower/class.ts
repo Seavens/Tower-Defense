@@ -10,7 +10,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
-import type { Mob } from "shared/mobs/api";
+import type { Mob } from "shared/mob/api";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 const {

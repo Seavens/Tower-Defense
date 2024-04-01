@@ -7,7 +7,7 @@ import { meleeTowerItem } from "./melee";
 import { sniperTowerItem } from "./sniper";
 import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
-import type { MobDamage } from "shared/mobs/types";
+import type { MobDamage } from "shared/mob/types";
 import type { TowerTargeting } from "shared/tower/types";
 
 export type TowerUpgradeInfo = [

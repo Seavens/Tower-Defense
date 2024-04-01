@@ -300,7 +300,11 @@ export function Tower({ tower, visible }: TowerProps): Element {
 							position={UDim2.fromScale(0.5, 0.48)}
 							textColor={PALETTE.accent}
 							textSize={px(TEXT_SIZE) + 10}
-							text={`Upgrade: $${abbreviator.numberToString(upgradeCost)}`}
+							text={
+								upgradeCost >= math.huge
+									? "MAX"
+									: `Upgrade: $${abbreviator.numberToString(upgradeCost)}`
+							}
 							textStrokeColor={OUTLINE}
 							textStrokeTransparency={TEXT_STROKE_TRANSPARENCY}
 							font={FONT}

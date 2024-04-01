@@ -1,11 +1,11 @@
 import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "server/mob/class";
-import { MobUtil } from "shared/mobs/utils";
+import { MobUtil } from "shared/mob/utils";
 import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { mapDefinitions } from "shared/map/definitions";
-import { mobDefinitions } from "shared/mobs/mobs";
+import { mobDefinitions } from "shared/mob/mobs";
 import {
 	selectCurrentMap,
 	selectCurrentWave,

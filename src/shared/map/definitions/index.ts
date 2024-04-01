@@ -1,7 +1,7 @@
 import { MapId } from "../types";
 import { testMap } from "./test";
 import type { MapDifficulty } from "../types";
-import type { MobId } from "shared/mobs/types";
+import type { MobId } from "shared/mob/types";
 
 export type WaveDefinition = {
 	[I in MobId]?: {

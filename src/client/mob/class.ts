@@ -1,12 +1,12 @@
-import { Mob as API } from "shared/mobs/api";
+import { Mob as API } from "shared/mob/api";
 import { GAME_TICK_RATE } from "shared/core/core-constants";
-import { MobUtil } from "shared/mobs/utils";
+import { MobUtil } from "shared/mob/utils";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
 import { reuseThread } from "shared/utils/reuse-thread";
 import type { Bin } from "@rbxts/bin";
-import type { MobDamage, MobId, MobStatus } from "shared/mobs/types";
+import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 
 export class Mob extends API {
 	public static readonly mobs = new Map<number, Mob>();

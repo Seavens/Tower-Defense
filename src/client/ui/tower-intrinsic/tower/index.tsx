@@ -6,10 +6,12 @@ import { Latte, Mocha } from "@rbxts/catppuccin";
 import { TOWER_IMAGE_SIZE, TOWER_OUTLINE, TOWER_SIZE } from "../constants";
 import { TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TowerAction } from "./action";
+import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
 import { TowerUtil } from "shared/tower/utils";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utils";
 import { map } from "@rbxts/pretty-react-hooks";
+import { store } from "client/state/store";
 import { useAbbreviator, usePx } from "client/ui/hooks";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
@@ -43,9 +45,18 @@ export function Tower({ tower, side }: TowerProps): Element {
 
 	return (
 		<Group
-			size={UDim2.fromScale(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
-			anchorPoint={new Vector2(IS_EDIT ? 0.5 : side === "Left" ? 0 : 1, 0.5)}
-			position={UDim2.fromScale(IS_EDIT ? 0.5 : side === "Left" ? 0 : 1, 0.5)}
+			// size={UDim2.fromScale(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
+			// anchorPoint={new Vector2(IS_EDIT ? 0.5 : side === "Left" ? 0 : 1, 0.5)}
+			// position={
+			// 	new UDim2(
+			// 		IS_EDIT ? 0.5 : side === "Left" ? 0.5 : 0.5,
+			// 		(IS_EDIT ? 0 : side === "Left" ? -1 : 1) * px(10),
+			// 		0.5,
+			// 		0,
+			// 	)
+			// }
+			anchorPoint={new Vector2(0.5, 0.5)}
+			position={UDim2.fromScale(0.5, 0.5)}
 			key={"tower-group"}
 		>
 			<Frame
@@ -125,6 +136,9 @@ export function Tower({ tower, side }: TowerProps): Element {
 									(value: number): Color3 => PALETTE.error.Lerp(PALETTE.lightWhite, value / 3),
 								)}
 								rotation={hover.map((value: number): number => map(value, 0, 1, 0, 15))}
+								onClick={(): void => {
+									store.deselectTower({});
+								}}
 								{...events}
 								key={"tower-close"}
 							>
@@ -186,8 +200,12 @@ export function Tower({ tower, side }: TowerProps): Element {
 						text={cost >= math.huge ? "MAX" : `Upgrade: $${abbreviator.numberToString(cost)}`}
 						textColor={PALETTE.black}
 						textSize={px(15)}
-						enabled={true}
+						enabled={cost < math.huge}
 						layoutOrder={0}
+						onClick={(): void => {
+							const { key } = tower;
+							TowerImpl.upgradeTower(key);
+						}}
 					/>
 					<Group
 						size={new UDim2(0, px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(11), 1, 0)}
@@ -202,6 +220,10 @@ export function Tower({ tower, side }: TowerProps): Element {
 							text={TOWER_TARGETING_DISPLAY[tower.targeting]}
 							enabled={true}
 							layoutOrder={1}
+							onClick={(): void => {
+								const { key } = tower;
+								TowerImpl.changeTargeting(key);
+							}}
 						/>
 						<TowerAction
 							position={UDim2.fromScale(1, 1)}
@@ -210,6 +232,10 @@ export function Tower({ tower, side }: TowerProps): Element {
 							text={`Sell $${abbreviator.numberToString(price)}`}
 							enabled={true}
 							layoutOrder={2}
+							onClick={(): void => {
+								const { key } = tower;
+								TowerImpl.sellTower(key);
+							}}
 						/>
 					</Group>
 					<uipadding

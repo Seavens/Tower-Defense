@@ -1,10 +1,10 @@
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "./class";
-import { MobUtil } from "shared/mobs/utils";
+import { MobUtil } from "shared/mob/utils";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utils/create-listener";
-import type { MobDamage, MobStatus } from "shared/mobs/types";
+import type { MobDamage, MobStatus } from "shared/mob/types";
 import type { OnStart } from "@flamework/core";
 
 /** @hideinherited */

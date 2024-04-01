@@ -1,5 +1,5 @@
 import { ItemKind, ItemRarity } from "shared/inventory/types";
-import { MobDamage } from "shared/mobs/types";
+import { MobDamage } from "shared/mob/types";
 
 export const RARITY_WEIGHTS: { [I in ItemRarity]: number } = {
 	[ItemRarity.Rare]: 0.515, // 46.5% chance

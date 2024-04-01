@@ -1,5 +1,5 @@
 import { MapDifficulty, MapId } from "../types";
-import { MobId } from "shared/mobs/types";
+import { MobId } from "shared/mob/types";
 import type { MapDefinition } from ".";
 
 export const testMap: MapDefinition<MapId.Test> = {

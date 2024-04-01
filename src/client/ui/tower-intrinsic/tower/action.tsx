@@ -1,11 +1,11 @@
 import { Button, Text } from "client/ui/components";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
-import { composeBindings } from "@rbxts/pretty-react-hooks";
+import { composeBindings, map } from "@rbxts/pretty-react-hooks";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
-import { usePx } from "client/ui/hooks";
-import React from "@rbxts/react";
+import { useMotion, usePx } from "client/ui/hooks";
+import React, { useEffect } from "@rbxts/react";
 import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
 import type { Element } from "@rbxts/react";
 
@@ -39,6 +39,12 @@ export function TowerAction({
 	const [pressed, hovering, events] = useButtonState(enabled);
 	const { position: clicked, hover } = useButtonAnimation(pressed, hovering);
 
+	const [transparency, transparencyMotion] = useMotion(0);
+
+	useEffect((): void => {
+		transparencyMotion.spring(enabled ? 0 : 1);
+	}, [enabled]);
+
 	return (
 		<Button
 			size={size ?? new UDim2(0.5, -px(2), 1, 0)}
@@ -52,9 +58,9 @@ export function TowerAction({
 				backgroundColor,
 				(value: number, color: Color3): Color3 => color.Lerp(PALETTE.lightWhite, value / 3),
 			)}
-			backgroundTransparency={0}
+			backgroundTransparency={transparency.map((value: number): number => map(value, 0, 1, 0, 0.4))}
 			layoutOrder={layoutOrder}
-			onClick={onClick}
+			onClick={enabled ? onClick : undefined}
 			{...events}
 			key={"action-button"}
 		>
