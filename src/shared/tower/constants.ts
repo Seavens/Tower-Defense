@@ -7,6 +7,7 @@ export const TOWER_TARGETING_DISPLAY: { [T in TowerTargeting]: string } = {
 	[TowerTargeting.Weakest]: "Weakest",
 	[TowerTargeting.Closest]: "Closest",
 	[TowerTargeting.Farthest]: "Farthest",
+	[TowerTargeting.None]: "None",
 } as const;
 
 export const TOWER_GRADE_DISPLAY: { [G in TowerGrade]: string } = {

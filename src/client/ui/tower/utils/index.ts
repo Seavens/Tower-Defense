@@ -1,3 +1,3 @@
-import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "./format-tower";
+import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "./format-stats";
 
-export { formatUpgrade, formatRange, formatDamage, formatCooldown };
+export { formatCooldown, formatDamage, formatRange, formatUpgrade };

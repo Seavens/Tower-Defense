@@ -1,6 +1,8 @@
 import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "./constants";
 import { ItemKind, ItemRarity } from "shared/inventory/types";
 import { Modding } from "@flamework/core";
+import { RarityUtility } from "./rarities/utils";
+import { TowerUtility } from "./items/towers/utility";
 import { createUUID } from "shared/utils/create-uuid";
 import { itemDefinitions } from "./items";
 import { rarityDefinitions } from "shared/inventory/rarities";
@@ -14,38 +16,7 @@ const mappedItemIds = {
 	[ItemKind.Relic]: relicItemIds,
 };
 
-export namespace ItemUtil {
-	export function getRarity(): ItemRarity {
-		const randomValue = math.random();
-		let cumulative = 0;
-		const weights = [
-			rarityDefinitions[ItemRarity.Rare].weight,
-			rarityDefinitions[ItemRarity.Epic].weight,
-			rarityDefinitions[ItemRarity.Legendary].weight,
-			rarityDefinitions[ItemRarity.Mythical].weight,
-			rarityDefinitions[ItemRarity.Secret].weight,
-		];
-		const rarities = [
-			ItemRarity.Rare,
-			ItemRarity.Epic,
-			ItemRarity.Legendary,
-			ItemRarity.Mythical,
-			ItemRarity.Secret,
-		];
-
-		for (const index of $range(1, weights.size())) {
-			cumulative += weights[index - 1];
-			if (randomValue <= cumulative) {
-				return rarities[index - 1];
-			}
-		}
-		return ItemRarity.Rare;
-	}
-
-	export function getMultiplier(): number {
-		return math.random() * (ITEM_RNG_MAX - ITEM_RNG_MIN) + ITEM_RNG_MIN;
-	}
-
+export namespace ItemUtility {
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;
 
 	export function createItem<T extends Option<ItemKind>>(
@@ -60,7 +31,7 @@ export namespace ItemUtil {
 	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item {
 		let id: ItemId;
 		if (kind !== undefined) {
-			const rarity = getRarity();
+			const rarity = RarityUtility.getRarity();
 			const ids = mappedItemIds[kind];
 			const filteredIds = ids.filter(
 				(id) => itemDefinitions[id].rarity === rarity && itemDefinitions[id].kind.kind === kind,
@@ -73,7 +44,7 @@ export namespace ItemUtil {
 		const { kind: itemKind } = definition.kind;
 		const uuid = createUUID();
 		if (itemKind === ItemKind.Relic) {
-			const multiplier = getMultiplier();
+			const multiplier = TowerUtility.getMultiplier();
 			const unique: ItemRelicUnique = {
 				kind: ItemKind.Relic,
 				multiplier,
@@ -86,9 +57,9 @@ export namespace ItemUtil {
 			};
 			return item;
 		}
-		const cooldown = getMultiplier();
-		const damage = getMultiplier();
-		const range = getMultiplier();
+		const cooldown = TowerUtility.getMultiplier();
+		const damage = TowerUtility.getMultiplier();
+		const range = TowerUtility.getMultiplier();
 		const unique: ItemTowerUnique = {
 			kind: ItemKind.Tower,
 			cooldown,

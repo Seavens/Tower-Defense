@@ -129,7 +129,7 @@ export abstract class Mob {
 		const { id, max, health } = this;
 		const { resistances } = mobDefinitions[id];
 		if (resistances.includes(kind)) {
-			warn(this.index, "|", "Resisted damage.");
+			// warn(this.index, "|", "Resisted damage.");
 			return;
 		}
 		this.attacker ??= tower;

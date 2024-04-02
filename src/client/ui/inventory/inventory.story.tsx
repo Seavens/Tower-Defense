@@ -1,7 +1,7 @@
 import { Boolean, CreateReactStory } from "@rbxts/ui-labs";
 import { Inventory } from "./inventory";
 import { ItemKind } from "shared/inventory/types";
-import { ItemUtil } from "shared/inventory/utils";
+import { ItemUtility } from "shared/inventory/utility";
 import { MAXIMUM_STORED } from "shared/inventory/constants";
 import { Players } from "@rbxts/services";
 import { ReflexProvider } from "@rbxts/react-reflex";
@@ -10,7 +10,7 @@ import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
 
-const items = ItemUtil.createItems(1, MAXIMUM_STORED, ItemKind.Tower);
+const items = ItemUtility.createItems(1, MAXIMUM_STORED, ItemKind.Tower);
 
 export = CreateReactStory(
 	{

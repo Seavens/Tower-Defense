@@ -11,6 +11,7 @@ export const enum TowerTargeting {
 	Weakest = "tower_targeting:weakest",
 	Closest = "tower_targeting:closest",
 	Farthest = "tower_targeting:furthest",
+	None = "tower_targeting:none",
 }
 
 export const enum TowerGrade {

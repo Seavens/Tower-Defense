@@ -19,7 +19,7 @@ export namespace TowerUtil {
 		if (upgrade === undefined) {
 			return math.huge;
 		}
-		const [, , cost] = upgrade;
+		const { cost } = upgrade;
 		return cost;
 	}
 
@@ -29,7 +29,7 @@ export namespace TowerUtil {
 		const { upgrades: definitions } = kind;
 		let { cost } = kind;
 		for (const index of $range(1, upgrades)) {
-			const [, , price] = definitions[index - 1];
+			const price = definitions[index - 1].cost;
 			cost += price * SELL_RATIO;
 		}
 		return cost * SELL_RATIO;
@@ -47,8 +47,8 @@ export namespace TowerUtil {
 		if (upgrades === 0) {
 			return base * (damage + level);
 		}
-		const [_, { damage: multiplier }] = definitions[upgrades - 1];
-		const total = base * (damage + multiplier + level);
+		const damageMultiplier = definitions[upgrades - 1].multiplier.damage;
+		const total = base * (damage + damageMultiplier + level);
 		return total;
 	}
 
@@ -64,8 +64,8 @@ export namespace TowerUtil {
 		if (upgrades === 0) {
 			return base * (range + level);
 		}
-		const [_, { range: multiplier }] = definitions[upgrades - 1];
-		const total = base * (range + multiplier + level);
+		const rangeMultiplier = definitions[upgrades - 1].multiplier.range;
+		const total = base * (range + rangeMultiplier + level);
 		return total;
 	}
 
@@ -81,8 +81,8 @@ export namespace TowerUtil {
 		if (upgrades === 0) {
 			return base * (cooldown + level);
 		}
-		const [_, { cooldown: multiplier }] = definitions[upgrades - 1];
-		const total = base * (cooldown + multiplier + level);
+		const cooldownMultiplier = definitions[upgrades - 1].multiplier.cooldown;
+		const total = base * (cooldown + cooldownMultiplier + level);
 		return total;
 	}
 

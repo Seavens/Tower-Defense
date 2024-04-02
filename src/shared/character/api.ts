@@ -2,7 +2,7 @@ import { Animator } from "./animator";
 import { BaseCharacterAnimation } from "./types";
 import { Bin } from "@rbxts/bin";
 import { CHARACTER_BASE_ANIMATIONS } from "shared/character/constants";
-import { CharacterUtil } from "./utils";
+import { CharacterUtility } from "./utility";
 import { Collision, setCollision } from "shared/utils/collision";
 import { Players, RunService, Workspace } from "@rbxts/services";
 import { isBaseCharacterAnimation } from "./types";
@@ -24,7 +24,7 @@ export abstract class Character {
 	protected abstract readonly animator?: Animator<CharacterAnimation>;
 
 	public constructor(user: string, rig?: Model) {
-		rig ??= CharacterUtil.getCharacterRig(user).Clone();
+		rig ??= CharacterUtility.getCharacterRig(user).Clone();
 		const server = RunService.IsServer();
 		const { bin } = this;
 		const humanoid = rig.FindFirstChildWhichIsA("Humanoid", true);
@@ -50,7 +50,7 @@ export abstract class Character {
 		bin.add(ancestry);
 		bin.add(descendant);
 		if (server) {
-			const spawn = CharacterUtil.getSpawnLocation();
+			const spawn = CharacterUtility.getSpawnLocation();
 			rig.Name = user;
 			rig.Parent = Workspace.characters;
 			rig.PivotTo(spawn);

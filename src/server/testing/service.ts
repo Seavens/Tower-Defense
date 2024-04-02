@@ -1,7 +1,6 @@
 import { ITEM_RNG_MAX, ITEM_RNG_MIN, MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
 import { ItemKind } from "shared/inventory/types";
-import { ItemUtil } from "shared/inventory/utils";
-import { LevelUtil } from "shared/profile/utils";
+import { ItemUtility } from "shared/inventory/utility";
 import { Service } from "@flamework/core";
 import { TowerGrade } from "shared/tower/types";
 import { TowerUtil } from "shared/tower/utils";
@@ -24,16 +23,16 @@ export class TestService implements OnStart, OnDataLoaded {
 		const { user, id } = entity;
 		const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
 		const broadcast: EntityMetadata & BroadcastMetadata = { user, broadcast: true };
-		const items = ItemUtil.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
+		const items = ItemUtility.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
 		store.inventoryAddItems({ items }, metadata);
 		task.wait();
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 			const slot: Slot = `${index}`;
-			const item = items[index - 1];
-			warn(
-				TowerUtil.getOverallGrade(item.unique as ItemTowerUnique),
-				TowerUtil.getGrade(item.unique as ItemTowerUnique, "range"),
-			);
+			// const item = items[index - 1];
+			// warn(
+			// 	TowerUtil.getOverallGrade(item.unique as ItemTowerUnique),
+			// 	TowerUtil.getGrade(item.unique as ItemTowerUnique, "range"),
+			// );
 			store.inventoryEquipSlot({ slot }, metadata);
 		}
 
@@ -42,20 +41,5 @@ export class TestService implements OnStart, OnDataLoaded {
 		store.profileAdjustGems({ gems: 100000 }, metadata);
 	}
 
-	public onStart(): void {
-		// const grades = new Map<TowerGrade, number>();
-		// for (const _ of $range(1, 1000)) {
-		// 	const item = ItemUtil.createItem(1, ItemKind.Tower);
-		// 	const grade = TowerUtil.getOverallGrade(item.unique as ItemTowerUnique);
-		// 	const count = grades.get(grade) ?? 0;
-		// 	grades.set(grade, count + 1);
-		// }
-		// warn(
-		// 	grades.get(TowerGrade.S),
-		// 	grades.get(TowerGrade.A),
-		// 	grades.get(TowerGrade.B),
-		// 	grades.get(TowerGrade.C),
-		// 	grades.get(TowerGrade.D),
-		// );
-	}
+	public onStart(): void {}
 }

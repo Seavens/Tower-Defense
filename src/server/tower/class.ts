@@ -9,7 +9,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
-import { targetingModules } from "server/tower/targeting";
+import { targetingModules } from "shared/tower/targeting";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
 

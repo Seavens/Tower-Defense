@@ -1,24 +1,20 @@
-import { ItemId } from "../types";
-import { bluntTowerItem } from "./blunt";
-import { chaliceRelicItem } from "./chalice";
-import { eternalDamnationTowerItem } from "./eternal-damnation";
-import { godTowerItem } from "./god";
-import { meleeTowerItem } from "./melee";
-import { sniperTowerItem } from "./sniper";
+import { relics } from "./relics";
+import { towers } from "./towers";
+import type { ItemId } from "../types";
 import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
 import type { TowerTargeting } from "shared/tower/types";
 
-export type TowerUpgradeInfo = [
-	upgrade: number,
+export type TowerUpgradeInfo = {
+	upgrade: number;
 	multiplier: {
 		damage: number;
 		range: number;
 		cooldown: number;
-	},
-	cost: number,
-];
+	};
+	cost: number;
+};
 
 interface TowerDefinition {
 	kind: ItemKind.Tower;
@@ -26,13 +22,10 @@ interface TowerDefinition {
 	damage: number;
 	range: number;
 	cooldown: number;
-
 	damageKind: MobDamage;
 	limit: number;
 	cost: number;
-
 	upgrades: Array<TowerUpgradeInfo>;
-
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
 }
 
@@ -66,11 +59,7 @@ export type KindItemDefinition<K extends ItemKind> = {
 }[ItemId];
 
 export const itemDefinitions = {
-	[ItemId.Sniper]: sniperTowerItem,
-	[ItemId.Melee]: meleeTowerItem,
-	[ItemId.Blunt]: bluntTowerItem,
-	[ItemId.God]: godTowerItem,
-	[ItemId.EternalDamnation]: eternalDamnationTowerItem,
-	[ItemId.Chalice]: chaliceRelicItem,
+	...relics,
+	...towers,
 } as const;
 itemDefinitions satisfies { [I in ItemId]: ItemDefinition<I, InferClass<(typeof itemDefinitions)[I]>> };

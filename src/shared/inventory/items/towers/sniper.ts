@@ -1,9 +1,9 @@
-import { ItemId } from "../types";
-import { ItemKind } from "../types";
+import { ItemId } from "../../types";
+import { ItemKind } from "../../types";
 import { ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
 import { TowerTargeting } from "shared/tower/types";
-import type { ItemDefinition } from ".";
+import type { ItemDefinition } from "..";
 
 export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 	id: ItemId.Sniper,
@@ -16,20 +16,21 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 	kind: {
 		kind: ItemKind.Tower,
 
-		damage: 53,
-		range: 20,
+		damage: 57,
+		range: 12,
 		cooldown: 6,
 
 		damageKind: MobDamage.Projectile,
 		limit: 3,
-		cost: 500,
+		cost: 550,
 
 		upgrades: [
-			[1, { damage: 1.04, range: 1.02, cooldown: 0.98 }, 1000],
-			[2, { damage: 1.08, range: 1.04, cooldown: 0.96 }, 2000],
-			[3, { damage: 1.16, range: 1.08, cooldown: 0.92 }, 4000],
-			[4, { damage: 1.28, range: 1.16, cooldown: 0.84 }, 8000],
-			[5, { damage: 1.44, range: 1.24, cooldown: 0.76 }, 16000],
+			{ upgrade: 1, multiplier: { damage: 0.2, range: 0.3, cooldown: -0.05 }, cost: 350 },
+			{ upgrade: 2, multiplier: { damage: 0.4, range: 0.5, cooldown: -0.1 }, cost: 600 },
+			{ upgrade: 3, multiplier: { damage: 0.8, range: 0.9, cooldown: -0.15 }, cost: 900 },
+			{ upgrade: 4, multiplier: { damage: 1.3, range: 1.2, cooldown: -0.2 }, cost: 1300 },
+			{ upgrade: 5, multiplier: { damage: 1.9, range: 1.5, cooldown: -0.25 }, cost: 1900 },
+			{ upgrade: 6, multiplier: { damage: 2.6, range: 1.7, cooldown: -0.3 }, cost: 2600 },
 		],
 
 		targeting: [

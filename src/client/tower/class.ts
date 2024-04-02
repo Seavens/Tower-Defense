@@ -94,7 +94,6 @@ export class Tower extends API {
 	public getRange(origin = this.getGround()): number {
 		const replicated = this.getReplicated();
 		const range = TowerUtil.getTotalRange(replicated);
-		warn(replicated);
 		const ground = this.getGround();
 		const displacement = origin - ground;
 		const chord = 2 * math.sqrt(range ** 2 - displacement ** 2);

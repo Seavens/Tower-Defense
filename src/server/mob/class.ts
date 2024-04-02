@@ -93,53 +93,32 @@ export class Mob extends API {
 
 	public static removeAllMobs(): void {
 		const { mobs } = this;
-		for (const [_, mob] of mobs) {
-			mob.forceKill();
-		}
+		for (const [_, mob] of mobs) mob.forceKill();
 	}
 
 	public onDied(key?: string): void {
 		const { index } = this;
-
 		Events.mob.death.broadcast(index);
-		if (key === undefined) {
-			return;
-		}
 
+		if (key === undefined) return;
 		const replicated = store.getState(selectSpecificTower(key));
-		if (replicated === undefined) {
-			return;
-		}
 
 		const user = replicated?.owner;
-		if (user === undefined) {
-			return;
-		}
+		if (user === undefined) return;
 
 		const profile = store.getState(selectProfileData(user));
-		if (profile === undefined) {
-			return;
-		}
+		if (profile === undefined) return;
 
 		const mobDef = mobDefinitions[this.id];
 		const { bounty, experience } = mobDef;
 
-		// Add currency to the tower
 		store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
-		// store.profileAddExperience({ amount: experience }, { user: user, replicate: true });
 		store.towerAddExperience(
 			{
 				amount: experience,
 				key: key,
 			},
 			{ broadcast: true },
-		);
-
-		warn(
-			"Profile: Level: " + profile.level,
-			"Profile: Experience: " + profile.experience,
-			"Tower: Level: " + replicated.unique.level,
-			"Tower: Experience: " + replicated.unique.experience,
 		);
 	}
 
@@ -161,10 +140,9 @@ export class Mob extends API {
 		const { octree } = Mob;
 		const { node, movement } = this;
 		const now = os.clock();
-		// Optimization, octree position changes can potentially be expensive.
-		if (now - movement < GAME_TICK_RATE) {
-			return;
-		}
+
+		if (now - movement < GAME_TICK_RATE) return;
+
 		this.movement = now;
 		const cframe = this.getCFrame();
 		const position = cframe.Position;
@@ -190,18 +168,19 @@ export class Mob extends API {
 	public onResync(): void {
 		const { index } = this;
 		const { current, target } = this;
+
 		const alpha = this.getAlpha();
 		const first = new Vector2int16(index, current);
 		const second = new Vector2int16(target, alpha * 1000);
+
 		Events.mob.resync.broadcast(first, second);
 	}
 
 	public destroy(): void {
 		const { mobs, octree, onMobRemoved } = Mob;
 		const { node, index } = this;
-		if (this.isDestroyed()) {
-			return;
-		}
+		if (this.isDestroyed()) return;
+
 		octree.RemoveNode(node);
 		onMobRemoved.FireDeferred(this);
 		mobs.delete(index);

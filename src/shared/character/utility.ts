@@ -10,11 +10,11 @@ const { base } = characters;
 const humanoid = base.FindFirstChildOfClass("Humanoid");
 const animator = base.FindFirstChildWhichIsA("Animator", true);
 const animate = base.FindFirstChild("Animate");
-// if (humanoid !== undefined && humanoid.RigType !== Enum.HumanoidRigType.R6) {
-// 	warn(
-// 		`Character class expects ${base.GetFullName()} to be an R6 rig! If you wish to use an R15 rig, update "shared/constants/character-constants.ts", "CHARACTER_BASE_ANIMATIONS" to use R15 animations!`,
-// 	);
-// }
+if (humanoid !== undefined && humanoid.RigType !== Enum.HumanoidRigType.R15) {
+	warn(
+		`Character class expects ${base.GetFullName()} to be an R15 rig! If you wish to use an R6 rig, update "shared/constants/character-constants.ts", "CHARACTER_BASE_ANIMATIONS" to use R15 animations!`,
+	);
+}
 if (humanoid === undefined) {
 	warn(
 		`Character class is capable of working without a humanoid however ${base.GetFullName()} is expected to have a humanoid!`,
@@ -29,7 +29,7 @@ if (animator === undefined) {
 	);
 }
 
-export namespace CharacterUtil {
+export namespace CharacterUtility {
 	export function getCharacterRig(user?: string): Model {
 		if (user === undefined) {
 			setCollision(base, Collision.Character, true);
