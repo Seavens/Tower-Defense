@@ -28,8 +28,8 @@ export function formatStats(item: Item, size: number, owner: string): string {
 		return `${base}Level: ${truncateNumber(level, 0)}\n\tCost: $${truncateNumber(cost, 0)}\n\tDamage Kind: ${
 			MOB_DAMAGE_DISPLAY[damageKind]
 		}\n\tDamage: ${truncateNumber(baseDamage * damage, 2)}\n\tRange: ${truncateNumber(
-			2,
 			baseRange * range,
+			2,
 		)}\n\tCooldown: ${truncateNumber(baseCooldown * cooldown, 2)}\n\tLocked: ${locked}\n\tOriginal Owner: ${owner}`;
 	} else if (unique.kind === ItemKind.Relic) {
 		const { multiplier } = unique;

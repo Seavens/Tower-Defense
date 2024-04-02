@@ -49,8 +49,6 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 			size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
-			// backgroundTransparency={0.65}
-			// clipsDescendants={true}
 			layoutOrder={layoutOrder}
 			key={"item-slot"}
 		>

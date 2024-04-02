@@ -99,4 +99,13 @@ export namespace ItemUtility {
 		}
 		return items;
 	}
+
+	export function getAllItemNames(): Array<string> {
+		const names = new Array<string>();
+		for (const id of allItemIds) {
+			const { name } = itemDefinitions[id];
+			names.push(name);
+		}
+		return names;
+	}
 }

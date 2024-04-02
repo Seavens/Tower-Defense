@@ -11,8 +11,10 @@ import {
 import { ItemFiltering } from "shared/inventory/types";
 import { ItemKind } from "shared/inventory/types";
 import { ItemSlot } from "./item-slot";
+import { ItemUtility } from "shared/inventory/utility";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
+import { SearchBar } from "../components/search-bar";
 import { TextField } from "../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
 import { idToName } from "shared/utils/id-to-name";
@@ -48,9 +50,11 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const [pressed, hovering, events] = useButtonState();
 	const [filtered, setFiltering] = useState(ItemFiltering.All);
 	const [selected, setSelected] = useState<Slot>();
+	const [search, setSearch] = useState<Array<string>>();
 	const { hover, position } = useButtonAnimation(pressed, hovering);
 
 	const [transparency, transparencyMotion] = useMotion(0);
+	const allItemNames = ItemUtility.getAllItemNames();
 
 	const px = usePx();
 	const abbreviator = new Abbreviator();
@@ -86,10 +90,11 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 				continue;
 			}
 			const { id, unique } = item;
-			if (filtered === ItemFiltering.Locked && !unique.locked) {
+			if (filtered === ItemFiltering.Locked && unique.locked) {
+				warn("Locked");
 				continue;
 			}
-			// !! NEEDS TO BE SORTED BY KIND IN GROUPS, NOT JUST ONE GROUP
+
 			if (filtered === ItemFiltering.Relic && unique.kind !== ItemKind.Relic) {
 				continue;
 			}
@@ -97,7 +102,10 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 				continue;
 			}
 
-			const { rarity } = itemDefinitions[id];
+			const { rarity, name } = itemDefinitions[id];
+
+			if (search !== undefined && !search.includes(name)) continue;
+
 			const order =
 				filtered === ItemFiltering.Rarity
 					? RARITY_ORDERS[rarity]
@@ -117,7 +125,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 			);
 		}
 		return elements;
-	}, [stored, filtered, selected]);
+	}, [stored, filtered, selected, search]);
 
 	const itemDef = useItemDefinition(item?.id);
 	const rarityDef = useRarityDefinition(itemDef?.id);
@@ -237,28 +245,28 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										<uipadding PaddingLeft={new UDim(0, px(4))} />
 									</Text>
 								</Group>
-								{/* // !! Implement */}
-								<TextField
+								<SearchBar
 									key={"search"}
 									size={UDim2.fromOffset(px(200), px(30))}
 									position={UDim2.fromScale(0.365, 0.5)}
 									anchorPoint={new Vector2(0, 0.5)}
 									cornerRadius={new UDim(0, px(4))}
-									placeholderText={"Search..."}
 									backgroundTransparency={0}
 									textSize={px(18)}
 									textColor={TEXTCOLOR}
-									placeholderColor={Latte.Base}
 									font={FONTS.robotoMono.regular}
 									backgroundColor={BACKGROUND_LIGHT}
-									change={{}}
+									onSearch={setSearch}
+									queries={allItemNames}
+									enabled={true}
+									accuracy={5}
 								>
 									<uistroke
 										ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 										Thickness={1}
 										Color={OUTLINE}
 									/>
-								</TextField>
+								</SearchBar>
 								<DropDown
 									anchorPoint={new Vector2(0, 0.5)}
 									position={UDim2.fromScale(0.78, 0.5)}

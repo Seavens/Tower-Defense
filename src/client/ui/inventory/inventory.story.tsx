@@ -12,6 +12,14 @@ import type { Element } from "@rbxts/react";
 
 const items = ItemUtility.createItems(1, MAXIMUM_STORED, ItemKind.Tower);
 
+for (const item of items) {
+	const rand = math.random();
+	if (rand < 0.5) {
+		item.unique.locked = true;
+	}
+	item.unique.locked = false;
+}
+
 export = CreateReactStory(
 	{
 		name: "Inventory",
