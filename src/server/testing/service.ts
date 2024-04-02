@@ -1,5 +1,5 @@
 import { ITEM_RNG_MAX, ITEM_RNG_MIN, MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
-import { ItemKind } from "shared/inventory/types";
+import { ItemId, ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
 import { Service } from "@flamework/core";
 import { TowerGrade } from "shared/tower/types";
@@ -25,7 +25,6 @@ export class TestService implements OnStart, OnDataLoaded {
 		const broadcast: EntityMetadata & BroadcastMetadata = { user, broadcast: true };
 		const items = ItemUtility.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
 		store.inventoryAddItems({ items }, metadata);
-		task.wait();
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 			const slot: Slot = `${index}`;
 			// const item = items[index - 1];

@@ -30,7 +30,7 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 			{ upgrade: 3, multiplier: { damage: 0.8, range: 0.9, cooldown: -0.15 }, cost: 900 },
 			{ upgrade: 4, multiplier: { damage: 1.3, range: 1.2, cooldown: -0.2 }, cost: 1300 },
 			{ upgrade: 5, multiplier: { damage: 1.9, range: 1.5, cooldown: -0.25 }, cost: 1900 },
-			{ upgrade: 6, multiplier: { damage: 2.6, range: 1.7, cooldown: -0.3 }, cost: 2600 },
+			{ upgrade: 6, multiplier: { damage: 1.275701754385965, range: 1.7, cooldown: -0.3 }, cost: 2600 },
 		],
 
 		targeting: [

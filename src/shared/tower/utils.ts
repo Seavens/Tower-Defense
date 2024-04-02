@@ -3,12 +3,12 @@ import { MAX_TOWER_LEVEL, SELL_RATIO, TOWER_GRADE_RANGES, TOWER_LEVEL_MULTIPLIER
 import { Modding } from "@flamework/core";
 import { TowerGrade } from "./types";
 import { itemDefinitions } from "shared/inventory/items";
-import type { ItemTowerUnique } from "shared/inventory/types";
+import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "./types";
 
-type TowerGradedStats = "damage" | "range" | "cooldown";
+type TowerStat = "damage" | "range" | "cooldown";
 
-const gradedStats = Modding.inspect<Array<TowerGradedStats>>();
+const gradedStats = Modding.inspect<Array<TowerStat>>();
 
 export namespace TowerUtil {
 	export function getUpgradeCost(tower: ReplicatedTower): number {
@@ -86,13 +86,16 @@ export namespace TowerUtil {
 		return total;
 	}
 
-	export function getGrade(unique: ItemTowerUnique, stat: TowerGradedStats): TowerGrade {
+	export function getGrade(unique: ItemTowerUnique, stat: TowerStat): TowerGrade {
 		const value = unique[stat];
 		const max = ITEM_RNG_MAX - ITEM_RNG_MIN;
-		const alpha = (value - ITEM_RNG_MIN) / max;
+		let alpha = (value - ITEM_RNG_MIN) / max;
+		if (stat === "cooldown") {
+			alpha = math.abs(1 - alpha);
+		}
 		let result = TowerGrade.D;
 		for (const [grade, [max, min]] of pairs(TOWER_GRADE_RANGES)) {
-			if (alpha <= min || alpha > max) {
+			if (alpha <= max || alpha > min) {
 				continue;
 			}
 			result = grade;
@@ -106,7 +109,10 @@ export namespace TowerUtil {
 		for (const stat of gradedStats) {
 			const value = unique[stat];
 			const max = ITEM_RNG_MAX - ITEM_RNG_MIN;
-			const alpha = (value - ITEM_RNG_MIN) / max;
+			let alpha = (value - ITEM_RNG_MIN) / max;
+			if (stat === "cooldown") {
+				alpha = math.abs(1 - alpha);
+			}
 			total += alpha;
 		}
 		total /= 3;
@@ -124,5 +130,14 @@ export namespace TowerUtil {
 	export function getLevelMultiplier(unique: ItemTowerUnique): number {
 		const { level } = unique;
 		return TOWER_LEVEL_MULTIPLIER * (level / MAX_TOWER_LEVEL);
+	}
+
+	export function calculateMultiplier(id: TowerItemId, duration: number, stat: TowerStat): number {
+		const { kind } = itemDefinitions[id];
+		const base = kind[stat];
+		const average = (ITEM_RNG_MAX + ITEM_RNG_MIN) / 2;
+		const level = TOWER_LEVEL_MULTIPLIER * (1 / MAX_TOWER_LEVEL);
+		const multiplier = -average + duration / base - level;
+		return multiplier;
 	}
 }
