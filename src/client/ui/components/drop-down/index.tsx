@@ -64,7 +64,7 @@ export function DropDown({
 					enabled={true}
 					visible={open}
 					backgroundColor={backgroundColor}
-					onClick={(): void => {
+					onLeftClick={(): void => {
 						onClick?.(option);
 						setSelected(index);
 						setOpen(false);

@@ -16,6 +16,7 @@ export interface ContextMenuProps {
 	onClick: (option: string) => void;
 	backgroundColor: Color3;
 	textColor: Color3;
+	open: boolean;
 
 	size?: UDim2;
 	position?: BindingOrValue<UDim2>;
@@ -36,6 +37,7 @@ export function ContextMenu({
 	index,
 	enabled,
 	onClick,
+	open,
 	backgroundColor,
 	textColor,
 	strokeColor,
@@ -50,7 +52,7 @@ export function ContextMenu({
 
 	const height = elementHeight === undefined ? (size === undefined ? px(16) : size.Y.Offset) : elementHeight;
 
-	const [open, setOpen] = useState(false);
+	// const [open, setOpen] = useState(false);
 	const [pressed, hovering] = useButtonState(enabled);
 	const { hover } = useButtonAnimation(pressed, hovering);
 
@@ -67,10 +69,10 @@ export function ContextMenu({
 					enabled={true}
 					visible={open}
 					backgroundColor={backgroundColor}
-					onClick={(): void => {
+					onLeftClick={(): void => {
 						onClick?.(option);
 						setSelected(index);
-						setOpen(false);
+						// setOpen(false);
 					}}
 				/>
 			);
@@ -88,19 +90,21 @@ export function ContextMenu({
 	}, [index]);
 
 	return (
-		<imagebutton
-			Size={size}
-			Position={position}
-			AnchorPoint={anchorPoint}
-			BackgroundColor3={hover.map((value: number): Color3 => backgroundColor.Lerp(backgroundColor, value))}
-			Event={{
-				MouseButton2Click: (): void => {
-					setOpen((value: boolean): boolean => !value);
-				},
-			}}
+		<Frame
+			size={size}
+			position={position}
+			anchorPoint={anchorPoint}
+			backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(backgroundColor, value))}
+			// Event={{
+			// 	MouseButton2Click: (): void => {
+			// 		setOpen((value: boolean): boolean => !value);
+			// 	},
+			// }}
 			key={"context-frame"}
-			ZIndex={10}
-			BackgroundTransparency={displayHeader === undefined ? 1 : 0}
+			zIndex={10}
+			// active={false}
+			// utoButtonColor={false}
+			backgroundTransparency={displayHeader === undefined ? 1 : 0}
 		>
 			<uistroke
 				Color={strokeColor ?? OUTLINE}
@@ -149,6 +153,6 @@ export function ContextMenu({
 				textSize={px(12)}
 				key={"context-selected"}
 			/>
-		</imagebutton>
+		</Frame>
 	);
 }

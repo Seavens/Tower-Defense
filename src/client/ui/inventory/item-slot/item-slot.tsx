@@ -36,7 +36,6 @@ export function ItemSlot({
 
 	const [outline, outlineMotion] = useMotion(1);
 
-	const [leftClick, setLeftClick] = useState(false);
 	const [rightClick, setRightClick] = useState(false);
 
 	const headerText = useMemo((): Option<string> => {
@@ -57,6 +56,8 @@ export function ItemSlot({
 		outlineMotion.spring(selected ? 0 : 1, SPRINGS.gentle);
 	}, [selected]);
 
+	warn(rightClick);
+
 	return (
 		<Group
 			size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
@@ -65,36 +66,38 @@ export function ItemSlot({
 			layoutOrder={layoutOrder}
 			key={"item-slot"}
 		>
-			<ContextMenu
-				enabled={enableContext}
-				size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
-				index={1}
-				options={["Lock", "Sell", "View", "Cancel"]}
-				onClick={(): void => {
-					setRightClick(true);
-					enableContext = false;
-				}}
-				backgroundColor={Mocha.Base}
-				textColor={Latte.Base}
-				elementHeight={px(10)}
-			/>
 			<imagebutton
 				Size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(2) * 2, px(ITEM_SLOT_SIZE.Y) - px(2) * 2)}
 				AnchorPoint={Vector2.one.mul(0.5)}
 				Position={UDim2.fromScale(0.5, 0.5)}
 				BackgroundColor3={Darken(color, 0.25)}
 				key={"slot-group"}
+				AutoButtonColor={false}
 				Event={{
 					MouseButton1Click: (): void => {
 						if (rightClick) {
 							setRightClick(false);
-							enableContext = false;
 						}
+					},
+					MouseButton2Click: (): void => {
+						setRightClick((value: boolean): boolean => !value);
 					},
 				}}
 			>
 				<uicorner CornerRadius={new UDim(0, px(5))} />
-
+				<ContextMenu
+					enabled={true}
+					size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
+					index={1}
+					options={["Lock", "Sell", "View", "Cancel"]}
+					open={rightClick}
+					onClick={(): void => {
+						setRightClick(false);
+					}}
+					backgroundColor={Mocha.Base}
+					textColor={Latte.Base}
+					elementHeight={px(ITEM_SLOT_SIZE.Y) / 4}
+				/>
 				<Frame
 					size={UDim2.fromScale(1, 1)}
 					anchorPoint={new Vector2(0.5, 0.5)}

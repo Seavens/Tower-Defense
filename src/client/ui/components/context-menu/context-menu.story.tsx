@@ -27,6 +27,7 @@ export = CreateReactStory(
 				textColor={Mocha.Overlay0}
 				backgroundColor={Mocha.Base}
 				strokeColor={Mocha.Overlay1}
+				open={true}
 			/>
 		);
 	},

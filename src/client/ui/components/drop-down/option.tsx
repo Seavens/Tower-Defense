@@ -1,5 +1,6 @@
 import { Button } from "../button";
 import { Darken } from "@rbxts/colour-utils";
+import { DelayRender } from "../delay-render";
 import { FONTS, SPRINGS } from "client/ui/constants";
 import { Group } from "../group";
 import { Latte, Mocha } from "@rbxts/catppuccin";
@@ -16,7 +17,7 @@ interface DropdownOptionProps {
 	text: string;
 	enabled: boolean;
 	visible: boolean;
-	onClick?: () => void;
+	onLeftClick?: () => void;
 	onRightClick?: () => void;
 	backgroundColor: Color3;
 }
@@ -26,7 +27,7 @@ export function DropdownOption({
 	text,
 	enabled,
 	visible,
-	onClick: onLeftClick,
+	onLeftClick,
 	onRightClick,
 	backgroundColor,
 }: DropdownOptionProps): Element {
@@ -42,31 +43,41 @@ export function DropdownOption({
 	}, [visible]);
 
 	return (
-		<Group size={size ?? new UDim2(1, -px(3), 0, px(16))} anchorPoint={Vector2.one.mul(0.5)} key={"option-group"}>
-			<Button
-				size={new UDim2(1, -px(4), 1, 0)}
-				position={UDim2.fromScale(0, 0)}
-				anchorPoint={Vector2.zero}
-				cornerRadius={new UDim(0, px(3))}
-				key={"option-button"}
-				backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(Mocha.Overlay0, value))}
-				backgroundTransparency={transparency}
-				onClick={onLeftClick}
-				{...events}
+		<DelayRender shouldRender={visible} unmountDelay={0.25}>
+			<Group
+				size={size ?? new UDim2(1, -px(3), 0, px(16))}
+				anchorPoint={Vector2.one.mul(0.5)}
+				key={"option-group"}
 			>
-				<Text
-					size={UDim2.fromScale(1, 1)}
-					anchorPoint={Vector2.one.mul(0.5)}
-					position={UDim2.fromScale(0.5, 0.5)}
-					font={FONTS.inter.regular}
-					text={text}
-					textColor={Latte.Base}
-					textWrapped={true}
-					textSize={px(12)}
-					textTransparency={transparency}
-					key={"option-text"}
-				/>
-			</Button>
-		</Group>
+				<Button
+					size={new UDim2(1, -px(4), 1, 0)}
+					position={UDim2.fromScale(0, 0)}
+					anchorPoint={Vector2.zero}
+					cornerRadius={new UDim(0, px(3))}
+					key={"option-button"}
+					backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(Mocha.Overlay0, value))}
+					backgroundTransparency={transparency}
+					active={false}
+					event={{
+						MouseButton1Click: (): void => onLeftClick?.(),
+						MouseButton2Click: (): void => onRightClick?.(),
+					}}
+					{...events}
+				>
+					<Text
+						size={UDim2.fromScale(1, 1)}
+						anchorPoint={Vector2.one.mul(0.5)}
+						position={UDim2.fromScale(0.5, 0.5)}
+						font={FONTS.inter.regular}
+						text={text}
+						textColor={Latte.Base}
+						textWrapped={true}
+						textSize={px(12)}
+						textTransparency={transparency}
+						key={"option-text"}
+					/>
+				</Button>
+			</Group>
+		</DelayRender>
 	);
 }
