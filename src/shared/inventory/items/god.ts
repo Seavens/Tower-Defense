@@ -25,12 +25,12 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		cost: 700,
 
 		upgrades: [
-			[1, { damage: 1.05, range: 1.03, cooldown: 0.9 }, 1000],
-			[2, { damage: 1.1, range: 1.06, cooldown: 96 }, 2000],
-			[3, { damage: 1.2, range: 1.1, cooldown: 0.9 }, 4000],
-			[4, { damage: 1.4, range: 1.2, cooldown: 0.8 }, 8000],
-			[5, { damage: 1.8, range: 1.4, cooldown: 0.8 }, 16000],
-			[6, { damage: 2.4, range: 1.8, cooldown: 0.7 }, 32000],
+			[1, { damage: 2, range: 0.1, cooldown: -0.1 }, 1000],
+			[2, { damage: 3, range: 0.3, cooldown: -0.2 }, 2000],
+			[3, { damage: 4, range: 0.5, cooldown: -0.3 }, 4000],
+			[4, { damage: 5, range: 0.7, cooldown: -0.4 }, 8000],
+			[5, { damage: 6, range: 1, cooldown: -0.5 }, 16000],
+			[6, { damage: 7, range: 1.4, cooldown: -0.6 }, 32000],
 		],
 
 		targeting: [
