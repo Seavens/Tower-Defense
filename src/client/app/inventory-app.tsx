@@ -1,4 +1,4 @@
-import { Inventory } from "client/ui/inventory/inventory";
+import { Inventory } from "client/ui/inventory/storage/inventory";
 import { useEffect, useState } from "@rbxts/react";
 import { useKeyPress } from "@rbxts/pretty-react-hooks";
 import React from "@rbxts/react";

@@ -1,12 +1,12 @@
 import { Darken, GetPerceivedBrightness } from "@rbxts/colour-utils";
 import { FONTS, SPRINGS } from "client/ui/constants";
-import { Frame, Group, Image, Text } from "../components";
-import { ITEM_SLOT_SIZE } from "./constants";
+import { Frame, Group, Image, Text } from "client/ui/components";
+import { ITEM_SLOT_SIZE } from "../constants";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { map } from "@rbxts/pretty-react-hooks";
-import { useItemDefinition, useRarityDefinition } from "./utils";
-import { useMotion, usePx } from "../hooks";
+import { useItemDefinition, useRarityDefinition } from "../utils";
+import { useMotion, usePx } from "client/ui/hooks";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
@@ -60,6 +60,30 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 				backgroundColor={Darken(color, 0.25)}
 				key={"slot-group"}
 			>
+				<Frame
+					size={UDim2.fromScale(1, 1)}
+					anchorPoint={new Vector2(0.5, 0.5)}
+					position={UDim2.fromScale(0.5, 0.5)}
+					cornerRadius={new UDim(0, px(5))}
+					key={"locked-image"}
+					backgroundColor={new Color3(0.27, 0.27, 0.27)}
+					backgroundTransparency={affordable ? 1 : 0.5}
+					zIndex={15}
+				>
+					<Image
+						size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(25), px(ITEM_SLOT_SIZE.Y) - px(25))}
+						anchorPoint={new Vector2(0.5, 0.5)}
+						position={UDim2.fromScale(0.5, 0.4)}
+						cornerRadius={new UDim(0, px(5))}
+						image={"rbxassetid://4772171909"}
+						key={"locked-image"}
+						backgroundTransparency={1}
+						imageTransparency={affordable ? 1 : 0.5}
+						clipsDescendants={true}
+					>
+						<uiaspectratioconstraint AspectRatio={1} key={"locked-aspect-ratio"} />
+					</Image>
+				</Frame>
 				<Group
 					size={UDim2.fromScale(1, 0.8)}
 					anchorPoint={Vector2.zero}
@@ -68,18 +92,6 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 					zIndex={2}
 					key={"slot-upper"}
 				>
-					<Image
-						size={UDim2.fromScale(1, 1)}
-						anchorPoint={new Vector2(0.5, 0.5)}
-						position={UDim2.fromScale(0.5, 0.5)}
-						cornerRadius={new UDim(0, px(5))}
-						image={"rbxassetid://4772171909"}
-						key={"locked-image"}
-						backgroundColor={new Color3(0.27, 0.27, 0.27)}
-						backgroundTransparency={affordable ? 1 : 0.5}
-						imageTransparency={affordable ? 1 : 0.5}
-						zIndex={15}
-					/>
 					<Group
 						size={UDim2.fromScale(1, 1)}
 						anchorPoint={Vector2.zero}
@@ -144,7 +156,6 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 							size={UDim2.fromScale(1, 0.5)}
 							anchorPoint={Vector2.one}
 							position={UDim2.fromScale(1, 0.25)}
-							cornerRadius={new UDim(0, px(5))}
 							backgroundColor={Darken(color, 0.45)}
 							key={"lower-color-top"}
 							zIndex={1}

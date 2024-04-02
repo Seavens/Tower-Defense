@@ -16,7 +16,8 @@ interface DropdownOptionProps {
 	text: string;
 	enabled: boolean;
 	visible: boolean;
-	onClick?: () => void;
+	onLeftClick?: () => void;
+	onRightClick?: () => void;
 	backgroundColor: Color3;
 }
 
@@ -25,7 +26,8 @@ export function DropdownOption({
 	text,
 	enabled,
 	visible,
-	onClick,
+	onLeftClick,
+	onRightClick,
 	backgroundColor,
 }: DropdownOptionProps): Element {
 	const px = usePx();
@@ -49,7 +51,7 @@ export function DropdownOption({
 				key={"option-button"}
 				backgroundColor={hover.map((value: number): Color3 => backgroundColor.Lerp(Mocha.Overlay0, value))}
 				backgroundTransparency={transparency}
-				onClick={onClick}
+				onClick={onLeftClick}
 				{...events}
 			>
 				<Text

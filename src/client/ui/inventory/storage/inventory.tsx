@@ -1,30 +1,33 @@
-import { Button, DelayRender, DropDown, Frame, Group, Image, Text, Transition } from "../components";
+import { Button, DelayRender, DropDown, Frame, Group, Image, Text, Transition } from "../../components";
+import { ContextMenuText } from "client/ui/components/context-menu/contextText";
 import { Darken, Lighten } from "@rbxts/colour-utils";
-import { FONTS, PALETTE, SPRINGS } from "../constants";
+import { FONTS, PALETTE, SPRINGS } from "../../constants";
 import {
 	INVENTORY_COLUMN_COUNT,
+	INVENTORY_ROW_MAX,
 	INVENTORY_SIZE,
+	ITEM_SLOT_PADDING,
 	ITEM_SLOT_SIZE,
 	RARITY_ORDERS,
 	TRANSPARENCY_GRADIENT,
-} from "./constants";
+} from "../constants";
 import { ItemFiltering } from "shared/inventory/types";
 import { ItemKind } from "shared/inventory/types";
-import { ItemSlot } from "./item-slot";
+import { ItemSlot } from "../item-slot/item-slot";
 import { ItemUtility } from "shared/inventory/utility";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
-import { SearchBar } from "../components/search-bar";
-import { TextField } from "../components/text-field";
-import { formatStats, useItemDefinition, useRarityDefinition } from "./utils";
+import { SearchBar } from "../../components/search-bar";
+import { TextField } from "../../components/text-field";
+import { formatStats, useItemDefinition, useRarityDefinition } from "../utils";
 import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { map, useAsync } from "@rbxts/pretty-react-hooks";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
-import { useButtonAnimation } from "../hooks/use-button-animation";
-import { useButtonState } from "../hooks/use-button-state";
-import { useMotion, usePx } from "../hooks";
+import { useButtonAnimation } from "../../hooks/use-button-animation";
+import { useButtonState } from "../../hooks/use-button-state";
+import { useMotion, usePx } from "../../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import Abbreviator from "@rbxts/abbreviate";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";
@@ -59,6 +62,16 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 	const px = usePx();
 	const abbreviator = new Abbreviator();
 
+	useEffect(() => {
+		if (search === undefined || search.size() === 0) {
+			setSearch(undefined);
+		}
+	}, [search]);
+
+	useEffect((): void => {
+		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.responsive);
+	}, [visible]);
+
 	const item = useMemo((): Option<Item> => {
 		if (selected === undefined) {
 			return undefined;
@@ -83,6 +96,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
+
 		for (const index of $range(1, stored.size())) {
 			const slot: Slot = `${index}`;
 			const item = stored.get(slot);
@@ -90,15 +104,15 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 				continue;
 			}
 			const { id, unique } = item;
-			if (filtered === ItemFiltering.Locked && unique.locked) {
-				warn("Locked");
+			if (filtered === ItemFiltering.Locked && !unique.locked) {
+				continue;
+			}
+
+			if (filtered === ItemFiltering.Tower && unique.kind !== ItemKind.Tower) {
 				continue;
 			}
 
 			if (filtered === ItemFiltering.Relic && unique.kind !== ItemKind.Relic) {
-				continue;
-			}
-			if (filtered === ItemFiltering.Tower && unique.kind !== ItemKind.Tower) {
 				continue;
 			}
 
@@ -125,14 +139,20 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 			);
 		}
 		return elements;
-	}, [stored, filtered, selected, search]);
+	}, [stored, filtered, selected, search, stats, px]);
 
 	const itemDef = useItemDefinition(item?.id);
 	const rarityDef = useRarityDefinition(itemDef?.id);
 
-	useEffect((): void => {
-		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.responsive);
-	}, [visible]);
+	const canvasSize = useMemo(() => {
+		const numColumns = math.min(INVENTORY_ROW_MAX, elements.size());
+		const numRows = math.ceil(elements.size() / numColumns);
+
+		const canvasWidth = numColumns * (ITEM_SLOT_SIZE.X + ITEM_SLOT_PADDING);
+		const canvasHeight = numRows * (ITEM_SLOT_SIZE.Y + ITEM_SLOT_PADDING);
+
+		return UDim2.fromOffset(px(canvasWidth), px(canvasHeight));
+	}, [elements, px]);
 
 	return (
 		<DelayRender shouldRender={visible} unmountDelay={1}>
@@ -257,6 +277,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									font={FONTS.robotoMono.regular}
 									backgroundColor={BACKGROUND_LIGHT}
 									onSearch={setSearch}
+									clearTextOnFocus={true}
 									queries={allItemNames}
 									enabled={true}
 									accuracy={5}
@@ -267,7 +288,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										Color={OUTLINE}
 									/>
 								</SearchBar>
-								<DropDown
+								<ContextMenuText
 									anchorPoint={new Vector2(0, 0.5)}
 									position={UDim2.fromScale(0.78, 0.5)}
 									textColor={TEXTCOLOR}
@@ -278,6 +299,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									options={["Off", "Item", "Rarity", "Level", "Locked"]}
 									index={1}
 									enabled={true}
+									dislayHeader={true}
 									onClick={(option: string): void => {
 										switch (option) {
 											case "Off":
@@ -345,10 +367,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 								BorderSizePixel={0}
 								ScrollBarThickness={px(THICKNESS)}
 								ScrollBarImageColor3={Latte.Base}
-								CanvasSize={UDim2.fromOffset(
-									0,
-									px(INVENTORY_COLUMN_COUNT * (ITEM_SLOT_SIZE.Y + 5)) + px(36),
-								)}
+								CanvasSize={canvasSize}
 								ZIndex={2}
 							>
 								<uipadding

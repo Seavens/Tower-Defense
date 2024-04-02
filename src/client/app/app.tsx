@@ -1,4 +1,4 @@
-import { HotbarApp } from "../ui/inventory";
+import { HotbarApp } from "../ui/inventory/hotbar";
 import { InventoryApp } from "./inventory-app";
 import { Layer } from "client/ui/components";
 import { ReflexProvider } from "@rbxts/react-reflex";

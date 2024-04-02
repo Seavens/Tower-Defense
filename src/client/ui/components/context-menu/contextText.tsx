@@ -1,17 +1,17 @@
-import { type BindingOrValue, getBindingValue } from "@rbxts/pretty-react-hooks";
-import { Button } from "../button";
+import { Button, Frame, Group, Image, Text } from "..";
+import React, { useEffect, useMemo, useState } from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element } from "@rbxts/react";
+
 import { Darken } from "@rbxts/colour-utils";
-import { DropdownOption } from "./option";
+import { DropdownOption } from "../drop-down/option";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
-import { Text } from "../text";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
 import { usePx } from "client/ui/hooks";
-import React, { useEffect, useMemo, useState } from "@rbxts/react";
-import type { Element } from "@rbxts/react";
 
-interface DropDownProps {
+export interface ContextMenuProps {
 	size?: UDim2;
 	position?: BindingOrValue<UDim2>;
 	anchorPoint?: BindingOrValue<Vector2>;
@@ -23,9 +23,10 @@ interface DropDownProps {
 	backgroundColor: Color3;
 	textColor: Color3;
 	strokeColor?: Color3;
+	dislayHeader?: boolean;
 }
 
-export function DropDown({
+export function ContextMenuText({
 	size,
 	position = UDim2.fromScale(0.5, 0.5),
 	anchorPoint = Vector2.one.mul(0.5),
@@ -37,14 +38,14 @@ export function DropDown({
 	backgroundColor,
 	textColor,
 	strokeColor,
-}: DropDownProps): Element {
+	dislayHeader,
+}: ContextMenuProps): Element {
 	const px = usePx();
 
 	const OUTLINE = Darken(backgroundColor, 0.25);
 
 	size ??= UDim2.fromOffset(px(200), px(16));
 
-	// Assume size is already in `px`
 	const height = size?.Y.Offset ?? px(16);
 
 	const [open, setOpen] = useState(false);
@@ -96,21 +97,17 @@ export function DropDown({
 		>
 			<uistroke
 				Color={strokeColor ?? OUTLINE}
+				Transparency={strokeColor === undefined ? 1 : 0}
 				Thickness={px(1)}
 				key={"dropdown-stroke"}
 				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 			/>
-			<scrollingframe
-				Size={new UDim2(1, -px(13), 2, 0)}
-				Position={new UDim2(0, 0, 1, px(1))}
-				AnchorPoint={new Vector2(0, 0)}
-				BackgroundTransparency={1}
-				BorderSizePixel={0}
-				ScrollBarThickness={px(3)}
-				ScrollBarImageColor3={Latte.Base}
-				CanvasSize={UDim2.fromOffset(0, open ? height * options.size() : 0)}
-				ClipsDescendants={true}
-				key={"dropdown-options"}
+			<Frame
+				size={new UDim2(1, 0, 2, 0)}
+				position={new UDim2(0, 0, 1, px(1))}
+				anchorPoint={new Vector2(0, 0)}
+				backgroundTransparency={1}
+				key={"context-options"}
 			>
 				{elements}
 				<uilistlayout
@@ -120,8 +117,9 @@ export function DropDown({
 					Padding={new UDim()}
 					key={"dropdown-layout"}
 				/>
-			</scrollingframe>
+			</Frame>
 			<Text
+				visible={dislayHeader || false}
 				size={UDim2.fromOffset(px(16), px(16))}
 				position={UDim2.fromScale(1, 1)}
 				anchorPoint={Vector2.one}
@@ -133,6 +131,7 @@ export function DropDown({
 				key={"dropdown-icon"}
 			/>
 			<Text
+				visible={dislayHeader || false}
 				size={new UDim2(1, -px(16), 1, 0)}
 				anchorPoint={Vector2.zero}
 				position={UDim2.fromScale(0, 0)}
