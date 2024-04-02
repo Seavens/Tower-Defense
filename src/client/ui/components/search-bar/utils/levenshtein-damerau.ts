@@ -19,7 +19,7 @@ export function levenshteinDamerau(a: string, b: string): number {
 	}
 	for (const i of $range(1, rows)) {
 		for (const j of $range(1, columns)) {
-			if (a.byte(i)[0] === b.byte(i)[0]) {
+			if (a.byte(i)[0] === b.byte(j)[0]) {
 				// -2 because we're trying to do -1 while the compiler is trying to +1
 				matrix[i - 1][j - 1] = matrix[i - 2][j - 2];
 				continue;

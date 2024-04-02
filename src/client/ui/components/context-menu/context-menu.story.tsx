@@ -1,4 +1,4 @@
-import { ContextMenuText } from "./contextText";
+import { ContextMenu } from "./contextMenu";
 import { CreateReactStory, Number } from "@rbxts/ui-labs";
 import { Mocha } from "@rbxts/catppuccin";
 import React from "@rbxts/react";
@@ -19,7 +19,7 @@ export = CreateReactStory(
 		const { length, height } = controls;
 		const size = UDim2.fromOffset(length, height);
 		return (
-			<ContextMenuText
+			<ContextMenu
 				size={size}
 				options={["One", "Two", "Three"]}
 				index={1}

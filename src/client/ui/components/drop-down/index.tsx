@@ -64,7 +64,7 @@ export function DropDown({
 					enabled={true}
 					visible={open}
 					backgroundColor={backgroundColor}
-					onLeftClick={(): void => {
+					onClick={(): void => {
 						onClick?.(option);
 						setSelected(index);
 						setOpen(false);
@@ -101,7 +101,7 @@ export function DropDown({
 				ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 			/>
 			<scrollingframe
-				Size={new UDim2(1, -px(13), 2, 0)}
+				Size={new UDim2(1, -px(13), 3, 0)}
 				Position={new UDim2(0, 0, 1, px(1))}
 				AnchorPoint={new Vector2(0, 0)}
 				BackgroundTransparency={1}

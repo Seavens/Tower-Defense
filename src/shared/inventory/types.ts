@@ -5,10 +5,9 @@ import type { ItemDefinition, itemDefinitions } from "./items";
 
 export const enum ItemFiltering {
 	All = "item_filter:all",
-	Tower = "item_filter:tower",
-	Relic = "item_filter:relic",
 	Rarity = "item_filter:rarity",
 	Level = "item_filter:level",
+	Items = "item_filter:items",
 	Locked = "item_filter:locked",
 }
 

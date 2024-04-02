@@ -69,11 +69,7 @@ export function SearchBar({
 		}
 		const matches = new Array<string>();
 		for (const query of queries) {
-			// const levenshtein = levenshteinDamerau(search, query);
-			// if (levenshtein > accuracy) {
-			// 	continue;
-			// }
-			const [match] = query.lower().find(search.lower());
+			const [match] = query.lower().find(`^${search.lower()}`);
 			if (match === undefined) {
 				continue;
 			}

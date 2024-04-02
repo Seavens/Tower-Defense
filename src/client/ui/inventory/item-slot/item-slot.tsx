@@ -1,5 +1,7 @@
+/* eslint-disable roblox-ts/lua-truthiness */
+import { ContextMenu } from "client/ui/components/context-menu/contextMenu";
 import { Darken, GetPerceivedBrightness } from "@rbxts/colour-utils";
-import { FONTS, SPRINGS } from "client/ui/constants";
+import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, Text } from "client/ui/components";
 import { ITEM_SLOT_SIZE } from "../constants";
 import { ItemKind } from "shared/inventory/types";
@@ -7,35 +9,46 @@ import { Latte, Mocha } from "@rbxts/catppuccin";
 import { map } from "@rbxts/pretty-react-hooks";
 import { useItemDefinition, useRarityDefinition } from "../utils";
 import { useMotion, usePx } from "client/ui/hooks";
-import React, { useEffect, useMemo } from "@rbxts/react";
+import React, { useEffect, useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item, ItemId } from "shared/inventory/types";
 
 export interface ItemSlotProps extends Partial<Item> {
+	enableContext?: boolean;
 	affordable?: boolean;
 	selected?: boolean;
 	layoutOrder?: number;
 	onClick?: (id: ItemId) => void;
 }
 
-export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClick }: ItemSlotProps): Element {
+export function ItemSlot({
+	id,
+	unique,
+	affordable,
+	selected,
+	layoutOrder,
+	onClick,
+	enableContext,
+}: ItemSlotProps): Element {
 	const px = usePx();
-
 	const definition = useItemDefinition(id);
 	const rarity = useRarityDefinition(id);
 
 	const [outline, outlineMotion] = useMotion(1);
 
-	const cost = useMemo((): Option<number> => {
-		if (definition === undefined) {
-			return undefined;
-		}
+	const [leftClick, setLeftClick] = useState(false);
+	const [rightClick, setRightClick] = useState(false);
+
+	const headerText = useMemo((): Option<string> => {
+		if (definition === undefined) return undefined;
+
 		const { kind } = definition;
-		if (kind.kind !== ItemKind.Tower) {
-			return undefined;
-		}
+		if (kind.kind === ItemKind.Relic) return definition.name;
+
 		const { cost } = kind;
-		return cost;
+		if (kind.kind === ItemKind.Tower) return `$${cost}`;
+
+		return undefined;
 	}, [definition]);
 
 	const color = rarity?.color ?? Latte.Base;
@@ -52,23 +65,45 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 			layoutOrder={layoutOrder}
 			key={"item-slot"}
 		>
-			<Frame
-				size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(2) * 2, px(ITEM_SLOT_SIZE.Y) - px(2) * 2)}
-				anchorPoint={Vector2.one.mul(0.5)}
-				position={UDim2.fromScale(0.5, 0.5)}
-				cornerRadius={new UDim(0, px(5))}
-				backgroundColor={Darken(color, 0.25)}
+			<ContextMenu
+				enabled={enableContext}
+				size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
+				index={1}
+				options={["Lock", "Sell", "View", "Cancel"]}
+				onClick={(): void => {
+					setRightClick(true);
+					enableContext = false;
+				}}
+				backgroundColor={Mocha.Base}
+				textColor={Latte.Base}
+				elementHeight={px(10)}
+			/>
+			<imagebutton
+				Size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(2) * 2, px(ITEM_SLOT_SIZE.Y) - px(2) * 2)}
+				AnchorPoint={Vector2.one.mul(0.5)}
+				Position={UDim2.fromScale(0.5, 0.5)}
+				BackgroundColor3={Darken(color, 0.25)}
 				key={"slot-group"}
+				Event={{
+					MouseButton1Click: (): void => {
+						if (rightClick) {
+							setRightClick(false);
+							enableContext = false;
+						}
+					},
+				}}
 			>
+				<uicorner CornerRadius={new UDim(0, px(5))} />
+
 				<Frame
 					size={UDim2.fromScale(1, 1)}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					position={UDim2.fromScale(0.5, 0.5)}
 					cornerRadius={new UDim(0, px(5))}
-					key={"locked-image"}
 					backgroundColor={new Color3(0.27, 0.27, 0.27)}
 					backgroundTransparency={affordable ? 1 : 0.5}
 					zIndex={15}
+					key={"locked-image"}
 				>
 					<Image
 						size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(25), px(ITEM_SLOT_SIZE.Y) - px(25))}
@@ -76,10 +111,10 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 						position={UDim2.fromScale(0.5, 0.4)}
 						cornerRadius={new UDim(0, px(5))}
 						image={"rbxassetid://4772171909"}
-						key={"locked-image"}
 						backgroundTransparency={1}
 						imageTransparency={affordable ? 1 : 0.5}
 						clipsDescendants={true}
+						key={"locked-image"}
 					>
 						<uiaspectratioconstraint AspectRatio={1} key={"locked-aspect-ratio"} />
 					</Image>
@@ -98,23 +133,15 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 						position={UDim2.fromScale(0, 0)}
 						key={"image-group"}
 					>
-						<imagebutton
-							Size={UDim2.fromScale(1, 1)}
-							AnchorPoint={Vector2.one.mul(0.5)}
-							Position={UDim2.fromScale(0.5, 0.5)}
-							BackgroundTransparency={1}
-							Image={definition?.image}
-							ImageTransparency={definition === undefined ? 1 : 0}
-							ScaleType={Enum.ScaleType.Fit}
-							Event={{
-								MouseButton1Click: (): void => {
-									if (id === undefined || !affordable) {
-										return;
-									}
-									onClick?.(id);
-								},
-							}}
-							key={"slot-image"}
+						<Image
+							size={UDim2.fromScale(1, 1)}
+							anchorPoint={Vector2.one.mul(0.5)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							backgroundTransparency={1}
+							image={definition?.image}
+							imageTransparency={definition === undefined ? 1 : 0}
+							scaleType={"Fit"}
+							key={"slot-imagebutton"}
 						>
 							<Text
 								size={new UDim2(1, 0, 0, px(12))}
@@ -122,7 +149,13 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 								anchorPoint={new Vector2(0, 1)}
 								backgroundTransparency={1}
 								text={
-									unique !== undefined && unique.kind === ItemKind.Tower ? `Lv: ${unique.level}` : ""
+									unique === undefined
+										? ""
+										: unique.kind === ItemKind.Tower
+											? `Lv: ${unique.level}`
+											: unique.kind === ItemKind.Relic
+												? `Multi: ${unique.multiplier}`
+												: ""
 								}
 								textStrokeColor={Mocha.Base}
 								textStrokeTransparency={0.75}
@@ -133,7 +166,7 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 								zIndex={1}
 								key={"tower-level"}
 							/>
-						</imagebutton>
+						</Image>
 					</Group>
 				</Group>
 				<Group
@@ -167,7 +200,7 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 							textStrokeColor={Mocha.Crust}
 							textStrokeTransparency={0.75}
 							textColor={Latte.Base}
-							text={definition === undefined ? "" : `$${cost}`}
+							text={definition === undefined ? "" : `${headerText}`}
 							textSize={px(10)}
 							font={FONTS.inter.bold}
 							key={"tower-cost"}
@@ -181,7 +214,7 @@ export function ItemSlot({ id, unique, affordable, selected, layoutOrder, onClic
 					Thickness={px(2)}
 					key={"slot-outline"}
 				/>
-			</Frame>
+			</imagebutton>
 		</Group>
 	);
 }

@@ -3,14 +3,16 @@ import { ItemKind, type ItemTowerUnique, type TowerItemId } from "shared/invento
 import { ItemSlot } from "./item-slot";
 import { Modding } from "@flamework/core";
 import { ReflexProvider } from "@rbxts/react-reflex";
+import { itemDefinitions } from "shared/inventory/items";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
+import type { ItemId, ItemRelicUnique } from "shared/inventory/types";
 
-const allTowerItemIds = Modding.inspect<Array<TowerItemId>>();
+const allItemIds = Modding.inspect<Array<ItemId>>();
 
-const unique: ItemTowerUnique = {
+const towerUnique: ItemTowerUnique = {
 	cooldown: 1.15,
 	damage: 1.15,
 	kind: ItemKind.Tower,
@@ -21,13 +23,19 @@ const unique: ItemTowerUnique = {
 	range: 1.15,
 };
 
+const relicUnique: ItemRelicUnique = {
+	kind: ItemKind.Relic,
+	locked: false,
+	multiplier: 1.15,
+};
+
 export = CreateReactStory(
 	{
-		name: "Hotbar",
+		name: "Slot",
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {
-			id: Choose(allTowerItemIds),
+			id: Choose(allItemIds),
 			affordable: Boolean(true),
 			selected: Boolean(true),
 		},
@@ -40,7 +48,12 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<ItemSlot id={id} unique={unique} selected={selected} affordable={affordable} />
+				<ItemSlot
+					id={id}
+					selected={selected}
+					affordable={affordable}
+					unique={itemDefinitions[id].kind.kind === ItemKind.Tower ? towerUnique : relicUnique}
+				/>
 			</ReflexProvider>
 		);
 	},

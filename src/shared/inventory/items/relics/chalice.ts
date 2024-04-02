@@ -6,13 +6,13 @@ import type { ItemDefinition } from "..";
 export const chaliceItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = {
 	id: ItemId.Chalice,
 	name: "Chalice",
-	desc: "..",
+	desc: "A chalice that grants you a 1.3x multplier.",
 
-	image: "rbxassetid://16452498785",
+	image: "rbxassetid://129697838",
 	rarity: ItemRarity.Legendary,
 
 	kind: {
 		kind: ItemKind.Relic,
-		multiplier: 1.2,
+		multiplier: 1.3,
 	},
 };

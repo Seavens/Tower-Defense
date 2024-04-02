@@ -1,5 +1,4 @@
 import { Button, DelayRender, DropDown, Frame, Group, Image, Text, Transition } from "../../components";
-import { ContextMenuText } from "client/ui/components/context-menu/contextText";
 import { Darken, Lighten } from "@rbxts/colour-utils";
 import { FONTS, PALETTE, SPRINGS } from "../../constants";
 import {
@@ -104,15 +103,13 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 				continue;
 			}
 			const { id, unique } = item;
+
 			if (filtered === ItemFiltering.Locked && !unique.locked) {
 				continue;
 			}
 
-			if (filtered === ItemFiltering.Tower && unique.kind !== ItemKind.Tower) {
-				continue;
-			}
-
-			if (filtered === ItemFiltering.Relic && unique.kind !== ItemKind.Relic) {
+			// !! NEXT
+			if (filtered === ItemFiltering.Items && unique.kind !== ItemKind.Tower) {
 				continue;
 			}
 
@@ -288,7 +285,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										Color={OUTLINE}
 									/>
 								</SearchBar>
-								<ContextMenuText
+								<DropDown
 									anchorPoint={new Vector2(0, 0.5)}
 									position={UDim2.fromScale(0.78, 0.5)}
 									textColor={TEXTCOLOR}
@@ -299,14 +296,13 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									options={["Off", "Item", "Rarity", "Level", "Locked"]}
 									index={1}
 									enabled={true}
-									dislayHeader={true}
 									onClick={(option: string): void => {
 										switch (option) {
 											case "Off":
 												setFiltering(ItemFiltering.All);
 												break;
 											case "Item":
-												setFiltering(ItemFiltering.Relic);
+												setFiltering(ItemFiltering.Items);
 												break;
 											case "Rarity":
 												setFiltering(ItemFiltering.Rarity);

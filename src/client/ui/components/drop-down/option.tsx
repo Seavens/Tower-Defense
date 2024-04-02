@@ -16,7 +16,7 @@ interface DropdownOptionProps {
 	text: string;
 	enabled: boolean;
 	visible: boolean;
-	onLeftClick?: () => void;
+	onClick?: () => void;
 	onRightClick?: () => void;
 	backgroundColor: Color3;
 }
@@ -26,7 +26,7 @@ export function DropdownOption({
 	text,
 	enabled,
 	visible,
-	onLeftClick,
+	onClick: onLeftClick,
 	onRightClick,
 	backgroundColor,
 }: DropdownOptionProps): Element {
