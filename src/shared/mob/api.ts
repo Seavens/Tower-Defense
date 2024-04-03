@@ -1,5 +1,5 @@
 import { Bin } from "@rbxts/bin";
-import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/core-constants";
+import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
 import { MapUtil } from "shared/map/utils";
 import { MobStatus } from "./types";
 import { mobDefinitions } from "./mobs";

@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { IS_EDIT } from "shared/core/core-constants";
+import { IS_EDIT } from "shared/core/constants";
 import { PlayerUtil } from "shared/player/utils";
 import { createBroadcaster } from "@rbxts/reflex";
 import { isBroadcastMetadata, isEntityMetadata, isReplicationMetadata } from "shared/replication/metadata";

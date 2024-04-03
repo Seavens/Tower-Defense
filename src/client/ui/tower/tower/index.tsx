@@ -12,7 +12,7 @@ import { TowerUtil } from "shared/tower/utils";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
-import { useAbbreviator, usePx } from "client/ui/hooks";
+import { useAbbreviation, usePx } from "client/ui/hooks";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
 import { useRarityColor, useTowerDefintion } from "../hooks";
@@ -28,19 +28,20 @@ export function Tower({ tower }: TowerProps): Element {
 	const { id, unique } = tower;
 
 	const px = usePx();
-	const abbreviator = useAbbreviator();
 	const definition = useTowerDefintion(id);
 	const rarity = useRarityColor(definition.rarity);
 
 	const [pressed, hovering, events] = useButtonState();
 	const { position, hover } = useButtonAnimation(pressed, hovering);
 
-	const cost = useMemo((): number => {
+	const _cost = useMemo((): number => {
 		return TowerUtil.getUpgradeCost(tower);
 	}, [tower]);
-	const price = useMemo((): number => {
+	const cost = useAbbreviation(_cost);
+	const _price = useMemo((): number => {
 		return TowerUtil.getSellPrice(tower);
 	}, [tower]);
+	const price = useAbbreviation(_price);
 	const max = useMemo((): number => {
 		const { level } = unique;
 		const max = LevelUtil.getMaxExp(level, true);
@@ -113,8 +114,6 @@ export function Tower({ tower }: TowerProps): Element {
 								anchorPoint={new Vector2(0, 1)}
 								backgroundTransparency={1}
 								text={`Level: ${unique.level}`}
-								textStrokeColor={Mocha.Base}
-								textStrokeTransparency={0.75}
 								textXAlignment={"Left"}
 								textYAlignment={"Bottom"}
 								textColor={Latte.Base}
@@ -174,7 +173,7 @@ export function Tower({ tower }: TowerProps): Element {
 								cornerRadius={new UDim(0, px(3))}
 								backgroundTransparency={0}
 								backgroundColor={hover.map(
-									(value: number): Color3 => PALETTE.error.Lerp(PALETTE.lightWhite, value / 3),
+									(value: number): Color3 => PALETTE.error.Lerp(PALETTE.light_white, value / 3),
 								)}
 								rotation={hover.map((value: number): number => map(value, 0, 1, 0, 15))}
 								onClick={(): void => {
@@ -237,11 +236,11 @@ export function Tower({ tower }: TowerProps): Element {
 						size={new UDim2(0, px(TOWER_IMAGE_SIZE.X), 1, 0)}
 						position={UDim2.fromScale(0, 1)}
 						anchorPoint={new Vector2(0, 1)}
-						backgroundColor={PALETTE.lightGreen}
-						text={cost >= math.huge ? "MAX" : `Upgrade: $${abbreviator.numberToString(cost)}`}
+						backgroundColor={PALETTE.light_green}
+						text={_cost >= math.huge ? "MAX" : `Upgrade: $${cost}`}
 						textColor={PALETTE.black}
 						textSize={px(15)}
-						enabled={cost < math.huge}
+						enabled={_cost < math.huge}
 						layoutOrder={0}
 						onClick={(): void => {
 							const { key } = tower;
@@ -258,7 +257,7 @@ export function Tower({ tower }: TowerProps): Element {
 							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2 + 1, 1, 0)}
 							position={UDim2.fromScale(0, 0)}
 							anchorPoint={Vector2.zero}
-							backgroundColor={PALETTE.lightBlue}
+							backgroundColor={PALETTE.light_blue}
 							text={TOWER_TARGETING_DISPLAY[tower.targeting]}
 							enabled={true}
 							layoutOrder={1}
@@ -271,8 +270,8 @@ export function Tower({ tower }: TowerProps): Element {
 							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2, 1, 0)}
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
-							backgroundColor={PALETTE.lightRed}
-							text={`Sell $${abbreviator.numberToString(price)}`}
+							backgroundColor={PALETTE.light_red}
+							text={`Sell $${price}`}
 							enabled={true}
 							layoutOrder={2}
 							onClick={(): void => {

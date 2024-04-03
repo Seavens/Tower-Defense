@@ -141,7 +141,7 @@ export function ItemSlot({
 							anchorPoint={Vector2.one.mul(0.5)}
 							position={UDim2.fromScale(0.5, 0.5)}
 							backgroundTransparency={1}
-							image={definition?.image}
+							image={definition?.image ?? ""}
 							imageTransparency={definition === undefined ? 1 : 0}
 							scaleType={"Fit"}
 							key={"slot-imagebutton"}
@@ -160,8 +160,6 @@ export function ItemSlot({
 												? `Multi: ${unique.multiplier}`
 												: ""
 								}
-								textStrokeColor={Mocha.Base}
-								textStrokeTransparency={0.75}
 								textXAlignment={"Left"}
 								textColor={Latte.Base}
 								textSize={px(10)}
@@ -200,8 +198,6 @@ export function ItemSlot({
 							size={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							position={UDim2.fromScale(1, 1)}
-							textStrokeColor={Mocha.Crust}
-							textStrokeTransparency={0.75}
 							textColor={Latte.Base}
 							text={definition === undefined ? "" : `${headerText}`}
 							textSize={px(10)}

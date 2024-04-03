@@ -1,5 +1,5 @@
 import { Events } from "client/network";
-import { IS_EDIT } from "shared/core/core-constants";
+import { IS_EDIT } from "shared/core/constants";
 import { createBroadcastReceiver } from "@rbxts/reflex";
 import type { BroadcastAction, ProducerMiddleware } from "@rbxts/reflex";
 

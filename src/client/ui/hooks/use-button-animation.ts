@@ -1,8 +1,8 @@
-import { SPRINGS } from "../constants";
-import { useMemo } from "@rbxts/react";
-import { useMotion } from "./use-motion";
 import { useUpdateEffect } from "@rbxts/pretty-react-hooks";
 import type React from "@rbxts/react";
+import { useMemo } from "@rbxts/react";
+import { SPRINGS } from "../constants";
+import { useMotion } from "./use-motion";
 
 export interface ButtonAnimation {
 	position: React.Binding<number>;

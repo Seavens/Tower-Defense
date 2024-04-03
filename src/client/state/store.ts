@@ -4,9 +4,9 @@ import { receiverMiddleware } from "client/replication/middleware";
 import { sharedSlices } from "shared/state/slices";
 import type { InferActions, InferState } from "@rbxts/reflex";
 
-export type ClientProducer = typeof store;
-export type ClientState = InferState<ClientProducer>;
-export type ClientActions = InferActions<ClientProducer>;
+export type ClientStore = typeof store;
+export type ClientState = InferState<ClientStore>;
+export type ClientActions = InferActions<ClientStore>;
 
 export const combinedSlices = {
 	...clientSlices,

@@ -4,7 +4,7 @@ import { DataUtil } from "./utils";
 import { Events } from "server/network";
 import { Service } from "@flamework/core";
 import { Signal } from "@rbxts/beacon";
-import { USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/core-constants";
+import { USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/constants";
 import { createCollection } from "@rbxts/lapis";
 import { createListener } from "shared/utils/create-listener";
 import { isData } from "shared/data/types";

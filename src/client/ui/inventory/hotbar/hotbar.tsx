@@ -1,7 +1,7 @@
 import { Darken } from "@rbxts/colour-utils";
 import { EXP_BAR_SIZE_Y, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "../constants";
 import { FONTS, PALETTE } from "client/ui/constants";
-import { Frame, Group, Text } from "../../components";
+import { Frame, Group, Text } from "client/ui/components";
 import { ItemSlot } from "../item-slot/item-slot";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { LevelUtil } from "shared/profile/utils";
@@ -14,7 +14,7 @@ import { selectInventoryData } from "client/inventory/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { store } from "client/state/store";
 import { truncateNumber } from "shared/utils/truncate-number";
-import { useAbbreviator, usePx } from "../../hooks";
+import { useAbbreviation, usePx } from "../../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
@@ -24,7 +24,6 @@ const player = Players.LocalPlayer;
 const user = PlayerUtil.getUser(player);
 
 export function Hotbar(): Element {
-	const abbreviator = useAbbreviator();
 	const px = usePx();
 
 	const { equipped } = useSelector(selectInventoryData);
@@ -35,6 +34,10 @@ export function Hotbar(): Element {
 	const max = useMemo((): number => {
 		return LevelUtil.getMaxExp(level);
 	}, [level]);
+
+	const currencyText = useAbbreviation(currency);
+	const expText = useAbbreviation(experience);
+	const maxText = useAbbreviation(max);
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -72,11 +75,7 @@ export function Hotbar(): Element {
 				textSize={px(14)}
 				font={FONTS.inter.bold}
 				textColor={Macchiato.Base}
-				textStrokeColor={PALETTE.accent}
-				textStrokeTransparency={0.25}
-				text={
-					currency === undefined ? `Undefined` : `$${abbreviator.stringToNumber(truncateNumber(currency, 0))}`
-				}
+				text={currency === undefined ? `Undefined` : `$${currencyText}`}
 			/>
 			<Frame
 				key={"item-group"}
@@ -123,7 +122,7 @@ export function Hotbar(): Element {
 					Position={new UDim2(0, px(7), 0.5, 0)}
 					BackgroundTransparency={1}
 					TextColor3={Latte.Base}
-					Text={`${abbreviator.numberToString(experience)}/${abbreviator.numberToString(max)}`}
+					Text={`${expText}/${maxText}`}
 					TextSize={px(12)}
 					FontFace={FONTS.inter.bold}
 					TextXAlignment={Enum.TextXAlignment.Left}

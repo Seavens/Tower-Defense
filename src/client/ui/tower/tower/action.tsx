@@ -63,7 +63,7 @@ export function TowerAction({
 				backgroundColor={composeBindings(
 					hover,
 					backgroundColor,
-					(value: number, color: Color3): Color3 => color.Lerp(PALETTE.lightWhite, value / 3),
+					(value: number, color: Color3): Color3 => color.Lerp(PALETTE.light_white, value / 3),
 				)}
 				backgroundTransparency={transparency.map((value: number): number => map(value, 0, 1, 0, 0.4))}
 				onClick={enabled ? onClick : undefined}

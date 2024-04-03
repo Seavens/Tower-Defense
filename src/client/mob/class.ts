@@ -1,5 +1,5 @@
 import { Mob as API } from "shared/mob/api";
-import { GAME_TICK_RATE } from "shared/core/core-constants";
+import { GAME_TICK_RATE } from "shared/core/constants";
 import { MobUtil } from "shared/mob/utils";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";

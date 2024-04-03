@@ -1,11 +1,10 @@
-// Resourced from Littensy: https://github.com/littensy/slither
-import { UserInputService } from "@rbxts/services";
 import { useEventListener } from "@rbxts/pretty-react-hooks";
 import { useState } from "@rbxts/react";
+import { UserInputService } from "@rbxts/services";
 
 export type InputDevice = "keyboard" | "gamepad" | "touch";
 
-const getInputType = (inputType = UserInputService.GetLastInputType()): InputDevice | undefined => {
+function getInputType(inputType = UserInputService.GetLastInputType()): InputDevice {
 	if (inputType === Enum.UserInputType.Keyboard || inputType === Enum.UserInputType.MouseMovement) {
 		return "keyboard";
 	} else if (inputType === Enum.UserInputType.Gamepad1) {
@@ -14,23 +13,19 @@ const getInputType = (inputType = UserInputService.GetLastInputType()): InputDev
 		return "touch";
 	}
 	return "keyboard";
-};
+}
 
-/**
- * Returns the current input device being used by the player.
- * @returns An InputDevice string.
- */
 export function useInputDevice(): InputDevice {
 	const [device, setDevice] = useState<InputDevice>(() => {
-		return getInputType() ?? "keyboard";
+		return getInputType();
 	});
 
-	useEventListener(UserInputService.LastInputTypeChanged, (inputType) => {
+	useEventListener(UserInputService.LastInputTypeChanged, (inputType: Enum.UserInputType) => {
 		const newDevice = getInputType(inputType);
-
-		if (newDevice !== undefined) {
-			setDevice(newDevice);
+		if (newDevice === undefined) {
+			return;
 		}
+		setDevice(newDevice);
 	});
 
 	return device;

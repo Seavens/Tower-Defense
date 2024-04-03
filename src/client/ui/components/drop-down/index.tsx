@@ -1,10 +1,9 @@
 import { type BindingOrValue, getBindingValue } from "@rbxts/pretty-react-hooks";
-import { Button } from "../button";
+import { Button, Text } from "../basic";
 import { Darken } from "@rbxts/colour-utils";
 import { DropdownOption } from "./option";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
-import { Text } from "../text";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
 import { usePx } from "client/ui/hooks";

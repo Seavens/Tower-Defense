@@ -1,4 +1,3 @@
-// Resourced from Littensy: https://github.com/littensy/slither
 import { useCamera, useDebounceState, useEventListener } from "@rbxts/pretty-react-hooks";
 import { useMemo } from "@rbxts/react";
 
@@ -25,7 +24,7 @@ interface ScaleFunction {
 	ceil: (pixels: number) => number;
 }
 
-const BASE_RESOLUTION = new Vector2(1280, 832);
+const BASE_RESOLUTION = new Vector2(1920, 1080);
 const MIN_SCALE = 0.75;
 const DOMINANT_AXIS = 0.5;
 
@@ -36,7 +35,6 @@ function calculateScale(viewport: Vector2): number {
 	const width = math.log(viewport.X / BASE_RESOLUTION.X, 2);
 	const height = math.log(viewport.Y / BASE_RESOLUTION.Y, 2);
 	const centered = width + (height - width) * DOMINANT_AXIS;
-
 	return math.max(2 ** centered, MIN_SCALE);
 }
 

@@ -4,7 +4,7 @@ import { ItemUtility } from "shared/inventory/utility";
 import { Service } from "@flamework/core";
 import { TowerGrade } from "shared/tower/types";
 import { TowerUtil } from "shared/tower/utils";
-import { USE_MOCK_DATA } from "shared/core/core-constants";
+import { USE_MOCK_DATA } from "shared/core/constants";
 import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";
 import type { BroadcastMetadata, EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";

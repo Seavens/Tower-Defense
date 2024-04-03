@@ -1,8 +1,8 @@
-import { Button, DelayRender, DropDown, Frame, Group, Image, Text, Transition } from "../../components";
+import { Button, DelayRender, Frame, Group, Image, SearchBar, Text, Transition } from "client/ui/components";
 import { Darken, Lighten } from "@rbxts/colour-utils";
+import { DropDown } from "client/ui/components/drop-down";
 import { FONTS, PALETTE, SPRINGS } from "../../constants";
 import {
-	INVENTORY_COLUMN_COUNT,
 	INVENTORY_ROW_MAX,
 	INVENTORY_SIZE,
 	ITEM_SLOT_PADDING,
@@ -16,8 +16,6 @@ import { ItemSlot } from "../item-slot/item-slot";
 import { ItemUtility } from "shared/inventory/utility";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
-import { SearchBar } from "../../components/search-bar";
-import { TextField } from "../../components/text-field";
 import { formatStats, useItemDefinition, useRarityDefinition } from "../utils";
 import { idToName } from "shared/utils/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
@@ -444,7 +442,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 							anchorPoint={new Vector2(0.5, 0)}
 							position={UDim2.fromScale(0.5, 0)}
 							backgroundTransparency={0.5}
-							image={itemDef?.image}
+							image={itemDef?.image ?? ""}
 							backgroundColor={rarityDef?.color}
 						>
 							<uiaspectratioconstraint AspectRatio={1} />
