@@ -4,7 +4,7 @@ import { t } from "@rbxts/t";
 
 export interface InventoryData {
 	stored: Map<Slot, Item>;
-	equipped: Map<Slot, Item>;
+	equipped: Array<Slot>;
 }
 
 export interface ProfileData {
@@ -28,7 +28,7 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
 	stored: t.map(isSlot, isItem),
-	equipped: t.map(isSlot, isItem),
+	equipped: t.array(isSlot),
 });
 
 export const isData: t.check<Data> = t.strictInterface({

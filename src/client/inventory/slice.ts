@@ -2,7 +2,7 @@ import { DATA_TEMPLATE } from "shared/data/constants";
 import { InventoryImpl } from "shared/inventory/impl";
 import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
-import { isDraft, original, produce } from "@rbxts/immut";
+import { original, produce } from "@rbxts/immut";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/replication/metadata";
@@ -10,6 +10,7 @@ import type {
 	InventoryActions,
 	InventoryAddItems,
 	InventoryEquipSlot,
+	InventoryPatchSlot,
 	InventoryRemoveItems,
 	InventoryUnequipSlot,
 } from "shared/inventory/actions";
@@ -76,6 +77,16 @@ export const inventorySlice = createProducer<InventoryState, ExcludeMetadata<Inv
 			return draft;
 		});
 	},
+	inventoryPatchSlot: (state: InventoryState, { slot, patch }: InventoryPatchSlot): InventoryState =>
+		produce(state, (draft: Draft<InventoryState>): InventoryState => {
+			const { data } = draft;
+			const { stored } = data;
+			const success = InventoryImpl.patchSlot(stored, slot, patch);
+			if (!success) {
+				return original(draft);
+			}
+			return draft;
+		}),
 
 	// Data actions
 	dataAdded: (state: InventoryState, payload: DataAdded): InventoryState => {

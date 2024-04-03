@@ -1,5 +1,5 @@
 import { HotbarApp } from "../ui/inventory/hotbar";
-import { InventoryApp } from "./inventory-app";
+import { InventoryApp } from "client/ui/inventory-intrinsic";
 import { Layer } from "client/ui/components";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { TowerApp } from "client/ui/tower";

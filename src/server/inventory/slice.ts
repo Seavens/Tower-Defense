@@ -1,6 +1,6 @@
 import { InventoryImpl } from "shared/inventory/impl";
 import { createProducer } from "@rbxts/reflex";
-import { isDraft, original, produce } from "@rbxts/immut";
+import { original, produce } from "@rbxts/immut";
 import type { DataAdded, DataRemoved } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { EntityMetadata } from "shared/replication/metadata";
@@ -8,6 +8,7 @@ import type {
 	InventoryActions,
 	InventoryAddItems,
 	InventoryEquipSlot,
+	InventoryPatchSlot,
 	InventoryRemoveItems,
 	InventoryUnequipSlot,
 } from "shared/inventory/actions";
@@ -96,6 +97,20 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		});
 	},
+	inventoryPatchSlot: (state: State, { slot, patch }: InventoryPatchSlot, { user }: EntityMetadata): State =>
+		produce(state, (draft: Draft<State>): State => {
+			const state = draft[user];
+			if (state === undefined) {
+				return original(draft);
+			}
+			const { data } = state;
+			const { stored } = data;
+			const success = InventoryImpl.patchSlot(stored, slot, patch);
+			if (!success) {
+				return original(draft);
+			}
+			return draft;
+		}),
 
 	// Data actions
 	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {

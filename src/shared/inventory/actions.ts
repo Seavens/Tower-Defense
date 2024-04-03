@@ -1,7 +1,7 @@
 import type {} from "shared/tower/types";
 import type { DataActions } from "shared/data/actions";
 import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
-import type { Item } from "./types";
+import type { Item, ItemUnique } from "./types";
 
 export type InventoryActions<S> = {
 	inventoryAddItems: (state: S, payload: InventoryAddItems, metadata: EntityMetadata & ReplicationMetadata) => S;
@@ -16,6 +16,7 @@ export type InventoryActions<S> = {
 		payload: InventoryUnequipSlot,
 		metadata: EntityMetadata & ReplicationMetadata,
 	) => S;
+	inventoryPatchSlot: (state: S, payload: InventoryPatchSlot, metadata: EntityMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
 export interface InventoryAddItems {
@@ -32,4 +33,9 @@ export interface InventoryEquipSlot {
 
 export interface InventoryUnequipSlot {
 	slot: Slot;
+}
+
+export interface InventoryPatchSlot {
+	slot: Slot;
+	patch: Partial<ItemUnique>;
 }

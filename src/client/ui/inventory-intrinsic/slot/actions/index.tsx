@@ -5,13 +5,13 @@ import { useMotion } from "client/ui/hooks";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
-interface SlotActionsProps<T extends string = string> {
+interface SlotActionsProps<T extends string> {
 	visible: boolean;
 	actions: Array<T>;
 	onClick?: (action: T) => void;
 }
 
-export function SlotActions({ visible, actions, onClick }: SlotActionsProps): Element {
+export function SlotActions<T extends string>({ visible, actions, onClick }: SlotActionsProps<T>): Element {
 	const [transparency, transparencyMotion] = useMotion(0);
 
 	const elements = useMemo((): Array<Element> => {

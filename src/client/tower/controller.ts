@@ -103,9 +103,9 @@ export class TowerController implements OnStart {
 			if (slot === undefined) {
 				return;
 			}
-			const { equipped } = store.getState(selectInventoryData);
-			const tower = equipped.get(slot);
-			if (tower === undefined) {
+			const { stored, equipped } = store.getState(selectInventoryData);
+			const tower = stored.get(slot);
+			if (!equipped.includes(slot) || tower === undefined) {
 				return;
 			}
 			const { uuid } = tower;

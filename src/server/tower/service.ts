@@ -24,10 +24,11 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		const { placed } = this;
 		const user = PlayerUtil.getUser(player);
 		const currency = store.getState(selectCurrency(user));
-		const { equipped } = store.getState(selectInventoryData(user));
+		const { stored, equipped } = store.getState(selectInventoryData(user));
 		let result: Option<Item>;
-		for (const [_, item] of equipped) {
-			if (item.uuid !== uuid) {
+		for (const slot of equipped) {
+			const item = stored.get(slot);
+			if (item === undefined || item.uuid !== uuid) {
 				continue;
 			}
 			result = item;

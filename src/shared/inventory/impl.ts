@@ -1,14 +1,15 @@
 import { Dictionary } from "@rbxts/sift";
 import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "./constants";
-import { isDraft } from "@rbxts/immut";
-import type { Item } from "./types";
+import { find, remove } from "@rbxts/immut/src/table";
+import Immut, { createDraft, isDraft } from "@rbxts/immut";
+import type { Item, ItemUnique } from "./types";
 
 export namespace InventoryImpl {
-	export function getAvailableSlot(inventory: Map<Slot, Item>, max: number): Slot | undefined {
+	export function getAvailableSlot(storage: Map<Slot, Item>): Option<Slot> {
 		let available: Option<Slot>;
-		for (const index of $range(1, max)) {
+		for (const index of $range(1, MAXIMUM_STORED)) {
 			const slot: Slot = `${index}`;
-			if (inventory.has(slot)) {
+			if (storage.has(slot)) {
 				continue;
 			}
 			available = slot;
@@ -27,7 +28,7 @@ export namespace InventoryImpl {
 		}
 		adding = Dictionary.copyDeep(adding);
 		for (const item of adding) {
-			const slot = getAvailableSlot(storage, MAXIMUM_STORED);
+			const slot = getAvailableSlot(storage);
 			if (slot === undefined) {
 				return false;
 			}
@@ -40,32 +41,21 @@ export namespace InventoryImpl {
 		return true;
 	}
 
-	export function removeItems(storage: Map<Slot, Item>, equipped: Map<Slot, Item>, removing: Array<Slot>): boolean {
+	export function removeItems(storage: Map<Slot, Item>, equipped: Array<Slot>, removing: Array<Slot>): boolean {
 		if (!isDraft(storage) || !isDraft(equipped)) {
 			return false;
 		}
 		for (const slot of removing) {
-			const item = storage.get(slot);
-			if (item !== undefined) {
-				// Check to ensure the item is not currently equipped
-				let found: Option<Slot>;
-				// Search for it...
-				for (const [slot, search] of equipped) {
-					if (search !== item) {
-						continue;
-					}
-					// It was equipped
-					found = slot;
-				}
-				// Remove it
-				found !== undefined && equipped.delete(slot);
+			const index = find(equipped, slot);
+			if (index === undefined) {
+				remove(equipped, index);
 			}
 			storage.delete(slot);
 		}
 		return true;
 	}
 
-	export function equipSlot(storage: Map<Slot, Item>, equipped: Map<Slot, Item>, slot: Slot): boolean {
+	export function equipSlot(storage: Map<Slot, Item>, equipped: Array<Slot>, slot: Slot): boolean {
 		if (!isDraft(storage) || !isDraft(equipped)) {
 			return false;
 		}
@@ -74,23 +64,40 @@ export namespace InventoryImpl {
 			return false;
 		}
 		const size = equipped.size();
-		const available = getAvailableSlot(equipped, MAXIMUM_EQUIPPED);
-		if (size > MAXIMUM_EQUIPPED || available === undefined) {
+		if (size >= MAXIMUM_EQUIPPED) {
 			return false;
 		}
-		equipped.set(available, item);
+		Immut.table.insert(equipped, slot);
 		return true;
 	}
 
-	export function unequipSlot(equipped: Map<Slot, Item>, slot: Slot): boolean {
+	export function unequipSlot(equipped: Array<Slot>, slot: Slot): boolean {
 		if (!isDraft(equipped)) {
 			return false;
 		}
-		const item = equipped.get(slot);
+		const index = find(equipped, slot);
+		if (index === undefined) {
+			return false;
+		}
+		remove(equipped, index);
+		return true;
+	}
+
+	export function patchSlot(storage: Map<Slot, Item>, slot: Slot, patch: Partial<ItemUnique>): boolean {
+		if (!isDraft(storage)) {
+			return false;
+		}
+		const item = storage.get(slot);
 		if (item === undefined) {
 			return false;
 		}
-		equipped.delete(slot);
+		const { unique } = item;
+		const { kind } = unique;
+		if (kind !== patch.kind) {
+			return false;
+		}
+		const current = Immut.current(unique);
+		item.unique = { ...current, ...patch } as ItemUnique;
 		return true;
 	}
 }

@@ -26,7 +26,7 @@ const user = PlayerUtil.getUser(player);
 export function Hotbar(): Element {
 	const px = usePx();
 
-	const { equipped } = useSelector(selectInventoryData);
+	const { stored, equipped } = useSelector(selectInventoryData);
 	const { experience, level } = useSelector(selectProfileData);
 	const { status } = useSelector(selectGameData);
 	const currency = useSelector(selectCurrency(user));
@@ -41,9 +41,8 @@ export function Hotbar(): Element {
 
 	const elements = useMemo(() => {
 		const elements: Array<Element> = [];
-		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
-			const slot: Slot = `${index}`;
-			const tower = equipped.get(slot);
+		for (const slot of equipped) {
+			const tower = stored.get(slot);
 			const cost = getTowerCost(tower?.id);
 			elements.push(
 				<ItemSlot
@@ -57,7 +56,7 @@ export function Hotbar(): Element {
 			);
 		}
 		return elements;
-	}, [equipped, currency, status]);
+	}, [equipped, stored, currency]);
 
 	return (
 		<Group

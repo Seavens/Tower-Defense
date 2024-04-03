@@ -1,12 +1,14 @@
-import { Frame, Group, ScrollingFrame } from "client/ui/components";
+import { Events } from "client/network";
+import { Frame, Group, RenderInView, ScrollingFrame } from "client/ui/components";
 import { INVENTORY_COLUMNS, INVENTORY_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
 import { ItemKind } from "shared/inventory/types";
 import { PALETTE } from "client/ui/constants";
-import { usePx } from "client/ui/hooks";
+import { usePx, useStore } from "client/ui/hooks";
 import React, { useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { Item } from "shared/inventory/types";
+import type { SlotActions } from "../slot";
 
 export interface InventoryProps {
 	items: Map<Slot, Item>;
@@ -14,9 +16,11 @@ export interface InventoryProps {
 
 export function Inventory({ items }: InventoryProps): Element {
 	const px = usePx();
+	const store = useStore();
 
 	const [enabled, setEnabled] = useState(true);
 	const [selected, setSelected] = useState<Slot>();
+	const [container, setContainer] = useState<Frame>();
 
 	const item = useMemo((): Option<Item> => {
 		if (selected === undefined) {
@@ -26,12 +30,13 @@ export function Inventory({ items }: InventoryProps): Element {
 		return item;
 	}, [items, selected]);
 
-	const slots = useMemo((): Array<Element> => {
-		const slots = new Array<Element>();
+	const slots = useMemo((): Map<string, Element> => {
+		const slots = new Map<string, Element>();
 		for (const [slot, item] of items) {
 			const { id, unique } = item;
 			const { locked, kind } = unique;
 			const element = (
+				// <RenderInView container={container} layoutOrder={tonumber(slot)} key={`slot-${slot}`}>
 				<InventorySlot
 					id={id}
 					locked={locked}
@@ -50,16 +55,27 @@ export function Inventory({ items }: InventoryProps): Element {
 						setEnabled(false);
 						setSelected(slot);
 					}}
-					onActionClick={(action: string): void => {
+					onActionClick={(action: SlotActions): void => {
 						setEnabled(true);
-						// Do something with the action.
+						if (action === "Close") {
+							return;
+						} else if (action === "Lock") {
+							store.inventoryPatchSlot({ patch: { kind, locked: !locked }, slot });
+							Events.inventory.lock(slot);
+						} else if (action === "Equip") {
+							store.inventoryEquipSlot({ slot });
+							Events.inventory.equip(slot);
+						} else if (action === "Sell") {
+							//
+						}
 					}}
 				/>
+				// </RenderInView>
 			);
-			slots.push(element);
+			slots.set(`slot-${slot}`, element);
 		}
 		return slots;
-	}, [items, enabled, selected]);
+	}, [items, container, enabled, selected]);
 
 	return (
 		<Group
@@ -95,6 +111,7 @@ export function Inventory({ items }: InventoryProps): Element {
 					cornerRadius={new UDim(0, px(3))}
 					backgroundColor={PALETTE.black}
 					backgroundTransparency={0.35}
+					ref={setContainer}
 					key={"inventory-slots"}
 				>
 					<ScrollingFrame

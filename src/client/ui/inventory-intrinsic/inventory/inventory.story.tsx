@@ -1,6 +1,8 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { Inventory } from ".";
 import { ItemUtility } from "shared/inventory/utility";
+import { ReflexProvider } from "@rbxts/react-reflex";
+import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
@@ -19,6 +21,10 @@ export = CreateReactStory(
 			items.set(`${index}`, item);
 		}
 
-		return <Inventory items={items} />;
+		return (
+			<ReflexProvider producer={store}>
+				<Inventory items={items} />
+			</ReflexProvider>
+		);
 	},
 );

@@ -10,6 +10,6 @@ export const DATA_TEMPLATE: Data = {
 	},
 	inventory: {
 		stored: new Map<Slot, Item>(),
-		equipped: new Map<Slot, Item>(),
+		equipped: new Array<Slot>(),
 	},
 };

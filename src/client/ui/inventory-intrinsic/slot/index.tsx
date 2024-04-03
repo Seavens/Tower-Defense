@@ -1,6 +1,7 @@
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components";
 import { ItemKind } from "shared/inventory/types";
+import { Modding } from "@flamework/core";
 import { SLOT_SIZE } from "../constants";
 import { SlotActions } from "./actions";
 import { itemDefinitions } from "shared/inventory/items";
@@ -21,8 +22,12 @@ interface InventorySlotProps {
 	layoutOrder?: number;
 	onLeftClick?: () => void;
 	onRightClick?: () => void;
-	onActionClick?: (action: string) => void;
+	onActionClick?: (action: SlotActions) => void;
 }
+
+export type SlotActions = "Sell" | "Equip" | "Lock" | "Close";
+
+const slotActions = Modding.inspect<Array<SlotActions>>();
 
 const useItemDefinition = useDefinition(itemDefinitions);
 const useRarityDefinition = useDefinition(rarityDefinitions);
@@ -190,7 +195,7 @@ export function InventorySlot({
 					key={"slot-outline"}
 				/>
 				{!enabled && menu && (
-					<SlotActions actions={["Sell", "Lock", "Equip", "Close"]} onClick={onActionClick} visible={menu} />
+					<SlotActions<SlotActions> actions={slotActions} onClick={onActionClick} visible={menu} />
 				)}
 			</ReactiveButton>
 			<uipadding
