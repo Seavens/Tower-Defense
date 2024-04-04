@@ -1,5 +1,4 @@
 import { Button, DelayRender, Group, Text } from "../basic";
-import { Darken } from "@rbxts/colour-utils";
 import { FONTS, SPRINGS } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";

@@ -1,4 +1,3 @@
-import { Darken } from "@rbxts/colour-utils";
 import { EXP_BAR_SIZE_Y, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "../constants";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Frame, Group, Text } from "client/ui/components";
@@ -95,13 +94,13 @@ export function Hotbar(): Element {
 			<Frame
 				key={"level-frame"}
 				size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(EXP_BAR_SIZE_Y))}
-				backgroundColor={Darken(Mocha.Mauve, 0.75)}
+				// backgroundColor={Darken(Mocha.Mauve, 0.75)}
 				cornerRadius={new UDim(0, px(5))}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={UDim2.fromScale(0.5, 1)}
 			>
 				<uistroke
-					Color={Darken(Mocha.Blue, 0.5)}
+					// Color={Darken(Mocha.Blue, 0.5)}
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 					Thickness={px(1)}
 					key={"level-outline"}

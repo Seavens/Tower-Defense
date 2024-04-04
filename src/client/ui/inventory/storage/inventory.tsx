@@ -1,5 +1,4 @@
 import { Button, DelayRender, Frame, Group, Image, SearchBar, Text, Transition } from "client/ui/components";
-import { Darken, Lighten } from "@rbxts/colour-utils";
 import { DropDown } from "client/ui/components/drop-down";
 import { FONTS, PALETTE, SPRINGS } from "../../constants";
 import {
@@ -37,8 +36,8 @@ interface Inventoryunique {
 }
 
 const BACKGROUND = Mocha.Base;
-const OUTLINE = Darken(BACKGROUND, 0.25);
-const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
+// const OUTLINE = Darken(BACKGROUND, 0.25);
+// const BACKGROUND_LIGHT = Lighten(Mocha.Base, 0.1);
 const THICKNESS = 6;
 const TEXTCOLOR = Latte.Base;
 const TRANSPARENCY = 0;
@@ -173,7 +172,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 						backgroundTransparency={0}
 					>
 						<uicorner CornerRadius={new UDim(0, px(5))} />
-						<uistroke Color={OUTLINE} Thickness={px(2)} />
+						{/* <uistroke Color={OUTLINE} Thickness={px(2)} /> */}
 						<Group
 							key={"inventory-topbar"}
 							size={UDim2.fromScale(1, 0.1)}
@@ -218,7 +217,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										).ToHex()}">Gems</font>: ${abbreviator.numberToString(gems)}`}
 										textColor={TEXTCOLOR}
 										textScaled={true}
-										backgroundColor={BACKGROUND_LIGHT}
+										// backgroundColor={BACKGROUND_LIGHT}
 										backgroundTransparency={TRANSPARENCY}
 										textXAlignment="Left"
 										textYAlignment="Center"
@@ -227,7 +226,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									>
 										<uistroke
 											ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-											Color={OUTLINE}
+											// Color={OUTLINE}
 											Thickness={1}
 										/>
 										<uipadding PaddingLeft={new UDim(0, px(4))} />
@@ -245,7 +244,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 										).ToHex()}">Coins</font>: ${abbreviator.numberToString(coins)}`}
 										textColor={TEXTCOLOR}
 										textScaled={true}
-										backgroundColor={BACKGROUND_LIGHT}
+										// backgroundColor={BACKGROUND_LIGHT}
 										backgroundTransparency={TRANSPARENCY}
 										textXAlignment="Left"
 										textYAlignment="Center"
@@ -254,7 +253,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									>
 										<uistroke
 											ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-											Color={OUTLINE}
+											// Color={OUTLINE}
 											Thickness={1}
 										/>
 										<uipadding PaddingLeft={new UDim(0, px(4))} />
@@ -270,7 +269,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									textSize={px(18)}
 									textColor={TEXTCOLOR}
 									font={FONTS.robotoMono.regular}
-									backgroundColor={BACKGROUND_LIGHT}
+									// backgroundColor={BACKGROUND_LIGHT}
 									onSearch={setSearch}
 									clearTextOnFocus={true}
 									queries={allItemNames}
@@ -280,15 +279,15 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 									<uistroke
 										ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 										Thickness={1}
-										Color={OUTLINE}
+										// Color={OUTLINE}
 									/>
 								</SearchBar>
-								<DropDown
+								{/* <DropDown
 									anchorPoint={new Vector2(0, 0.5)}
 									position={UDim2.fromScale(0.78, 0.5)}
 									textColor={TEXTCOLOR}
-									backgroundColor={BACKGROUND_LIGHT}
-									strokeColor={OUTLINE}
+									// backgroundColor={BACKGROUND_LIGHT}
+									// strokeColor={OUTLINE}
 									size={UDim2.fromOffset(px(80), px(30))}
 									cornerRadius={new UDim(0, px(4))}
 									options={["Off", "Item", "Rarity", "Level", "Locked"]}
@@ -313,7 +312,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 												break;
 										}
 									}}
-								/>
+								/> */}
 							</Group>
 							<Button
 								size={UDim2.fromOffset(px(16), px(16))}
@@ -426,7 +425,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 						zIndex={1}
 					>
 						<uicorner CornerRadius={new UDim(0, px(5))} />
-						<uistroke Color={OUTLINE} Thickness={px(2)} />
+						{/* <uistroke Color={OUTLINE} Thickness={px(2)} /> */}
 						<uipadding PaddingTop={new UDim(0, px(8))} />
 
 						<uilistlayout
@@ -447,7 +446,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 						>
 							<uiaspectratioconstraint AspectRatio={1} />
 							<uicorner CornerRadius={new UDim(0, px(5))} />
-							<uistroke Color={OUTLINE} Thickness={px(2)} />
+							{/* <uistroke Color={OUTLINE} Thickness={px(2)} /> */}
 						</Image>
 						<Frame
 							key={"item-stats"}
@@ -456,7 +455,7 @@ export function Inventory({ visible, onClose }: Inventoryunique): Element {
 							position={UDim2.fromScale(0.5, 0)}
 							backgroundTransparency={0.5}
 						>
-							<uistroke Color={OUTLINE} Thickness={px(2)} />
+							{/* <uistroke Color={OUTLINE} Thickness={px(2)} /> */}
 							<uicorner CornerRadius={new UDim(0, px(5))} />
 							<Text
 								size={UDim2.fromScale(0.9, 0.9)}

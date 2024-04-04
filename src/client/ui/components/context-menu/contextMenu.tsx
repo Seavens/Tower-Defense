@@ -1,14 +1,12 @@
 import { Button, Frame, Group, Image, Text } from "..";
-import React, { useEffect, useMemo, useState } from "@rbxts/react";
-import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
-import type { Element } from "@rbxts/react";
-
-import { Darken } from "@rbxts/colour-utils";
 import { DropdownOption } from "../drop-down/option";
 import { FONTS } from "client/ui/constants";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
 import { usePx } from "client/ui/hooks";
+import React, { useEffect, useMemo, useState } from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element } from "@rbxts/react";
 
 export interface ContextMenuProps {
 	options: Array<string>;
@@ -46,7 +44,7 @@ export function ContextMenu({
 }: ContextMenuProps): Element {
 	const px = usePx();
 
-	const OUTLINE = Darken(backgroundColor, 0.25);
+	// const OUTLINE = Darken(backgroundColor, 0.25);
 
 	// size ??= UDim2.fromOffset(px(200), px(16));
 
@@ -107,7 +105,7 @@ export function ContextMenu({
 			backgroundTransparency={displayHeader === undefined ? 1 : 0}
 		>
 			<uistroke
-				Color={strokeColor ?? OUTLINE}
+				// Color={strokeColor ?? OUTLINE}
 				Transparency={strokeColor === undefined ? 1 : 0}
 				Thickness={px(1)}
 				key={"context-stroke"}

@@ -1,6 +1,6 @@
 import { type BindingOrValue, getBindingValue } from "@rbxts/pretty-react-hooks";
 import { Button, Text } from "../basic";
-import { Darken } from "@rbxts/colour-utils";
+import { ColorUtil } from "client/ui/utils";
 import { DropdownOption } from "./option";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
@@ -39,7 +39,7 @@ export function DropDown({
 }: DropDownProps): Element {
 	const px = usePx();
 
-	const OUTLINE = Darken(backgroundColor, 0.25);
+	const OUTLINE = ColorUtil.darken(backgroundColor, 0.25);
 
 	size ??= UDim2.fromOffset(px(200), px(16));
 

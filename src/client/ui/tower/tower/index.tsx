@@ -1,10 +1,9 @@
 import { Button, Frame, Group, Image, Text } from "client/ui/components";
-import { Darken } from "@rbxts/colour-utils";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { LevelUtil } from "shared/profile/utils";
 import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
-import { TOWER_IMAGE_SIZE, TOWER_OUTLINE, TOWER_SIZE } from "../constants";
+import { TOWER_IMAGE_SIZE, TOWER_SIZE } from "../constants";
 import { TowerAction } from "./action";
 import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
@@ -81,7 +80,7 @@ export function Tower({ tower }: TowerProps): Element {
 							position={UDim2.fromScale(0.5, 0.5)}
 							anchorPoint={Vector2.one.mul(0.5)}
 							cornerRadius={new UDim(0, px(3))}
-							backgroundColor={Darken(rarity, 0.25)}
+							// backgroundColor={Darken(rarity, 0.25)}
 							backgroundTransparency={0}
 							image={definition.image}
 							key={"tower-image"}
@@ -92,7 +91,7 @@ export function Tower({ tower }: TowerProps): Element {
 									position={UDim2.fromScale(0, 1)}
 									anchorPoint={new Vector2(0, 1)}
 									cornerRadius={new UDim(0, px(3))}
-									backgroundColor={Darken(rarity, 0.45)}
+									// backgroundColor={Darken(rarity, 0.45)}
 									backgroundTransparency={0.5}
 									clipsDescendants={true}
 									key={"tower-level-bar"}
@@ -147,7 +146,7 @@ export function Tower({ tower }: TowerProps): Element {
 								position={new UDim2(0, -px(4), 0, 0)}
 								anchorPoint={Vector2.zero}
 								cornerRadius={new UDim(0, px(3))}
-								backgroundColor={Darken(rarity, 0.45)}
+								// backgroundColor={Darken(rarity, 0.45)}
 								backgroundTransparency={0}
 								key={"tower-flag"}
 							>
@@ -199,7 +198,7 @@ export function Tower({ tower }: TowerProps): Element {
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							cornerRadius={new UDim(0, px(3))}
-							backgroundColor={Darken(rarity, 0.55)}
+							// backgroundColor={Darken(rarity, 0.55)}
 							backgroundTransparency={0}
 							layoutOrder={2}
 							key={"tower-stats"}
@@ -296,7 +295,6 @@ export function Tower({ tower }: TowerProps): Element {
 						key={"tower-padding"}
 					/>
 				</Group>
-				<uistroke ApplyStrokeMode={"Border"} Color={TOWER_OUTLINE} Thickness={px(2)} key={"tower-outline"} />
 			</Frame>
 		</Group>
 	);

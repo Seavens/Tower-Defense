@@ -1,7 +1,6 @@
 /* eslint-disable roblox-ts/lua-truthiness */
 import { ContextMenu } from "client/ui/components/context-menu/contextMenu";
-import { Darken, GetPerceivedBrightness } from "@rbxts/colour-utils";
-import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
+import { FONTS, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, Text } from "client/ui/components";
 import { ITEM_SLOT_SIZE } from "../constants";
 import { ItemKind } from "shared/inventory/types";
@@ -68,7 +67,7 @@ export function ItemSlot({
 				Size={UDim2.fromOffset(px(ITEM_SLOT_SIZE.X) - px(2) * 2, px(ITEM_SLOT_SIZE.Y) - px(2) * 2)}
 				AnchorPoint={Vector2.one.mul(0.5)}
 				Position={UDim2.fromScale(0.5, 0.5)}
-				BackgroundColor3={Darken(color, 0.25)}
+				// BackgroundColor3={Darken(color, 0.25)}
 				key={"slot-group"}
 				AutoButtonColor={false}
 				Event={{
@@ -181,14 +180,14 @@ export function ItemSlot({
 						anchorPoint={Vector2.one}
 						position={UDim2.fromScale(1, 1)}
 						cornerRadius={new UDim(0, px(5))}
-						backgroundColor={Darken(color, 0.45)}
+						// backgroundColor={Darken(color, 0.45)}
 						key={"lower-color"}
 					>
 						<Frame
 							size={UDim2.fromScale(1, 0.5)}
 							anchorPoint={Vector2.one}
 							position={UDim2.fromScale(1, 0.25)}
-							backgroundColor={Darken(color, 0.45)}
+							// backgroundColor={Darken(color, 0.45)}
 							key={"lower-color-top"}
 							zIndex={1}
 						/>
@@ -205,7 +204,7 @@ export function ItemSlot({
 					</Frame>
 				</Group>
 				<uistroke
-					Color={Darken(Mocha.Base, 0.25)}
+					// Color={Darken(Mocha.Base, 0.25)}
 					ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 					Transparency={outline.map((value: number): number => map(value, 0, 1, 0.25, 1))}
 					Thickness={px(2)}
