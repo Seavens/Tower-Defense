@@ -1,6 +1,6 @@
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components";
-import { ItemKind } from "shared/inventory/types";
+import { ItemKind, ItemRarity } from "shared/inventory/types";
 import { Modding } from "@flamework/core";
 import { SLOT_SIZE } from "../constants";
 import { SlotActions } from "./actions";
@@ -8,6 +8,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { map } from "@rbxts/pretty-react-hooks";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx } from "client/ui/hooks";
+import { useRainbow } from "client/ui/hooks/use-rainbow-animation";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
@@ -45,7 +46,9 @@ export function InventorySlot({
 	const px = usePx();
 
 	const { name, rarity, image, kind } = useItemDefinition(id);
-	const { color } = useRarityDefinition(rarity);
+	let { color } = useRarityDefinition(rarity);
+	color = (rarity === ItemRarity.Mythical ? useRainbow() : color) as never;
+
 	const cost = useAbbreviation(kind.kind === ItemKind.Tower ? kind.cost : 0, 0);
 	const darkened = useDarkenedColor(color, 0.5);
 	const abbreviated = useAbbreviation(level, kind.kind === ItemKind.Tower ? 0 : 2);

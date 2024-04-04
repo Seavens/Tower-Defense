@@ -199,7 +199,15 @@ export function Inventory({ items }: InventoryProps): Element {
 					backgroundColor={PALETTE.black}
 					backgroundTransparency={0.35}
 					key={"inventory-background"}
-				/>
+				>
+					<uilistlayout
+						FillDirection={Enum.FillDirection.Vertical}
+						HorizontalAlignment={Enum.HorizontalAlignment.Center}
+						VerticalAlignment={Enum.VerticalAlignment.Top}
+						SortOrder={Enum.SortOrder.LayoutOrder}
+					/>
+					<viewportframe Size={UDim2.fromOffset(px(100), px(100))} key={"inventory-viewport"} />
+				</Frame>
 			</Group>
 		</Group>
 	);
