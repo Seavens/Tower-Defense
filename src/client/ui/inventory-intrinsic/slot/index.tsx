@@ -8,7 +8,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { map } from "@rbxts/pretty-react-hooks";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx } from "client/ui/hooks";
-import React, { useEffect } from "@rbxts/react";
+import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 
@@ -25,9 +25,7 @@ interface InventorySlotProps {
 	onActionClick?: (action: SlotActions) => void;
 }
 
-export type SlotActions = "Sell" | "Equip" | "Lock" | "Close";
-
-const slotActions = Modding.inspect<Array<SlotActions>>();
+export type SlotActions = "Sell" | "Equip" | "Lock" | "Unlock" | "Close";
 
 const useItemDefinition = useDefinition(itemDefinitions);
 const useRarityDefinition = useDefinition(rarityDefinitions);
@@ -56,6 +54,10 @@ export function InventorySlot({
 	const [transparency, transparencyMotion] = useMotion(0);
 	const [imageTransparency, imageMotion] = useMotion(0);
 	const [lock, lockMotion] = useMotion(1);
+
+	const actions = useMemo((): Array<SlotActions> => {
+		return ["Sell", "Equip", locked ? "Unlock" : "Lock", "Close"];
+	}, [locked]);
 
 	useEffect((): void => {
 		outlineMotion.spring(selected ? (enabled ? 0 : 0.5) : 1, SPRINGS.gentle);
@@ -195,7 +197,7 @@ export function InventorySlot({
 					key={"slot-outline"}
 				/>
 				{!enabled && menu && (
-					<SlotActions<SlotActions> actions={slotActions} onClick={onActionClick} visible={menu} />
+					<SlotActions<SlotActions> actions={actions} onClick={onActionClick} visible={menu} />
 				)}
 			</ReactiveButton>
 			<uipadding
