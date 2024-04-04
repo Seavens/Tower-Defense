@@ -1,14 +1,12 @@
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components";
 import { ItemKind, ItemRarity } from "shared/inventory/types";
-import { Modding } from "@flamework/core";
 import { SLOT_SIZE } from "../constants";
 import { SlotActions } from "./actions";
 import { itemDefinitions } from "shared/inventory/items";
 import { map } from "@rbxts/pretty-react-hooks";
 import { rarityDefinitions } from "shared/inventory/rarities";
-import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx } from "client/ui/hooks";
-import { useRainbow } from "client/ui/hooks/use-rainbow-animation";
+import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx, useRainbow } from "client/ui/hooks";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
