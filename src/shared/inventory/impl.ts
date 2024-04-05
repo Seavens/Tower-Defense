@@ -1,8 +1,8 @@
 import { Dictionary } from "@rbxts/sift";
+import { type Item, ItemKind, type ItemUnique } from "./types";
 import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "./constants";
 import { find, remove } from "@rbxts/immut/src/table";
 import Immut, { createDraft, isDraft } from "@rbxts/immut";
-import type { Item, ItemUnique } from "./types";
 
 export namespace InventoryImpl {
 	export function getAvailableSlot(storage: Map<Slot, Item>): Option<Slot> {
@@ -60,11 +60,13 @@ export namespace InventoryImpl {
 			return false;
 		}
 		const item = storage.get(slot);
-		if (item === undefined) {
+		if (item === undefined || Immut.table.find(equipped, slot) !== undefined) {
 			return false;
 		}
+		const { unique } = item;
+		const { kind } = unique;
 		const size = equipped.size();
-		if (size >= MAXIMUM_EQUIPPED) {
+		if (size >= MAXIMUM_EQUIPPED || kind !== ItemKind.Tower) {
 			return false;
 		}
 		Immut.table.insert(equipped, slot);

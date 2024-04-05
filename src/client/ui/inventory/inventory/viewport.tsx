@@ -18,7 +18,7 @@ export function InventoryViewport({ id }: InventoryViewportProps): Element {
 		}
 		const camera = new Instance("Camera");
 		camera.Parent = viewport;
-		camera.CFrame = new CFrame(0, 0, -3).mul(CFrame.Angles(0, math.rad(180), 0));
+		camera.CFrame = new CFrame(0, 1, -2.5).mul(CFrame.Angles(0, math.rad(180), 0));
 		const world = new Instance("WorldModel");
 		world.Parent = viewport;
 		model.PivotTo(CFrame.identity);

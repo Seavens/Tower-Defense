@@ -32,7 +32,7 @@ export class TestService implements OnStart, OnDataLoaded {
 			// 	TowerUtil.getOverallGrade(item.unique as ItemTowerUnique),
 			// 	TowerUtil.getGrade(item.unique as ItemTowerUnique, "range"),
 			// );
-			store.inventoryEquipSlot({ slot }, metadata);
+			// store.inventoryEquipSlot({ slot }, metadata);
 		}
 
 		store.gameAddCurrency({ amount: 100000 }, broadcast);

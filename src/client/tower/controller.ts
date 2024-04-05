@@ -119,7 +119,6 @@ export class TowerController implements OnStart {
 			selectPlacedTowers,
 			(_: ReplicatedTower, key: string): defined => key,
 			(replicated: ReplicatedTower, key: string): (() => void) => {
-				warn(replicated);
 				const tower = new Tower(replicated);
 				const unsubscribe = store.subscribe(
 					selectSpecificTower(key),
