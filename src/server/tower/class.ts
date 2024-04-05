@@ -77,7 +77,6 @@ export class Tower extends API {
 		const { key } = this;
 		const tower = store.getState(selectSpecificTower(key));
 		if (tower === undefined) {
-			// Unreachable under normal circumstances.
 			throw "Tower does not exist!";
 		}
 		return tower;
@@ -108,7 +107,7 @@ export class Tower extends API {
 		this.lastAttack = now;
 		const currentTarget = this.getTarget();
 		if (currentTarget !== lastTarget) {
-			const target = currentTarget?.index;
+			const target = currentTarget?.uuid;
 			Events.tower.target.broadcast(key, target);
 		}
 		this.lastTarget = currentTarget;

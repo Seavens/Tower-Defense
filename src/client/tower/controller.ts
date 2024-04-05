@@ -147,7 +147,7 @@ export class TowerController implements OnStart {
 			const tower = Tower.getTower(previous);
 			tower?.disableVisuals();
 		});
-		Events.tower.target.connect((key: string, target?: number): void => {
+		Events.tower.target.connect((key: string, target?: UUID): void => {
 			if (target === undefined) {
 				return;
 			}

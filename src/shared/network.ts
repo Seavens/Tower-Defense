@@ -38,17 +38,18 @@ interface ServerToClientEvents {
 	};
 
 	tower: {
-		target: Networking.Unreliable<(key: string, target?: number) => void>;
-		place: Networking.Unreliable<(uuid: string, position: Vector3) => void>;
+		target: Networking.Unreliable<(key: string, target?: UUID) => void>;
+		place: Networking.Unreliable<(uuid: UUID, position: Vector3) => void>;
 	};
 
 	mob: {
-		resync: Networking.Unreliable<(first: Vector2int16, second: Vector2int16) => void>;
-		damage: Networking.Unreliable<(data: Vector2int16, kind: MobDamage) => void>;
-		death: Networking.Unreliable<(index: number) => void>;
-		statusAdded: Networking.Unreliable<(data: Vector2int16, status: MobStatus, timestamp: number) => void>;
-		statusRemoved: Networking.Unreliable<(index: number, status: MobStatus) => void>;
-		indexReset: Networking.Unreliable<(index: number) => void>;
+		resync: Networking.Unreliable<(uuid: UUID, current: number, target: number, alpha: number) => void>;
+		damage: Networking.Unreliable<(uuid: UUID, damage: number, kind: MobDamage) => void>;
+		death: Networking.Unreliable<(uuid: UUID) => void>;
+		statusAdded: Networking.Unreliable<
+			(uuid: UUID, duration: number, status: MobStatus, timestamp: number) => void
+		>;
+		statusRemoved: Networking.Unreliable<(uuid: UUID, status: MobStatus) => void>;
 	};
 }
 

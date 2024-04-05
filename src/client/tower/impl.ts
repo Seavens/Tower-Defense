@@ -23,22 +23,6 @@ export namespace TowerImpl {
 			return;
 		}
 		Events.tower.upgrade(key);
-
-		// const def = itemDefinitions[tower.id];
-		// if (def === undefined || currency < def.kind.cost) {
-		// 	return;
-		// }
-
-		// const { id } = tower;
-		// const index = tower.getUpgrades();
-		// const { kind } = itemDefinitions[id];
-		// const { upgrades } = kind;
-		// if (index >= upgrades.size()) {
-		// 	return;
-		// }
-
-		// tower.upgradeRange();
-		// Events.tower.upgrade(key);
 	}
 
 	export function changeTargeting(key: string): void {

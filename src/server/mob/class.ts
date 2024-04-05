@@ -16,7 +16,7 @@ import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 import type { Node } from "@rbxts/octo-tree";
 
 export class Mob extends API {
-	public static readonly mobs = new Map<number, Mob>();
+	public static readonly mobs = new Map<UUID, Mob>();
 
 	public static readonly onMobAdded = new Signal<Mob>();
 	public static readonly onMobRemoved = new Signal<Mob>();
@@ -25,7 +25,7 @@ export class Mob extends API {
 
 	protected static octree = new Octree<Mob>();
 
-	public declare readonly index: number;
+	public declare readonly uuid: UUID;
 	public declare readonly id: MobId;
 
 	protected declare readonly bin: Bin;
@@ -61,23 +61,28 @@ export class Mob extends API {
 		});
 	}
 
-	public constructor(index: number, id: MobId) {
+	public constructor(uuid: UUID, id: MobId) {
 		const { mobs, octree, onMobAdded } = Mob;
-		super(index, id);
+		super(uuid, id);
 		const { waypoints } = this;
 		const [first] = waypoints;
 		const position = first.Position;
 		const node = octree.CreateNode(position, this);
 		this.node = node;
 		onMobAdded.FireDeferred(this);
-		mobs.set(index, this);
+		mobs.set(uuid, this);
 		this.start();
 	}
 
-	public static getMob(index: number): Option<Mob> {
+	public static getMob(uuid: UUID): Option<Mob> {
 		const { mobs } = this;
-		const mob = mobs.get(index);
+		const mob = mobs.get(uuid);
 		return mob;
+	}
+
+	public static getMobs(): Map<UUID, Mob> {
+		const { mobs } = this;
+		return mobs;
 	}
 
 	public static getMobCount(): number {
@@ -97,8 +102,8 @@ export class Mob extends API {
 	}
 
 	public onDied(key?: string): void {
-		const { index } = this;
-		Events.mob.death.broadcast(index);
+		const { uuid } = this;
+		Events.mob.death.broadcast(uuid);
 
 		if (key === undefined) return;
 		const replicated = store.getState(selectSpecificTower(key));
@@ -123,17 +128,13 @@ export class Mob extends API {
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {
-		const { index } = this;
-		const data = new Vector2int16(index, damage);
-		Events.mob.damage.broadcast(data, kind);
+		const { uuid } = this;
+		Events.mob.damage.broadcast(uuid, damage, kind);
 	}
 
 	public onWaypoint(): void {
-		const { index } = this;
-		const { current, target } = this;
-		const first = new Vector2int16(index, current);
-		const second = new Vector2int16(target, 0);
-		Events.mob.resync.broadcast(first, second);
+		const { uuid, current, target } = this;
+		Events.mob.resync.broadcast(uuid, current, target, 0);
 	}
 
 	public onMovement(): void {
@@ -150,14 +151,13 @@ export class Mob extends API {
 	}
 
 	public onStatus(status: MobStatus, duration: number, added: boolean): void {
-		const { index } = this;
+		const { uuid } = this;
 		const timestamp = Workspace.GetServerTimeNow();
 		if (!added) {
-			Events.mob.statusRemoved.broadcast(index, status);
+			Events.mob.statusRemoved.broadcast(uuid, status);
 			return;
 		}
-		const data = new Vector2int16(index, duration);
-		Events.mob.statusAdded.broadcast(data, status, timestamp);
+		Events.mob.statusAdded.broadcast(uuid, duration, status, timestamp);
 	}
 
 	public onEnd(): void {
@@ -166,19 +166,15 @@ export class Mob extends API {
 	}
 
 	public onResync(): void {
-		const { index } = this;
+		const { uuid } = this;
 		const { current, target } = this;
-
 		const alpha = this.getAlpha();
-		const first = new Vector2int16(index, current);
-		const second = new Vector2int16(target, alpha * 1000);
-
-		Events.mob.resync.broadcast(first, second);
+		Events.mob.resync.broadcast(uuid, current, target, alpha * 1000);
 	}
 
 	public destroy(): void {
 		const { mobs, octree, onMobRemoved } = Mob;
-		const { node, index } = this;
+		const { node, uuid: index } = this;
 		if (this.isDestroyed()) return;
 
 		octree.RemoveNode(node);

@@ -23,7 +23,6 @@ export class Tower extends API {
 
 	public declare readonly id: TowerItemId;
 	public declare readonly uuid: UUID;
-	public declare readonly index: number;
 	public declare readonly cframe: CFrame;
 	public declare readonly owner: string;
 
@@ -64,7 +63,6 @@ export class Tower extends API {
 		const { key } = this;
 		const tower = store.getState(selectSpecificTower(key));
 		if (tower === undefined) {
-			// Unreachable under normal circumstances.
 			throw "Tower does not exist!";
 		}
 		return tower;

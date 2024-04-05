@@ -4,10 +4,10 @@ import { MapUtil } from "shared/map/utils";
 import { MobStatus } from "./types";
 import { mobDefinitions } from "./mobs";
 import { statusDefinitions } from "./statuses";
-import type { MobDamage, MobId } from "./types";
+import type { MobDamage, MobData, MobId } from "./types";
 
 export abstract class Mob {
-	public readonly index: number;
+	public readonly uuid: UUID;
 	public readonly id: MobId;
 
 	protected readonly bin = new Bin();
@@ -27,10 +27,10 @@ export abstract class Mob {
 	protected started = false;
 	protected attacker: Option<string>;
 
-	public constructor(index: number, id: MobId) {
+	public constructor(uuid: UUID, id: MobId) {
 		const waypoints = MapUtil.getMapWaypoints();
 		const { health } = mobDefinitions[id];
-		this.index = index;
+		this.uuid = uuid;
 		this.id = id;
 		this.waypoints = waypoints;
 		this.max = health;
@@ -112,14 +112,12 @@ export abstract class Mob {
 		const timestamp = os.clock() + duration;
 		statuses.set(status, timestamp);
 		this.onStatus(status, duration, true);
-		// warn(status, "Added");
 	}
 
 	public removeStatus(status: MobStatus): void {
 		const { statuses } = this;
 		statuses.delete(status);
 		this.onStatus(status, 0, false);
-		// warn(status, "Removed");
 	}
 
 	public takeDamage(damage: number, kind: MobDamage, tower?: string): void {
@@ -129,11 +127,9 @@ export abstract class Mob {
 		const { id, max, health } = this;
 		const { resistances } = mobDefinitions[id];
 		if (resistances.includes(kind)) {
-			// warn(this.index, "|", "Resisted damage.");
 			return;
 		}
 		this.attacker ??= tower;
-		// warn(this.index, "|", health, health - damage);
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
 			this.onDied(tower);
@@ -146,10 +142,8 @@ export abstract class Mob {
 
 	public forceKill(): void {
 		if (this.isDead() || this.isDestroyed()) {
-			// warn(this.index, "|", "Failed to forcekill.");
 			return;
 		}
-		// warn(this.index, "|", "Forcekilled");
 		this.onDied(this.attacker);
 		this.destroy();
 	}
@@ -167,7 +161,6 @@ export abstract class Mob {
 			return;
 		}
 		if (this.isDead()) {
-			// warn(this.index, "|", "Dead past tick.");
 			this.onDied(this.attacker);
 			this.destroy();
 			return;
@@ -204,14 +197,28 @@ export abstract class Mob {
 
 	public destroy(): void {
 		if (this.isDestroyed()) {
-			// warn(this.index, "|", "Failed to destroy.");
 			return;
 		}
-		// warn(this.index, "|", "Successfully destroyed.");
 		const { bin } = this;
 		bin.destroy();
 		this.destroyed = true;
 		this.started = false;
+	}
+
+	public serialize(): MobData {
+		const { uuid, id, health, current, target, final, elapsed, duration, statuses } = this;
+		const data = {
+			uuid,
+			id,
+			health,
+			current,
+			target,
+			final,
+			elapsed,
+			duration,
+			statuses: new Map<MobStatus, number>(),
+		};
+		return data;
 	}
 
 	public abstract onDied(tower?: string): void;

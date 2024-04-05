@@ -28,7 +28,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
 		let longest = 0;
-		// eslint-disable-next-line roblox-ts/no-array-pairs
 		for (const [_, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
 				continue;
@@ -46,39 +45,39 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 	}
 
 	public spawnWave(map: MapId, wave: number): void {
-		const { waves } = mapDefinitions[map];
-		const [definition] = waves[wave - 1];
-		MobUtil.setMobIndex(0);
-		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
-		const longest = this.getSpawnDuration(map, wave);
-		for (const [id, { count, delay, wait }] of pairs(definition)) {
-			if (count <= 0) {
-				continue;
-			}
-			task.delay(delay, (): void => {
-				let status = store.getState(selectGameStatus);
-				for (const _ of $range(1, count)) {
-					if (status === GameStatus.Ended) {
-						break;
-					}
-					const index = MobUtil.getMobIndex();
-					const mob = new Mob(index, id);
-					mob.start();
-					if (wait < 0) {
-						continue;
-					}
-					task.wait(wait);
-					status = store.getState(selectGameStatus);
-				}
-			});
-			const status = store.getState(selectGameStatus);
-			if (status === GameStatus.Ended) {
-				break;
-			}
-		}
-		task.delay(longest, (): void => {
-			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
-		});
+		// const { waves } = mapDefinitions[map];
+		// const [definition] = waves[wave - 1];
+		// MobUtil.setMobIndex(0);
+		// store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		// const longest = this.getSpawnDuration(map, wave);
+		// for (const [id, { count, delay, wait }] of pairs(definition)) {
+		// 	if (count <= 0) {
+		// 		continue;
+		// 	}
+		// 	task.delay(delay, (): void => {
+		// 		let status = store.getState(selectGameStatus);
+		// 		for (const _ of $range(1, count)) {
+		// 			if (status === GameStatus.Ended) {
+		// 				break;
+		// 			}
+		// 			const index = MobUtil.getMobIndex();
+		// 			const mob = new Mob(index, id);
+		// 			mob.start();
+		// 			if (wait < 0) {
+		// 				continue;
+		// 			}
+		// 			task.wait(wait);
+		// 			status = store.getState(selectGameStatus);
+		// 		}
+		// 	});
+		// 	const status = store.getState(selectGameStatus);
+		// 	if (status === GameStatus.Ended) {
+		// 		break;
+		// 	}
+		// }
+		// task.delay(longest, (): void => {
+		// 	store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
+		// });
 	}
 
 	// Map Timeline
@@ -126,12 +125,21 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		warn("Round ended.");
 	}
 
+	// !!
 	public onPlayerAdded(entity: Entity): void {
-		if (!entity.isPlayer()) {
-			return;
-		}
+		if (!entity.isPlayer()) return;
 		const { player } = entity;
-		Events.mob.indexReset(player, MobUtil.getMobIndex(false));
+
+		const selected = store.getState(selectGameStatus);
+		if (selected === GameStatus.None) return;
+
+		const mobs = Mob.getMobs();
+
+		for (const [uuid, mob] of mobs) {
+			const data = mob.serialize();
+			const { current, target } = data;
+			Events.mob.resync.broadcast(uuid, current, target, 0);
+		}
 	}
 
 	public onStart(): void {

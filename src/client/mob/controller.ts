@@ -47,29 +47,22 @@ export class MobController implements OnStart {
 		Mob.onMobDied.Connect((mob: Mob): void => {
 			mobDied.fire(mob);
 		});
-		Events.mob.indexReset.connect((index: number): void => {
-			MobUtil.setMobIndex(index);
-		});
-		Events.mob.damage.connect((data: Vector2int16, kind: MobDamage): void => {
-			const index = data.X;
-			const damage = data.Y;
-			const mob = Mob.getMob(index);
+		Events.mob.damage.connect((uuid: UUID, damage: number, kind: MobDamage): void => {
+			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
 			mob.takeDamage(damage, kind);
 		});
-		Events.mob.death.connect((index: number): void => {
-			const mob = Mob.getMob(index);
+		Events.mob.death.connect((uuid: UUID): void => {
+			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
 			mob.forceKill();
 		});
-		Events.mob.statusAdded.connect((data: Vector2int16, status: MobStatus, timestamp: number): void => {
-			const index = data.X;
-			const duration = data.Y;
-			const mob = Mob.getMob(index);
+		Events.mob.statusAdded.connect((uuid: UUID, duration: number, status: MobStatus, timestamp: number): void => {
+			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
@@ -77,22 +70,21 @@ export class MobController implements OnStart {
 			const delta = now - timestamp;
 			mob.applyStatus(status, duration - delta);
 		});
-		Events.mob.statusRemoved.connect((index: number, status: MobStatus): void => {
-			const mob = Mob.getMob(index);
+		Events.mob.statusRemoved.connect((uuid: UUID, status: MobStatus): void => {
+			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
 			mob.removeStatus(status);
 		});
-		Events.mob.resync.connect((first: Vector2int16, second: Vector2int16): void => {
-			const index = first.X;
-			const current = first.Y;
-			const target = second.X;
-			const alpha = second.Y / 1000;
-			const mob = Mob.getMob(index);
+		Events.mob.resync.connect((uuid: UUID, current: number, target: number, alpha: number): void => {
+			const alphaNew = alpha / 1000;
+			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
+			1;
 		});
 	}
 }
+1;

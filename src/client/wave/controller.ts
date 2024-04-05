@@ -2,6 +2,7 @@ import { Controller } from "@flamework/core";
 import { GameStatus } from "shared/game/types";
 import { Mob } from "client/mob/class";
 import { MobUtil } from "shared/mob/utils";
+import { createUUID } from "shared/utils/create-uuid";
 import { mapDefinitions } from "shared/map/definitions";
 import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "client/state/store";
@@ -15,7 +16,6 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
 		let longest = 0;
-		// eslint-disable-next-line roblox-ts/no-array-pairs
 		for (const [_, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
 				continue;
@@ -35,7 +35,6 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 	public spawnWave(map: MapId, wave: number): void {
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
-		MobUtil.setMobIndex(0);
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		const longest = this.getSpawnDuration(map, wave);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
@@ -48,8 +47,8 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 					if (status === GameStatus.Ended) {
 						break;
 					}
-					const index = MobUtil.getMobIndex();
-					const mob = new Mob(index, id);
+					const uuid = createUUID();
+					const mob = new Mob(uuid, id);
 					mob.start();
 					if (wait < 0) {
 						continue;

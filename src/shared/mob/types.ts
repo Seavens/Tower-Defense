@@ -1,7 +1,20 @@
 import { Flamework } from "@flamework/core";
+import { number } from "@rbxts/react/src/prop-types";
 
 export const enum MobId {
 	Zombie = "mob_id:zombie",
+}
+
+export interface MobData {
+	uuid: UUID;
+	id: MobId;
+	health: number;
+	current: number;
+	target: number;
+	final: number;
+	elapsed: number;
+	duration: number;
+	statuses: Map<MobStatus, number>;
 }
 
 export const enum MobDamage {
