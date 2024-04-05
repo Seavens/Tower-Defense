@@ -85,9 +85,24 @@ export class Mob extends API {
 		}
 	}
 
+	public setHealth(value: number): void {
+		const { health } = this;
+		if (value <= 0) {
+			return;
+		}
+		const damage = health - value;
+		this.health = value;
+		this.onDamage(damage);
+	}
+
+	public getDuration(): number {
+		const { duration } = this;
+		return duration;
+	}
+
 	public onDied(): void {}
 
-	public onDamage(damage: number, kind: MobDamage): void {}
+	public onDamage(damage: number, kind?: MobDamage): void {}
 
 	public onWaypoint(): void {}
 

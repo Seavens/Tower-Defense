@@ -17,8 +17,14 @@ export interface OnPlayerRemoving {
 	onPlayerRemoving(player: Entity): void;
 }
 
+export interface OnPlayerReady {
+	/** @hideinherited */
+	onPlayerReady(player: Entity): void;
+}
+
 const playerAdded = createListener<OnPlayerAdded>();
 const playerRemoving = createListener<OnPlayerRemoving>();
+const playerReady = createListener<OnPlayerReady>();
 
 Players.CharacterAutoLoads = false;
 
@@ -64,6 +70,7 @@ export class PlayerService implements OnStart {
 		}
 		loaded.add(entity);
 		entity.loadCharacter();
+		playerReady.fire(entity);
 	}
 
 	public onGameClosed(): void {

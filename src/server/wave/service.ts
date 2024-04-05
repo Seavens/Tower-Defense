@@ -2,9 +2,9 @@ import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { INTERMISSION_TIME } from "./constants";
 import { Mob } from "server/mob/class";
-import { MobUtil } from "shared/mob/utils";
-import { Players } from "@rbxts/services";
+import { Players, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
+import { createUUID } from "shared/utils/create-uuid";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/mobs";
 import {
@@ -18,12 +18,13 @@ import {
 import { store } from "server/state/store";
 import type { Entity } from "shared/player/api";
 import type { MapId } from "shared/map/types";
+import type { MobData } from "shared/mob/types";
 import type { OnMobEnded, OnMobRemoved } from "../mob/service";
-import type { OnPlayerAdded } from "../player/service";
+import type { OnPlayerReady } from "../player/service";
 import type { OnStart } from "@flamework/core";
 
 @Service({})
-export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerAdded {
+export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerReady {
 	public getSpawnDuration(map: MapId, wave: number): number {
 		const { waves } = mapDefinitions[map];
 		const [definition] = waves[wave - 1];
@@ -45,42 +46,42 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 	}
 
 	public spawnWave(map: MapId, wave: number): void {
-		// const { waves } = mapDefinitions[map];
-		// const [definition] = waves[wave - 1];
-		// MobUtil.setMobIndex(0);
-		// store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
-		// const longest = this.getSpawnDuration(map, wave);
-		// for (const [id, { count, delay, wait }] of pairs(definition)) {
-		// 	if (count <= 0) {
-		// 		continue;
-		// 	}
-		// 	task.delay(delay, (): void => {
-		// 		let status = store.getState(selectGameStatus);
-		// 		for (const _ of $range(1, count)) {
-		// 			if (status === GameStatus.Ended) {
-		// 				break;
-		// 			}
-		// 			const index = MobUtil.getMobIndex();
-		// 			const mob = new Mob(index, id);
-		// 			mob.start();
-		// 			if (wait < 0) {
-		// 				continue;
-		// 			}
-		// 			task.wait(wait);
-		// 			status = store.getState(selectGameStatus);
-		// 		}
-		// 	});
-		// 	const status = store.getState(selectGameStatus);
-		// 	if (status === GameStatus.Ended) {
-		// 		break;
-		// 	}
-		// }
-		// task.delay(longest, (): void => {
-		// 	store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
-		// });
+		const { waves } = mapDefinitions[map];
+		const [definition] = waves[wave - 1];
+		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
+		const longest = this.getSpawnDuration(map, wave);
+		for (const [id, { count, delay, wait }] of pairs(definition)) {
+			if (count <= 0) {
+				continue;
+			}
+			task.delay(delay, (): void => {
+				let status = store.getState(selectGameStatus);
+				for (const _ of $range(1, count)) {
+					if (status === GameStatus.Ended) {
+						break;
+					}
+					const uuid = createUUID();
+					const mob = new Mob(uuid, id);
+					const now = Workspace.GetServerTimeNow();
+					Events.mob.spawned.broadcast(id, uuid, now);
+					mob.start();
+					if (wait < 0) {
+						continue;
+					}
+					task.wait(wait);
+					status = store.getState(selectGameStatus);
+				}
+			});
+			const status = store.getState(selectGameStatus);
+			if (status === GameStatus.Ended) {
+				break;
+			}
+		}
+		task.delay(longest, (): void => {
+			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
+		});
 	}
 
-	// Map Timeline
 	public onMobRemoved(): void {
 		// Check if all mobs are dead
 		const count = Mob.getMobCount();
@@ -125,21 +126,19 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerA
 		warn("Round ended.");
 	}
 
-	// !!
-	public onPlayerAdded(entity: Entity): void {
+	public onPlayerReady(entity: Entity): void {
 		if (!entity.isPlayer()) return;
 		const { player } = entity;
-
 		const selected = store.getState(selectGameStatus);
 		if (selected === GameStatus.None) return;
-
 		const mobs = Mob.getMobs();
-
+		const serialized = new Map<UUID, MobData>();
 		for (const [uuid, mob] of mobs) {
 			const data = mob.serialize();
-			const { current, target } = data;
-			Events.mob.resync.broadcast(uuid, current, target, 0);
+			serialized.set(uuid, data);
 		}
+		warn("synchronizing");
+		Events.mob.sync(player, serialized);
 	}
 
 	public onStart(): void {

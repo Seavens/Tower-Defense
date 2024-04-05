@@ -1,10 +1,9 @@
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "./class";
-import { MobUtil } from "shared/mob/utils";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utils/create-listener";
-import type { MobDamage, MobStatus } from "shared/mob/types";
+import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 import type { OnStart } from "@flamework/core";
 
 /** @hideinherited */
@@ -77,13 +76,41 @@ export class MobController implements OnStart {
 			}
 			mob.removeStatus(status);
 		});
-		Events.mob.resync.connect((uuid: UUID, current: number, target: number, alpha: number): void => {
-			const alphaNew = alpha / 1000;
+		Events.mob.resync.connect((uuid: UUID, current: number, alpha: number, timestamp: number): void => {
 			const mob = Mob.getMob(uuid);
 			if (mob === undefined) {
 				return;
 			}
-			1;
+			mob.calculateDuration();
+			const now = Workspace.GetServerTimeNow();
+			const duration = mob.getDuration();
+			let delta = now - timestamp;
+			while (delta > duration) {
+				current += 1;
+				delta -= duration;
+			}
+			if (current > 1) {
+				const waypoints = mob.getWaypoints();
+				mob.nextWaypoint(current, waypoints.size());
+			}
+			delta > 0 && mob.setAlpha(alpha, delta);
+		});
+		Events.mob.spawned.connect((id: MobId, uuid: UUID, timestamp: number): void => {
+			const now = Workspace.GetServerTimeNow();
+			const mob = new Mob(uuid, id);
+			mob.start();
+			const duration = mob.getDuration();
+			let delta = now - timestamp;
+			let current = 1;
+			while (delta > duration) {
+				current += 1;
+				delta -= duration;
+			}
+			if (current > 1) {
+				const waypoints = mob.getWaypoints();
+				mob.nextWaypoint(current, waypoints.size());
+			}
+			delta > 0 && mob.setElapsed(delta);
 		});
 	}
 }

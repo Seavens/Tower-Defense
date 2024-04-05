@@ -1,6 +1,6 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
-import type { MobDamage, MobStatus } from "./mob/types";
+import type { MobDamage, MobData, MobId, MobStatus } from "./mob/types";
 import type { TowerTargeting } from "./tower/types";
 
 interface ClientToServerEvents {
@@ -43,13 +43,15 @@ interface ServerToClientEvents {
 	};
 
 	mob: {
-		resync: Networking.Unreliable<(uuid: UUID, current: number, target: number, alpha: number) => void>;
+		resync: Networking.Unreliable<(uuid: UUID, current: number, alpha: number, timestamp: number) => void>;
 		damage: Networking.Unreliable<(uuid: UUID, damage: number, kind: MobDamage) => void>;
 		death: Networking.Unreliable<(uuid: UUID) => void>;
 		statusAdded: Networking.Unreliable<
 			(uuid: UUID, duration: number, status: MobStatus, timestamp: number) => void
 		>;
 		statusRemoved: Networking.Unreliable<(uuid: UUID, status: MobStatus) => void>;
+		spawned(id: MobId, uuid: UUID, timestamp: number): void;
+		sync(data: Map<UUID, MobData>): void;
 	};
 }
 

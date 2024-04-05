@@ -2,6 +2,7 @@ import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
 import { MapUtil } from "shared/map/utils";
 import { MobStatus } from "./types";
+import { Workspace } from "@rbxts/services";
 import { mobDefinitions } from "./mobs";
 import { statusDefinitions } from "./statuses";
 import type { MobDamage, MobData, MobId } from "./types";
@@ -37,6 +38,20 @@ export abstract class Mob {
 		this.health = health;
 	}
 
+	public setAlpha(alpha: number, delta = 0): void {
+		this.calculateDuration();
+		const { duration } = this;
+		const elapsed = alpha * duration;
+		this.elapsed = math.min(elapsed + delta, duration);
+	}
+
+	public setElapsed(delta: number): void {
+		this.calculateDuration();
+		const { duration } = this;
+		const elapsed = delta;
+		this.elapsed = math.min(elapsed, duration);
+	}
+
 	public getCFrame(): CFrame {
 		const { current, target, waypoints, last } = this;
 		const a = waypoints[current - 1].GetPivot();
@@ -52,6 +67,11 @@ export abstract class Mob {
 		const { elapsed, duration } = this;
 		const alpha = math.clamp(elapsed / duration, 0, 1);
 		return alpha;
+	}
+
+	public getWaypoints(): Array<BasePart> {
+		const { waypoints } = this;
+		return waypoints;
 	}
 
 	public getHealth(): number {
@@ -98,6 +118,7 @@ export abstract class Mob {
 	}
 
 	public nextWaypoint(current: number, final: number): void {
+		warn(current);
 		const target = current + 1;
 		this.current = math.clamp(current, 1, final);
 		this.target = math.clamp(target, current, final);
@@ -148,11 +169,27 @@ export abstract class Mob {
 		this.destroy();
 	}
 
-	public start(): void {
+	public serialize(): MobData {
+		const { id, health, current, statuses } = this;
+		const alpha = this.getAlpha();
+		const timestamp = Workspace.GetServerTimeNow();
+		const data: MobData = {
+			id,
+			health,
+			current,
+			timestamp,
+			alpha,
+			statuses,
+		};
+		return data;
+	}
+
+	public start(current = 1): void {
 		const waypoints = MapUtil.getMapWaypoints();
 		const final = waypoints.size();
 		this.waypoints = waypoints;
-		this.nextWaypoint(1, final);
+		this.nextWaypoint(current, final);
+		this.setAlpha(0);
 		this.started = true;
 	}
 
@@ -205,24 +242,8 @@ export abstract class Mob {
 		this.started = false;
 	}
 
-	public serialize(): MobData {
-		const { uuid, id, health, current, target, final, elapsed, duration, statuses } = this;
-		const data = {
-			uuid,
-			id,
-			health,
-			current,
-			target,
-			final,
-			elapsed,
-			duration,
-			statuses: new Map<MobStatus, number>(),
-		};
-		return data;
-	}
-
 	public abstract onDied(tower?: string): void;
-	public abstract onDamage(damage: number, kind: MobDamage): void;
+	public abstract onDamage(damage: number, kind?: MobDamage): void;
 	public abstract onMovement(delta: number): void;
 	public abstract onWaypoint(index: number): void;
 	public abstract onStatus(status: MobStatus, duration: number, added: boolean): void;

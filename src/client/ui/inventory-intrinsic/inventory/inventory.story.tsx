@@ -23,7 +23,7 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<Inventory items={items} />
+				<Inventory items={items} visible={true} />
 			</ReflexProvider>
 		);
 	},

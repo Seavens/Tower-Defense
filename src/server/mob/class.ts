@@ -5,7 +5,6 @@ import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
 import { mobDefinitions } from "shared/mob/mobs";
-import { profileSlice } from "server/profile/slice";
 import { reuseThread } from "shared/utils/reuse-thread";
 import { selectProfileData } from "server/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
@@ -141,9 +140,7 @@ export class Mob extends API {
 		const { octree } = Mob;
 		const { node, movement } = this;
 		const now = os.clock();
-
 		if (now - movement < GAME_TICK_RATE) return;
-
 		this.movement = now;
 		const cframe = this.getCFrame();
 		const position = cframe.Position;
@@ -167,9 +164,10 @@ export class Mob extends API {
 
 	public onResync(): void {
 		const { uuid } = this;
-		const { current, target } = this;
+		const { current } = this;
 		const alpha = this.getAlpha();
-		Events.mob.resync.broadcast(uuid, current, target, alpha * 1000);
+		const now = Workspace.GetServerTimeNow();
+		Events.mob.resync.broadcast(uuid, current, alpha, now);
 	}
 
 	public destroy(): void {

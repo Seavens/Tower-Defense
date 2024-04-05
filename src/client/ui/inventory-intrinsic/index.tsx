@@ -21,7 +21,7 @@ export function InventoryApp(): Element {
 	return (
 		<>
 			{/* <Hotbar visible={!toggled} /> */}
-			<Inventory items={stored} />
+			<Inventory items={stored} visible={toggled} />
 		</>
 	);
 }

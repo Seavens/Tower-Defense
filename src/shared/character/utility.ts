@@ -62,9 +62,11 @@ export namespace CharacterUtility {
 			return CFrame.identity;
 		}
 		const size = instance.Size;
-		const random = new Vector3(math.random(-size.X / 2, size.X / 2), 0, math.random(-size.Z / 2, size.Z / 2)).mul(
-			math.random(),
-		);
+		const random = new Vector3(
+			math.random(-size.X / 2, size.X / 2),
+			size.Y / 2,
+			math.random(-size.Z / 2, size.Z / 2),
+		).mul(math.random());
 		const cframe = instance.GetPivot();
 		return cframe.add(random);
 	}
