@@ -185,3 +185,5 @@
 // 		</Group>
 // 	);
 // }
+
+export = undefined;

@@ -14,7 +14,7 @@ export = CreateReactStory(
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {
-			id: Choose(allItemIds, 1),
+			id: Choose(allItemIds, 0),
 			locked: Boolean(false),
 			enabled: Boolean(true),
 			selected: Boolean(true),

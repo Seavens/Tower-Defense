@@ -15,13 +15,13 @@ export = CreateReactStory(
 		reactRoblox: ReactRoblox,
 		controls: {
 			id: Choose(allTowerItemIds, 1),
-			duration: Number(1, 0, math.huge),
+			value: Number(1, 0, math.huge),
 			stat: Choose(["damage", "cooldown", "range"], 1),
 		},
 	},
 	({ controls }): Element => {
-		const { id, duration, stat } = controls;
-		warn(TowerUtil.calculateMultiplier(id, duration, stat));
+		const { id, value, stat } = controls;
+		warn(TowerUtil.calculateMultiplier(id, value, stat));
 
 		return <></>;
 	},

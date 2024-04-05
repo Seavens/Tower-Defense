@@ -12,3 +12,5 @@
 // 	}, [id]);
 // 	return definition;
 // }
+
+export = undefined;

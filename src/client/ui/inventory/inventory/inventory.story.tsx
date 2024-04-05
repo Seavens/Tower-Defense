@@ -13,9 +13,13 @@ export = CreateReactStory(
 		name: "Inventory",
 		react: React,
 		reactRoblox: ReactRoblox,
+		cleanup: (): void => {
+			store.resetState();
+		},
 	},
 	({ controls }): Element => {
 		const items = new Map<Slot, Item>();
+		const equipped = new Array<Slot>();
 		for (const index of $range(1, 100)) {
 			const item = ItemUtility.createItem(1);
 			items.set(`${index}`, item);
@@ -23,7 +27,7 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<Inventory items={items} visible={true} />
+				<Inventory items={items} equipped={equipped} visible={true} />
 			</ReflexProvider>
 		);
 	},

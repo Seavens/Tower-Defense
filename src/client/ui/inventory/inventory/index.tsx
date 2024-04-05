@@ -11,7 +11,15 @@ import {
 } from "client/ui/components";
 import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
-import { INVENTORY_COLUMNS, INVENTORY_ROWS, INVENTORY_SIZE, INVENTORY_TOPBAR_Y, SLOT_SIZE } from "../constants";
+import {
+	INVENTORY_COLUMNS,
+	INVENTORY_ROWS,
+	INVENTORY_SIZE,
+	INVENTORY_TOPBAR_Y,
+	RARITY_ORDERS,
+	SLOT_SIZE,
+} from "../constants";
+import { InventoryFilterKind } from "../types";
 import { InventorySlot } from "../slot";
 import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
@@ -27,11 +35,12 @@ import type { SlotActions } from "../slot";
 
 export interface InventoryProps {
 	items: Map<Slot, Item>;
+	equipped: Array<Slot>;
 	visible: boolean;
 	onClose?: () => void;
 }
 
-export function Inventory({ items, visible, onClose }: InventoryProps): Element {
+export function Inventory({ items, equipped, visible, onClose }: InventoryProps): Element {
 	const px = usePx();
 	const store = useStore();
 
@@ -39,6 +48,7 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 	const [selected, setSelected] = useState<Slot>();
 	const [container, setContainer] = useState<Frame>();
 	const [search, setSearch] = useState<Array<string>>();
+	const [filter, setFilter] = useState<InventoryFilterKind>();
 
 	const [transparency, transparencyMotion] = useMotion(1);
 
@@ -79,8 +89,9 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 		for (const [slot, item] of items) {
 			const { id, unique } = item;
 			const { locked, kind } = unique;
-
-			const { name } = itemDefinitions[id];
+			const isEquipped = equipped.includes(slot);
+			const { name, rarity } = itemDefinitions[id];
+			const level = kind === ItemKind.Tower ? unique.level : unique.multiplier;
 			if (search !== undefined && !search.includes(name)) continue;
 
 			const element = (
@@ -88,11 +99,18 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 					<InventorySlot
 						id={id}
 						locked={locked}
-						level={kind === ItemKind.Tower ? unique.level : unique.multiplier}
+						level={level}
 						selected={selected === slot}
 						enabled={enabled}
 						menu={!enabled && selected === slot}
-						layoutOrder={tonumber(slot)}
+						equipped={isEquipped}
+						layoutOrder={
+							filter === InventoryFilterKind.Level
+								? level
+								: filter === InventoryFilterKind.Rarity
+									? RARITY_ORDERS[rarity]
+									: tonumber(slot)
+						}
 						onLeftClick={(): void => {
 							if (!enabled) {
 								return;
@@ -113,6 +131,9 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 							} else if (action === "Equip") {
 								store.inventoryEquipSlot({ slot });
 								Events.inventory.equip(slot);
+							} else if (action === "Unequip") {
+								store.inventoryUnequipSlot({ slot });
+								Events.inventory.unequip(slot);
 							} else if (action === "Sell") {
 								//
 							}
@@ -123,7 +144,7 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 			slots.set(`slot-${slot}`, element);
 		}
 		return slots;
-	}, [items, container, enabled, selected, search]);
+	}, [items, equipped, container, enabled, selected, search, filter]);
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);
@@ -233,10 +254,10 @@ export function Inventory({ items, visible, onClose }: InventoryProps): Element 
 								<uigridlayout
 									CellSize={UDim2.fromOffset(px(SLOT_SIZE.X), px(SLOT_SIZE.Y))}
 									CellPadding={UDim2.fromScale(0, 0)}
-									SortOrder={Enum.SortOrder.LayoutOrder}
 									HorizontalAlignment={Enum.HorizontalAlignment.Center}
 									VerticalAlignment={Enum.VerticalAlignment.Top}
 									StartCorner={Enum.StartCorner.TopLeft}
+									SortOrder={Enum.SortOrder.LayoutOrder}
 								/>
 							</ScrollingFrame>
 							{slots.isEmpty() && (

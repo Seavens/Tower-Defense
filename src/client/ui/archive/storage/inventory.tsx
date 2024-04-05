@@ -478,3 +478,5 @@
 // 		</DelayRender>
 // 	);
 // }
+
+export = undefined;

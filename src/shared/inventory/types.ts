@@ -3,14 +3,6 @@ import { isUUID } from "shared/guards";
 import { t } from "@rbxts/t";
 import type { ItemDefinition, itemDefinitions } from "./items";
 
-export const enum ItemFiltering {
-	All = "item_filter:all",
-	Rarity = "item_filter:rarity",
-	Level = "item_filter:level",
-	Items = "item_filter:items",
-	Locked = "item_filter:locked",
-}
-
 export const enum ItemRarity {
 	Rare = "rarity_id:rare",
 	Epic = "rarity_id:epic",

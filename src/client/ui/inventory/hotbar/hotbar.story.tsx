@@ -2,7 +2,6 @@ import { CreateReactStory } from "@rbxts/ui-labs";
 import { Hotbar } from ".";
 import { ItemUtility } from "shared/inventory/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
-import { Players } from "@rbxts/services";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
@@ -15,6 +14,9 @@ export = CreateReactStory(
 		name: "Hotbar",
 		react: React,
 		reactRoblox: ReactRoblox,
+		cleanup: (): void => {
+			store.resetState();
+		},
 	},
 	({ controls }): Element => {
 		const items = new Map<Slot, Item>();

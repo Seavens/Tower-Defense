@@ -12,3 +12,5 @@
 // 	const { cost } = kind;
 // 	return cost;
 // }
+
+export = undefined;

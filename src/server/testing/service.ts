@@ -35,7 +35,7 @@ export class TestService implements OnStart, OnDataLoaded {
 			// store.inventoryEquipSlot({ slot }, metadata);
 		}
 
-		store.gameAddCurrency({ amount: 100000 }, broadcast);
+		// store.gameAddCurrency({ amount: 100000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
 	}

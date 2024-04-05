@@ -17,13 +17,14 @@ interface InventorySlotProps {
 	enabled: boolean;
 	selected: boolean;
 	menu: boolean;
+	equipped?: boolean;
 	layoutOrder?: number;
 	onLeftClick?: () => void;
 	onRightClick?: () => void;
 	onActionClick?: (action: SlotActions) => void;
 }
 
-export type SlotActions = "Sell" | "Equip" | "Lock" | "Unlock" | "Close";
+export type SlotActions = "Sell" | "Equip" | "Unequip" | "Lock" | "Unlock" | "Close";
 
 export function InventorySlot({
 	id,
@@ -32,6 +33,7 @@ export function InventorySlot({
 	enabled,
 	selected,
 	menu,
+	equipped,
 	layoutOrder = 1,
 	onLeftClick,
 	onRightClick,
@@ -44,11 +46,11 @@ export function InventorySlot({
 	const rarity = definition?.rarity;
 	const kind = definition?.kind;
 
-	const image = definition === undefined ? "" : definition?.image;
-	const cost = kind === undefined ? 0 : useAbbreviation(kind.kind === ItemKind.Tower ? kind.cost : 0, 0);
-	const color = rarity === undefined ? PALETTE.white : useRarityColor(rarity);
+	const image = definition?.image;
+	const cost = useAbbreviation(kind === undefined || kind.kind !== ItemKind.Tower ? 0 : kind.cost, 0);
+	const color = useRarityColor(rarity);
 	const darkened = useDarkenedColor(color, 0.5);
-	const abbreviated = kind === undefined ? 0 : useAbbreviation(level, kind.kind === ItemKind.Tower ? 0 : 2);
+	const abbreviated = useAbbreviation(level, kind === undefined || kind.kind === ItemKind.Tower ? 0 : 2);
 
 	const [outline, outlineMotion] = useMotion(1);
 	const [transparency, transparencyMotion] = useMotion(0);
@@ -56,12 +58,12 @@ export function InventorySlot({
 	const [lock, lockMotion] = useMotion(1);
 
 	const actions = useMemo((): Array<SlotActions> => {
-		return ["Sell", "Equip", locked ? "Unlock" : "Lock", "Close"];
-	}, [locked]);
+		return ["Sell", equipped ? "Unequip" : "Equip", locked ? "Unlock" : "Lock", "Close"];
+	}, [locked, equipped]);
 
 	useEffect((): void => {
-		outlineMotion.spring(selected ? (enabled ? 0 : 0.5) : 1, SPRINGS.gentle);
-	}, [selected, enabled]);
+		outlineMotion.spring(equipped || selected ? (enabled ? 0 : 0.5) : 1, SPRINGS.gentle);
+	}, [selected, equipped, enabled]);
 
 	useEffect((): void => {
 		transparencyMotion.spring(enabled ? 0 : 1, SPRINGS.responsive);
@@ -106,7 +108,7 @@ export function InventorySlot({
 						position={UDim2.fromScale(0.5, 0.5)}
 						anchorPoint={Vector2.one.mul(0.5)}
 						backgroundTransparency={1}
-						image={image}
+						image={image ?? ""}
 						imageTransparency={imageTransparency}
 						zIndex={1}
 						key={"slot-image"}

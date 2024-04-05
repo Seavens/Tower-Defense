@@ -16,3 +16,5 @@
 // 		</frame>
 // 	);
 // }
+
+export = undefined;

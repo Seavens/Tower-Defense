@@ -3,3 +3,5 @@
 // import { useRarityDefinition } from "./use-rarity-definition";
 
 // export { useItemDefinition, useRarityDefinition, formatStats };
+
+export = undefined;

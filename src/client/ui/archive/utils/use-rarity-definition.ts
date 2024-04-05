@@ -18,3 +18,5 @@
 // 	}, [id]);
 // 	return rarity;
 // }
+
+export = undefined;

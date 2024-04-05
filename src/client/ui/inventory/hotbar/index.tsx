@@ -2,11 +2,13 @@ import { DelayRender, Frame, Group, Text, Transition } from "client/ui/component
 import { FONTS, SPRINGS } from "client/ui/constants";
 import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
-import { ItemKind } from "shared/inventory/types";
+import { ItemKind, isTowerItemId } from "shared/inventory/types";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { LevelUtil } from "shared/profile/utils";
+import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
 import { PlayerUtil } from "shared/player/utils";
 import { Players } from "@rbxts/services";
+import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { truncateNumber } from "shared/utils/truncate-number";
@@ -45,23 +47,30 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 
 	const slots = useMemo(() => {
 		const elements: Array<Element> = [];
-		for (const slot of equipped) {
+		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+			const slot = equipped[index - 1] ?? `${-1}`;
 			const item = items.get(slot);
-			if (item === undefined) {
-				continue;
+			const id = item?.id;
+			const unique = item?.unique;
+			const kind = unique?.kind;
+			let cost = 0;
+			if (id !== undefined && isTowerItemId(id)) {
+				const { kind } = itemDefinitions[id];
+				({ cost } = kind);
 			}
-			const { id, unique } = item;
-			const { kind } = unique;
 			elements.push(
 				<InventorySlot
 					id={id}
-					locked={false}
-					level={kind === ItemKind.Tower ? unique.level : unique.multiplier}
+					locked={cost > currency}
+					level={unique !== undefined ? (kind === ItemKind.Tower ? unique.level : unique.multiplier) : 0}
 					selected={true}
-					enabled={true}
+					enabled={id !== undefined}
 					menu={false}
-					layoutOrder={tonumber(slot)}
+					layoutOrder={index}
 					onLeftClick={(): void => {
+						if (id === undefined) {
+							return;
+						}
 						store.beginPlacement({ placing: id, slot });
 					}}
 				/>,

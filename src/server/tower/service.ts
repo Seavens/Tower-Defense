@@ -2,6 +2,7 @@ import { Events } from "server/network";
 import { PlayerUtil } from "shared/player/utils";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
+import { TowerUtil } from "shared/tower/utils";
 import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
 import { isUUID } from "shared/guards";
 import { itemDefinitions } from "shared/inventory/items";
@@ -111,13 +112,17 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		Events.tower.upgrade.connect((player: Player, key: string): void => {
 			const user = PlayerUtil.getUser(player);
 			const tower = Tower.getTower(key);
+			const currency = store.getState(selectCurrency(user));
 			if (tower === undefined) {
 				return;
 			}
+			const replicated = tower.getReplicated();
+			const cost = TowerUtil.getUpgradeCost(replicated);
 			const { owner } = tower;
-			if (user !== owner) {
+			if (user !== owner || cost > currency) {
 				return;
 			}
+			store.gameAddCurrency({ amount: -cost }, { user, broadcast: true });
 			tower.upgradeTower();
 		});
 		Events.tower.sell.connect((player: Player, key: string): void => {

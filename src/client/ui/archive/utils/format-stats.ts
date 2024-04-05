@@ -41,3 +41,5 @@
 
 // // v Includes targeting v
 // // return `${base}Damage: ${truncateNumber(baseDamage * damage)}\n\tRange: ${truncateNumber(baseRange * range)}\n\tCooldown: ${truncateNumber(baseCooldown * cooldown)}\n\tCost: ${truncateNumber(cost)}\n\tDamage Kind: ${MOB_DAMAGE_DISPLAY[damageKind]}\n\tTargeting:\t\t${formatTargeting(targeting)}\n\tOwner: ${truncateNumber(owner)}\n\tLevel: ${truncateNumber(level)}\n\tLocked: ${locked}`;
+
+export = undefined;

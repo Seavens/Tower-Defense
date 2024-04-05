@@ -22,3 +22,5 @@
 // 	[ItemRarity.Mythical]: 2,
 // 	[ItemRarity.Secret]: 1,
 // };
+
+export = undefined;

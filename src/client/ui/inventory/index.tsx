@@ -22,7 +22,7 @@ export function InventoryApp(): Element {
 	return (
 		<>
 			<Hotbar visible={true} items={stored} equipped={equipped} />
-			<Inventory items={stored} visible={toggled} onClose={(): void => setToggled(false)} />
+			<Inventory items={stored} equipped={equipped} visible={toggled} onClose={(): void => setToggled(false)} />
 		</>
 	);
 }

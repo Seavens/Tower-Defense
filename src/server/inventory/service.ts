@@ -34,5 +34,12 @@ export class InventoryService implements OnStart {
 			const user = PlayerUtil.getUser(player);
 			store.inventoryEquipSlot({ slot }, { user, replicate: true });
 		});
+		Events.inventory.unequip.connect((player: Player, slot: string): void => {
+			if (!isSlot(slot)) {
+				return;
+			}
+			const user = PlayerUtil.getUser(player);
+			store.inventoryUnequipSlot({ slot }, { user, replicate: true });
+		});
 	}
 }
