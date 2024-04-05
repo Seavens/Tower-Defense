@@ -1,7 +1,7 @@
-import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
-import type { Element, InferEnumNames, Ref } from "@rbxts/react";
 import { forwardRef } from "@rbxts/react";
 import React from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element, InferEnumNames, Ref } from "@rbxts/react";
 import type { FrameProps } from "./frame";
 
 export interface ImageProps extends FrameProps<ImageLabel> {

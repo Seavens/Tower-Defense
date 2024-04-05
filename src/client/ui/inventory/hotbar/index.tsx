@@ -1,6 +1,6 @@
 import { DelayRender, Frame, Group, Text, Transition } from "client/ui/components";
-import { EXP_BAR_SIZE_Y, HOTBAR_SIZE, ITEM_SLOT_SIZE } from "client/ui/archive/constants";
 import { FONTS, SPRINGS } from "client/ui/constants";
+import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
 import { ItemKind } from "shared/inventory/types";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
@@ -102,7 +102,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					/>
 					<Frame
 						key={"item-group"}
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(ITEM_SLOT_SIZE.Y))}
+						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}
 						anchorPoint={new Vector2(0.5, 0)}
 						position={UDim2.fromScale(0.5, 0)}
 						backgroundTransparency={1}
@@ -118,7 +118,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					</Frame>
 					<Frame
 						key={"level-frame"}
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(EXP_BAR_SIZE_Y))}
+						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(10))}
 						// backgroundColor={Darken(Mocha.Mauve, 0.75)}
 						cornerRadius={new UDim(0, px(5))}
 						anchorPoint={new Vector2(0.5, 1)}
@@ -153,7 +153,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					</Frame>
 					<Frame
 						key={"level-holder"}
-						size={UDim2.fromOffset(px(EXP_BAR_SIZE_Y), px(EXP_BAR_SIZE_Y))}
+						size={UDim2.fromOffset(px(10), px(10))}
 						anchorPoint={new Vector2(0.5, 1)}
 						position={UDim2.fromScale(0.5, 1)}
 						backgroundColor={Mocha.Teal}

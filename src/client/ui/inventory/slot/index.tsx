@@ -3,15 +3,15 @@ import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components"
 import { ItemKind } from "shared/inventory/types";
 import { SLOT_SIZE } from "../constants";
 import { SlotActions } from "./actions";
-import { itemDefinitions } from "shared/inventory/items";
 import { map } from "@rbxts/pretty-react-hooks";
 import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx, useRarityColor } from "client/ui/hooks";
+import { useItemDefinition } from "client/ui/hooks/use-item-definition";
 import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 
 interface InventorySlotProps {
-	id: ItemId;
+	id?: ItemId;
 	locked: boolean;
 	level: number;
 	enabled: boolean;
@@ -24,8 +24,6 @@ interface InventorySlotProps {
 }
 
 export type SlotActions = "Sell" | "Equip" | "Lock" | "Unlock" | "Close";
-
-const useItemDefinition = useDefinition(itemDefinitions);
 
 export function InventorySlot({
 	id,
@@ -41,12 +39,16 @@ export function InventorySlot({
 }: InventorySlotProps): Element {
 	const px = usePx();
 
-	const { name, rarity, image, kind } = useItemDefinition(id);
-	const color = useRarityColor(rarity);
+	const definition = useItemDefinition(id);
+	const name = definition?.name;
+	const rarity = definition?.rarity;
+	const kind = definition?.kind;
 
-	const cost = useAbbreviation(kind.kind === ItemKind.Tower ? kind.cost : 0, 0);
+	const image = definition === undefined ? "" : definition?.image;
+	const cost = kind === undefined ? 0 : useAbbreviation(kind.kind === ItemKind.Tower ? kind.cost : 0, 0);
+	const color = rarity === undefined ? PALETTE.white : useRarityColor(rarity);
 	const darkened = useDarkenedColor(color, 0.5);
-	const abbreviated = useAbbreviation(level, kind.kind === ItemKind.Tower ? 0 : 2);
+	const abbreviated = kind === undefined ? 0 : useAbbreviation(level, kind.kind === ItemKind.Tower ? 0 : 2);
 
 	const [outline, outlineMotion] = useMotion(1);
 	const [transparency, transparencyMotion] = useMotion(0);
@@ -114,7 +116,13 @@ export function InventorySlot({
 							position={UDim2.fromScale(0, 1)}
 							anchorPoint={new Vector2(0, 1)}
 							backgroundTransparency={1}
-							text={kind.kind === ItemKind.Tower ? `Lv: ${abbreviated}` : `${abbreviated}`}
+							text={
+								kind === undefined
+									? ""
+									: kind.kind === ItemKind.Tower
+										? `Lv: ${abbreviated}`
+										: `${abbreviated}`
+							}
 							textColor={PALETTE.white}
 							font={FONTS.inter.bold}
 							textSize={px(12)}
@@ -158,7 +166,13 @@ export function InventorySlot({
 						size={UDim2.fromScale(1, 1)}
 						position={UDim2.fromScale(0.5, 0.5)}
 						anchorPoint={Vector2.one.mul(0.5)}
-						text={kind.kind === ItemKind.Tower ? `$${cost}` : name}
+						text={
+							id === undefined || kind === undefined
+								? ""
+								: kind.kind === ItemKind.Tower
+									? `$${cost}`
+									: name
+						}
 						textColor={PALETTE.white}
 						font={FONTS.inter.bold}
 						textSize={px(16)}

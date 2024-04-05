@@ -1,9 +1,9 @@
+import { RunService } from "@rbxts/services";
+import { createMotion } from "@rbxts/ripple";
+import { useBinding, useEffect, useMemo } from "@rbxts/react";
 import { useLatestCallback } from "@rbxts/pretty-react-hooks";
 import type { Binding } from "@rbxts/react";
-import { useBinding, useEffect, useMemo } from "@rbxts/react";
 import type { Motion, MotionGoal } from "@rbxts/ripple";
-import { createMotion } from "@rbxts/ripple";
-import { RunService } from "@rbxts/services";
 
 export function useMotion<T = number>(
 	goal: number,
