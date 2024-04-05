@@ -9,7 +9,6 @@ import {
 	Text,
 	Transition,
 } from "client/ui/components";
-import { ColorUtil } from "client/ui/utils";
 import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { INVENTORY_COLUMNS, INVENTORY_ROWS, INVENTORY_SIZE, INVENTORY_TOPBAR_Y, SLOT_SIZE } from "../constants";

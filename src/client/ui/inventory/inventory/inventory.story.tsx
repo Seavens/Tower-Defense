@@ -10,7 +10,7 @@ import type { Item } from "shared/inventory/types";
 
 export = CreateReactStory(
 	{
-		name: "Inventory Slot v2",
+		name: "Inventory",
 		react: React,
 		reactRoblox: ReactRoblox,
 	},

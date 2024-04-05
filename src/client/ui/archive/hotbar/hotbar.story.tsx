@@ -1,35 +1,37 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { Hotbar } from ".";
+import { Hotbar } from "./hotbar";
+import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
-import { Players } from "@rbxts/services";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
-import type { Item } from "shared/inventory/types";
+
+const items = ItemUtility.createItems(1, MAXIMUM_EQUIPPED, ItemKind.Tower);
 
 export = CreateReactStory(
 	{
-		name: "Hot Bar",
+		name: "Hotbar",
 		react: React,
 		reactRoblox: ReactRoblox,
+		cleanup: (): void => {
+			store.resetState();
+		},
 	},
-	({ controls }): Element => {
-		const items = new Map<Slot, Item>();
-		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
-			const item = ItemUtility.createItem(1);
-			items.set(`${index}`, item);
-		}
-
-		store.profileAddExperience({ amount: 168754 });
-		store.profileAdjustCoins({ coins: 35178 });
-		store.profileAdjustGems({ gems: 418 });
-
+	(): Element => {
+		store.inventoryAddItems({ items: items });
+		store.profileAddExperience({ amount: 10000000 });
+		task.defer((): void => {
+			for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+				const slot: Slot = `${index}`;
+				store.inventoryEquipSlot({ slot });
+			}
+		});
 		return (
 			<ReflexProvider producer={store}>
-				<Hotbar items={items} />
+				<Hotbar />
 			</ReflexProvider>
 		);
 	},
