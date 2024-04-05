@@ -6,7 +6,7 @@ import { lastTargeting } from "./last";
 import { noneTargeting } from "./none";
 import { strongestTargeting } from "./strongest";
 import { weakestTargeting } from "./weakest";
-import type { Mob } from "server/mob/class";
+import type { Mob } from "shared/mob/api";
 import type { Node } from "@rbxts/octo-tree";
 
 export interface TargetingModule<I extends TowerTargeting> {

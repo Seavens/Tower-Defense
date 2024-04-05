@@ -5,8 +5,10 @@ import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utils/create-schedule";
 import { reuseThread } from "shared/utils/reuse-thread";
+import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
+import type { Node } from "@rbxts/octo-tree";
 
 export class Mob extends API {
 	public static readonly mobs = new Map<UUID, Mob>();
@@ -15,6 +17,8 @@ export class Mob extends API {
 	public static readonly onMobRemoved = new Signal<Mob>();
 	public static readonly onMobEnded = new Signal<Mob>();
 	public static readonly onMobDied = new Signal<Mob>();
+
+	protected static octree = new Octree<Mob>();
 
 	public declare readonly uuid: UUID;
 	public declare readonly id: MobId;
@@ -32,6 +36,10 @@ export class Mob extends API {
 	protected declare duration: number;
 	protected declare destroyed: boolean;
 	protected readonly instance: Model;
+
+	protected readonly node: Node<Mob>;
+
+	protected movement = os.clock();
 
 	static {
 		createSchedule({
@@ -51,13 +59,17 @@ export class Mob extends API {
 
 	public constructor(uuid: UUID, id: MobId) {
 		super(uuid, id);
-		const { mobs, onMobAdded } = Mob;
-		const { bin } = this;
+		const { mobs, onMobAdded, octree } = Mob;
+		const { waypoints, bin } = this;
 		const model = MobUtil.getMobModel(id);
+		const [first] = waypoints;
+		const position = first.Position;
+		const node = octree.CreateNode(position, this);
 		model.Parent = Workspace.mobs;
-		this.instance = model;
 		model.Name = uuid;
 		bin.add(model);
+		this.node = node;
+		this.instance = model;
 		onMobAdded.FireDeferred(this);
 		mobs.set(uuid, this);
 	}
@@ -76,6 +88,12 @@ export class Mob extends API {
 	public static getMobCount(): number {
 		const { mobs } = this;
 		return mobs.size();
+	}
+
+	public static getMobsInRadius(position: Vector3, radius: number): Array<Node<Mob>> {
+		const { octree } = this;
+		const mobs = octree.SearchRadius(position, radius);
+		return mobs;
 	}
 
 	public static removeAllMobs(): void {
@@ -107,9 +125,15 @@ export class Mob extends API {
 	public onWaypoint(): void {}
 
 	public onMovement(delta: number): void {
-		const { instance } = this;
+		const { octree } = Mob;
+		const { instance, movement, node } = this;
 		const cframe = this.getCFrame();
 		instance.PivotTo(cframe);
+		const now = os.clock();
+		if (now - movement < GAME_TICK_RATE) return;
+		this.movement = now;
+		const position = cframe.Position;
+		octree.ChangeNodePosition(node, position);
 	}
 
 	public onStatus(status: MobStatus, duration: number, added: boolean): void {}
@@ -119,11 +143,12 @@ export class Mob extends API {
 	public onResync(): void {}
 
 	public destroy(): void {
-		const { mobs, onMobRemoved } = Mob;
-		const { uuid, instance } = this;
+		const { mobs, onMobRemoved, octree } = Mob;
+		const { uuid, instance, node } = this;
 		if (this.isDestroyed()) {
 			return;
 		}
+		octree.RemoveNode(node);
 		onMobRemoved.FireDeferred(this);
 		task.defer((): void => {
 			mobs.delete(uuid);

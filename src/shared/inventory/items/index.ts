@@ -4,7 +4,7 @@ import type { ItemId } from "../types";
 import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
-import type { TowerTargeting } from "shared/tower/types";
+import type { TowerTargeting, TowerVisual } from "shared/tower/types";
 
 export type TowerUpgradeInfo = {
 	upgrade: number;
@@ -27,6 +27,8 @@ interface TowerDefinition {
 	cost: number;
 	upgrades: Array<TowerUpgradeInfo>;
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
+
+	visual: TowerVisual;
 }
 
 interface RelicDefinition {
@@ -34,7 +36,7 @@ interface RelicDefinition {
 	multiplier: number;
 }
 
-export interface ItemClasses {
+export interface DefinitionKinds {
 	[ItemKind.Tower]: TowerDefinition;
 	[ItemKind.Relic]: RelicDefinition;
 }
@@ -47,7 +49,7 @@ export interface ItemDefinition<I extends ItemId, C extends ItemKind> {
 	rarity: ItemRarity;
 	image: RBXAssetId;
 
-	kind: ItemClasses[C];
+	kind: DefinitionKinds[C];
 }
 
 type InferClass<T> = T extends ItemDefinition<ItemId, infer C> ? C : never;

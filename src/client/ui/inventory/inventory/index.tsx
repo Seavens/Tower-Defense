@@ -28,9 +28,10 @@ import type { SlotActions } from "../slot";
 export interface InventoryProps {
 	items: Map<Slot, Item>;
 	visible: boolean;
+	onClose?: () => void;
 }
 
-export function Inventory({ items, visible }: InventoryProps): Element {
+export function Inventory({ items, visible, onClose }: InventoryProps): Element {
 	const px = usePx();
 	const store = useStore();
 
@@ -199,6 +200,7 @@ export function Inventory({ items, visible }: InventoryProps): Element {
 								anchorPoint={Vector2.one}
 								textSize={px(INVENTORY_TOPBAR_Y + 5)}
 								enabled={enabled}
+								onClose={onClose}
 								key={"inventory-close"}
 							/>
 						</Frame>

@@ -2,7 +2,6 @@ import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
 import { Mob } from "../mob/class";
-import { TowerTargeting } from "shared/tower/types";
 import { TowerUtil } from "shared/tower/utils";
 import { createSchedule } from "shared/utils/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
@@ -12,6 +11,7 @@ import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
+import type { TowerTargeting } from "shared/tower/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
@@ -82,16 +82,21 @@ export class Tower extends API {
 		return tower;
 	}
 
+	public getTargeting(): TowerTargeting {
+		const { targeting } = this.getReplicated();
+		return targeting;
+	}
+
 	public getTarget(): Option<Mob> {
 		const { cframe } = this;
 		const position = cframe.Position;
 		const replicated = this.getReplicated();
 		const range = TowerUtil.getTotalRange(replicated);
 		const mobs = Mob.getMobsInRadius(position, range);
-		const targeting = TowerTargeting.First;
+		const targeting = this.getTargeting();
 		const module = targetingModules[targeting];
 		const target = module.getTarget(mobs);
-		return target;
+		return target as Option<Mob>;
 	}
 
 	public attackTarget(delta: number): void {
@@ -108,7 +113,7 @@ export class Tower extends API {
 		const currentTarget = this.getTarget();
 		if (currentTarget !== lastTarget) {
 			const target = currentTarget?.uuid;
-			Events.tower.target.broadcast(key, target);
+			Events.tower.attack.broadcast(key, target);
 		}
 		this.lastTarget = currentTarget;
 		if (currentTarget === undefined) {

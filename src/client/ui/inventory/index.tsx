@@ -1,3 +1,4 @@
+import { Hotbar } from "./hotbar";
 import { Inventory } from "./inventory";
 import { selectInventoryData } from "client/inventory/selectors";
 import { useEffect, useState } from "@rbxts/react";
@@ -9,7 +10,7 @@ import type { Element } from "@rbxts/react";
 export function InventoryApp(): Element {
 	const tab = useKeyPress(["Tab"]);
 	const [toggled, setToggled] = useState(false);
-	const { stored } = useSelector(selectInventoryData);
+	const { stored, equipped } = useSelector(selectInventoryData);
 
 	useEffect((): void => {
 		if (!tab) {
@@ -20,8 +21,8 @@ export function InventoryApp(): Element {
 
 	return (
 		<>
-			{/* <Hotbar visible={!toggled} /> */}
-			<Inventory items={stored} visible={toggled} />
+			<Hotbar visible={!toggled} items={stored} equipped={equipped} />
+			<Inventory items={stored} visible={toggled} onClose={(): void => setToggled(false)} />
 		</>
 	);
 }

@@ -20,10 +20,11 @@ export function formatStats(
 	if (unique.kind === ItemKind.Tower && kind.kind === ItemKind.Tower) {
 		const { cost, damageKind, targeting } = kind;
 		const { damage, range, cooldown, level, locked } = unique;
+		const { damage: baseDamage, cooldown: baseCooldown, range: baseRange } = kind;
 		return mapBinding(
 			color,
 			(value: Color3): string =>
-				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nLevel: ${truncateNumber(level, 0)}\nCost: ${truncateNumber(cost, 0)}\nDamage: ${truncateNumber(damage, 0)}\nRange: ${truncateNumber(range, 0)}\nCooldown: ${truncateNumber(cooldown, 0)}\nLocked: ${locked ? "Yes" : "No"}\nDamage Kind: ${MOB_DAMAGE_DISPLAY[damageKind]}`,
+				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nLevel: ${truncateNumber(level, 0)}\nCost: ${truncateNumber(cost, 3)}\nDamage: ${truncateNumber(baseDamage * damage, 3)}\nRange: ${truncateNumber(baseRange * range, 0)}\nCooldown: ${truncateNumber(baseCooldown * cooldown, 0)}\nLocked: ${locked ? "Yes" : "No"}\nDamage Kind: ${MOB_DAMAGE_DISPLAY[damageKind]}`,
 		);
 	} else if (unique.kind === ItemKind.Relic) {
 		const { multiplier } = unique;

@@ -12,15 +12,18 @@ import type { Item } from "shared/inventory/types";
 
 export = CreateReactStory(
 	{
-		name: "Hot Bar",
+		name: "Hotbar",
 		react: React,
 		reactRoblox: ReactRoblox,
 	},
 	({ controls }): Element => {
 		const items = new Map<Slot, Item>();
+		const equipped = new Array<Slot>();
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
+			const slot: Slot = `${index}`;
 			const item = ItemUtility.createItem(1);
-			items.set(`${index}`, item);
+			items.set(slot, item);
+			equipped.push(slot);
 		}
 
 		store.profileAddExperience({ amount: 168754 });
@@ -29,7 +32,7 @@ export = CreateReactStory(
 
 		return (
 			<ReflexProvider producer={store}>
-				<Hotbar items={items} />
+				<Hotbar visible={true} items={items} equipped={equipped} />
 			</ReflexProvider>
 		);
 	},

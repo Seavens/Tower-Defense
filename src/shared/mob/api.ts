@@ -118,7 +118,6 @@ export abstract class Mob {
 	}
 
 	public nextWaypoint(current: number, final: number): void {
-		warn(current);
 		const target = current + 1;
 		this.current = math.clamp(current, 1, final);
 		this.target = math.clamp(target, current, final);

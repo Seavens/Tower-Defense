@@ -22,6 +22,10 @@ export const enum TowerGrade {
 	D = "tower_grade:d",
 }
 
+export const enum TowerVisual {
+	SniperShot = "tower_visual:sniper_shot",
+}
+
 export interface ReplicatedTower {
 	id: TowerItemId;
 	uuid: UUID;
@@ -36,6 +40,7 @@ export interface ReplicatedTower {
 
 export const isTowerTargeting = Flamework.createGuard<TowerTargeting>();
 export const isTowerGrade = Flamework.createGuard<TowerGrade>();
+export const isTowerVisual = Flamework.createGuard<TowerVisual>();
 
 export const isReplicatedTower: t.check<ReplicatedTower> = t.strictInterface({
 	id: isTowerItemId,

@@ -1,16 +1,21 @@
 import { Tower as API } from "shared/tower/api";
+import { Bin } from "@rbxts/bin";
 import { Collision, setCollision } from "shared/utils/collision";
 import { ComponentTag } from "shared/components/types";
-import { Events } from "client/network";
+import { GAME_TICK_RATE } from "shared/core/constants";
+import { Mob } from "client/mob/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { TowerUtil } from "shared/tower/utils";
+import { createSchedule } from "shared/utils/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
+import { reuseThread } from "shared/utils/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
+import { targetingModules } from "shared/tower/targeting";
+import { towerVisualModules } from "./visuals";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
-import type { Mob } from "shared/mob/api";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 const {
@@ -33,13 +38,31 @@ export class Tower extends API {
 	protected declare readonly key: string;
 	protected declare readonly unique: ItemTowerUnique;
 
+	protected readonly bin = new Bin();
+
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
+
+	static {
+		createSchedule({
+			name: "TowerTick",
+			tick: GAME_TICK_RATE,
+			phase: 0,
+			onTick: (): void => {
+				const { towers } = this;
+				for (const [_, tower] of towers) {
+					reuseThread((): void => {
+						tower.onTick();
+					});
+				}
+			},
+		});
+	}
 
 	public constructor(tower: ReplicatedTower) {
 		super(tower);
 		const { towers } = Tower;
-		const { id, cframe, key } = this;
+		const { id, cframe, key, bin } = this;
 		const model = assets.FindFirstChild(id);
 		if (model === undefined || !model.IsA("Model")) {
 			throw `Could not find model for Tower(${id})!`;
@@ -51,6 +74,7 @@ export class Tower extends API {
 		instance.SetAttribute(TOWER_KEY_ATTRIBUTE, key);
 		instance.Parent = placed;
 		this.instance = instance;
+		bin.add(instance);
 		towers.set(key, this);
 	}
 
@@ -78,15 +102,20 @@ export class Tower extends API {
 	}
 
 	public getTargeting(): TowerTargeting {
-		const { id, key } = this;
-		const tower = store.getState(selectSpecificTower(key));
-		if (tower === undefined) {
-			const definition = itemDefinitions[id];
-			const { targeting: defaults } = definition.kind;
-			const [targeting] = defaults;
-			return targeting;
-		}
-		return tower.targeting;
+		const { targeting } = this.getReplicated();
+		return targeting;
+	}
+
+	public getTarget(): Option<Mob> {
+		const { cframe } = this;
+		const position = cframe.Position;
+		const replicated = this.getReplicated();
+		const range = TowerUtil.getTotalRange(replicated);
+		const mobs = Mob.getMobsInRadius(position, range);
+		const targeting = this.getTargeting();
+		const module = targetingModules[targeting];
+		const target = module.getTarget(mobs);
+		return target as Option<Mob>;
 	}
 
 	public getRange(origin = this.getGround()): number {
@@ -99,7 +128,7 @@ export class Tower extends API {
 	}
 
 	public upgradeTower(): void {
-		const { instance, key, sphere, circle } = this;
+		const { instance, sphere, circle } = this;
 		if (sphere !== undefined) {
 			const size = this.getRange();
 			sphere.Size = Vector3.one.mul(size);
@@ -117,7 +146,9 @@ export class Tower extends API {
 		const { instance } = this;
 		const offset = instance.GetExtentsSize().div(2);
 		const pivot = instance.GetPivot();
-		const relative = new CFrame(pivot.PointToWorldSpace(offset).add(Vector3.yAxis.mul(offset.Y * -2)));
+		const relative = new CFrame(
+			pivot.PointToWorldSpace(Vector3.yAxis.mul(offset.Y)).add(Vector3.yAxis.mul(offset.Y * -2)),
+		);
 
 		const sphere = new Instance("Part");
 		sphere.Shape = Enum.PartType.Ball;
@@ -157,16 +188,37 @@ export class Tower extends API {
 		circle?.Destroy();
 	}
 
-	public rotateToTarget(target: Vector3): void {
+	public attackTarget(target: Option<Mob>): void {
+		const { id, bin, instance } = this;
+		const { kind } = itemDefinitions[id];
+		const { visual } = kind;
+		const module = towerVisualModules[visual];
+		const { duration } = module;
+		const temporary = new Bin();
+		module.onEffect(temporary, instance, target);
+		bin.add(temporary);
+		task.delay(duration, (): void => {
+			temporary.destroy();
+		});
+	}
+
+	public onTick(): void {
 		const { instance, cframe } = this;
-		const position = cframe.Position;
-		const pivot = CFrame.lookAt(position, new Vector3(target.X, position.Y, target.Z), Vector3.yAxis);
+		const mob = this.getTarget();
+		if (mob === undefined) {
+			return;
+		}
+		const target = mob.getCFrame();
+		const position = target.Position;
+		const current = cframe.Position;
+		const pivot = CFrame.lookAt(current, new Vector3(position.X, current.Y, position.Z), Vector3.yAxis);
 		instance.PivotTo(pivot);
 	}
 
 	public destroy(): void {
 		const { towers } = Tower;
-		const { instance, sphere, circle, key } = this;
+		const { instance, sphere, circle, key, bin } = this;
+		bin.destroy();
 		towers.delete(key);
 		instance.Destroy();
 		sphere?.Destroy();

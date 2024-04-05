@@ -1,5 +1,5 @@
 import { TowerTargeting } from "shared/tower/types";
-import type { Mob } from "server/mob/class";
+import type { Mob } from "shared/mob/api";
 import type { Node } from "@rbxts/octo-tree";
 import type { TargetingModule } from ".";
 

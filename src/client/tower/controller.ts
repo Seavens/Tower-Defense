@@ -119,6 +119,7 @@ export class TowerController implements OnStart {
 			selectPlacedTowers,
 			(_: ReplicatedTower, key: string): defined => key,
 			(replicated: ReplicatedTower, key: string): (() => void) => {
+				warn(replicated);
 				const tower = new Tower(replicated);
 				const unsubscribe = store.subscribe(
 					selectSpecificTower(key),
@@ -147,7 +148,7 @@ export class TowerController implements OnStart {
 			const tower = Tower.getTower(previous);
 			tower?.disableVisuals();
 		});
-		Events.tower.target.connect((key: string, target?: UUID): void => {
+		Events.tower.attack.connect((key: string, target?: UUID): void => {
 			if (target === undefined) {
 				return;
 			}
@@ -156,9 +157,7 @@ export class TowerController implements OnStart {
 			if (tower === undefined || mob === undefined) {
 				return;
 			}
-			const cframe = mob.getCFrame();
-			const position = cframe.Position;
-			tower.rotateToTarget(position);
+			tower.attackTarget(mob);
 		});
 		UserInputService.InputBegan.Connect((input: InputObject, processed: boolean): void => {
 			if (processed) {
