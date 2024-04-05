@@ -7,7 +7,7 @@ import { useInputDevice } from "./use-input-device";
 import { useLightenedColor } from "./use-lightened-color";
 import { useMotion } from "./use-motion";
 import { usePx } from "./use-px";
-import { useRainbow } from "./use-rainbow";
+import { useRarityColor } from "./use-rarity-color";
 import { useScale } from "./use-scale";
 import { useStore } from "./use-store";
 
@@ -23,5 +23,5 @@ export {
 	usePx,
 	useScale,
 	useStore,
-	useRainbow,
+	useRarityColor,
 };

@@ -18,5 +18,10 @@ export function InventoryApp(): Element {
 		setToggled((value: boolean): boolean => !value);
 	}, [tab]);
 
-	return <Inventory items={stored} />;
+	return (
+		<>
+			{/* <Hotbar visible={!toggled} /> */}
+			<Inventory items={stored} />
+		</>
+	);
 }

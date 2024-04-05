@@ -43,6 +43,10 @@
 				"mobs": {
 					"$className": "Folder",
 					"$ignoreUnknownInstances": true
+				},
+				"items": {
+					"$className": "Folder",
+					"$ignoreUnknownInstances": true
 				}
 			}
 		},

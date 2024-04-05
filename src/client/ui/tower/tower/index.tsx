@@ -1,4 +1,5 @@
 import { Button, Frame, Group, Image, Text } from "client/ui/components";
+import { ColorUtil } from "client/ui/utils";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { LevelUtil } from "shared/profile/utils";
@@ -11,10 +12,10 @@ import { TowerUtil } from "shared/tower/utils";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utils";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
-import { useAbbreviation, usePx } from "client/ui/hooks";
+import { useAbbreviation, useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
 import { useButtonAnimation } from "client/ui/hooks/use-button-animation";
 import { useButtonState } from "client/ui/hooks/use-button-state";
-import { useRarityColor, useTowerDefintion } from "../hooks";
+import { useTowerDefintion } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -28,7 +29,11 @@ export function Tower({ tower }: TowerProps): Element {
 
 	const px = usePx();
 	const definition = useTowerDefintion(id);
+
 	const rarity = useRarityColor(definition.rarity);
+	const light = useDarkenedColor(rarity, 0.25);
+	const medium = useDarkenedColor(rarity, 0.45);
+	const dark = useDarkenedColor(rarity, 0.55);
 
 	const [pressed, hovering, events] = useButtonState();
 	const { position, hover } = useButtonAnimation(pressed, hovering);
@@ -80,7 +85,7 @@ export function Tower({ tower }: TowerProps): Element {
 							position={UDim2.fromScale(0.5, 0.5)}
 							anchorPoint={Vector2.one.mul(0.5)}
 							cornerRadius={new UDim(0, px(3))}
-							// backgroundColor={Darken(rarity, 0.25)}
+							backgroundColor={light}
 							backgroundTransparency={0}
 							image={definition.image}
 							key={"tower-image"}
@@ -91,7 +96,7 @@ export function Tower({ tower }: TowerProps): Element {
 									position={UDim2.fromScale(0, 1)}
 									anchorPoint={new Vector2(0, 1)}
 									cornerRadius={new UDim(0, px(3))}
-									// backgroundColor={Darken(rarity, 0.45)}
+									backgroundColor={medium}
 									backgroundTransparency={0.5}
 									clipsDescendants={true}
 									key={"tower-level-bar"}
@@ -146,7 +151,7 @@ export function Tower({ tower }: TowerProps): Element {
 								position={new UDim2(0, -px(4), 0, 0)}
 								anchorPoint={Vector2.zero}
 								cornerRadius={new UDim(0, px(3))}
-								// backgroundColor={Darken(rarity, 0.45)}
+								backgroundColor={medium}
 								backgroundTransparency={0}
 								key={"tower-flag"}
 							>
@@ -198,7 +203,7 @@ export function Tower({ tower }: TowerProps): Element {
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							cornerRadius={new UDim(0, px(3))}
-							// backgroundColor={Darken(rarity, 0.55)}
+							backgroundColor={dark}
 							backgroundTransparency={0}
 							layoutOrder={2}
 							key={"tower-stats"}

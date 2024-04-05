@@ -1,14 +1,18 @@
 import { CloseButton, Frame, Group, RenderInView, ScrollingFrame, SearchBar, Text } from "client/ui/components";
+import { ColorUtil } from "client/ui/utils";
 import { Events } from "client/network";
 import { FONTS, PALETTE } from "client/ui/constants";
-import { INVENTORY_COLUMNS, INVENTORY_ROWS, INVENTORY_SIZE, SLOT_SIZE } from "../constants";
+import { INVENTORY_COLUMNS, INVENTORY_ROWS, INVENTORY_SIZE, INVENTORY_TOPBAR_Y, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
+import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
+import { formatStats } from "../utils";
 import { itemDefinitions } from "shared/inventory/items";
-import { usePx, useStore } from "client/ui/hooks";
+import { useDarkenedColor, usePx, useRarityColor, useStore } from "client/ui/hooks";
 import React, { useMemo, useState } from "@rbxts/react";
-import type { Element } from "@rbxts/react";
+import type { AnyItemDefinition } from "shared/inventory/items";
+import type { Binding, Element } from "@rbxts/react";
 import type { Item } from "shared/inventory/types";
 import type { SlotActions } from "../slot";
 
@@ -32,6 +36,26 @@ export function Inventory({ items }: InventoryProps): Element {
 		const item = items.get(selected);
 		return item;
 	}, [items, selected]);
+
+	const definition = useMemo((): Option<AnyItemDefinition> => {
+		if (item === undefined) {
+			return undefined;
+		}
+		const { id } = item;
+		return itemDefinitions[id];
+	}, [item]);
+
+	const color = useRarityColor(definition?.rarity);
+	const light = useDarkenedColor(color, 0.25);
+	const medium = useDarkenedColor(color, 0.45);
+	const dark = useDarkenedColor(color, 0.55);
+
+	const stats = useMemo((): Option<Binding<string>> => {
+		if (item === undefined) {
+			return undefined;
+		}
+		return formatStats(item, color, px(20), "Test");
+	}, [item, color, px]);
 
 	const queries = useMemo((): Array<string> => {
 		return ItemUtility.getAllItemNames();
@@ -60,7 +84,7 @@ export function Inventory({ items }: InventoryProps): Element {
 							if (!enabled) {
 								return;
 							}
-							setSelected(slot);
+							setSelected((value: Option<Slot>): Option<Slot> => (value === slot ? undefined : slot));
 						}}
 						onRightClick={(): void => {
 							setEnabled(false);
@@ -90,19 +114,25 @@ export function Inventory({ items }: InventoryProps): Element {
 
 	return (
 		<Group
-			size={UDim2.fromOffset(px(INVENTORY_SIZE.X) + px(3), px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(30))}
+			size={UDim2.fromOffset(
+				px(INVENTORY_SIZE.X) + px(3),
+				px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(INVENTORY_TOPBAR_Y),
+			)}
 			position={UDim2.fromScale(0.5, 0.5)}
 			anchorPoint={Vector2.one.mul(0.5)}
 			key={"inventory-group"}
 		>
 			<Group
-				size={UDim2.fromOffset(px(SLOT_SIZE.X) * INVENTORY_COLUMNS, px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(30))}
+				size={UDim2.fromOffset(
+					px(SLOT_SIZE.X) * INVENTORY_COLUMNS,
+					px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(INVENTORY_TOPBAR_Y),
+				)}
 				position={UDim2.fromScale(1, 0.5)}
 				anchorPoint={new Vector2(1, 0.5)}
 				key={"inventory-right"}
 			>
 				<Frame
-					size={UDim2.fromOffset(px(SLOT_SIZE.X) * INVENTORY_COLUMNS, px(30) - px(3))}
+					size={UDim2.fromOffset(px(SLOT_SIZE.X) * INVENTORY_COLUMNS, px(INVENTORY_TOPBAR_Y) - px(3))}
 					position={UDim2.fromScale(1, 0)}
 					anchorPoint={new Vector2(1, 0)}
 					cornerRadius={new UDim(0, px(3))}
@@ -112,7 +142,7 @@ export function Inventory({ items }: InventoryProps): Element {
 				>
 					<SearchBar
 						key={"search"}
-						size={UDim2.fromOffset(px(200), px(30) - px(3) * 2)}
+						size={UDim2.fromOffset(px(200), px(INVENTORY_TOPBAR_Y) - px(3) * 2)}
 						position={new UDim2(1, -px(30) - px(3), 1, 0)}
 						anchorPoint={Vector2.one}
 						cornerRadius={new UDim(0, px(3))}
@@ -130,10 +160,10 @@ export function Inventory({ items }: InventoryProps): Element {
 						<uistroke ApplyStrokeMode={Enum.ApplyStrokeMode.Border} Thickness={1} Color={PALETTE.black} />
 					</SearchBar>
 					<CloseButton
-						size={UDim2.fromOffset(px(30) - px(3) * 2, px(30) - px(3) * 2)}
+						size={UDim2.fromOffset(px(INVENTORY_TOPBAR_Y) - px(3) * 2, px(INVENTORY_TOPBAR_Y) - px(3) * 2)}
 						position={new UDim2(1, -px(3), 1, 0)}
 						anchorPoint={Vector2.one}
-						textSize={px(30)}
+						textSize={px(INVENTORY_TOPBAR_Y + 5)}
 						enabled={enabled}
 						key={"inventory-close"}
 					/>
@@ -185,7 +215,7 @@ export function Inventory({ items }: InventoryProps): Element {
 			<Group
 				size={UDim2.fromOffset(
 					px(INVENTORY_SIZE.X) - px(SLOT_SIZE.X) * INVENTORY_COLUMNS,
-					px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(30),
+					px(SLOT_SIZE.Y) * INVENTORY_ROWS + px(INVENTORY_TOPBAR_Y),
 				)}
 				position={UDim2.fromScale(0, 0.5)}
 				anchorPoint={new Vector2(0, 0.5)}
@@ -200,13 +230,63 @@ export function Inventory({ items }: InventoryProps): Element {
 					backgroundTransparency={0.35}
 					key={"inventory-background"}
 				>
-					<uilistlayout
-						FillDirection={Enum.FillDirection.Vertical}
-						HorizontalAlignment={Enum.HorizontalAlignment.Center}
-						VerticalAlignment={Enum.VerticalAlignment.Top}
-						SortOrder={Enum.SortOrder.LayoutOrder}
+					<Frame
+						size={
+							new UDim2(1, 0, 0, px(INVENTORY_SIZE.X) - px(SLOT_SIZE.X) * INVENTORY_COLUMNS - px(3) * 2)
+						}
+						position={UDim2.fromScale(0, 0)}
+						anchorPoint={Vector2.zero}
+						cornerRadius={new UDim(0, px(3))}
+						backgroundColor={light}
+						backgroundTransparency={0.35}
+						key={"inventory-viewport"}
+					>
+						{item === undefined && (
+							<Text
+								size={UDim2.fromScale(1, 1)}
+								position={UDim2.fromScale(0.5, 0.5)}
+								anchorPoint={Vector2.one.mul(0.5)}
+								backgroundTransparency={1}
+								text={"Select an item..."}
+								textColor={PALETTE.white}
+								textSize={px(20)}
+								textWrapped={true}
+								key={"inventory-item-text"}
+							/>
+						)}
+						{item !== undefined && <InventoryViewport id={item.id} />}
+					</Frame>
+					<Text
+						size={new UDim2(1, 0, 1, -(px(INVENTORY_SIZE.X) - px(SLOT_SIZE.X) * INVENTORY_COLUMNS) + px(1))}
+						position={UDim2.fromScale(1, 1)}
+						anchorPoint={Vector2.one}
+						cornerRadius={new UDim(0, px(3))}
+						backgroundColor={medium}
+						backgroundTransparency={0.35}
+						textXAlignment={"Left"}
+						textYAlignment={"Top"}
+						text={stats ?? ""}
+						textColor={PALETTE.white}
+						textSize={px(16)}
+						textWrapped={true}
+						richText={true}
+						key={"inventory-item"}
+					>
+						<uipadding
+							PaddingBottom={new UDim(0, px(3))}
+							PaddingLeft={new UDim(0, px(6))}
+							PaddingRight={new UDim(0, px(6))}
+							PaddingTop={new UDim(0, px(3))}
+							key={"inventory-padding"}
+						/>
+					</Text>
+					<uipadding
+						PaddingBottom={new UDim(0, px(3))}
+						PaddingLeft={new UDim(0, px(3))}
+						PaddingRight={new UDim(0, px(3))}
+						PaddingTop={new UDim(0, px(3))}
+						key={"inventory-padding"}
 					/>
-					<viewportframe Size={UDim2.fromOffset(px(100), px(100))} key={"inventory-viewport"} />
 				</Frame>
 			</Group>
 		</Group>
