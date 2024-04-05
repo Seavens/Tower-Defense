@@ -1,10 +1,10 @@
 import { Group } from "client/ui/components";
-import { useItemModel } from "../utility";
-import React, { useEffect, useState } from "@rbxts/react";
+import { ReplicatedStorage } from "@rbxts/services";
+import { ViewportUtility } from "client/ui/utility/viewport-utility";
+import React, { useCallback, useEffect, useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
-import type { ViewportCalculations } from "client/ui/utils";
-
+import type { ViewportCalculations } from "client/ui/utility";
 interface InventoryViewportProps {
 	id: ItemId;
 }
@@ -23,14 +23,14 @@ export function InventoryViewport({ id }: InventoryViewportProps): Element {
 	const [viewport, setViewport] = useState<ViewportFrame>();
 
 	const calibrate = useCallback((viewport: ViewportFrame, camera: Camera): ViewportCalculations => {
-		return ViewportUtil.calibrateViewport(viewport, camera);
+		return ViewportUtility.calibrateViewport(viewport, camera);
 	}, []);
 
 	const points = useMemo((): Option<Array<Vector3>> => {
 		if (prefab === undefined) {
 			return undefined;
 		}
-		const points = ViewportUtil.getModelPointCloud(prefab);
+		const points = ViewportUtility.getModelPointCloud(prefab);
 		return points;
 	}, [prefab]);
 
@@ -45,7 +45,7 @@ export function InventoryViewport({ id }: InventoryViewportProps): Element {
 		const look = pivot.LookVector;
 		const right = look.Cross(Vector3.yAxis);
 		const calcs = calibrate(viewport, camera);
-		const cframe = ViewportUtil.getMinimumFitCFrame(
+		const cframe = ViewportUtility.getMinimumFitCFrame(
 			points,
 			calcs,
 			CFrame.fromMatrix(Vector3.zero, look, right).mul(CFrame.Angles(math.rad(180), math.rad(90), math.rad(90))),

@@ -28,7 +28,7 @@ const unique: ItemTowerUnique = {
 
 export = CreateReactStory(
 	{
-		name: "Tower v2",
+		name: "Tower",
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {

@@ -1,4 +1,4 @@
 import { ColorUtil } from "./color-util";
-import { ViewportCalculations, ViewportUtil } from "./viewport-util";
+import { ViewportCalculations, ViewportUtility } from "./viewport-utility";
 
-export { ColorUtil, ViewportUtil, ViewportCalculations };
+export { ColorUtil, ViewportUtility, ViewportCalculations };
