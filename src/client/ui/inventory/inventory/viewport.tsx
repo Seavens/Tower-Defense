@@ -1,36 +1,68 @@
 import { Group } from "client/ui/components";
-import { useItemModel } from "../utils";
-import React, { useEffect, useState } from "@rbxts/react";
+import { ReplicatedStorage } from "@rbxts/services";
+import { ViewportUtil } from "client/ui/utils";
+import React, { useCallback, useEffect, useMemo, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
+import type { ViewportCalculations } from "client/ui/utils";
 
 interface InventoryViewportProps {
 	id: ItemId;
 }
 
-export function InventoryViewport({ id }: InventoryViewportProps): Element {
-	const model = useItemModel(id);
-	const [viewport, setViewport] = useState<ViewportFrame>();
+const { assets } = ReplicatedStorage;
+const { items } = assets;
 
-	useEffect((): (() => void) | void => {
-		if (viewport === undefined || model === undefined) {
+export function InventoryViewport({ id }: InventoryViewportProps): Element {
+	const prefab = useMemo((): Option<Model> => {
+		const prefab = items.FindFirstChild(id);
+		if (prefab === undefined || !prefab.IsA("Model")) {
 			return undefined;
 		}
+		return prefab;
+	}, [id]);
+	const [viewport, setViewport] = useState<ViewportFrame>();
+
+	const calibrate = useCallback((viewport: ViewportFrame, camera: Camera): ViewportCalculations => {
+		return ViewportUtil.calibrateViewport(viewport, camera);
+	}, []);
+
+	const points = useMemo((): Option<Array<Vector3>> => {
+		if (prefab === undefined) {
+			return undefined;
+		}
+		const points = ViewportUtil.getModelPointCloud(prefab);
+		return points;
+	}, [prefab]);
+
+	useEffect((): (() => void) | void => {
+		if (viewport === undefined || prefab === undefined || points === undefined) {
+			return undefined;
+		}
+		const model = prefab.Clone();
 		const camera = new Instance("Camera");
-		camera.Parent = viewport;
-		camera.CFrame = new CFrame(0, 1, -2.5).mul(CFrame.Angles(0, math.rad(180), 0));
 		const world = new Instance("WorldModel");
-		world.Parent = viewport;
-		model.PivotTo(CFrame.identity);
-		model.Parent = world;
+		const pivot = model.GetPivot();
+		const look = pivot.LookVector;
+		const right = look.Cross(Vector3.yAxis);
+		const calcs = calibrate(viewport, camera);
+		const cframe = ViewportUtil.getMinimumFitCFrame(
+			points,
+			calcs,
+			CFrame.fromMatrix(Vector3.zero, look, right).mul(CFrame.Angles(math.rad(180), math.rad(90), math.rad(90))),
+		);
 		viewport.CurrentCamera = camera;
+		camera.CFrame = cframe;
+		camera.Parent = viewport;
+		world.Parent = viewport;
+		model.Parent = world;
 		return (): void => {
 			viewport.CurrentCamera = undefined;
 			camera.Destroy();
 			model.Destroy();
 			world.Destroy();
 		};
-	}, [model, viewport]);
+	}, [viewport, prefab, points]);
 
 	return (
 		<Group
