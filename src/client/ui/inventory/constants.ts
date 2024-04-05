@@ -9,7 +9,7 @@ export const INVENTORY_SLOTS_SIZE = new Vector2(SLOT_SIZE.X * INVENTORY_COLUMNS,
 export const INVENTORY_SIZE = new Vector2(INVENTORY_SLOTS_SIZE.X + 200, INVENTORY_SLOTS_SIZE.Y);
 export const INVENTORY_TOPBAR_Y = 35;
 
-export const EXP_BAR_SIZE_Y = 200;
+export const EXP_BAR_SIZE_Y = 10;
 export const HOTBAR_SIZE = new Vector2(SLOT_SIZE.X * MAXIMUM_EQUIPPED, SLOT_SIZE.Y + EXP_BAR_SIZE_Y);
 
 export const RARITY_ORDERS: { [R in ItemRarity]: number } = {

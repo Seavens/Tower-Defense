@@ -1,5 +1,5 @@
 import { DATA_TEMPLATE } from "shared/data/constants";
-import { LevelUtil } from "shared/profile/utils";
+import { LevelUtility } from "shared/profile/utility";
 import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
@@ -26,7 +26,7 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 	profileAddExperience: (state: ProfileState, payload: ProfileAddExperience): ProfileState => {
 		const { amount } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
-			const [level, leftover] = LevelUtil.calculateIncrease(draft.data.level, amount);
+			const [level, leftover] = LevelUtility.calculateIncrease(draft.data.level, amount);
 			draft.data.level = level;
 			draft.data.experience = leftover;
 		});

@@ -1,15 +1,14 @@
 import { Button, Frame, Group, Image, Text } from "client/ui/components";
-import { ColorUtil } from "client/ui/utils";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { LevelUtil } from "shared/profile/utils";
+import { LevelUtility } from "shared/profile/utility";
 import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TOWER_IMAGE_SIZE, TOWER_SIZE } from "../constants";
 import { TowerAction } from "./action";
 import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
-import { TowerUtil } from "shared/tower/utils";
-import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utils";
+import { TowerUtility } from "shared/tower/utility";
+import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utility";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
 import { useAbbreviation, useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
@@ -39,16 +38,16 @@ export function Tower({ tower }: TowerProps): Element {
 	const { position, hover } = useButtonAnimation(pressed, hovering);
 
 	const _cost = useMemo((): number => {
-		return TowerUtil.getUpgradeCost(tower);
+		return TowerUtility.getUpgradeCost(tower);
 	}, [tower]);
 	const cost = useAbbreviation(_cost);
 	const _price = useMemo((): number => {
-		return TowerUtil.getSellPrice(tower);
+		return TowerUtility.getSellPrice(tower);
 	}, [tower]);
 	const price = useAbbreviation(_price);
 	const max = useMemo((): number => {
 		const { level } = unique;
-		const max = LevelUtil.getMaxExp(level, true);
+		const max = LevelUtility.getMaxExp(level, true);
 		return max;
 	}, [unique]);
 

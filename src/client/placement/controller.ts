@@ -1,9 +1,9 @@
-import { Collision, setCollision } from "shared/utils/collision";
+import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 import { Controller } from "@flamework/core";
 import { ReplicatedStorage, UserInputService, Workspace } from "@rbxts/services";
-import { getMouseCFrame } from "client/utils/get-mouse-cframe";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { getMouseCFrame } from "client/utility/get-mouse-cframe";
+import { reuseThread } from "shared/utility/reuse-thread";
 import { selectCurrentMap } from "shared/game/selectors";
 import { selectPlacing } from "./selectors";
 import { store } from "client/state/store";

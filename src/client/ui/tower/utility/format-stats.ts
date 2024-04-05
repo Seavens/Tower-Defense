@@ -1,5 +1,5 @@
 import { PALETTE } from "client/ui/constants";
-import { TowerUtil } from "shared/tower/utils";
+import { TowerUtility } from "shared/tower/utility";
 import { itemDefinitions } from "shared/inventory/items";
 import Abbreviator from "@rbxts/abbreviate";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -18,9 +18,9 @@ export function formatUpgrade(replicated: ReplicatedTower): string {
 }
 
 export function formatRange(replicated: ReplicatedTower): string {
-	const currentRange = TowerUtil.getTotalRange(replicated);
+	const currentRange = TowerUtility.getTotalRange(replicated);
 	const { upgrades } = replicated;
-	const nextRange = TowerUtil.getTotalRange({ ...replicated, upgrades: upgrades + 1 });
+	const nextRange = TowerUtility.getTotalRange({ ...replicated, upgrades: upgrades + 1 });
 	let text = `${abbreviator.numberToString(currentRange)}`;
 	if (nextRange >= math.huge) {
 		return text;
@@ -31,8 +31,8 @@ export function formatRange(replicated: ReplicatedTower): string {
 }
 
 export function formatDamage(replicated: ReplicatedTower): string {
-	const currentDamage = TowerUtil.getTotalDamage(replicated);
-	const nextDamage = TowerUtil.getTotalDamage({ ...replicated, upgrades: replicated.upgrades + 1 });
+	const currentDamage = TowerUtility.getTotalDamage(replicated);
+	const nextDamage = TowerUtility.getTotalDamage({ ...replicated, upgrades: replicated.upgrades + 1 });
 	let text = `${abbreviator.numberToString(currentDamage)}`;
 	if (nextDamage >= math.huge) {
 		return text;
@@ -43,8 +43,8 @@ export function formatDamage(replicated: ReplicatedTower): string {
 }
 
 export function formatCooldown(replicated: ReplicatedTower): string {
-	const currentCooldown = TowerUtil.getTotalCooldown(replicated);
-	const nextCooldown = TowerUtil.getTotalCooldown({ ...replicated, upgrades: replicated.upgrades + 1 });
+	const currentCooldown = TowerUtility.getTotalCooldown(replicated);
+	const nextCooldown = TowerUtility.getTotalCooldown({ ...replicated, upgrades: replicated.upgrades + 1 });
 	let text = `${abbreviator.numberToString(currentCooldown)}`;
 	if (nextCooldown >= math.huge) {
 		return text;

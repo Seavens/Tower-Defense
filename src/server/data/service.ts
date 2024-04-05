@@ -1,12 +1,12 @@
 import { COLLECTION_KEY, COLLECTION_NAME } from "./constants";
 import { DATA_TEMPLATE } from "shared/data/constants";
-import { DataUtil } from "./utils";
+import { DataUtil } from "./utility";
 import { Events } from "server/network";
 import { Service } from "@flamework/core";
 import { Signal } from "@rbxts/beacon";
 import { USE_MOCK_DATA, WIPE_MOCK_DATA } from "shared/core/constants";
 import { createCollection } from "@rbxts/lapis";
-import { createListener } from "shared/utils/create-listener";
+import { createListener } from "shared/utility/create-listener";
 import { isData } from "shared/data/types";
 import { selectData } from "./selector";
 import { store } from "server/state/store";

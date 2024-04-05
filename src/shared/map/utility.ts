@@ -5,7 +5,7 @@ import type { WaveDefinition } from "shared/map/definitions";
 
 const { map } = Workspace;
 
-export namespace MapUtil {
+export namespace MapUtility {
 	export function getMapWaypoints(): Array<BasePart> {
 		const { waypoints } = map;
 		const ordered = new Array<BasePart>();

@@ -11,7 +11,7 @@ const BLOCK = [0, 1, 2, 3, 4, 5, 6, 7];
 const WEDGE = [0, 1, 3, 4, 5, 7];
 const CORNER_WEDGE = [0, 1, 4, 5, 6];
 
-export class ViewportUtil {
+export class ViewportUtility {
 	public static getIndices(part: BasePart): Array<number> {
 		if (part.IsA("WedgePart")) {
 			return WEDGE;

@@ -1,7 +1,7 @@
 import { type BindingOrValue, composeBindings, lerp, map } from "@rbxts/pretty-react-hooks";
 import { Button, TextField } from "../../basic";
 import { FONTS, PADDING, PALETTE, SPRINGS } from "client/ui/constants";
-import { levenshteinDamerau } from "./utils";
+import { levenshteinDamerau } from "./utility";
 import { useButtonAnimation, useButtonState, useMotion, usePx } from "client/ui/hooks";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";
 import type { Element, InferEnumNames } from "@rbxts/react";

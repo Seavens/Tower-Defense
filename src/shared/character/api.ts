@@ -3,7 +3,7 @@ import { BaseCharacterAnimation } from "./types";
 import { Bin } from "@rbxts/bin";
 import { CHARACTER_BASE_ANIMATIONS } from "shared/character/constants";
 import { CharacterUtility } from "./utility";
-import { Collision, setCollision } from "shared/utils/collision";
+import { Collision, setCollision } from "shared/utility/collision";
 import { Players, RunService, Workspace } from "@rbxts/services";
 import { isBaseCharacterAnimation } from "./types";
 import type { CharacterAnimation } from "./types";

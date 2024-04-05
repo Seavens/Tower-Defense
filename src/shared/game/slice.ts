@@ -1,5 +1,5 @@
 import { GameStatus } from "./types";
-import { MapUtil } from "shared/map/utils";
+import { MapUtility } from "shared/map/utility";
 import { STARTING_CURRENCY } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
@@ -69,7 +69,7 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 			if (map === undefined || status !== GameStatus.Waiting) {
 				return original(draft);
 			}
-			const waveCount = MapUtil.getWaveCount(map);
+			const waveCount = MapUtility.getWaveCount(map);
 			const nextWave = math.clamp(wave + 1, 1, waveCount);
 			draft.status = GameStatus.Ongoing;
 			draft.wave = nextWave;

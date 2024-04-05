@@ -1,6 +1,6 @@
 import type { Entity } from "./api";
 
-export namespace PlayerUtil {
+export namespace PlayerUtility {
 	export function getUser(playerOrEntity: Player | Entity): string {
 		if (typeIs(playerOrEntity, "Instance")) {
 			const player = playerOrEntity;

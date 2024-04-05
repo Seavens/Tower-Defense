@@ -1,6 +1,6 @@
 import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
-import { MapUtil } from "shared/map/utils";
+import { MapUtility } from "shared/map/utility";
 import { MobStatus } from "./types";
 import { Workspace } from "@rbxts/services";
 import { mobDefinitions } from "./mobs";
@@ -29,7 +29,7 @@ export abstract class Mob {
 	protected attacker: Option<string>;
 
 	public constructor(uuid: UUID, id: MobId) {
-		const waypoints = MapUtil.getMapWaypoints();
+		const waypoints = MapUtility.getMapWaypoints();
 		const { health } = mobDefinitions[id];
 		this.uuid = uuid;
 		this.id = id;
@@ -123,7 +123,7 @@ export abstract class Mob {
 		this.target = math.clamp(target, current, final);
 		this.final = math.clamp(final, current, math.huge);
 		this.elapsed = 0;
-		this.waypoints = MapUtil.getMapWaypoints();
+		this.waypoints = MapUtility.getMapWaypoints();
 		this.calculateDuration();
 	}
 
@@ -184,7 +184,7 @@ export abstract class Mob {
 	}
 
 	public start(current = 1): void {
-		const waypoints = MapUtil.getMapWaypoints();
+		const waypoints = MapUtility.getMapWaypoints();
 		const final = waypoints.size();
 		this.waypoints = waypoints;
 		this.nextWaypoint(current, final);

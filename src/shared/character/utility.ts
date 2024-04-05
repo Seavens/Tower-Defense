@@ -1,5 +1,5 @@
 import { CollectionService, ReplicatedStorage } from "@rbxts/services";
-import { Collision, setCollision } from "shared/utils/collision";
+import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 
 const { characters } = ReplicatedStorage;

@@ -1,7 +1,7 @@
 import { PROFILE_BASE_EXPERIENCE, PROFILE_EXPERIENCE_INTERVAL, PROFILE_GROWTH_RATE } from "./constants";
 import { TOWER_BASE_EXPERIENCE, TOWER_EXPERIENCE_INTERVAL, TOWER_GROWTH_RATE } from "shared/tower/constants";
 
-export namespace LevelUtil {
+export namespace LevelUtility {
 	export function getMaxExp(level: number, tower?: boolean): number {
 		if (level >= 100) {
 			return level;

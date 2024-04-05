@@ -1,16 +1,16 @@
 import { Tower as API } from "shared/tower/api";
 import { Bin } from "@rbxts/bin";
-import { Collision, setCollision } from "shared/utils/collision";
+import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 import { GAME_TICK_RATE } from "shared/core/constants";
 import { Mob } from "client/mob/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
-import { TowerUtil } from "shared/tower/utils";
-import { createSchedule } from "shared/utils/create-schedule";
+import { TowerUtility } from "shared/tower/utility";
+import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { reuseThread } from "shared/utility/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
 import { targetingModules } from "shared/tower/targeting";
@@ -110,7 +110,7 @@ export class Tower extends API {
 		const { cframe } = this;
 		const position = cframe.Position;
 		const replicated = this.getReplicated();
-		const range = TowerUtil.getTotalRange(replicated);
+		const range = TowerUtility.getTotalRange(replicated);
 		const mobs = Mob.getMobsInRadius(position, range);
 		const targeting = this.getTargeting();
 		const module = targetingModules[targeting];
@@ -120,7 +120,7 @@ export class Tower extends API {
 
 	public getRange(origin = this.getGround()): number {
 		const replicated = this.getReplicated();
-		const range = TowerUtil.getTotalRange(replicated);
+		const range = TowerUtility.getTotalRange(replicated);
 		const ground = this.getGround();
 		const displacement = origin - ground;
 		const chord = 2 * math.sqrt(range ** 2 - displacement ** 2);

@@ -1,11 +1,11 @@
-import { Collision, setCollision } from "shared/utils/collision";
+import { Collision, setCollision } from "shared/utility/collision";
 import { ReplicatedStorage } from "@rbxts/services";
 import type { MobId } from "./types";
 
 const { assets } = ReplicatedStorage;
 const { mobs } = assets;
 
-export namespace MobUtil {
+export namespace MobUtility {
 	export function getMobModel(id: MobId): Model {
 		const prefab = mobs.FindFirstChild(id);
 		if (prefab === undefined || !prefab.IsA("Model")) {

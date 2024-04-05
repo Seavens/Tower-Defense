@@ -3,7 +3,7 @@ import { MOB_DAMAGE_DISPLAY } from "shared/inventory/constants";
 import { itemDefinitions } from "shared/inventory/items";
 import { mapBinding } from "@rbxts/pretty-react-hooks";
 import { rarityDefinitions } from "shared/inventory/rarities";
-import { truncateNumber } from "shared/utils/truncate-number";
+import { truncateNumber } from "shared/utility/truncate-number";
 import type { Binding } from "@rbxts/react";
 import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
 import type { Item } from "shared/inventory/types";

@@ -2,10 +2,10 @@ import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
 import { Mob } from "../mob/class";
-import { TowerUtil } from "shared/tower/utils";
-import { createSchedule } from "shared/utils/create-schedule";
+import { TowerUtility } from "shared/tower/utility";
+import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { reuseThread } from "shared/utility/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
@@ -91,7 +91,7 @@ export class Tower extends API {
 		const { cframe } = this;
 		const position = cframe.Position;
 		const replicated = this.getReplicated();
-		const range = TowerUtil.getTotalRange(replicated);
+		const range = TowerUtility.getTotalRange(replicated);
 		const mobs = Mob.getMobsInRadius(position, range);
 		const targeting = this.getTargeting();
 		const module = targetingModules[targeting];
@@ -103,8 +103,8 @@ export class Tower extends API {
 		const { id, key, lastAttack, lastTarget } = this;
 		const { kind } = itemDefinitions[id];
 		const replicated = this.getReplicated();
-		const damage = TowerUtil.getTotalDamage(replicated);
-		const cooldown = TowerUtil.getTotalCooldown(replicated);
+		const damage = TowerUtility.getTotalDamage(replicated);
+		const cooldown = TowerUtility.getTotalCooldown(replicated);
 		const now = os.clock();
 		if (now - lastAttack < cooldown) {
 			return;
@@ -127,7 +127,7 @@ export class Tower extends API {
 	public sellTower(): void {
 		const { key, owner } = this;
 		const tower = this.getReplicated();
-		const cost = TowerUtil.getSellPrice(tower);
+		const cost = TowerUtility.getSellPrice(tower);
 		store.gameAddCurrency({ amount: cost }, { user: owner, broadcast: true });
 		store.towerSell({ key }, { user: owner, broadcast: true });
 		this.destroy();

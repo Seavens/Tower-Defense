@@ -3,8 +3,8 @@ import { Character } from "./class";
 import { Entity } from "server/player/class";
 import { Events, Functions } from "server/network";
 import { Service } from "@flamework/core";
-import { createListener } from "shared/utils/create-listener";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { createListener } from "shared/utility/create-listener";
+import { reuseThread } from "shared/utility/reuse-thread";
 import type { OnPlayerAdded } from "../player/service";
 import type { OnStart } from "@flamework/core";
 

@@ -1,11 +1,9 @@
-import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "./constants";
-import { ItemKind, ItemRarity } from "shared/inventory/types";
+import { ItemKind } from "shared/inventory/types";
 import { Modding } from "@flamework/core";
-import { RarityUtility } from "./rarities/utils";
+import { RarityUtility } from "./rarities/utility";
 import { TowerUtility } from "./items/towers/utility";
-import { createUUID } from "shared/utils/create-uuid";
+import { createUUID } from "shared/utility/create-uuid";
 import { itemDefinitions } from "./items";
-import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Item, ItemId, ItemRelicUnique, ItemTowerUnique, RelicItemId, TowerItemId } from "shared/inventory/types";
 
 const allItemIds = Modding.inspect<Array<ItemId>>();
@@ -61,14 +59,13 @@ export namespace ItemUtility {
 		const damage = TowerUtility.getMultiplier();
 		const range = TowerUtility.getMultiplier();
 
-		// !! CHANGE AFTER TESTING
 		const unique: ItemTowerUnique = {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
-			level: math.random(1, 100),
-			experience: math.random(1, 10000),
-			locked: math.random() < 0.5 ? true : false,
+			level: 0,
+			experience: 0,
+			locked: false,
 			owner,
 			range,
 		};

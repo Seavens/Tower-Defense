@@ -4,7 +4,7 @@ import { INTERMISSION_TIME } from "./constants";
 import { Mob } from "server/mob/class";
 import { Players, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
-import { createUUID } from "shared/utils/create-uuid";
+import { createUUID } from "shared/utility/create-uuid";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/mobs";
 import {

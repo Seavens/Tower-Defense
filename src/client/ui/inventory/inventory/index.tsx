@@ -24,7 +24,7 @@ import { InventorySlot } from "../slot";
 import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
-import { formatStats } from "../utils";
+import { formatStats } from "../utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { useDarkenedColor, useMotion, usePx, useRarityColor, useStore } from "client/ui/hooks";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";

@@ -26,12 +26,10 @@ export = CreateReactStory(
 			if (index % 2 !== 0) {
 				const item = ItemUtility.createItem(1);
 				items.set(slot, item);
-				warn(`Created item ${item.id} for slot ${slot}`);
 			}
-			warn(`Equipped slot ${slot}`);
 			equipped.push(slot);
 		}
-		store.profileAddExperience({ amount: 168754 });
+		store.profileAddExperience({ amount: 1654 });
 		store.profileAdjustCoins({ coins: 35178 });
 		store.profileAdjustGems({ gems: 418 });
 

@@ -1,14 +1,14 @@
 import { Events } from "client/network";
-import { PlayerUtil } from "shared/player/utils";
+import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
 import { Tower } from "./class";
-import { TowerUtil } from "shared/tower/utils";
+import { TowerUtility } from "shared/tower/utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { store } from "client/state/store";
 
 const player = Players.LocalPlayer;
-const user = PlayerUtil.getUser(player);
+const user = PlayerUtility.getUser(player);
 
 export namespace TowerImpl {
 	export function upgradeTower(key: string): void {
@@ -18,7 +18,7 @@ export namespace TowerImpl {
 			return;
 		}
 		const replicated = tower.getReplicated();
-		const cost = TowerUtil.getUpgradeCost(replicated);
+		const cost = TowerUtility.getUpgradeCost(replicated);
 		if (cost > currency) {
 			return;
 		}

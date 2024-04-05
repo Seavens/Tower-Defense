@@ -1,4 +1,4 @@
-import { Collision } from "shared/utils/collision";
+import { Collision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 import { MapId } from "shared/map/types";
 import { ServerStorage, Workspace } from "@rbxts/services";

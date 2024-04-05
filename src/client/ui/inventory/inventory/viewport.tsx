@@ -1,7 +1,6 @@
 import { Group } from "client/ui/components";
-import { ReplicatedStorage } from "@rbxts/services";
-import { ViewportUtil } from "client/ui/utils";
-import React, { useCallback, useEffect, useMemo, useState } from "@rbxts/react";
+import { useItemModel } from "../utility";
+import React, { useEffect, useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { ItemId } from "shared/inventory/types";
 import type { ViewportCalculations } from "client/ui/utils";

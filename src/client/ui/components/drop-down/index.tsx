@@ -1,6 +1,6 @@
 import { type BindingOrValue, getBindingValue } from "@rbxts/pretty-react-hooks";
 import { Button, Text } from "../basic";
-import { ColorUtil } from "client/ui/utils";
+import { ColorUtil } from "client/ui/utility";
 import { DropdownOption } from "./option";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";

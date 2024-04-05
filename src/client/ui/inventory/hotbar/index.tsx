@@ -4,14 +4,14 @@ import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
 import { ItemKind, isTowerItemId } from "shared/inventory/types";
 import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
-import { LevelUtil } from "shared/profile/utils";
+import { LevelUtility } from "shared/profile/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
-import { PlayerUtil } from "shared/player/utils";
+import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { selectProfileData } from "client/profile/selectors";
-import { truncateNumber } from "shared/utils/truncate-number";
+import { truncateNumber } from "shared/utility/truncate-number";
 import { useAbbreviation, useMotion, usePx, useStore } from "client/ui/hooks";
 import { useEffect, useMemo } from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
@@ -26,7 +26,7 @@ export interface HotbarProps {
 }
 
 const player = Players.LocalPlayer;
-const user = PlayerUtil.getUser(player);
+const user = PlayerUtility.getUser(player);
 
 export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const px = usePx();
@@ -38,7 +38,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const [transparency, transparencyMotion] = useMotion(1);
 
 	const max = useMemo((): number => {
-		return LevelUtil.getMaxExp(level);
+		return LevelUtility.getMaxExp(level);
 	}, [level]);
 
 	const currencyText = useAbbreviation(currency);
@@ -92,23 +92,12 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 				groupTransparency={transparency}
 				key={"hotbar-transition"}
 			>
-				<Group
+				<Frame
 					key={"hotbar-group"}
 					size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y) + px(4))}
 					anchorPoint={new Vector2(0.5, 1)}
 					position={UDim2.fromScale(0.5, 1)}
 				>
-					<Text
-						key={"currency-text"}
-						size={UDim2.fromOffset(px(100), px(20))}
-						anchorPoint={new Vector2(0.5, 1)}
-						position={UDim2.fromScale(0.5, -0.05)}
-						backgroundTransparency={1}
-						textSize={px(14)}
-						font={FONTS.inter.bold}
-						textColor={Macchiato.Base}
-						text={currency === undefined ? `Undefined` : `$${currencyText}`}
-					/>
 					<Frame
 						key={"item-group"}
 						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}
@@ -134,7 +123,6 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						position={UDim2.fromScale(0.5, 1)}
 					>
 						<uistroke
-							// Color={Darken(Mocha.Blue, 0.5)}
 							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							Thickness={px(1)}
 							key={"level-outline"}
@@ -144,7 +132,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							size={UDim2.fromScale(math.min(experience / max, 1), 1)}
 							anchorPoint={new Vector2(0, 0.5)}
 							position={UDim2.fromScale(0, 0.5)}
-							backgroundColor={Mocha.Blue}
+							backgroundColor={Mocha.Base}
 							cornerRadius={new UDim(0, px(5))}
 						/>
 						<textlabel
@@ -193,7 +181,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						</textlabel>
 						<uicorner CornerRadius={new UDim(1, 0)} key={"level-corner"} />
 					</Frame>
-				</Group>
+				</Frame>
 			</Transition>
 		</DelayRender>
 	);

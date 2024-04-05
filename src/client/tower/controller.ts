@@ -4,7 +4,7 @@ import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "client/mob/class";
 import { PlacementController } from "client/placement/controller";
-import { PlayerUtil } from "shared/player/utils";
+import { PlayerUtility } from "shared/player/utility";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { Tower } from "client/tower/class";
 import { selectInventoryData } from "client/inventory/selectors";
@@ -81,7 +81,7 @@ export class TowerController implements OnStart {
 		}
 		// This may be faster than a state selection?
 		const tower = Tower.getTower(key);
-		if (tower === undefined || tower.owner !== PlayerUtil.getUser(player)) {
+		if (tower === undefined || tower.owner !== PlayerUtility.getUser(player)) {
 			this.deselectTower();
 			return;
 		}

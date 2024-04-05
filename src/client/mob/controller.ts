@@ -2,7 +2,7 @@ import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "./class";
 import { Workspace } from "@rbxts/services";
-import { createListener } from "shared/utils/create-listener";
+import { createListener } from "shared/utility/create-listener";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 import type { OnStart } from "@flamework/core";
 

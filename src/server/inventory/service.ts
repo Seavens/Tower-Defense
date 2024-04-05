@@ -1,5 +1,5 @@
 import { Events } from "server/network";
-import { PlayerUtil } from "shared/player/utils";
+import { PlayerUtility } from "shared/player/utility";
 import { Service } from "@flamework/core";
 import { isSlot } from "shared/guards";
 import { selectInventoryData } from "./selectors";
@@ -13,7 +13,7 @@ export class InventoryService implements OnStart {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtil.getUser(player);
+			const user = PlayerUtility.getUser(player);
 			const state = store.getState(selectInventoryData(user));
 			if (state === undefined) {
 				return;
@@ -31,14 +31,14 @@ export class InventoryService implements OnStart {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtil.getUser(player);
+			const user = PlayerUtility.getUser(player);
 			store.inventoryEquipSlot({ slot }, { user, replicate: true });
 		});
 		Events.inventory.unequip.connect((player: Player, slot: string): void => {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtil.getUser(player);
+			const user = PlayerUtility.getUser(player);
 			store.inventoryUnequipSlot({ slot }, { user, replicate: true });
 		});
 	}

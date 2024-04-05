@@ -10,7 +10,7 @@ type TowerStat = "damage" | "range" | "cooldown";
 
 const gradedStats = Modding.inspect<Array<TowerStat>>();
 
-export namespace TowerUtil {
+export namespace TowerUtility {
 	export function getUpgradeCost(tower: ReplicatedTower): number {
 		const { id, upgrades } = tower;
 		const { kind } = itemDefinitions[id];

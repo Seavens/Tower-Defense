@@ -1,10 +1,10 @@
 import { Mob as API } from "shared/mob/api";
 import { GAME_TICK_RATE } from "shared/core/constants";
-import { MobUtil } from "shared/mob/utils";
+import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
-import { createSchedule } from "shared/utils/create-schedule";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { createSchedule } from "shared/utility/create-schedule";
+import { reuseThread } from "shared/utility/reuse-thread";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
@@ -61,7 +61,7 @@ export class Mob extends API {
 		super(uuid, id);
 		const { mobs, onMobAdded, octree } = Mob;
 		const { waypoints, bin } = this;
-		const model = MobUtil.getMobModel(id);
+		const model = MobUtility.getMobModel(id);
 		const [first] = waypoints;
 		const position = first.Position;
 		const node = octree.CreateNode(position, this);

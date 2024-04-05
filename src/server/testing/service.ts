@@ -3,7 +3,7 @@ import { ItemId, ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
 import { Service } from "@flamework/core";
 import { TowerGrade } from "shared/tower/types";
-import { TowerUtil } from "shared/tower/utils";
+import { TowerUtility } from "shared/tower/utility";
 import { USE_MOCK_DATA } from "shared/core/constants";
 import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";

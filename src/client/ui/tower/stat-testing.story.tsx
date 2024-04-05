@@ -1,6 +1,6 @@
 import { Choose, CreateReactStory, Number } from "@rbxts/ui-labs";
 import { Modding } from "@flamework/core";
-import { TowerUtil } from "shared/tower/utils";
+import { TowerUtility } from "shared/tower/utility";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
@@ -21,7 +21,7 @@ export = CreateReactStory(
 	},
 	({ controls }): Element => {
 		const { id, value, stat } = controls;
-		warn(TowerUtil.calculateMultiplier(id, value, stat));
+		warn(TowerUtility.calculateMultiplier(id, value, stat));
 
 		return <></>;
 	},

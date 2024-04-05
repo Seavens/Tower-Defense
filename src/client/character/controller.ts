@@ -1,8 +1,8 @@
 import { Character } from "./class";
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
-import { createListener } from "shared/utils/create-listener";
-import { reuseThread } from "shared/utils/reuse-thread";
+import { createListener } from "shared/utility/create-listener";
+import { reuseThread } from "shared/utility/reuse-thread";
 import type { OnStart } from "@flamework/core";
 
 export interface OnCharacterAdded {

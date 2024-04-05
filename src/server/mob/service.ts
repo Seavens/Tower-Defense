@@ -1,6 +1,6 @@
 import { Mob } from "server/mob/class";
 import { Service } from "@flamework/core";
-import { createListener } from "shared/utils/create-listener";
+import { createListener } from "shared/utility/create-listener";
 import type { OnStart } from "@flamework/core";
 
 /** @hideinherited */
