@@ -1,15 +1,18 @@
 import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
+import { ItemKind, type ItemTowerUnique, type TowerItemId } from "shared/inventory/types";
 import { Mob } from "../mob/class";
+import { PlayerUtility } from "shared/player/utility";
+import { TowerInventoryUtility } from "./util";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
+import { mobDefinitions } from "shared/mob/mobs";
 import { reuseThread } from "shared/utility/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
-import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerTargeting } from "shared/tower/types";
 
@@ -121,7 +124,11 @@ export class Tower extends API {
 			return;
 		}
 		const { damageKind } = kind;
-		currentTarget.takeDamage(damage, damageKind, key);
+		const died = currentTarget.takeDamage(damage, damageKind, key);
+		if (!died) {
+			return;
+		}
+		this.addExperience(currentTarget);
 	}
 
 	public sellTower(): void {
@@ -136,6 +143,30 @@ export class Tower extends API {
 	public upgradeTower(): void {
 		const { key, owner } = this;
 		store.towerUpgrade({ key }, { user: owner, broadcast: true });
+	}
+
+	public addExperience(mob: Mob): void {
+		if (!mob.isDead()) {
+			return;
+		}
+		const { owner, key, uuid } = this;
+		const { id } = mob;
+		const { experience: amount } = mobDefinitions[id];
+		const player = PlayerUtility.getPlayer(owner);
+		store.towerAddExperience({ amount: amount, key }, { broadcast: true });
+		if (player === undefined) {
+			return;
+		}
+		const slot = TowerInventoryUtility.getTowerSlot(player, uuid);
+		if (slot === undefined) {
+			return;
+		}
+		const { unique } = this.getReplicated();
+		const { level, experience } = unique;
+		store.inventoryPatchSlot(
+			{ slot, patch: { kind: ItemKind.Tower, level, experience } },
+			{ user: owner, replicate: true },
+		);
 	}
 
 	public destroy(): void {

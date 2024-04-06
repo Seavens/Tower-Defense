@@ -1,4 +1,5 @@
 import { LevelUtility } from "shared/profile/utility";
+import { MAX_TOWER_LEVEL } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
@@ -82,7 +83,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 
 			const { level } = tower.unique;
 			const [newLevel, newExperience] = LevelUtility.calculateIncrease(level, amount, true);
-			tower.unique.level = newLevel;
+			tower.unique.level = math.min(newLevel, MAX_TOWER_LEVEL);
 			tower.unique.experience += newExperience;
 
 			if (tower.unique.level >= 100) {

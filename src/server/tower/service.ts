@@ -2,16 +2,15 @@ import { Events } from "server/network";
 import { PlayerUtility } from "shared/player/utility";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
+import { TowerInventoryUtility } from "./util";
 import { TowerUtility } from "shared/tower/utility";
 import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
 import { isUUID } from "shared/guards";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency, selectCurrentMap } from "shared/game/selectors";
-import { selectInventoryData } from "server/inventory/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "server/player/class";
-import type { Item } from "shared/inventory/types";
 import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "../player/service";
 import type { OnStart } from "@flamework/core";
@@ -25,20 +24,10 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		const { placed } = this;
 		const user = PlayerUtility.getUser(player);
 		const currency = store.getState(selectCurrency(user));
-		const { stored, equipped } = store.getState(selectInventoryData(user));
-		let result: Option<Item>;
-		for (const slot of equipped) {
-			const item = stored.get(slot);
-			if (item === undefined || item.uuid !== uuid) {
-				continue;
-			}
-			result = item;
-			break;
-		}
-		if (result === undefined || currency <= 0) {
+		const item = TowerInventoryUtility.getTowerItem(player, uuid);
+		if (item === undefined) {
 			return;
 		}
-		const item = result;
 		const { id, unique } = item;
 		if (!isTowerItemId(id) || !isItemTowerUnique(unique)) {
 			return;

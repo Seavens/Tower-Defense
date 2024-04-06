@@ -2,6 +2,7 @@ import { Mob as API } from "shared/mob/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
 import { Signal } from "@rbxts/beacon";
+import { Tower } from "server/tower/class";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
 import { mobDefinitions } from "shared/mob/mobs";
@@ -101,7 +102,7 @@ export class Mob extends API {
 	}
 
 	public onDied(key?: string): void {
-		const { uuid } = this;
+		const { id, uuid } = this;
 		Events.mob.death.broadcast(uuid);
 
 		if (key === undefined) return;
@@ -113,17 +114,9 @@ export class Mob extends API {
 		const profile = store.getState(selectProfileData(user));
 		if (profile === undefined) return;
 
-		const mobDef = mobDefinitions[this.id];
-		const { bounty, experience } = mobDef;
+		const { bounty } = mobDefinitions[id];
 
 		store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
-		store.towerAddExperience(
-			{
-				amount: experience,
-				key: key,
-			},
-			{ broadcast: true },
-		);
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {

@@ -140,24 +140,25 @@ export abstract class Mob {
 		this.onStatus(status, 0, false);
 	}
 
-	public takeDamage(damage: number, kind: MobDamage, tower?: string): void {
+	public takeDamage(damage: number, kind: MobDamage, tower?: string): boolean {
 		if (damage <= 0) {
-			return;
+			return false;
 		}
 		const { id, max, health } = this;
 		const { resistances } = mobDefinitions[id];
 		if (resistances.includes(kind)) {
-			return;
+			return false;
 		}
 		this.attacker ??= tower;
 		const value = math.clamp(health - damage, 0, max);
 		if (value <= 0) {
 			this.onDied(tower);
 			this.destroy();
-			return;
+			return true;
 		}
 		this.onDamage(damage, kind);
 		this.health = value;
+		return false;
 	}
 
 	public forceKill(): void {
