@@ -31,7 +31,6 @@ export const SELL_RATIO = 0.35;
 export const MAX_TOWER_LEVEL = 100;
 
 export const TOWER_BASE_EXPERIENCE = 100;
-export const TOWER_GROWTH_RATE = 1.35;
-export const TOWER_EXPERIENCE_INTERVAL = 100;
+export const TOWER_GROWTH_RATE = 1.25;
 
 export const TOWER_LEVEL_MULTIPLIER = 0.5;

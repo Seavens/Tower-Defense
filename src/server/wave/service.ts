@@ -99,7 +99,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 			store.gameAddCurrency({ amount: bounty }, { user: player.Name, broadcast: true });
 			store.profileAddExperience({ amount: experience }, { user: player.Name, replicate: true });
 		}
-		warn(`Bounty: ${bounty} | Experience: ${experience}`);
 
 		// Wait for intermission time before starting the next wave
 		for (const index of $range(1, INTERMISSION_TIME)) {

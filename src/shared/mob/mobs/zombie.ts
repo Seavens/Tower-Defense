@@ -11,5 +11,5 @@ export const zombieMob: MobDefinition<MobId.Zombie> = {
 	health: 10,
 
 	bounty: 75,
-	experience: 5000000,
+	experience: 250,
 };

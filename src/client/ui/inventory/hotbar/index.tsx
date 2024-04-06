@@ -1,5 +1,5 @@
-import { DelayRender, Frame, Group, Text, Transition } from "client/ui/components";
-import { FONTS, SPRINGS } from "client/ui/constants";
+import { Button, DelayRender, Frame, Group, Text, Transition } from "client/ui/components";
+import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
 import { ItemKind, isTowerItemId } from "shared/inventory/types";
@@ -8,11 +8,12 @@ import { LevelUtility } from "shared/profile/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
 import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
+import { getSizeFactor } from "../utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { truncateNumber } from "shared/utility/truncate-number";
-import { useAbbreviation, useMotion, usePx, useStore } from "client/ui/hooks";
+import { useAbbreviation, useDarkenedColor, useLightenedColor, useMotion, usePx, useStore } from "client/ui/hooks";
 import { useEffect, useMemo } from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
 import React from "@rbxts/react";
@@ -34,6 +35,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 
 	const { experience, level } = useSelector(selectProfileData);
 	const currency = useSelector(selectCurrency(user));
+	warn(experience);
 
 	const [transparency, transparencyMotion] = useMotion(1);
 
@@ -41,7 +43,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 		return LevelUtility.getMaxExp(level);
 	}, [level]);
 
-	const currencyText = useAbbreviation(currency);
+	const currencyText = useAbbreviation(currency, 0);
 	const experienceText = useAbbreviation(experience);
 	const maxExperienceText = useAbbreviation(max);
 
@@ -86,102 +88,84 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	return (
 		<DelayRender shouldRender={visible} unmountDelay={1}>
 			<Transition
-				size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y) + px(4))}
+				size={UDim2.fromOffset(px(HOTBAR_SIZE.X + px(200)), px(HOTBAR_SIZE.Y) + px(50))}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={UDim2.fromScale(0.5, 1)}
 				groupTransparency={transparency}
-				key={"hotbar-transition"}
+				key={"hotbar-group"}
 			>
-				<Frame
-					key={"hotbar-group"}
-					size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(HOTBAR_SIZE.Y) + px(4))}
-					anchorPoint={new Vector2(0.5, 1)}
-					position={UDim2.fromScale(0.5, 1)}
-				>
-					<Frame
-						key={"item-group"}
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}
-						anchorPoint={new Vector2(0.5, 0)}
-						position={UDim2.fromScale(0.5, 0)}
-						backgroundTransparency={1}
-					>
-						{slots}
+				<uilistlayout
+					FillDirection={Enum.FillDirection.Horizontal}
+					HorizontalAlignment={Enum.HorizontalAlignment.Center}
+					VerticalAlignment={Enum.VerticalAlignment.Center}
+					SortOrder={Enum.SortOrder.LayoutOrder}
+				/>
+				<Group
+					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
+					key={"left-hotbar-group"}
+				/>
+				<Group size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y) + px(75))} key={"center-hotbar-Frame"}>
+					<uilistlayout
+						FillDirection={Enum.FillDirection.Vertical}
+						HorizontalAlignment={Enum.HorizontalAlignment.Center}
+						VerticalAlignment={Enum.VerticalAlignment.Top}
+						SortOrder={Enum.SortOrder.LayoutOrder}
+						Padding={new UDim(0, px(4))}
+					/>
+					<Text
+						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
+						text={`Currency: $${currencyText}`}
+						font={FONTS.inter.bold}
+						textColor={PALETTE.accent}
+						strokeTransparency={0.25}
+						textSize={px(20)}
+						key={"currency-text"}
+					/>
+					<Group key={"middle-center-group"} size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}>
 						<uilistlayout
-							key={"item-layout"}
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
 							VerticalAlignment={Enum.VerticalAlignment.Center}
-							Padding={new UDim(0, 0)}
+							SortOrder={Enum.SortOrder.LayoutOrder}
 						/>
-					</Frame>
+						{slots}
+					</Group>
 					<Frame
-						key={"level-frame"}
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(10))}
-						// backgroundColor={Darken(Mocha.Mauve, 0.75)}
-						cornerRadius={new UDim(0, px(5))}
+						key={"middle-bottom-frame"}
+						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
 						anchorPoint={new Vector2(0.5, 1)}
 						position={UDim2.fromScale(0.5, 1)}
+						backgroundColor={useLightenedColor(Mocha.Base, 0.15)}
+						cornerRadius={new UDim(0, px(8))}
 					>
 						<uistroke
+							Color={Macchiato.Base}
 							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-							Thickness={px(1)}
-							key={"level-outline"}
+							Thickness={px(2)}
 						/>
 						<Frame
 							key={"level-bar"}
-							size={UDim2.fromScale(math.min(experience / max, 1), 1)}
+							size={UDim2.fromScale(math.min(experience / max, 1), getSizeFactor(experience, max))}
 							anchorPoint={new Vector2(0, 0.5)}
 							position={UDim2.fromScale(0, 0.5)}
-							backgroundColor={Mocha.Base}
-							cornerRadius={new UDim(0, px(5))}
+							backgroundColor={useDarkenedColor(Macchiato.Blue, 0.25)}
+							cornerRadius={new UDim(0, px(8))}
 						/>
-						<textlabel
+						<Text
+							size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
+							text={`Experience: ${experienceText} / ${maxExperienceText}`}
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(20)}
 							key={"experience-text"}
-							Size={UDim2.fromScale(0.5, 1)}
-							AnchorPoint={new Vector2(0, 0.5)}
-							Position={new UDim2(0, px(7), 0.5, 0)}
-							BackgroundTransparency={1}
-							TextColor3={Latte.Base}
-							Text={`${experienceText}/${maxExperienceText}`}
-							TextSize={px(12)}
-							FontFace={FONTS.inter.bold}
-							TextXAlignment={Enum.TextXAlignment.Left}
 						/>
 					</Frame>
-					<Frame
-						key={"level-holder"}
-						size={UDim2.fromOffset(px(10), px(10))}
-						anchorPoint={new Vector2(0.5, 1)}
-						position={UDim2.fromScale(0.5, 1)}
-						backgroundColor={Mocha.Teal}
-						zIndex={2}
-					>
-						<textlabel
-							key={"level-value"}
-							Size={UDim2.fromOffset(0, px(12))}
-							AnchorPoint={Vector2.one.mul(0.5)}
-							Position={UDim2.fromScale(0.5, 0.5)}
-							BackgroundColor3={Mocha.Teal}
-							TextColor3={Latte.Base}
-							Text={truncateNumber(level, 0)}
-							TextSize={px(16)}
-							FontFace={FONTS.inter.bold}
-							AutomaticSize={Enum.AutomaticSize.X}
-							TextStrokeColor3={Mocha.Base}
-							TextStrokeTransparency={0}
-						>
-							<uipadding
-								PaddingBottom={new UDim(0, px(5))}
-								PaddingLeft={new UDim(0, px(3))}
-								PaddingRight={new UDim(0, px(3))}
-								PaddingTop={new UDim(0, px(5))}
-								key={"text-padding"}
-							/>
-							<uicorner CornerRadius={new UDim(0, px(3))} key={"level-corner"} />
-						</textlabel>
-						<uicorner CornerRadius={new UDim(1, 0)} key={"level-corner"} />
-					</Frame>
-				</Frame>
+				</Group>
+				<Group
+					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
+					key={"right-hotbar-group"}
+				/>
 			</Transition>
 		</DelayRender>
 	);

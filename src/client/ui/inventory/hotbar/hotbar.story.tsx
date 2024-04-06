@@ -29,7 +29,7 @@ export = CreateReactStory(
 			}
 			equipped.push(slot);
 		}
-		store.profileAddExperience({ amount: 1654 });
+		store.profileAddExperience({ amount: 73000 });
 		store.profileAdjustCoins({ coins: 35178 });
 		store.profileAdjustGems({ gems: 418 });
 

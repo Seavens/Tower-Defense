@@ -21,6 +21,8 @@ export interface TextProps<T extends Instance = TextLabel> extends FrameProps<T>
 	textAutoResize?: "X" | "Y" | "XY";
 	richText?: BindingOrValue<boolean>;
 	maxVisibleGraphemes?: BindingOrValue<number>;
+	strokeTransparency?: BindingOrValue<number>;
+	strokeColor?: BindingOrValue<Color3>;
 }
 
 export const Text = forwardRef(
@@ -54,6 +56,8 @@ export const Text = forwardRef(
 			textYAlignment,
 			visible,
 			zIndex,
+			strokeColor,
+			strokeTransparency,
 		}: TextProps,
 		ref: Ref<TextLabel>,
 	): Element => {
@@ -88,6 +92,8 @@ export const Text = forwardRef(
 				LayoutOrder={layoutOrder}
 				Change={change}
 				Event={event}
+				TextStrokeColor3={strokeColor}
+				TextStrokeTransparency={strokeTransparency}
 			>
 				{children}
 				{cornerRadius !== undefined && <uicorner CornerRadius={cornerRadius} />}

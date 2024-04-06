@@ -114,7 +114,10 @@ export class Mob extends API {
 		const profile = store.getState(selectProfileData(user));
 		if (profile === undefined) return;
 
-		const { bounty } = mobDefinitions[id];
+		const { bounty, experience } = mobDefinitions[id];
+
+		store.profileAddExperience({ amount: experience }, { user, replicate: true });
+		warn(store.getState(selectProfileData(user)).experience);
 
 		store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
 	}

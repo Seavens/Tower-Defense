@@ -9,3 +9,5 @@ export const WIPE_MOCK_DATA = true;
 export const GAME_TIMESTEP = 1;
 export const GAME_TICK_RATE = 1 / 45;
 export const INTERPOLATION_SMOOTHNESS = 0.8;
+
+export const IS_LOBBY = false;

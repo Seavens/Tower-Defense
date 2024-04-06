@@ -76,7 +76,6 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			if (tower === undefined) return;
 
 			if (tower.unique.level >= 100) {
-				warn("Tower is already at max level.");
 				tower.unique.experience = 0;
 				return;
 			}
@@ -87,10 +86,8 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			tower.unique.experience += newExperience;
 
 			if (tower.unique.level >= 100) {
-				warn("Tower has reached max level.");
 				tower.unique.experience = 0;
 				return;
 			}
-			warn(`Tower leveled up to ${newLevel} with ${newExperience} experience left.`);
 		}),
 });

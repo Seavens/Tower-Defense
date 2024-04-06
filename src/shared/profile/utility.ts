@@ -1,35 +1,27 @@
-import { PROFILE_BASE_EXPERIENCE, PROFILE_EXPERIENCE_INTERVAL, PROFILE_GROWTH_RATE } from "./constants";
-import { TOWER_BASE_EXPERIENCE, TOWER_EXPERIENCE_INTERVAL, TOWER_GROWTH_RATE } from "shared/tower/constants";
+import { PROFILE_BASE_EXPERIENCE, PROFILE_GROWTH_RATE } from "./constants";
+import { TOWER_BASE_EXPERIENCE, TOWER_GROWTH_RATE } from "shared/tower/constants";
 
 export namespace LevelUtility {
-	export function getMaxExp(level: number, tower?: boolean): number {
-		if (level >= 100) {
-			return level;
-		}
-		const required =
-			math.floor((tower === undefined ? PROFILE_BASE_EXPERIENCE : TOWER_BASE_EXPERIENCE) * level) **
-			(tower === undefined ? PROFILE_GROWTH_RATE : TOWER_GROWTH_RATE);
-		const interval =
-			tower === undefined
-				? PROFILE_EXPERIENCE_INTERVAL
-				: TOWER_EXPERIENCE_INTERVAL *
-					math.ceil(
-						required / (tower === undefined ? PROFILE_EXPERIENCE_INTERVAL : TOWER_EXPERIENCE_INTERVAL),
-					);
-		return interval;
+	export function getMaxExp(level: number, tower = false): number {
+		if (level >= 100) return level;
+
+		const baseExperience = tower ? TOWER_BASE_EXPERIENCE : PROFILE_BASE_EXPERIENCE;
+		const growthRate = tower ? TOWER_GROWTH_RATE : PROFILE_GROWTH_RATE;
+
+		return baseExperience * math.pow(growthRate, level - 1);
 	}
 
-	export function calculateIncrease(startLevel: number, exp: number, tower?: boolean): [level: number, exp: number] {
+	export function calculateIncrease(startLevel: number, exp: number, tower = false): [level: number, exp: number] {
 		if (exp === math.huge) {
 			return [1, 0];
 		}
 		let level = startLevel;
-		let required = getMaxExp(level, tower === undefined ? false : true);
+		let required = getMaxExp(level, tower ? true : false);
 		let leftover = exp;
 		while (leftover >= required) {
 			level += 1;
 			leftover -= required;
-			required = getMaxExp(level, tower === undefined ? false : true);
+			required = getMaxExp(level, tower ? true : false);
 		}
 		return [level, leftover];
 	}
