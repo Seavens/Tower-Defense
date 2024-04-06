@@ -8,6 +8,7 @@ export function selectProfileState(state: ClientState): ProfileState {
 	let result = profile;
 	if (result === undefined) {
 		result = { data: DATA_TEMPLATE.profile };
+		warn("default");
 	}
 	return result;
 }

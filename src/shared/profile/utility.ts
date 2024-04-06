@@ -16,12 +16,12 @@ export namespace LevelUtility {
 			return [1, 0];
 		}
 		let level = startLevel;
-		let required = getMaxExp(level, tower ? true : false);
+		let required = getMaxExp(level, tower);
 		let leftover = exp;
 		while (leftover >= required) {
 			level += 1;
 			leftover -= required;
-			required = getMaxExp(level, tower ? true : false);
+			required = getMaxExp(level, tower);
 		}
 		return [level, leftover];
 	}

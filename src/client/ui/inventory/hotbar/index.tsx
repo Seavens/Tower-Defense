@@ -35,7 +35,6 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 
 	const { experience, level } = useSelector(selectProfileData);
 	const currency = useSelector(selectCurrency(user));
-	warn(experience);
 
 	const [transparency, transparencyMotion] = useMotion(1);
 
@@ -46,6 +45,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const currencyText = useAbbreviation(currency, 0);
 	const experienceText = useAbbreviation(experience);
 	const maxExperienceText = useAbbreviation(max);
+	warn(level, max, experience);
 
 	const slots = useMemo(() => {
 		const elements: Array<Element> = [];

@@ -55,11 +55,7 @@ export class MobService implements OnStart {
 				return;
 			}
 			const { owner } = tower;
-			const { bounty, experience } = mobDefinitions[id];
-			store.profileAddExperience({ amount: experience }, { user: owner, replicate: true });
-			task.defer((): void => {
-				warn(store.getState(selectProfileData(owner)));
-			});
+			const { bounty } = mobDefinitions[id];
 			store.gameAddCurrency({ amount: bounty }, { user: owner, broadcast: true });
 		});
 	}

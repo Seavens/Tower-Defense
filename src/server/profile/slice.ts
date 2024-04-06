@@ -35,7 +35,7 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			const { level } = data;
 			const [newLevel, newExperience] = LevelUtility.calculateIncrease(level, amount);
 			player.data.level = newLevel;
-			player.data.experience += newExperience;
+			player.data.experience = newExperience;
 		});
 	},
 	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: EntityMetadata): State => {

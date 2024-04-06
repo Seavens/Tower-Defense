@@ -2,6 +2,7 @@ import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { INTERMISSION_TIME } from "./constants";
 import { Mob } from "server/mob/class";
+import { PlayerUtility } from "shared/player/utility";
 import { Players, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { createUUID } from "shared/utility/create-uuid";
@@ -96,8 +97,9 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 		const bounty = store.getState(selectBounty);
 		const experience = store.getState(selectExperience);
 		for (const player of Players.GetPlayers()) {
-			store.gameAddCurrency({ amount: bounty }, { user: player.Name, broadcast: true });
-			store.profileAddExperience({ amount: experience }, { user: player.Name, replicate: true });
+			const user = PlayerUtility.getUser(player);
+			store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
+			store.profileAddExperience({ amount: experience }, { user, replicate: true });
 		}
 
 		// Wait for intermission time before starting the next wave
