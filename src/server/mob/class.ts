@@ -21,7 +21,7 @@ export class Mob extends API {
 	public static readonly onMobAdded = new Signal<Mob>();
 	public static readonly onMobRemoved = new Signal<Mob>();
 	public static readonly onMobEnded = new Signal<Mob>();
-	public static readonly onMobDied = new Signal<[mob: Mob, tower: string]>();
+	public static readonly onMobDied = new Signal<[mob: Mob, tower?: string]>();
 
 	protected static octree = new Octree<Mob>();
 
@@ -102,24 +102,10 @@ export class Mob extends API {
 	}
 
 	public onDied(key?: string): void {
-		const { id, uuid } = this;
+		const { onMobDied } = Mob;
+		const { uuid } = this;
 		Events.mob.death.broadcast(uuid);
-
-		if (key === undefined) return;
-		const replicated = store.getState(selectSpecificTower(key));
-
-		const user = replicated?.owner;
-		if (user === undefined) return;
-
-		const profile = store.getState(selectProfileData(user));
-		if (profile === undefined) return;
-
-		const { bounty, experience } = mobDefinitions[id];
-
-		store.profileAddExperience({ amount: experience }, { user, replicate: true });
-		warn(store.getState(selectProfileData(user)).experience);
-
-		store.gameAddCurrency({ amount: bounty }, { user, broadcast: true });
+		onMobDied.FireDeferred(this, key);
 	}
 
 	public onDamage(damage: number, kind: MobDamage): void {

@@ -1,4 +1,4 @@
-import { CreateReactStory } from "@rbxts/ui-labs";
+import { CreateReactStory, Number } from "@rbxts/ui-labs";
 import { Hotbar } from ".";
 import { ItemUtility } from "shared/inventory/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
@@ -14,11 +14,17 @@ export = CreateReactStory(
 		name: "Hotbar",
 		react: React,
 		reactRoblox: ReactRoblox,
+		controls: {
+			experience: Number(100, 0, math.huge, 1),
+			coins: Number(100, 0, math.huge, 1),
+			gems: Number(100, 0, math.huge, 1),
+		},
 		cleanup: (): void => {
 			store.resetState();
 		},
 	},
 	({ controls }): Element => {
+		const { experience, coins, gems } = controls;
 		const items = new Map<Slot, Item>();
 		const equipped = new Array<Slot>();
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
@@ -29,9 +35,9 @@ export = CreateReactStory(
 			}
 			equipped.push(slot);
 		}
-		store.profileAddExperience({ amount: 73000 });
-		store.profileAdjustCoins({ coins: 35178 });
-		store.profileAdjustGems({ gems: 418 });
+		store.profileAddExperience({ amount: experience });
+		store.profileAdjustCoins({ coins: coins });
+		store.profileAdjustGems({ gems: gems });
 
 		return (
 			<ReflexProvider producer={store}>

@@ -1,3 +1,4 @@
+import { InventoryFilterKind } from "./types";
 import { ItemRarity } from "shared/inventory/types";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
 import { usePx } from "../hooks";
@@ -18,4 +19,12 @@ export const RARITY_ORDERS: { [R in ItemRarity]: number } = {
 	[ItemRarity.Legendary]: 3,
 	[ItemRarity.Mythical]: 2,
 	[ItemRarity.Secret]: 1,
-};
+} as const;
+
+export const FILTER_DISPLAYS: { [F in InventoryFilterKind]: string } = {
+	[InventoryFilterKind.All]: "All",
+	[InventoryFilterKind.Level]: "Level",
+	[InventoryFilterKind.Rarity]: "Rarity",
+	[InventoryFilterKind.Locked]: "Locked",
+	[InventoryFilterKind.Unlocked]: "Unlocked",
+} as const;

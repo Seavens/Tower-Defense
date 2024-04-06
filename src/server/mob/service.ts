@@ -1,6 +1,10 @@
 import { Mob } from "server/mob/class";
 import { Service } from "@flamework/core";
+import { Tower } from "server/tower/class";
 import { createListener } from "shared/utility/create-listener";
+import { mobDefinitions } from "shared/mob/mobs";
+import { selectProfileData } from "server/profile/selectors";
+import { store } from "server/state/store";
 import type { OnStart } from "@flamework/core";
 
 /** @hideinherited */
@@ -40,8 +44,23 @@ export class MobService implements OnStart {
 		Mob.onMobEnded.Connect((mob: Mob): void => {
 			mobEnded.fire(mob);
 		});
-		Mob.onMobDied.Connect((mob: Mob): void => {
+		Mob.onMobDied.Connect((mob: Mob, key?: string): void => {
 			mobDied.fire(mob);
+			if (key === undefined) {
+				return;
+			}
+			const { id } = mob;
+			const tower = Tower.getTower(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { owner } = tower;
+			const { bounty, experience } = mobDefinitions[id];
+			store.profileAddExperience({ amount: experience }, { user: owner, replicate: true });
+			task.defer((): void => {
+				warn(store.getState(selectProfileData(owner)));
+			});
+			store.gameAddCurrency({ amount: bounty }, { user: owner, broadcast: true });
 		});
 	}
 }

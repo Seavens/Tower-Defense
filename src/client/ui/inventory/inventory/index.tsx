@@ -3,6 +3,7 @@ import {
 	DelayRender,
 	Frame,
 	Group,
+	ReactiveButton,
 	RenderInView,
 	ScrollingFrame,
 	SearchBar,
@@ -10,8 +11,8 @@ import {
 	Transition,
 } from "client/ui/components";
 import { Events } from "client/network";
-import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import {
+	FILTER_DISPLAYS,
 	INVENTORY_COLUMNS,
 	INVENTORY_ROWS,
 	INVENTORY_SIZE,
@@ -19,11 +20,13 @@ import {
 	RARITY_ORDERS,
 	SLOT_SIZE,
 } from "../constants";
+import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { InventoryFilterKind } from "../types";
 import { InventorySlot } from "../slot";
 import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
+import { Modding } from "@flamework/core";
 import { formatStats } from "../utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { useDarkenedColor, useMotion, usePx, useRarityColor, useStore } from "client/ui/hooks";
@@ -40,6 +43,8 @@ export interface InventoryProps {
 	onClose?: () => void;
 }
 
+const filters = Modding.inspect<Array<InventoryFilterKind>>();
+
 export function Inventory({ items, equipped, visible, onClose }: InventoryProps): Element {
 	const px = usePx();
 	const store = useStore();
@@ -48,7 +53,7 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 	const [selected, setSelected] = useState<Slot>();
 	const [container, setContainer] = useState<Frame>();
 	const [search, setSearch] = useState<Array<string>>();
-	const [filter, setFilter] = useState<InventoryFilterKind>();
+	const [filter, setFilter] = useState(InventoryFilterKind.All);
 
 	const [transparency, transparencyMotion] = useMotion(1);
 
@@ -191,11 +196,11 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 						>
 							<SearchBar
 								key={"search"}
-								size={UDim2.fromOffset(px(200), px(INVENTORY_TOPBAR_Y) - px(3) * 2)}
-								position={new UDim2(1, -px(30) - px(3), 1, 0)}
-								anchorPoint={Vector2.one}
+								size={UDim2.fromOffset(px(200), px(INVENTORY_TOPBAR_Y) - px(3) * 3)}
+								position={new UDim2(1, -px(30) - px(3), 0.5, 0)}
+								anchorPoint={new Vector2(1, 0.5)}
 								cornerRadius={new UDim(0, px(3))}
-								backgroundTransparency={0}
+								backgroundTransparency={0.35}
 								textSize={px(18)}
 								textColor={PALETTE.accent}
 								font={FONTS.robotoMono.regular}
@@ -203,7 +208,7 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 								onSearch={setSearch}
 								clearTextOnFocus={true}
 								queries={queries}
-								enabled={true}
+								enabled={enabled}
 								accuracy={3}
 							>
 								<uistroke
@@ -214,16 +219,80 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 							</SearchBar>
 							<CloseButton
 								size={UDim2.fromOffset(
-									px(INVENTORY_TOPBAR_Y) - px(3) * 2,
-									px(INVENTORY_TOPBAR_Y) - px(3) * 2,
+									px(INVENTORY_TOPBAR_Y) - px(3) * 3,
+									px(INVENTORY_TOPBAR_Y) - px(3) * 3,
 								)}
-								position={new UDim2(1, -px(3), 1, 0)}
-								anchorPoint={Vector2.one}
+								position={new UDim2(1, -px(3), 0.5, 0)}
+								anchorPoint={new Vector2(1, 0.5)}
 								textSize={px(INVENTORY_TOPBAR_Y + 5)}
 								enabled={enabled}
 								onClose={onClose}
 								key={"inventory-close"}
 							/>
+							<ReactiveButton
+								size={
+									new UDim2(
+										0,
+										px(SLOT_SIZE.X) * INVENTORY_COLUMNS -
+											px(200) -
+											px(INVENTORY_TOPBAR_Y) -
+											px(3) * 2,
+										0,
+										px(INVENTORY_TOPBAR_Y) - px(3) * 3,
+									)
+								}
+								position={new UDim2(0, px(3), 0.5, 0)}
+								anchorPoint={new Vector2(0, 0.5)}
+								backgroundColor={PALETTE.black}
+								backgroundTransparency={0.35}
+								cornerRadius={new UDim(0, px(3))}
+								enabled={enabled}
+								onLeftClick={(): void => {
+									if (!enabled) {
+										return;
+									}
+									if (filter === undefined) {
+										setFilter(filters[0]);
+										return;
+									}
+									let index = filters.indexOf(filter);
+									if (index >= filters.size()) {
+										index = 0;
+									}
+									const result = filters[(index + 1) % filters.size()];
+									setFilter(result);
+								}}
+								onRightClick={(): void => {
+									if (!enabled) {
+										return;
+									}
+									if (filter === undefined) {
+										setFilter(filters[filters.size() - 1]);
+										return;
+									}
+									let index = filters.indexOf(filter);
+									if (index <= 0) {
+										index = filters.size();
+									}
+									const result = filters[(index - 1) % filters.size()];
+									setFilter(result);
+								}}
+								key={"inventory-filter"}
+							>
+								<Text
+									size={UDim2.fromScale(1, 1)}
+									position={UDim2.fromScale(0, 0)}
+									anchorPoint={Vector2.zero}
+									backgroundTransparency={1}
+									text={FILTER_DISPLAYS[filter]}
+									textColor={PALETTE.white}
+									textSize={px(18)}
+									font={FONTS.robotoMono.regular}
+									richText={true}
+									layoutOrder={2}
+									key={"inventory-filter-name"}
+								/>
+							</ReactiveButton>
 						</Frame>
 						<Frame
 							size={UDim2.fromOffset(
