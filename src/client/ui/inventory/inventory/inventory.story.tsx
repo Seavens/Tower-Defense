@@ -1,6 +1,7 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { Inventory } from ".";
 import { ItemUtility } from "shared/inventory/utility";
+import { MAXIMUM_STORED } from "shared/inventory/constants";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
@@ -20,7 +21,7 @@ export = CreateReactStory(
 	({ controls }): Element => {
 		const items = new Map<Slot, Item>();
 		const equipped = new Array<Slot>();
-		for (const index of $range(1, 100)) {
+		for (const index of $range(1, MAXIMUM_STORED)) {
 			const item = ItemUtility.createItem(1);
 			items.set(`${index}`, item);
 		}

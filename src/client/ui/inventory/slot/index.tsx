@@ -3,7 +3,8 @@ import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components"
 import { ItemKind } from "shared/inventory/types";
 import { SLOT_SIZE } from "../constants";
 import { SlotActions } from "./actions";
-import { map } from "@rbxts/pretty-react-hooks";
+import { idToName } from "shared/utility/id-to-name";
+import { map, useAsync } from "@rbxts/pretty-react-hooks";
 import { useAbbreviation, useDarkenedColor, useDefinition, useMotion, usePx, useRarityColor } from "client/ui/hooks";
 import { useItemDefinition } from "client/ui/hooks/use-item-definition";
 import React, { useEffect, useMemo } from "@rbxts/react";

@@ -33,7 +33,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const px = usePx();
 	const store = useStore();
 
-	const { experience, level } = useSelector(selectProfileData);
+	const { experience, level, gems, coins } = useSelector(selectProfileData);
 	const currency = useSelector(selectCurrency(user));
 
 	const [transparency, transparencyMotion] = useMotion(1);
@@ -42,10 +42,11 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 		return LevelUtility.getMaxExp(level);
 	}, [level]);
 
-	const currencyText = useAbbreviation(currency, 0);
+	const currencyText = useAbbreviation(currency, 2);
 	const experienceText = useAbbreviation(experience);
 	const maxExperienceText = useAbbreviation(max);
-	warn(level, max, experience);
+	const gemsText = useAbbreviation(gems, 2);
+	const coinsText = useAbbreviation(coins, 2);
 
 	const slots = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -102,7 +103,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 				/>
 				<Group
 					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
-					key={"left-hotbar-group"}
+					key={"left-hotbar-frame"}
 				/>
 				<Group size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y) + px(75))} key={"center-hotbar-Frame"}>
 					<uilistlayout
@@ -112,16 +113,48 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						SortOrder={Enum.SortOrder.LayoutOrder}
 						Padding={new UDim(0, px(4))}
 					/>
-					<Text
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
-						text={`Currency: $${currencyText}`}
-						font={FONTS.inter.bold}
-						textColor={PALETTE.accent}
-						strokeTransparency={0.25}
-						textSize={px(20)}
-						key={"currency-text"}
-					/>
-					<Group key={"middle-center-group"} size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}>
+					<Group size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))} key={"currency-text"}>
+						<uilistlayout
+							FillDirection={Enum.FillDirection.Horizontal}
+							HorizontalAlignment={Enum.HorizontalAlignment.Center}
+							VerticalAlignment={Enum.VerticalAlignment.Center}
+							SortOrder={Enum.SortOrder.LayoutOrder}
+						/>
+						<Text
+							size={UDim2.fromOffset(px(HOTBAR_SIZE.X) / 3.5, px(25))}
+							text={`<font color="#FFFF00">Coins:</font> ${coinsText}`}
+							richText={true}
+							textXAlignment="Left"
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(14)}
+							key={"coins-text"}
+						/>
+						<Text
+							size={UDim2.fromOffset(px(HOTBAR_SIZE.X) / 2.5, px(25))}
+							text={`<font color="#228B22">$</font>${currencyText}`}
+							richText={true}
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(24)}
+							key={"currency-text"}
+						/>
+						<Text
+							size={UDim2.fromOffset(px(HOTBAR_SIZE.X) / 3.5, px(25))}
+							text={`<font color="#6495ED">Gems:</font> ${gemsText}`}
+							richText={true}
+							textXAlignment="Right"
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(14)}
+							key={"gems-text"}
+						/>
+					</Group>
+
+					<Group key={"middle-center-Group"} size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y))}>
 						<uilistlayout
 							FillDirection={Enum.FillDirection.Horizontal}
 							HorizontalAlignment={Enum.HorizontalAlignment.Center}
@@ -132,16 +165,16 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					</Group>
 					<Frame
 						key={"middle-bottom-frame"}
-						size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
+						size={UDim2.fromOffset(px(HOTBAR_SIZE.X) - px(4), px(20))}
 						anchorPoint={new Vector2(0.5, 1)}
 						position={UDim2.fromScale(0.5, 1)}
 						backgroundColor={useLightenedColor(Mocha.Base, 0.15)}
-						cornerRadius={new UDim(0, px(8))}
+						cornerRadius={new UDim(0, px(4))}
 					>
 						<uistroke
 							Color={Macchiato.Base}
 							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
-							Thickness={px(2)}
+							Thickness={px(1)}
 						/>
 						<Frame
 							key={"level-bar"}
@@ -149,15 +182,17 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							anchorPoint={new Vector2(0, 0.5)}
 							position={UDim2.fromScale(0, 0.5)}
 							backgroundColor={useDarkenedColor(Macchiato.Blue, 0.25)}
-							cornerRadius={new UDim(0, px(8))}
+							cornerRadius={new UDim(0, px(4))}
 						/>
 						<Text
-							size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(25))}
-							text={`Experience: ${experienceText} / ${maxExperienceText}`}
+							size={UDim2.fromOffset(px(HOTBAR_SIZE.X / 4), px(20))}
+							position={UDim2.fromOffset(px(8), 0)}
+							text={`${experienceText} / ${maxExperienceText}`}
 							font={FONTS.inter.bold}
+							textXAlignment="Left"
 							textColor={PALETTE.accent}
 							strokeTransparency={0.25}
-							textSize={px(20)}
+							textSize={px(16)}
 							key={"experience-text"}
 						/>
 					</Frame>
@@ -165,7 +200,33 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 				<Group
 					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
 					key={"right-hotbar-group"}
-				/>
+				>
+					<Button
+						size={UDim2.fromOffset(px(90), px(45))}
+						anchorPoint={new Vector2(0.5, 0.5)}
+						position={UDim2.fromScale(0.5, 0.5)}
+						backgroundColor={useDarkenedColor(PALETTE.green, 0.25)}
+						cornerRadius={new UDim(0, px(4))}
+						onClick={(): void => {}}
+					>
+						<uistroke
+							Color={useDarkenedColor(PALETTE.green, 0.5)}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+							Thickness={px(1)}
+						/>
+						<Text
+							size={UDim2.fromOffset(px(70), px(50))}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							text={"Inventory"}
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(18)}
+							key={"inventory-text"}
+						/>
+					</Button>
+				</Group>
 			</Transition>
 		</DelayRender>
 	);

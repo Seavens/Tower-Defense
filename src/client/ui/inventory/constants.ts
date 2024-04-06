@@ -27,4 +27,6 @@ export const FILTER_DISPLAYS: { [F in InventoryFilterKind]: string } = {
 	[InventoryFilterKind.Rarity]: "Rarity",
 	[InventoryFilterKind.Locked]: "Locked",
 	[InventoryFilterKind.Unlocked]: "Unlocked",
+	[InventoryFilterKind.Tower]: "Tower",
+	[InventoryFilterKind.Relic]: "Relic",
 } as const;

@@ -18,20 +18,20 @@ export function formatStats(
 	const { name: itemName, desc, rarity, kind } = itemDefinitions[id];
 	const { name: rarityName } = rarityDefinitions[rarity];
 	if (unique.kind === ItemKind.Tower && kind.kind === ItemKind.Tower) {
-		const { cost, damageKind, targeting } = kind;
+		const { cost, damageKind } = kind;
 		const { damage, range, cooldown, level, locked } = unique;
 		const { damage: baseDamage, cooldown: baseCooldown, range: baseRange } = kind;
 		return mapBinding(
 			color,
 			(value: Color3): string =>
-				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nLevel: ${truncateNumber(level, 0)}\nCost: ${truncateNumber(cost, 3)}\nDamage: ${truncateNumber(baseDamage * damage, 3)}\nRange: ${truncateNumber(baseRange * range, 0)}\nCooldown: ${truncateNumber(baseCooldown * cooldown, 0)}\nLocked: ${locked ? "Yes" : "No"}\nDamage Kind: ${MOB_DAMAGE_DISPLAY[damageKind]}`,
+				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nLevel: ${truncateNumber(level, 0)}\nCost: ${truncateNumber(cost, 0)}\nDamage: ${truncateNumber(baseDamage * damage, 3)}\nRange: ${truncateNumber(baseRange * range, 2)}\nCooldown: ${truncateNumber(baseCooldown * cooldown, 2)}\nLocked: ${locked ? "Yes" : "No"}\nDamage Kind: ${MOB_DAMAGE_DISPLAY[damageKind]}\nCreator: ${owner}`,
 		);
 	} else if (unique.kind === ItemKind.Relic) {
 		const { multiplier } = unique;
 		return mapBinding(
 			color,
 			(value: Color3): string =>
-				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nMultiplier: ${truncateNumber(multiplier, 0)}\n`,
+				`<font size="${size}">${itemName}</font>\n<font color="#${value.ToHex()}">${rarityName}</font>\n${desc}\n\nMultiplier: ${truncateNumber(multiplier, 2)}\n`,
 		);
 	} else {
 		return undefined;

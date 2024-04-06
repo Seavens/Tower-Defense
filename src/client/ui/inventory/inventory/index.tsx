@@ -26,9 +26,12 @@ import { InventorySlot } from "../slot";
 import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
+import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { formatStats } from "../utility";
+import { idToName } from "shared/utility/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
+import { useAsync } from "@rbxts/pretty-react-hooks";
 import { useDarkenedColor, useMotion, usePx, useRarityColor, useStore } from "client/ui/hooks";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";
 import type { AnyItemDefinition } from "shared/inventory/items";
@@ -73,6 +76,16 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 		return itemDefinitions[id];
 	}, [item]);
 
+	const [user] = useAsync(async (): Promise<string> => {
+		if (item === undefined) return "";
+
+		if (item.unique.kind !== ItemKind.Tower) return "";
+
+		const { owner } = item.unique;
+
+		return idToName(owner);
+	}, [item]);
+
 	const color = useRarityColor(definition?.rarity);
 	const light = useDarkenedColor(color, 0.25);
 	const medium = useDarkenedColor(color, 0.45);
@@ -82,7 +95,7 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 		if (item === undefined) {
 			return undefined;
 		}
-		return formatStats(item, color, px(20), "Test");
+		return formatStats(item, color, px(20), user ?? "");
 	}, [item, color, px]);
 
 	const queries = useMemo((): Array<string> => {
@@ -97,10 +110,39 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 			const isEquipped = equipped.includes(slot);
 			const { name, rarity } = itemDefinitions[id];
 			const level = kind === ItemKind.Tower ? unique.level : unique.multiplier;
+
+			if (filter === InventoryFilterKind.Locked && !unique.locked) {
+				continue;
+			}
+
+			if (filter === InventoryFilterKind.Unlocked && unique.locked) {
+				continue;
+			}
+
+			if (filter === InventoryFilterKind.Tower && kind !== ItemKind.Tower) {
+				continue;
+			}
+
+			if (filter === InventoryFilterKind.Relic && kind !== ItemKind.Relic) {
+				continue;
+			}
+
 			if (search !== undefined && !search.includes(name)) continue;
 
 			const element = (
-				<RenderInView container={container} layoutOrder={tonumber(slot)} key={`slot-${slot}`}>
+				<RenderInView
+					container={container}
+					key={`slot-${slot}`}
+					layoutOrder={
+						filter === InventoryFilterKind.Level
+							? kind === ItemKind.Relic
+								? 1000000 + -level
+								: -level
+							: filter === InventoryFilterKind.Rarity
+								? RARITY_ORDERS[rarity] * 1000 + -level
+								: tonumber(slot)
+					}
+				>
 					<InventorySlot
 						id={id}
 						locked={locked}
@@ -109,13 +151,6 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 						enabled={enabled}
 						menu={!enabled && selected === slot}
 						equipped={isEquipped}
-						layoutOrder={
-							filter === InventoryFilterKind.Level
-								? level
-								: filter === InventoryFilterKind.Rarity
-									? RARITY_ORDERS[rarity]
-									: tonumber(slot)
-						}
 						onLeftClick={(): void => {
 							if (!enabled) {
 								return;

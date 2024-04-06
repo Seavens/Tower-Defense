@@ -58,7 +58,7 @@ export function useAbbreviation(value: number, decimals = 1): string {
 		const positive = value > 0 ? value : value * -1;
 		const index = math.floor(math.log10(positive) / 3);
 		if (index <= 0) {
-			return string.format(`%.${decimals}f`, value);
+			return `${value}`;
 		}
 		const abbreviation = NUMBER_ABBREVIATIONS[index - 1];
 		const significant = value / (10 ** 3) ** index;

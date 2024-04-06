@@ -34,7 +34,7 @@ export = CreateReactStory(
 		controls: {
 			id: Choose(allTowerItemIds, 1),
 			targeting: Choose(allTowerTargetings, 1),
-			upgrades: Number(1, 1, math.huge, 1),
+			upgrades: Number(0, 0, math.huge, 1),
 			level: Number(1, 1, MAX_TOWER_LEVEL, 1),
 			experience: Number(1, 1, math.huge, 1),
 		},

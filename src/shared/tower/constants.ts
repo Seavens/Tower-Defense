@@ -33,4 +33,4 @@ export const MAX_TOWER_LEVEL = 100;
 export const TOWER_BASE_EXPERIENCE = 100;
 export const TOWER_GROWTH_RATE = 1.25;
 
-export const TOWER_LEVEL_MULTIPLIER = 0.5;
+export const TOWER_LEVEL_MULTIPLIER = 0.4;

@@ -1,6 +1,6 @@
+import React, { forwardRef } from "@rbxts/react";
 import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
 import type { Element, Ref } from "@rbxts/react";
-import React, { forwardRef } from "@rbxts/react";
 import type { FrameProps } from "./frame";
 
 export interface ButtonProps extends FrameProps<TextButton> {

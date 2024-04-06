@@ -6,6 +6,8 @@ export const enum InventoryFilterKind {
 	Rarity = "inventory_filter_kind:rarity",
 	Locked = "inventory_filter_kind:locked",
 	Unlocked = "inventory_filter_kind:unlocked",
+	Tower = "inventory_filter_kind:tower",
+	Relic = "inventory_filter_kind:relic",
 }
 
 export const isInventoryFilterKind = Flamework.createGuard<InventoryFilterKind>();

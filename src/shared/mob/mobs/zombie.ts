@@ -8,8 +8,8 @@ export const zombieMob: MobDefinition<MobId.Zombie> = {
 
 	speed: 5,
 	resistances: [],
-	health: 10,
+	health: 100,
 
 	bounty: 75,
-	experience: 250,
+	experience: 15,
 };

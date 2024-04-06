@@ -9,6 +9,7 @@ import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
 import { TowerUtility } from "shared/tower/utility";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utility";
+import { getSizeFactor } from "client/ui/inventory/utility";
 import { map } from "@rbxts/pretty-react-hooks";
 import { store } from "client/state/store";
 import { useAbbreviation, useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
@@ -40,11 +41,13 @@ export function Tower({ tower }: TowerProps): Element {
 	const _cost = useMemo((): number => {
 		return TowerUtility.getUpgradeCost(tower);
 	}, [tower]);
-	const cost = useAbbreviation(_cost);
-	const _price = useMemo((): number => {
-		return TowerUtility.getSellPrice(tower);
-	}, [tower]);
-	const price = useAbbreviation(_price);
+	const cost = useAbbreviation(_cost, 2);
+	const _price = math.floor(
+		useMemo((): number => {
+			return TowerUtility.getSellPrice(tower);
+		}, [tower]),
+	);
+	const price = useAbbreviation(_price, 2);
 	const max = useMemo((): number => {
 		const { level } = unique;
 		const max = LevelUtility.getMaxExp(level, true);
@@ -91,21 +94,29 @@ export function Tower({ tower }: TowerProps): Element {
 						>
 							{unique.level < MAX_TOWER_LEVEL && (
 								<Frame
-									size={new UDim2(1, 0, 0, px(18))}
+									size={new UDim2(1, 0, 0, px(15))}
 									position={UDim2.fromScale(0, 1)}
 									anchorPoint={new Vector2(0, 1)}
-									cornerRadius={new UDim(0, px(3))}
-									backgroundColor={medium}
-									backgroundTransparency={0.5}
+									cornerRadius={new UDim(0, px(4))}
+									backgroundColor={PALETTE.black}
+									backgroundTransparency={0.2}
 									clipsDescendants={true}
 									key={"tower-level-bar"}
 								>
+									<uistroke
+										Thickness={px(1)}
+										Color={useDarkenedColor(dark, 0.2)}
+										key={"tower-level-stroke"}
+									/>
 									<Frame
-										size={UDim2.fromScale(unique.experience / max, 1)}
-										position={UDim2.fromScale(0, 0)}
-										anchorPoint={Vector2.zero}
-										cornerRadius={new UDim(0, px(3))}
-										backgroundColor={rarity}
+										size={UDim2.fromScale(
+											unique.experience / max,
+											getSizeFactor(unique.experience, max),
+										)}
+										position={UDim2.fromScale(0, 0.5)}
+										anchorPoint={new Vector2(0, 0.5)}
+										cornerRadius={new UDim(0, px(4))}
+										backgroundColor={dark}
 										backgroundTransparency={0}
 										key={"tower-level-progress"}
 									/>
@@ -117,6 +128,8 @@ export function Tower({ tower }: TowerProps): Element {
 								anchorPoint={new Vector2(0, 1)}
 								backgroundTransparency={1}
 								text={`Level: ${unique.level}`}
+								strokeColor={PALETTE.black}
+								strokeTransparency={0.25}
 								textXAlignment={"Left"}
 								textYAlignment={"Bottom"}
 								textColor={Latte.Base}
