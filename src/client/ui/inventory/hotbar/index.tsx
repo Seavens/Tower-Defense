@@ -205,7 +205,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					key={"right-hotbar-group"}
 				>
 					<ReactiveButton
-						size={new UDim2(1, 0, 0, px(45))}
+						size={new UDim2(0.9, 0, 0, px(45))}
 						anchorPoint={new Vector2(0.5, 0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
 						backgroundColor={useDarkenedColor(PALETTE.green, 0.25)}
