@@ -10,6 +10,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 
 	rarity: ItemRarity.Secret,
 	image: `rbxassetid://11714891100`,
+	value: 100_000,
 
 	kind: {
 		kind: ItemKind.Tower,

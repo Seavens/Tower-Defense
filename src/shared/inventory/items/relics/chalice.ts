@@ -10,6 +10,7 @@ export const chaliceItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = {
 
 	image: "rbxassetid://129697838",
 	rarity: ItemRarity.Legendary,
+	value: 18_000,
 
 	kind: {
 		kind: ItemKind.Relic,

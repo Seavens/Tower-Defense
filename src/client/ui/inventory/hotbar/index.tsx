@@ -1,4 +1,4 @@
-import { Button, DelayRender, Frame, Group, Text, Transition } from "client/ui/components";
+import { Button, DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "client/ui/components";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
@@ -8,9 +8,11 @@ import { LevelUtility } from "shared/profile/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
 import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
+import { UIKind } from "client/ui/types";
 import { getSizeFactor } from "../utility";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
+import { selectOpenUI } from "client/ui/selectors";
 import { selectProfileData } from "client/profile/selectors";
 import { truncateNumber } from "shared/utility/truncate-number";
 import { useAbbreviation, useDarkenedColor, useLightenedColor, useMotion, usePx, useStore } from "client/ui/hooks";
@@ -35,6 +37,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 
 	const { experience, level, gems, coins } = useSelector(selectProfileData);
 	const currency = useSelector(selectCurrency(user));
+	const open = useSelector(selectOpenUI);
 
 	const [transparency, transparencyMotion] = useMotion(1);
 
@@ -89,7 +92,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	return (
 		<DelayRender shouldRender={visible} unmountDelay={1}>
 			<Transition
-				size={UDim2.fromOffset(px(HOTBAR_SIZE.X + px(200)), px(HOTBAR_SIZE.Y) + px(50))}
+				size={UDim2.fromOffset(px(HOTBAR_SIZE.X + px(300)), px(HOTBAR_SIZE.Y) + px(60))}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={UDim2.fromScale(0.5, 1)}
 				groupTransparency={transparency}
@@ -102,7 +105,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					SortOrder={Enum.SortOrder.LayoutOrder}
 				/>
 				<Group
-					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
+					size={UDim2.fromOffset(px(SLOT_SIZE.X) * 1.7, px(SLOT_SIZE.Y) + px(50))}
 					key={"left-hotbar-frame"}
 				/>
 				<Group size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y) + px(75))} key={"center-hotbar-Frame"}>
@@ -198,16 +201,22 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					</Frame>
 				</Group>
 				<Group
-					size={UDim2.fromOffset(px(SLOT_SIZE.X) * px(1.7), px(SLOT_SIZE.Y) + px(50))}
+					size={UDim2.fromOffset(px(SLOT_SIZE.X) * 1.7, px(SLOT_SIZE.Y) + px(50))}
 					key={"right-hotbar-group"}
 				>
-					<Button
-						size={UDim2.fromOffset(px(90), px(45))}
+					<ReactiveButton
+						size={new UDim2(1, 0, 0, px(45))}
 						anchorPoint={new Vector2(0.5, 0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
 						backgroundColor={useDarkenedColor(PALETTE.green, 0.25)}
+						backgroundTransparency={0}
 						cornerRadius={new UDim(0, px(4))}
-						onClick={(): void => {}}
+						onClick={(): void => {
+							open === UIKind.Inventory
+								? store.closeUI({ kind: UIKind.Inventory })
+								: store.openUI({ kind: UIKind.Inventory });
+						}}
+						enabled={true}
 					>
 						<uistroke
 							Color={useDarkenedColor(PALETTE.green, 0.5)}
@@ -225,7 +234,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							textSize={px(18)}
 							key={"inventory-text"}
 						/>
-					</Button>
+					</ReactiveButton>
 				</Group>
 			</Transition>
 		</DelayRender>

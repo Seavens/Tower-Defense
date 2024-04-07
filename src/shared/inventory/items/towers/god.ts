@@ -10,6 +10,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 
 	rarity: ItemRarity.Mythical,
 	image: `rbxassetid://16172534401`,
+	value: 40_000,
 
 	kind: {
 		kind: ItemKind.Tower,

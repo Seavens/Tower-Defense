@@ -10,6 +10,7 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 
 	rarity: ItemRarity.Legendary,
 	image: `rbxassetid://12270286289`,
+	value: 16_000,
 
 	kind: {
 		kind: ItemKind.Tower,

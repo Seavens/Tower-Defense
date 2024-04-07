@@ -10,6 +10,7 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 
 	image: `rbxassetid://16672016840`,
 	rarity: ItemRarity.Epic,
+	value: 10_000,
 
 	kind: {
 		kind: ItemKind.Tower,

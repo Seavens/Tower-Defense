@@ -1,3 +1,4 @@
+import { UIKind } from "./types";
 import { config } from "@rbxts/ripple";
 import type { SpringOptions } from "@rbxts/ripple";
 
@@ -48,3 +49,7 @@ export const PALETTE = {
 };
 
 export const PADDING = 3;
+
+export const UI_PRIORITIES: { [K in UIKind]: number } = {
+	[UIKind.Inventory]: 5,
+} as const;

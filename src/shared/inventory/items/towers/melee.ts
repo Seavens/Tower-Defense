@@ -10,6 +10,7 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 
 	rarity: ItemRarity.Rare,
 	image: `rbxassetid://178007979`,
+	value: 1_000,
 
 	kind: {
 		kind: ItemKind.Tower,

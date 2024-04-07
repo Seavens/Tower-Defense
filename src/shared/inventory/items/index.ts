@@ -48,6 +48,7 @@ export interface ItemDefinition<I extends ItemId, C extends ItemKind> {
 
 	rarity: ItemRarity;
 	image: RBXAssetId;
+	value: number;
 
 	kind: DefinitionKinds[C];
 }

@@ -77,7 +77,7 @@ export namespace TowerUtility {
 		if (upgrades > definitions.size()) {
 			return math.huge;
 		}
-		const level = getLevelMultiplier(unique);
+		const level = math.abs(1 - getLevelMultiplier(unique));
 		if (upgrades === 0) {
 			return base * (cooldown + level);
 		}

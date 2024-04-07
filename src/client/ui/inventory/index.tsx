@@ -1,28 +1,36 @@
 import { Hotbar } from "./hotbar";
 import { Inventory } from "./inventory";
+import { UIKind } from "../types";
 import { selectInventoryData } from "client/inventory/selectors";
+import { selectOpenUI } from "../selectors";
 import { useEffect, useState } from "@rbxts/react";
-import { useKeyPress } from "@rbxts/pretty-react-hooks";
 import { useSelector } from "@rbxts/react-reflex";
+import { useStore } from "../hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function InventoryApp(): Element {
-	const tab = useKeyPress(["Tab"]);
-	const [toggled, setToggled] = useState(false);
+	const store = useStore();
+	const open = useSelector(selectOpenUI);
 	const { stored, equipped } = useSelector(selectInventoryData);
 
+	const [visible, setVisibility] = useState(false);
+
 	useEffect((): void => {
-		if (!tab) {
-			return;
-		}
-		setToggled((value: boolean): boolean => !value);
-	}, [tab]);
+		setVisibility(open === UIKind.Inventory);
+	}, [open]);
 
 	return (
 		<>
 			<Hotbar visible={true} items={stored} equipped={equipped} />
-			<Inventory items={stored} equipped={equipped} visible={toggled} onClose={(): void => setToggled(false)} />
+			<Inventory
+				items={stored}
+				equipped={equipped}
+				visible={visible}
+				onClose={(): void => {
+					store.closeUI({ kind: UIKind.Inventory });
+				}}
+			/>
 		</>
 	);
 }

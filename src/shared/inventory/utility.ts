@@ -1,10 +1,20 @@
+import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "./constants";
 import { ItemKind } from "shared/inventory/types";
+import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { RarityUtility } from "./rarities/utility";
 import { TowerUtility } from "./items/towers/utility";
 import { createUUID } from "shared/utility/create-uuid";
 import { itemDefinitions } from "./items";
-import type { Item, ItemId, ItemRelicUnique, ItemTowerUnique, RelicItemId, TowerItemId } from "shared/inventory/types";
+import type {
+	Item,
+	ItemId,
+	ItemRelicUnique,
+	ItemTowerUnique,
+	ItemUnique,
+	RelicItemId,
+	TowerItemId,
+} from "shared/inventory/types";
 
 const allItemIds = Modding.inspect<Array<ItemId>>();
 const towerItemIds = Modding.inspect<Array<TowerItemId>>();
@@ -107,5 +117,22 @@ export namespace ItemUtility {
 			names.push(name);
 		}
 		return names;
+	}
+
+	export function getItemValue(id: ItemId, unique: ItemUnique): number {
+		const { kind } = unique;
+		const { value } = itemDefinitions[id];
+		if (kind === ItemKind.Relic) {
+			const { multiplier } = unique;
+			const alpha = (multiplier - ITEM_RNG_MIN) / (ITEM_RNG_MAX - ITEM_RNG_MIN);
+			return value * alpha;
+		}
+		const { cooldown, damage, range, level } = unique;
+		const cooldownMultiplier = math.abs(1 - (cooldown - ITEM_RNG_MIN) / (ITEM_RNG_MAX - ITEM_RNG_MIN));
+		const damageMultiplier = (damage - ITEM_RNG_MIN) / (ITEM_RNG_MAX - ITEM_RNG_MIN);
+		const rangeMultiplier = (range - ITEM_RNG_MIN) / (ITEM_RNG_MAX - ITEM_RNG_MIN);
+		const levelMultiplier = (level - 1) / (MAX_TOWER_LEVEL - 1);
+		const alpha = (cooldownMultiplier + damageMultiplier + rangeMultiplier + levelMultiplier) / 4;
+		return value * alpha;
 	}
 }
