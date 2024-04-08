@@ -14,7 +14,7 @@ export const alienMob: MobDefinition<MobId.Alien> = {
 	bounty: 150,
 	experience: 35,
 
-	height: 1.43 + 1,
+	height: 1.43,
 
 	animations: {
 		[MobAnimation.Walk]: ["rbxassetid://913402848"],

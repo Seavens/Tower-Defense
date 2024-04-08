@@ -14,7 +14,7 @@ export const monkeyMob: MobDefinition<MobId.Monkey> = {
 	bounty: 500,
 	experience: 300,
 
-	height: 1.89 + 1,
+	height: 1.89,
 
 	animations: {
 		[MobAnimation.Walk]: ["rbxassetid://913402848"],
