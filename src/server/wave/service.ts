@@ -79,17 +79,16 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 			}
 		}
 		task.delay(longest, (): void => {
+			const count = Mob.getMobCount();
 			store.gameSetStatus({ status: GameStatus.Ongoing }, { broadcast: true });
+			if (count > 0) {
+				return;
+			}
+			this.nextWave();
 		});
 	}
 
-	public onMobRemoved(): void {
-		// Check if all mobs are dead
-		const count = Mob.getMobCount();
-		const status = store.getState(selectGameStatus);
-		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
-			return;
-		}
+	public nextWave(): void {
 		warn("Wave ended.");
 		store.gameEndWave({}, { broadcast: true });
 
@@ -105,11 +104,21 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 		// Wait for intermission time before starting the next wave
 		for (const index of $range(1, INTERMISSION_TIME)) {
 			task.wait(1);
-			warn(index, index > 1 ? "s" : "");
+			warn(INTERMISSION_TIME - index, INTERMISSION_TIME - index > 1 ? "s" : "");
 		}
 
 		warn("Wave started.");
 		store.gameStartWave({}, { broadcast: true });
+	}
+
+	public onMobRemoved(): void {
+		// Check if all mobs are dead
+		const count = Mob.getMobCount();
+		const status = store.getState(selectGameStatus);
+		if (count > 0 || status === GameStatus.Spawning || status === GameStatus.Ended) {
+			return;
+		}
+		this.nextWave();
 	}
 
 	public onMobEnded(mob: Mob): void {

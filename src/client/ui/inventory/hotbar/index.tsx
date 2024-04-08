@@ -1,4 +1,5 @@
 import { Button, DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "client/ui/components";
+import { ColorUtil } from "client/ui/utility";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
@@ -208,7 +209,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						size={new UDim2(0.9, 0, 0, px(45))}
 						anchorPoint={new Vector2(0.5, 0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
-						backgroundColor={useDarkenedColor(PALETTE.green, 0.25)}
+						backgroundColor={ColorUtil.darken(PALETTE.green, 0.25)}
 						backgroundTransparency={0}
 						cornerRadius={new UDim(0, px(4))}
 						onClick={(): void => {
@@ -219,7 +220,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						enabled={true}
 					>
 						<uistroke
-							Color={useDarkenedColor(PALETTE.green, 0.5)}
+							Color={ColorUtil.darken(PALETTE.green, 0.5)}
 							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
 							Thickness={px(1)}
 						/>
