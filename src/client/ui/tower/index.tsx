@@ -8,7 +8,7 @@ import { useCamera, usePrevious } from "@rbxts/pretty-react-hooks";
 import { useMotion, usePx } from "../hooks";
 import { useSelector, useSelectorCreator } from "@rbxts/react-reflex";
 import { useWorldPosition } from "./hooks";
-import React, { useEffect, useMemo } from "@rbxts/react";
+import React, { useEffect, useMemo, useRef } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function TowerApp(): Element {
@@ -23,7 +23,12 @@ export function TowerApp(): Element {
 	const point = useWorldPosition(tower?.position ?? previous?.position ?? Vector3.zero);
 	const camera = useCamera();
 
+	const last = useRef<"Left" | "Right">("Left");
+
 	const side = useMemo((): "Left" | "Right" => {
+		if (!visible) {
+			return last.current;
+		}
 		const viewport = camera.ViewportSize;
 		const half = new Vector2(viewport.X / 2, viewport.Y);
 		const x = point.X;
@@ -31,8 +36,11 @@ export function TowerApp(): Element {
 			return "Left";
 		}
 		return "Right";
-	}, [point, camera]);
-	const last = usePrevious(side);
+	}, [camera, point, visible]);
+
+	useEffect(() => {
+		last.current = side;
+	}, [side]);
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);

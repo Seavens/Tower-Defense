@@ -3,7 +3,7 @@ import { Frame, Text } from "../components";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mobDefinitions } from "shared/mob/mobs";
-import { useAbbreviation, usePx } from "../hooks";
+import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { MobId } from "shared/mob/types";
@@ -35,8 +35,7 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 				size={UDim2.fromScale(1, 1)}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={UDim2.fromScale(0.5, 1)}
-				backgroundColor={PALETTE.red}
-				backgroundTransparency={0.15}
+				backgroundColor={useDarkenedColor(PALETTE.red, 0.25)}
 				cornerRadius={new UDim(2)}
 				key={"health-frame"}
 			>
@@ -47,9 +46,8 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 					position={UDim2.fromScale(0.5, 0.5)}
 					cornerRadius={new UDim(0, 2)}
 					backgroundTransparency={1}
-					textXAlignment="Center"
-					swd
 					font={FONTS.inter.bold}
+					textScaled={true}
 					textColor={PALETTE.white}
 					strokeColor={PALETTE.black}
 					strokeTransparency={0}
@@ -61,7 +59,6 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0, 0.5)}
 					backgroundColor={PALETTE.green}
-					backgroundTransparency={0.15}
 					cornerRadius={new UDim(2)}
 					key={"current-health-frame"}
 					zIndex={1}
