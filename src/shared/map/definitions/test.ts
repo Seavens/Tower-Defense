@@ -13,7 +13,7 @@ export const testMap: MapDefinition<MapId.Test> = {
 	waves: [
 		[
 			{
-				[MobId.Zombie]: { count: 5, delay: 3, wait: 2 },
+				[MobId.Zombie]: { count: 50000, delay: 0.1, wait: 0.1 },
 			},
 			waveBounty,
 			experience,
@@ -47,5 +47,5 @@ export const testMap: MapDefinition<MapId.Test> = {
 			experience,
 		],
 	],
-	baseHealth: math.huge,
+	baseHealth: 1000,
 };

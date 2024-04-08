@@ -39,6 +39,10 @@ export const PALETTE = {
 	light_green: Color3.fromRGB(102, 255, 102),
 	light_red: Color3.fromRGB(230, 51, 51),
 
+	dark_blue: Color3.fromRGB(0, 0, 130),
+	dark_green: Color3.fromRGB(0, 128, 10),
+	dark_red: Color3.fromRGB(105, 0, 0),
+
 	black: Color3.fromRGB(30, 30, 30),
 	white: Color3.fromRGB(230, 230, 230),
 
