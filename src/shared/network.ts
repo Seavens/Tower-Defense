@@ -19,6 +19,7 @@ interface ClientToServerEvents {
 		lock(slot: string): void;
 		equip(slot: string): void;
 		unequip(slot: string): void;
+		sell(slot: string): void;
 	};
 }
 

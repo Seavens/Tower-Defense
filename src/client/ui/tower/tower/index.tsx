@@ -111,7 +111,7 @@ export function Tower({ tower }: TowerProps): Element {
 									<Frame
 										size={UDim2.fromScale(
 											unique.experience / max,
-											getSizeFactor(unique.experience, max),
+											getSizeFactor(unique.experience, max, px(4)),
 										)}
 										position={UDim2.fromScale(0, 0.5)}
 										anchorPoint={new Vector2(0, 0.5)}

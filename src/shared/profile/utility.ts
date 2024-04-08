@@ -8,7 +8,7 @@ export namespace LevelUtility {
 		const baseExperience = tower ? TOWER_BASE_EXPERIENCE : PROFILE_BASE_EXPERIENCE;
 		const growthRate = tower ? TOWER_GROWTH_RATE : PROFILE_GROWTH_RATE;
 
-		return baseExperience * math.pow(growthRate, level - 1);
+		return math.floor(baseExperience * math.pow(growthRate, level - 1));
 	}
 
 	export function calculateIncrease(startLevel: number, exp: number, tower = false): [level: number, exp: number] {

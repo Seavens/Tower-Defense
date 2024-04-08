@@ -184,6 +184,11 @@ export abstract class Mob {
 		return data;
 	}
 
+	public getUUID(): UUID {
+		const { uuid } = this;
+		return uuid;
+	}
+
 	public start(current = 1): void {
 		const waypoints = MapUtility.getMapWaypoints();
 		const final = waypoints.size();

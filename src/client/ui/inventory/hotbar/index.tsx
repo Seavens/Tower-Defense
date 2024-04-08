@@ -46,8 +46,8 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	}, [level]);
 
 	const currencyText = useAbbreviation(currency, 2);
-	const experienceText = useAbbreviation(experience);
-	const maxExperienceText = useAbbreviation(max);
+	const experienceText = useAbbreviation(experience, 2);
+	const maxExperienceText = useAbbreviation(max, 2);
 	const gemsText = useAbbreviation(gems, 2);
 	const coinsText = useAbbreviation(coins, 2);
 
@@ -181,7 +181,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						/>
 						<Frame
 							key={"level-bar"}
-							size={UDim2.fromScale(math.min(experience / max, 1), getSizeFactor(experience, max))}
+							size={UDim2.fromScale(math.min(experience / max, 1), getSizeFactor(experience, max, px(4)))}
 							anchorPoint={new Vector2(0, 0.5)}
 							position={UDim2.fromScale(0, 0.5)}
 							backgroundColor={useDarkenedColor(Macchiato.Blue, 0.25)}

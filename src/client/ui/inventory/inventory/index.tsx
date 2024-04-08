@@ -175,7 +175,9 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 								store.inventoryUnequipSlot({ slot });
 								Events.inventory.unequip(slot);
 							} else if (action === "Sell") {
-								//
+								if (item.unique.locked === true) return;
+								store.inventoryRemoveItems({ slots: [slot] });
+								Events.inventory.sell(slot);
 							}
 						}}
 					/>

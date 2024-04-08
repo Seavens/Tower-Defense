@@ -39,3 +39,7 @@ export interface InventoryPatchSlot {
 	slot: Slot;
 	patch: Partial<ItemUnique>;
 }
+
+export interface InventorySellItem {
+	slot: Slot;
+}
