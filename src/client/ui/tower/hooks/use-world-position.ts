@@ -1,4 +1,4 @@
-import { useCamera, useEventListener, useUpdate } from "@rbxts/pretty-react-hooks";
+import { useCamera, useEventListener, usePrevious, useUpdate } from "@rbxts/pretty-react-hooks";
 import { useMemo, useRef } from "@rbxts/react";
 
 export function useWorldPosition(position: Vector3): Vector2 {
@@ -23,8 +23,10 @@ export function useWorldPosition(position: Vector3): Vector2 {
 	// }, [camera, position, update]);
 
 	const [point] = camera.WorldToScreenPoint(position);
+	const previous = usePrevious(point);
 
 	return useMemo((): Vector2 => {
-		return new Vector2(point.X, point.Y);
-	}, [point]);
+		const position = new Vector2((previous ?? point).X, (previous ?? point).Y);
+		return position;
+	}, [point, previous]);
 }

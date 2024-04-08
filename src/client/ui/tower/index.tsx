@@ -7,8 +7,7 @@ import { selectSpecificTower } from "shared/tower/selectors";
 import { useCamera, usePrevious } from "@rbxts/pretty-react-hooks";
 import { useMotion, usePx } from "../hooks";
 import { useSelector, useSelectorCreator } from "@rbxts/react-reflex";
-import { useWorldPosition } from "./hooks";
-import React, { useEffect, useMemo, useRef } from "@rbxts/react";
+import React, { useEffect, useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function TowerApp(): Element {
@@ -20,27 +19,27 @@ export function TowerApp(): Element {
 
 	const visible = selected !== undefined;
 	const [transparency, transparencyMotion] = useMotion(1);
-	const point = useWorldPosition(tower?.position ?? previous?.position ?? Vector3.zero);
 	const camera = useCamera();
 
-	const last = useRef<"Left" | "Right">("Left");
-
 	const side = useMemo((): "Left" | "Right" => {
-		if (!visible) {
-			return last.current;
+		if (tower === undefined) {
+			return "Right";
+		}
+		const { position } = tower;
+		const old = previous?.position;
+		if (old !== undefined && position.FuzzyEq(old, 1e-2)) {
+			return last ?? "Right";
 		}
 		const viewport = camera.ViewportSize;
+		const [point] = camera.WorldToScreenPoint(tower?.position ?? Vector3.zero);
 		const half = new Vector2(viewport.X / 2, viewport.Y);
 		const x = point.X;
 		if (x >= half.X) {
 			return "Left";
 		}
 		return "Right";
-	}, [camera, point, visible]);
-
-	useEffect(() => {
-		last.current = side;
-	}, [side]);
+	}, [camera, visible, tower]);
+	const last = usePrevious(side);
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);

@@ -42,11 +42,9 @@ export function Tower({ tower }: TowerProps): Element {
 		return TowerUtility.getUpgradeCost(tower);
 	}, [tower]);
 	const cost = useAbbreviation(_cost, 2);
-	const _price = math.floor(
-		useMemo((): number => {
-			return TowerUtility.getSellPrice(tower);
-		}, [tower]),
-	);
+	const _price = useMemo((): number => {
+		return math.floor(TowerUtility.getSellPrice(tower));
+	}, [tower]);
 	const price = useAbbreviation(_price, 2);
 	const max = useMemo((): number => {
 		const { level } = unique;
