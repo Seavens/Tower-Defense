@@ -1,5 +1,6 @@
 import { TowerVisual } from "shared/tower/types";
 import { Workspace } from "@rbxts/services";
+import { mobDefinitions } from "shared/mob/mobs";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";
 import type { TowerVisualModule } from ".";
@@ -13,8 +14,10 @@ export const sniperShotModule: TowerVisualModule<TowerVisual.SniperShot> = {
 		if (target === undefined) {
 			return;
 		}
+		const mobDef = mobDefinitions[target.id];
+		const { height } = mobDef;
 		const pivot = model.GetPivot();
-		const cframe = target?.getCFrame();
+		const cframe = target?.getCFrame().mul(new CFrame(0, height, 0));
 		const attachment0 = new Instance("Attachment");
 		attachment0.Name = "sniper-shot-attachment0";
 		attachment0.WorldCFrame = pivot;

@@ -14,6 +14,8 @@ export interface MobDefinition<I extends MobId> {
 	bounty: number;
 
 	experience: number;
+
+	height: number;
 }
 
 export const mobDefinitions: { [I in MobId]: MobDefinition<I> } = {

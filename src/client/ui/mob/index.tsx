@@ -1,6 +1,8 @@
 import { BILLBOARD_SIZE } from "./constants";
+import { Frame } from "../components";
 import { Mob } from "client/mob/class";
 import { MobHealthbar } from "./health-bar";
+import { mobDefinitions } from "shared/mob/mobs";
 import { useEventListener, useUpdate } from "@rbxts/pretty-react-hooks";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
@@ -16,14 +18,15 @@ export function MobApp(): Element {
 		for (const [, mob] of Mob.getMobs()) {
 			const { id } = mob;
 			const health = mob.getHealth();
+			const { height } = mobDefinitions[id];
 			const element = (
 				<billboardgui
-					Size={UDim2.fromOffset(px(BILLBOARD_SIZE.X), px(BILLBOARD_SIZE.Y))}
+					Size={UDim2.fromScale(px(BILLBOARD_SIZE.X), px(BILLBOARD_SIZE.Y))}
 					Adornee={mob.getInstance()}
 					AlwaysOnTop={false}
 					Enabled={true}
 					MaxDistance={100}
-					ExtentsOffsetWorldSpace={new Vector3(0, 3, 0)} // Temporary, base this off mob height
+					ExtentsOffsetWorldSpace={new Vector3(0, height - 0.8, 0)}
 				>
 					<MobHealthbar id={id} health={health} />
 				</billboardgui>
