@@ -1,3 +1,4 @@
+import { MobAnimation } from "./types";
 import { MobId } from "../types";
 import type { MobDefinition } from ".";
 
@@ -13,9 +14,9 @@ export const alienMob: MobDefinition<MobId.Alien> = {
 	bounty: 150,
 	experience: 35,
 
-	height: 3,
+	height: 1.43 + 1,
 
 	animations: {
-		"mob_animation:Walk": ["rbxassetid://913402848"],
+		[MobAnimation.Walk]: ["rbxassetid://913402848"],
 	},
 };

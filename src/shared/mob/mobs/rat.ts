@@ -1,3 +1,4 @@
+import { MobAnimation } from "./types";
 import { MobId } from "../types";
 import type { MobDefinition } from ".";
 
@@ -13,9 +14,9 @@ export const ratMob: MobDefinition<MobId.Rat> = {
 	bounty: 75,
 	experience: 15,
 
-	height: 2.5,
+	height: 1.13 + 1,
 
 	animations: {
-		"mob_animation:Walk": ["rbxassetid://913402848"],
+		[MobAnimation.Walk]: ["rbxassetid://913402848"],
 	},
 };
