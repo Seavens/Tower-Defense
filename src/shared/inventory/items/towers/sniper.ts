@@ -15,21 +15,20 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 	kind: {
 		kind: ItemKind.Tower,
 
-		damage: 50,
+		damage: 70,
 		range: 15,
-		cooldown: 5,
+		cooldown: 4,
 
 		damageKind: MobDamage.Projectile,
-		limit: 3,
+		limit: 4,
 		cost: 550,
 
 		upgrades: [
-			{ upgrade: 1, multiplier: { damage: 0.2, range: 0.3, cooldown: -0.05 }, cost: 350 },
-			{ upgrade: 2, multiplier: { damage: 0.4, range: 0.7, cooldown: -0.12 }, cost: 500 },
-			{ upgrade: 3, multiplier: { damage: 0.8, range: 1.2, cooldown: -0.17 }, cost: 700 },
-			{ upgrade: 4, multiplier: { damage: 1.3, range: 1.8, cooldown: -0.25 }, cost: 900 },
-			{ upgrade: 5, multiplier: { damage: 1.9, range: 2.2, cooldown: -0.33 }, cost: 1900 },
-			{ upgrade: 6, multiplier: { damage: 2.6, range: 3.4, cooldown: -0.45 }, cost: 2600 },
+			{ upgrade: 1, multiplier: { damage: 0.3, range: 0.4, cooldown: -0.1 }, cost: 400 },
+			{ upgrade: 2, multiplier: { damage: 0.6, range: 0.7, cooldown: -0.2 }, cost: 700 },
+			{ upgrade: 3, multiplier: { damage: 1.2, range: 1.4, cooldown: -0.3 }, cost: 1200 },
+			{ upgrade: 4, multiplier: { damage: 1.8, range: 2.0, cooldown: -0.4 }, cost: 1600 },
+			{ upgrade: 5, multiplier: { damage: 2.5, range: 2.5, cooldown: -0.5 }, cost: 2000 },
 		],
 
 		targeting: [

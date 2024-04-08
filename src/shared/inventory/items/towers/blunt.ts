@@ -17,18 +17,18 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 
 		damage: 32,
 		range: 9,
-		cooldown: 6,
+		cooldown: 4,
 
 		damageKind: MobDamage.Blunt,
-		limit: 3,
+		limit: 4,
 		cost: 500,
 
 		upgrades: [
-			{ upgrade: 1, multiplier: { damage: 0.4, range: 0.3, cooldown: -0.2 }, cost: 300 },
-			{ upgrade: 2, multiplier: { damage: 0.65, range: 0.5, cooldown: -0.3 }, cost: 500 },
-			{ upgrade: 3, multiplier: { damage: 1, range: 0.8, cooldown: -0.4 }, cost: 700 },
-			{ upgrade: 4, multiplier: { damage: 2.5, range: 1.1, cooldown: -0.35 }, cost: 1200 },
-			{ upgrade: 5, multiplier: { damage: 2.9, range: 0.9, cooldown: -0.28 }, cost: 1500 },
+			{ upgrade: 1, multiplier: { damage: 0.3, range: 0.4, cooldown: -0.1 }, cost: 300 },
+			{ upgrade: 2, multiplier: { damage: 0.6, range: 0.7, cooldown: -0.2 }, cost: 600 },
+			{ upgrade: 3, multiplier: { damage: 1.2, range: 1.4, cooldown: -0.3 }, cost: 1000 },
+			{ upgrade: 4, multiplier: { damage: 1.8, range: 2.0, cooldown: -0.4 }, cost: 1400 },
+			{ upgrade: 5, multiplier: { damage: 2.5, range: 2.5, cooldown: -0.5 }, cost: 1800 },
 		],
 
 		targeting: [

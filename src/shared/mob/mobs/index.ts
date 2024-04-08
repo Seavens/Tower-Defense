@@ -1,5 +1,8 @@
 import { MobId } from "../types";
-import { zombieMob } from "./zombie";
+import { alienMob } from "./alien";
+import { monkeyMob } from "./monkey";
+import { ratMob } from "./rat";
+import type { MobAnimation } from "./types";
 import type { MobDamage } from "../types";
 
 export interface MobDefinition<I extends MobId> {
@@ -16,8 +19,12 @@ export interface MobDefinition<I extends MobId> {
 	experience: number;
 
 	height: number;
+
+	animations: { [K in MobAnimation]: Array<RBXAssetId> };
 }
 
 export const mobDefinitions: { [I in MobId]: MobDefinition<I> } = {
-	[MobId.Zombie]: zombieMob,
+	[MobId.Rat]: ratMob,
+	[MobId.Alien]: alienMob,
+	[MobId.Monkey]: monkeyMob,
 } as const;

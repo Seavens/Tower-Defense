@@ -1,8 +1,11 @@
+import { Animator } from "client/animation/animator";
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { Mob } from "./class";
+import { MobAnimation } from "shared/mob/mobs/types";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/create-listener";
+import { mobDefinitions } from "shared/mob/mobs";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
 import type { OnStart } from "@flamework/core";
 
@@ -98,6 +101,8 @@ export class MobController implements OnStart {
 		Events.mob.spawned.connect((id: MobId, uuid: UUID, timestamp: number): void => {
 			const now = Workspace.GetServerTimeNow();
 			const mob = new Mob(uuid, id);
+			const animator = new Animator(mob.getInstance(), mobDefinitions[mob.id].animations);
+			animator.playAnimation(MobAnimation.Walk);
 			mob.start();
 			const duration = mob.getDuration();
 			let delta = now - timestamp;

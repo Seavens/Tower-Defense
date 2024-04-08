@@ -1,1 +1,1 @@
-export const BILLBOARD_SIZE = new Vector2(1000, 75);
+export const BILLBOARD_SIZE = new Vector2(800, 75);

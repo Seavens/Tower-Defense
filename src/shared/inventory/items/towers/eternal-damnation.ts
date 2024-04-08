@@ -15,12 +15,12 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 	kind: {
 		kind: ItemKind.Tower,
 
-		damage: 215,
-		range: 12,
-		cooldown: 0.5,
+		damage: 185,
+		range: 10,
+		cooldown: 1.5,
 
 		damageKind: MobDamage.Magic,
-		limit: 3,
+		limit: 1,
 		cost: 1000,
 
 		upgrades: [

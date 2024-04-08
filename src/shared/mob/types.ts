@@ -1,7 +1,9 @@
 import { Flamework } from "@flamework/core";
 
 export const enum MobId {
-	Zombie = "mob_id:zombie",
+	Rat = "mob_id:rat",
+	Alien = "mob_id:alien",
+	Monkey = "mob_id:monkey",
 }
 
 export interface MobData {

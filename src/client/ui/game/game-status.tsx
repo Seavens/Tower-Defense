@@ -1,35 +1,32 @@
 import { BILLBOARD_SIZE } from "./constants";
 import { FONTS, PALETTE } from "../constants";
 import { Frame, Group, Text } from "../components";
+import { MapId } from "shared/map/types";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { MapId } from "shared/map/types";
 
-interface GameStatusProps {
+interface GameStatusUIProps {
 	health: number;
 	wave: number;
 	mapId: MapId;
 }
 
-export function GameStatus({ health, wave, mapId }: GameStatusProps): Element {
+export function GameStatusUI({ health, wave, mapId }: GameStatusUIProps): Element {
 	const px = usePx();
-	const mapDef = mapDefinitions[mapId];
+
+	const mapDef = useMemo(() => (mapId === undefined ? mapDefinitions[MapId.Test] : mapDefinitions[mapId]), [mapId]);
+	const { waves } = mapDef;
 	const max = useMemo((): number => {
 		const { baseHealth } = mapDefinitions[mapId];
 		return baseHealth;
 	}, [mapId]);
 
-	const _wave = useMemo((): number => {
-		return wave;
-	}, [wave]);
-
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
-	const { waves } = mapDef;
 
 	return (
 		<Group
@@ -95,7 +92,7 @@ export function GameStatus({ health, wave, mapId }: GameStatusProps): Element {
 				textColor={PALETTE.accent}
 				strokeColor={PALETTE.black}
 				strokeTransparency={0}
-				text={`Wave: ${_wave}/${waves.size()}`}
+				text={`Wave: ${wave}/${waves.size()}`}
 				textXAlignment="Left"
 				textSize={px(30)}
 			/>

@@ -118,7 +118,8 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 				return draft;
 			}
 			draft.status = GameStatus.Ended;
-			draft.wave = -1;
+			// Not Needed since the game is over.
+			// draft.wave = -1;
 			return draft;
 		});
 	},

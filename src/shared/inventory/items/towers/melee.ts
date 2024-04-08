@@ -16,18 +16,19 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 24,
-		range: 6,
-		cooldown: 3,
+		range: 7,
+		cooldown: 2,
 
 		damageKind: MobDamage.Sharp,
-		limit: 5,
+		limit: 7,
 		cost: 100,
 
 		upgrades: [
-			{ upgrade: 1, multiplier: { damage: 0.2, range: 0.3, cooldown: -0.15 }, cost: 300 },
-			{ upgrade: 2, multiplier: { damage: 0.4, range: 0.5, cooldown: -0.2 }, cost: 500 },
-			{ upgrade: 3, multiplier: { damage: 0.8, range: 0.9, cooldown: -0.35 }, cost: 700 },
-			{ upgrade: 4, multiplier: { damage: 1.3, range: 2.995, cooldown: -0.42 }, cost: 900 },
+			{ upgrade: 1, multiplier: { damage: 0.3, range: 0.4, cooldown: -0.1 }, cost: 200 },
+			{ upgrade: 2, multiplier: { damage: 0.6, range: 0.7, cooldown: -0.2 }, cost: 500 },
+			{ upgrade: 3, multiplier: { damage: 1.2, range: 1.4, cooldown: -0.3 }, cost: 800 },
+			{ upgrade: 4, multiplier: { damage: 1.8, range: 2.0, cooldown: -0.4 }, cost: 1000 },
+			{ upgrade: 5, multiplier: { damage: 2.5, range: 2.5, cooldown: -0.5 }, cost: 1300 },
 		],
 
 		targeting: [

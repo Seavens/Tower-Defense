@@ -1,12 +1,12 @@
 import { MobId } from "../types";
 import type { MobDefinition } from ".";
 
-export const zombieMob: MobDefinition<MobId.Zombie> = {
-	id: MobId.Zombie,
-	name: "Zombie",
+export const ratMob: MobDefinition<MobId.Rat> = {
+	id: MobId.Rat,
+	name: "Rat",
 	desc: "...",
 
-	speed: 5,
+	speed: 8,
 	resistances: [],
 	health: 100,
 
@@ -14,4 +14,8 @@ export const zombieMob: MobDefinition<MobId.Zombie> = {
 	experience: 15,
 
 	height: 2.5,
+
+	animations: {
+		"mob_animation:Walk": ["rbxassetid://913402848"],
+	},
 };

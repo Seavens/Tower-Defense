@@ -1,5 +1,5 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { GameStatus } from "./game-status";
+import { GameStatusUI } from "./game-status";
 import { MapId } from "shared/map/types";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
@@ -25,7 +25,7 @@ export = CreateReactStory(
 		const { health, wave, mapId } = controls;
 		return (
 			<ReflexProvider producer={store}>
-				<GameStatus health={health} wave={wave} mapId={mapId} />
+				<GameStatusUI health={health} wave={wave} mapId={mapId} />
 			</ReflexProvider>
 		);
 	},

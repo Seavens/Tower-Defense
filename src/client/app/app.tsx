@@ -1,3 +1,4 @@
+import { GameApp } from "client/ui/game";
 import { InventoryApp } from "client/ui/inventory";
 import { Layer } from "client/ui/components";
 import { MobApp } from "client/ui/mob";
@@ -11,10 +12,10 @@ export function App(): Element {
 	return (
 		<ReflexProvider producer={store}>
 			<Layer key={"app"}>
-				{/* <HotbarApp /> */}
 				<InventoryApp />
 				<TowerApp />
 				<MobApp />
+				<GameApp />
 			</Layer>
 		</ReflexProvider>
 	);
