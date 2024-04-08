@@ -4,30 +4,34 @@ import { Frame, Outline, Text } from "../components";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mobDefinitions } from "shared/mob/mobs";
-import { usePx } from "../hooks";
-import React from "@rbxts/react";
+import { useAbbreviation, usePx } from "../hooks";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { MobId } from "shared/mob/types";
 
-interface MobBillboardProps {
-	mobId: MobId;
-	currentHealth: number;
-
-	//uuid: UUID;
+interface MobHealthbarProps {
+	id: MobId;
+	health: number;
 }
 
-export function MobBillboard({ mobId, currentHealth }: MobBillboardProps): Element {
+export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 	const px = usePx();
 
-	const mobDef = mobDefinitions[mobId];
-	const { health } = mobDef;
+	const max = useMemo((): number => {
+		const { health } = mobDefinitions[id];
+		return health;
+	}, [id]);
+
+	const healthText = useAbbreviation(math.ceil(health));
+	const maxText = useAbbreviation(max);
 
 	return (
 		<Frame
 			size={UDim2.fromOffset(px(BILLBOARD_SIZE.X), px(BILLBOARD_SIZE.Y))}
 			anchorPoint={Vector2.one.mul(0.5)}
+			cornerRadius={new UDim(0, px(2))}
 			position={UDim2.fromScale(0.5, 0.5)}
-			backgroundTransparency={0.8}
+			backgroundTransparency={1}
 			key={"mob-frame"}
 		>
 			<Frame
@@ -44,16 +48,18 @@ export function MobBillboard({ mobId, currentHealth }: MobBillboardProps): Eleme
 					size={UDim2.fromScale(1, 1)}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					position={UDim2.fromScale(0.5, 0.5)}
+					cornerRadius={new UDim(0, px(2))}
+					backgroundTransparency={1}
 					textSize={px(52)}
 					font={FONTS.inter.bold}
 					textColor={PALETTE.white}
 					strokeColor={PALETTE.black}
 					strokeTransparency={0}
-					text={`${currentHealth} / ${health}`}
+					text={`${healthText}/${maxText}`}
 					zIndex={2}
 				/>
 				<Frame
-					size={UDim2.fromScale(currentHealth / health, getSizeFactor(currentHealth, health, px(2)))}
+					size={UDim2.fromScale(health / max, getSizeFactor(health, max, px(2)))}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0, 0.5)}
 					backgroundColor={PALETTE.green}

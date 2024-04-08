@@ -1,5 +1,6 @@
 import { InventoryApp } from "client/ui/inventory";
 import { Layer } from "client/ui/components";
+import { MobApp } from "client/ui/mob";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { TowerApp } from "client/ui/tower";
 import { store } from "client/state/store";
@@ -13,6 +14,7 @@ export function App(): Element {
 				{/* <HotbarApp /> */}
 				<InventoryApp />
 				<TowerApp />
+				<MobApp />
 			</Layer>
 		</ReflexProvider>
 	);

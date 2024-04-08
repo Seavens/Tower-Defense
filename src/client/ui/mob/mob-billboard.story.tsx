@@ -1,6 +1,6 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
 import { Mob } from "client/mob/class";
-import { MobBillboard } from "./billboard";
+import { MobHealthbar } from "./health-bar";
 import { MobId } from "shared/mob/types";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { createUUID } from "shared/utility/create-uuid";
@@ -26,7 +26,7 @@ export = CreateReactStory(
 		const { mobId, currentHealth } = controls;
 		return (
 			<ReflexProvider producer={store}>
-				<MobBillboard mobId={mobId} currentHealth={currentHealth} />
+				{/* <MobHealthbar mobId={mobId} currentHealth={currentHealth} /> */}
 			</ReflexProvider>
 		);
 	},

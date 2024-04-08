@@ -17,6 +17,7 @@ export class Mob extends API {
 	public static readonly onMobRemoved = new Signal<Mob>();
 	public static readonly onMobEnded = new Signal<Mob>();
 	public static readonly onMobDied = new Signal<Mob>();
+	public static readonly onMobDamaged = new Signal<Mob>();
 
 	protected static octree = new Octree<Mob>();
 
@@ -113,6 +114,11 @@ export class Mob extends API {
 		this.onDamage(damage);
 	}
 
+	public getInstance(): Model {
+		const { instance } = this;
+		return instance;
+	}
+
 	public getDuration(): number {
 		const { duration } = this;
 		return duration;
@@ -120,7 +126,10 @@ export class Mob extends API {
 
 	public onDied(): void {}
 
-	public onDamage(damage: number, kind?: MobDamage): void {}
+	public onDamage(damage: number, kind?: MobDamage): void {
+		const { onMobDamaged } = Mob;
+		onMobDamaged.FireDeferred(this);
+	}
 
 	public onWaypoint(): void {}
 
