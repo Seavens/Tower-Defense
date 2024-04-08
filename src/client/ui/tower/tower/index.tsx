@@ -34,6 +34,7 @@ export function Tower({ tower }: TowerProps): Element {
 	const light = useDarkenedColor(rarity, 0.25);
 	const medium = useDarkenedColor(rarity, 0.45);
 	const dark = useDarkenedColor(rarity, 0.55);
+	const darker = useDarkenedColor(rarity, 0.7);
 
 	const [pressed, hovering, events] = useButtonState();
 	const { position, hover } = useButtonAnimation(pressed, hovering);
@@ -42,10 +43,12 @@ export function Tower({ tower }: TowerProps): Element {
 		return TowerUtility.getUpgradeCost(tower);
 	}, [tower]);
 	const cost = useAbbreviation(_cost, 2);
+
 	const _price = useMemo((): number => {
 		return math.floor(TowerUtility.getSellPrice(tower));
 	}, [tower]);
 	const price = useAbbreviation(_price, 2);
+
 	const max = useMemo((): number => {
 		const { level } = unique;
 		const max = LevelUtility.getMaxExp(level, true);
@@ -101,11 +104,7 @@ export function Tower({ tower }: TowerProps): Element {
 									clipsDescendants={true}
 									key={"tower-level-bar"}
 								>
-									<uistroke
-										Thickness={px(1)}
-										Color={useDarkenedColor(dark, 0.2)}
-										key={"tower-level-stroke"}
-									/>
+									<uistroke Thickness={px(1)} Color={darker} key={"tower-level-stroke"} />
 									<Frame
 										size={UDim2.fromScale(
 											unique.experience / max,
