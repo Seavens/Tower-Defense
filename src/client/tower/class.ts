@@ -6,6 +6,7 @@ import { GAME_TICK_RATE } from "shared/core/constants";
 import { Mob } from "client/mob/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { Signal } from "@rbxts/beacon";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";

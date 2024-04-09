@@ -1,12 +1,12 @@
-import { Button, DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "client/ui/components";
 import { ColorUtil } from "client/ui/utility";
+import { DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "client/ui/components";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { HOTBAR_SIZE, SLOT_SIZE } from "../constants";
 import { InventorySlot } from "../slot";
 import { ItemKind, isTowerItemId } from "shared/inventory/types";
-import { Latte, Macchiato, Mocha } from "@rbxts/catppuccin";
 import { LevelUtility } from "shared/profile/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
+import { Macchiato, Mocha } from "@rbxts/catppuccin";
 import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
 import { UIKind } from "client/ui/types";
@@ -15,8 +15,7 @@ import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency } from "shared/game/selectors";
 import { selectOpenUI } from "client/ui/selectors";
 import { selectProfileData } from "client/profile/selectors";
-import { truncateNumber } from "shared/utility/truncate-number";
-import { useAbbreviation, useDarkenedColor, useLightenedColor, useMotion, usePx, useStore } from "client/ui/hooks";
+import { useAbbreviation, useLightenedColor, useMotion, usePx, useStore } from "client/ui/hooks";
 import { useEffect, useMemo } from "@rbxts/react";
 import { useSelector } from "@rbxts/react-reflex";
 import React from "@rbxts/react";
@@ -185,7 +184,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							size={UDim2.fromScale(math.min(experience / max, 1), getSizeFactor(experience, max, px(4)))}
 							anchorPoint={new Vector2(0, 0.5)}
 							position={UDim2.fromScale(0, 0.5)}
-							backgroundColor={useDarkenedColor(Macchiato.Blue, 0.25)}
+							backgroundColor={ColorUtil.darken(Macchiato.Blue, 0.25)}
 							cornerRadius={new UDim(0, px(4))}
 						/>
 						<Text
