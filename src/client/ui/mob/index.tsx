@@ -17,8 +17,8 @@ export function MobApp(): Element {
 		const billboards = new Array<Element>();
 		for (const [, mob] of Mob.getMobs()) {
 			const { id } = mob;
-			const health = mob.getHealth();
 			const { height } = mobDefinitions[id];
+			const health = mob.getHealth();
 			const element = (
 				<billboardgui
 					Size={UDim2.fromScale(px(BILLBOARD_SIZE.X), px(BILLBOARD_SIZE.Y))}

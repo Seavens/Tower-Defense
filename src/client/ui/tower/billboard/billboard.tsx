@@ -1,11 +1,9 @@
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Frame, Group, Image, Text } from "client/ui/components";
-import { Mocha } from "@rbxts/catppuccin";
-import { Players } from "@rbxts/services";
 import { useAbbreviation } from "client/ui/hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
+import type { ItemTowerUnique } from "shared/inventory/types";
 
 interface TowerBillboardProps {
 	owner: string;
@@ -15,10 +13,9 @@ interface TowerBillboardProps {
 export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element {
 	const { damage, range, cooldown } = unique;
 
-	const abb = useAbbreviation;
-	const damageText = abb(damage);
-	const rangeText = abb(range);
-	const cooldownText = abb(cooldown);
+	const damageText = useAbbreviation(math.round(damage / 0.001) * 0.001);
+	const rangeText = useAbbreviation(math.round(range / 0.001) * 0.001);
+	const cooldownText = useAbbreviation(math.round(cooldown / 0.001) * 0.001);
 
 	return (
 		<Group
@@ -85,6 +82,7 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 						anchorPoint={new Vector2(0, 0.5)}
 						position={UDim2.fromScale(0.05, 0.5)}
 						image={"rbxassetid://17075279045"}
+						// scaleType={"Fit"}
 						key={"damage-image"}
 					>
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -125,6 +123,7 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 						anchorPoint={new Vector2(0, 0.5)}
 						position={UDim2.fromScale(0.05, 0.5)}
 						image={"rbxassetid://17075536071"}
+						// scaleType={"Fit"}
 						key={"range-image"}
 					>
 						<uiaspectratioconstraint AspectRatio={1} />
@@ -165,6 +164,7 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 						anchorPoint={new Vector2(0, 0.52)}
 						position={UDim2.fromScale(0.05, 0.5)}
 						image={"rbxassetid://17075279299"}
+						// scaleType={"Fit"}
 						key={"cooldown-image"}
 					>
 						<uiaspectratioconstraint AspectRatio={1} />

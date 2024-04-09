@@ -2,6 +2,7 @@ import { DelayRender, Transition } from "../components";
 import { SPRINGS } from "../constants";
 import { TOWER_SIZE } from "./constants";
 import { Tower } from "./tower";
+import { TowerBillboards } from "./billboard";
 import { selectSelectedTower } from "client/tower/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { useCamera, usePrevious } from "@rbxts/pretty-react-hooks";
@@ -42,21 +43,29 @@ export function TowerApp(): Element {
 	}, [visible]);
 
 	return (
-		<DelayRender shouldRender={visible} unmountDelay={1}>
-			<Transition
-				size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
-				anchorPoint={new Vector2((visible ? side : last) === "Left" ? 0 : 1, 0.5)}
-				position={
-					new UDim2(side === "Left" ? 0 : 1, ((visible ? side : last) === "Left" ? 1 : -1) * px(10), 0.5, 0)
-				}
-				groupTransparency={transparency}
-				clipsDescendants={false}
-				key={"tower-app"}
-			>
-				{tower !== undefined || (tower === undefined && previous !== undefined) ? (
-					<Tower tower={(tower === undefined ? previous : tower)!} />
-				) : undefined}
-			</Transition>
-		</DelayRender>
+		<>
+			<DelayRender shouldRender={visible} unmountDelay={1}>
+				<Transition
+					size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
+					anchorPoint={new Vector2((visible ? side : last) === "Left" ? 0 : 1, 0.5)}
+					position={
+						new UDim2(
+							side === "Left" ? 0 : 1,
+							((visible ? side : last) === "Left" ? 1 : -1) * px(10),
+							0.5,
+							0,
+						)
+					}
+					groupTransparency={transparency}
+					clipsDescendants={false}
+					key={"tower-app"}
+				>
+					{tower !== undefined || (tower === undefined && previous !== undefined) ? (
+						<Tower tower={(tower === undefined ? previous : tower)!} />
+					) : undefined}
+				</Transition>
+			</DelayRender>
+			<TowerBillboards />
+		</>
 	);
 }
