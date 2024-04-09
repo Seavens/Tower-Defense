@@ -40,6 +40,7 @@
     "@rbxts/lapis": "^0.2.10",
     "@rbxts/octo-tree": "^0.3.1",
     "@rbxts/pretty-react-hooks": "^0.4.2",
+    "@rbxts/rbx-sleitnick-shake": "^1.0.0",
     "@rbxts/react": "^0.3.6",
     "@rbxts/react-reflex": "^0.3.4",
     "@rbxts/react-roblox": "^0.3.6",

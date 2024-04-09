@@ -47,6 +47,10 @@
 				"items": {
 					"$className": "Folder",
 					"$ignoreUnknownInstances": true
+				},
+				"effects": {
+					"$className": "Folder",
+					"$ignoreUnknownInstances": true
 				}
 			}
 		},

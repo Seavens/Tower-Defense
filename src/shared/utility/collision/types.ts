@@ -8,6 +8,8 @@ export const enum Collision {
 	Tower = "collision:tower",
 
 	Spawn = "collision:spawn",
+
+	Debris = "collision:debris",
 }
 
 export const isCollision = Flamework.createGuard<Collision>();

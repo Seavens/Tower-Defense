@@ -26,6 +26,7 @@ export const enum MobStatus {
 	Slowed = "mob_status:slowed",
 	Fast = "mob_status:fast",
 	Frozen = "mob_status:frozen",
+	Judgement = "mob_status:judgement",
 }
 
 export const isMobId = Flamework.createGuard<MobId>();

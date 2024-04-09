@@ -6,5 +6,6 @@ interface ReplicatedStorage {
 		mobs: Folder;
 		towers: Folder;
 		items: Folder;
+		effects: Folder;
 	};
 }

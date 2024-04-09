@@ -24,6 +24,7 @@ export const enum TowerGrade {
 
 export const enum TowerVisual {
 	SniperShot = "tower_visual:sniper_shot",
+	HolyStrike = "tower_visual:holy_strike",
 }
 
 export interface ReplicatedTower {
