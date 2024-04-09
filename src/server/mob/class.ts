@@ -5,7 +5,7 @@ import { Signal } from "@rbxts/beacon";
 import { Tower } from "server/tower/class";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
 import { selectProfileData } from "server/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";

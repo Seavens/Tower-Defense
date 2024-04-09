@@ -2,7 +2,7 @@ import { BILLBOARD_SIZE } from "./constants";
 import { Frame } from "../components";
 import { Mob } from "client/mob/class";
 import { MobHealthbar } from "./health-bar";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import { useEventListener, useUpdate } from "@rbxts/pretty-react-hooks";
 import { usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";

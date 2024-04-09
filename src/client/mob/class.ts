@@ -1,10 +1,12 @@
 import { Mob as API } from "shared/mob/api";
-import { Animator } from "shared/character/animator";
+import { Animator } from "client/animation/animator";
 import { GAME_TICK_RATE } from "shared/core/constants";
+import { MobAnimation } from "shared/mob/types";
 import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
+import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
@@ -38,6 +40,7 @@ export class Mob extends API {
 	protected declare duration: number;
 	protected declare destroyed: boolean;
 	protected readonly instance: Model;
+	protected readonly animator: Animator<MobAnimation>;
 
 	protected readonly node: Node<Mob>;
 
@@ -67,12 +70,17 @@ export class Mob extends API {
 		const [first] = waypoints;
 		const position = first.Position;
 		const node = octree.CreateNode(position, this);
+		const { animations } = mobDefinitions[id];
+		const animator = new Animator<MobAnimation>(model, animations);
 		model.Parent = Workspace.mobs;
 		model.Name = uuid;
 		bin.add(model);
+		bin.add(animator);
 		this.node = node;
 		this.instance = model;
+		this.animator = animator;
 		onMobAdded.FireDeferred(this);
+		animator.playAnimation(MobAnimation.Walk);
 		mobs.set(uuid, this);
 	}
 
@@ -146,7 +154,9 @@ export class Mob extends API {
 		octree.ChangeNodePosition(node, position);
 	}
 
-	public onStatus(status: MobStatus, duration: number, added: boolean): void {}
+	public onStatus(status: MobStatus, duration: number, added: boolean): void {
+		warn(status, duration, added);
+	}
 
 	public onEnd(): void {}
 

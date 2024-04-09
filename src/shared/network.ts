@@ -39,8 +39,9 @@ interface ServerToClientEvents {
 	};
 
 	tower: {
-		attack: Networking.Unreliable<(key: string, target?: UUID) => void>;
+		// attack: Networking.Unreliable<(key: string, target?: UUID) => void>;
 		place: Networking.Unreliable<(uuid: UUID, position: Vector3) => void>;
+		attack(key: string, target?: UUID): void;
 	};
 
 	mob: {

@@ -1,11 +1,14 @@
-import { ItemKind } from "shared/inventory/types";
+import { ITEM_RNG_MAX, ITEM_RNG_MIN, MAXIMUM_STORED } from "shared/inventory/constants";
+import { ItemId, ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
-import { MAXIMUM_STORED } from "shared/inventory/constants";
+import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Service } from "@flamework/core";
 import { USE_MOCK_DATA } from "shared/core/constants";
+import { createUUID } from "shared/utility/create-uuid";
 import { store } from "server/state/store";
 import type { BroadcastMetadata, EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { Entity } from "server/player/class";
+import type { Item } from "shared/inventory/types";
 import type { OnDataLoaded } from "../data/service";
 import type { OnStart } from "@flamework/core";
 
@@ -19,7 +22,7 @@ export class TestService implements OnStart, OnDataLoaded {
 		const { user, id } = entity;
 		const metadata: EntityMetadata & ReplicationMetadata = { user, replicate: true };
 		const broadcast: EntityMetadata & BroadcastMetadata = { user, broadcast: true };
-		const items = ItemUtility.createItems(id, MAXIMUM_STORED, ItemKind.Tower);
+		const items = ItemUtility.createItems(id, MAXIMUM_STORED - 1, ItemKind.Tower);
 		store.inventoryAddItems({ items }, metadata);
 		store.gameAddCurrency({ amount: 100000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);

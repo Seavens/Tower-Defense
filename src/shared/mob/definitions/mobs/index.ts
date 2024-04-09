@@ -1,9 +1,8 @@
-import { MobId } from "../types";
+import { MobId } from "../../types";
 import { alienMob } from "./alien";
 import { monkeyMob } from "./monkey";
 import { ratMob } from "./rat";
-import type { MobAnimation } from "./types";
-import type { MobDamage } from "../types";
+import type { MobAnimation, MobDamage } from "../../types";
 
 export interface MobDefinition<I extends MobId> {
 	id: I;

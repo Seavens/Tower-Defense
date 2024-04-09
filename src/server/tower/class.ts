@@ -8,7 +8,7 @@ import { TowerInventoryUtility } from "./util";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";

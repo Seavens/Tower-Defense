@@ -7,7 +7,7 @@ import { Players, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { createUUID } from "shared/utility/create-uuid";
 import { mapDefinitions } from "shared/map/definitions";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import {
 	selectBounty,
 	selectCurrentMap,

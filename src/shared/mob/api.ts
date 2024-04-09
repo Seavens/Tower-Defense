@@ -1,10 +1,12 @@
 import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
 import { MapUtility } from "shared/map/utility";
+import { MobStatus } from "./types";
 import { Workspace } from "@rbxts/services";
-import { mobDefinitions } from "./mobs";
+import { mobDefinitions } from "./definitions/mobs";
+import { statusDefinitions } from "./definitions";
+import { statusModules } from "./modules";
 import type { MobDamage, MobData, MobId } from "./types";
-import type { MobStatus } from "./types";
 
 export abstract class Mob {
 	public readonly uuid: UUID;
@@ -26,7 +28,6 @@ export abstract class Mob {
 	protected last = CFrame.identity;
 	protected started = false;
 	protected attacker: Option<string>;
-	protected speed = 1;
 
 	public constructor(uuid: UUID, id: MobId) {
 		const waypoints = MapUtility.getMapWaypoints();
@@ -50,13 +51,6 @@ export abstract class Mob {
 		const { duration } = this;
 		const elapsed = delta;
 		this.elapsed = math.min(elapsed, duration);
-	}
-
-	public setSpeed(speed: number): void {
-		if (speed < 0) {
-			speed = 0;
-		}
-		this.speed = speed;
 	}
 
 	public getCFrame(): CFrame {
@@ -84,11 +78,6 @@ export abstract class Mob {
 	public getHealth(): number {
 		const { health } = this;
 		return health;
-	}
-
-	public getSpeed(): number {
-		const { speed } = this;
-		return speed;
 	}
 
 	public isDead(): boolean {
@@ -145,6 +134,7 @@ export abstract class Mob {
 		const timestamp = os.clock() + duration;
 		statuses.set(status, timestamp);
 		this.onStatus(status, duration, true);
+		warn("applied", status, duration);
 	}
 
 	public removeStatus(status: MobStatus): void {
@@ -220,30 +210,30 @@ export abstract class Mob {
 			this.destroy();
 			return;
 		}
-		const { speed, target, current, final } = this;
-		// let totalSpeed = 1;
-		// let totalDamage = 0;
-		// for (const [status, timestamp] of statuses) {
-		// 	const now = os.clock();
-		// 	if (timestamp <= now) {
-		// 		this.removeStatus(status);
-		// 		continue;
-		// 	}
-		// 	const { speed } = statusDefinitions[status];
-		// 	if (status === MobStatus.Frozen) {
-		// 		totalSpeed = 0;
-		// 		break;
-		// 	}
-		// 	totalDamage += damage;
-		// 	totalSpeed += speed;
-		// }
-		// totalSpeed = math.clamp(totalSpeed, 0, math.huge);
+		const { statuses } = this;
+		const now = os.clock();
+		let totalSpeed = 1;
+		for (const [status, timestamp] of statuses) {
+			if (timestamp <= now) {
+				this.removeStatus(status);
+				continue;
+			}
+			const { speed } = statusDefinitions[status];
+			const remaining = math.max(timestamp - now, 0);
+			const module = statusModules[status];
+			module?.onTick(this, remaining);
+			totalSpeed += speed;
+		}
+		if (statuses.has(MobStatus.Frozen)) {
+			totalSpeed = 0;
+		}
+		const { target, current, final } = this;
 		if (current >= final) {
 			this.onEnd();
 			this.destroy();
 			return;
 		}
-		this.elapsed += delta * GAME_TIMESTEP * speed;
+		this.elapsed += delta * GAME_TIMESTEP * totalSpeed;
 		const alpha = this.getAlpha();
 		if (alpha >= 1) {
 			this.nextWaypoint(target, final);

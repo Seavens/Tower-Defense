@@ -1,6 +1,6 @@
 import { TowerVisual } from "shared/tower/types";
 import { Workspace } from "@rbxts/services";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";
 import type { TowerVisualModule } from ".";

@@ -1,8 +1,10 @@
+import { GameStatus } from "shared/game/types";
 import { Mob } from "server/mob/class";
 import { Service } from "@flamework/core";
 import { Tower } from "server/tower/class";
 import { createListener } from "shared/utility/create-listener";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
+import { selectGameStatus } from "shared/game/selectors";
 import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";
 import type { OnStart } from "@flamework/core";
@@ -51,7 +53,8 @@ export class MobService implements OnStart {
 			}
 			const { id } = mob;
 			const tower = Tower.getTower(key);
-			if (tower === undefined) {
+			const status = store.getState(selectGameStatus);
+			if (tower === undefined || status === GameStatus.Ended) {
 				return;
 			}
 			const { owner } = tower;

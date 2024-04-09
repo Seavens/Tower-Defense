@@ -29,6 +29,11 @@ export const enum MobStatus {
 	Judgement = "mob_status:judgement",
 }
 
+export const enum MobAnimation {
+	Walk = "mob_animation:walk",
+}
+
 export const isMobId = Flamework.createGuard<MobId>();
 export const isMobDamage = Flamework.createGuard<MobDamage>();
 export const isMobStatus = Flamework.createGuard<MobStatus>();
+export const isMobAnimation = Flamework.createGuard<MobAnimation>();

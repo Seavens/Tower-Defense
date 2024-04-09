@@ -2,7 +2,7 @@ import { FONTS, PALETTE } from "../constants";
 import { Frame, Text } from "../components";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
-import { mobDefinitions } from "shared/mob/mobs";
+import { mobDefinitions } from "shared/mob/definitions";
 import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";

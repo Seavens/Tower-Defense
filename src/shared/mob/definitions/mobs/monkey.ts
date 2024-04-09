@@ -1,5 +1,4 @@
-import { MobAnimation } from "./types";
-import { MobId } from "../types";
+import { MobAnimation, MobId } from "shared/mob/types";
 import type { MobDefinition } from ".";
 
 export const monkeyMob: MobDefinition<MobId.Monkey> = {
