@@ -6,6 +6,6 @@ export const frozenStatus: StatusDefinition<MobStatus.Frozen> = {
 	name: "Frozen",
 	desc: "...",
 
-	speed: 0,
+	speed: -5,
 	damageKind: MobDamage.Magic,
 };

@@ -6,6 +6,6 @@ export const judgementStatus: StatusDefinition<MobStatus.Judgement> = {
 	name: "Judgement",
 	desc: "...",
 
-	speed: 1,
+	speed: 0,
 	damageKind: MobDamage.Magic,
 };

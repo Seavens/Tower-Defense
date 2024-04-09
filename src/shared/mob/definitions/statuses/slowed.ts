@@ -6,6 +6,6 @@ export const slowedStatus: StatusDefinition<MobStatus.Slowed> = {
 	name: "Slowed",
 	desc: "...",
 
-	speed: 0.5,
+	speed: -0.75,
 	damageKind: MobDamage.Magic,
 };

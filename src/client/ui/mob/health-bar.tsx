@@ -1,9 +1,11 @@
+import { BILLBOARD_SIZE } from "./constants";
 import { FONTS, PALETTE } from "../constants";
 import { Frame, Text } from "../components";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mobDefinitions } from "shared/mob/definitions";
 import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
+import { useCamera } from "@rbxts/pretty-react-hooks";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { MobId } from "shared/mob/types";
@@ -21,6 +23,7 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
+	const dark = useDarkenedColor(PALETTE.red, 0.25);
 
 	return (
 		<Frame
@@ -35,7 +38,7 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 				size={UDim2.fromScale(1, 1)}
 				anchorPoint={new Vector2(0.5, 1)}
 				position={UDim2.fromScale(0.5, 1)}
-				backgroundColor={useDarkenedColor(PALETTE.red, 0.25)}
+				backgroundColor={dark}
 				cornerRadius={new UDim(2)}
 				key={"health-frame"}
 			>
@@ -55,7 +58,7 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 					zIndex={2}
 				/>
 				<Frame
-					size={UDim2.fromScale(health / max, getSizeFactor(health, max, 2))}
+					size={UDim2.fromScale(health / max, getSizeFactor(health, max, 15))}
 					anchorPoint={new Vector2(0, 0.5)}
 					position={UDim2.fromScale(0, 0.5)}
 					backgroundColor={PALETTE.green}

@@ -154,9 +154,7 @@ export class Mob extends API {
 		octree.ChangeNodePosition(node, position);
 	}
 
-	public onStatus(status: MobStatus, duration: number, added: boolean): void {
-		warn(status, duration, added);
-	}
+	public onStatus(status: MobStatus, duration: number, added: boolean): void {}
 
 	public onEnd(): void {}
 

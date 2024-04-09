@@ -1,12 +1,12 @@
 import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
 import { MapUtility } from "shared/map/utility";
-import { MobStatus } from "./types";
 import { Workspace } from "@rbxts/services";
 import { mobDefinitions } from "./definitions/mobs";
 import { statusDefinitions } from "./definitions";
 import { statusModules } from "./modules";
 import type { MobDamage, MobData, MobId } from "./types";
+import type { MobStatus } from "./types";
 
 export abstract class Mob {
 	public readonly uuid: UUID;
@@ -134,7 +134,6 @@ export abstract class Mob {
 		const timestamp = os.clock() + duration;
 		statuses.set(status, timestamp);
 		this.onStatus(status, duration, true);
-		warn("applied", status, duration);
 	}
 
 	public removeStatus(status: MobStatus): void {
@@ -224,9 +223,7 @@ export abstract class Mob {
 			module?.onTick(this, remaining);
 			totalSpeed += speed;
 		}
-		if (statuses.has(MobStatus.Frozen)) {
-			totalSpeed = 0;
-		}
+		totalSpeed = math.max(totalSpeed, 0);
 		const { target, current, final } = this;
 		if (current >= final) {
 			this.onEnd();

@@ -8,10 +8,9 @@ import type { TowerModule } from ".";
 export const eternalDamnationTower: TowerModule<ItemId.EternalDamnation> = {
 	id: ItemId.EternalDamnation,
 
-	onAttack: (tower: ReplicatedTower, target: Mob): void => {
+	onAttack: (tower: ReplicatedTower): void => {
+		const { position } = tower;
 		const radius = TowerUtility.getTotalRange(tower);
-		const cframe = target.getCFrame();
-		const position = cframe.Position;
 		const mobs = Mob.getMobsInRadius(position, radius);
 		for (const node of mobs) {
 			const mob = node.Object;
