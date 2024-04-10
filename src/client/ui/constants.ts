@@ -35,11 +35,11 @@ export const PALETTE = {
 
 	light_white: Color3.fromRGB(199, 199, 199),
 	light_gray: Color3.fromRGB(130, 130, 130),
-	light_blue: Color3.fromRGB(51, 120, 214),
+	light_blue: Color3.fromRGB(79, 181, 227),
 	light_green: Color3.fromRGB(94, 227, 82),
 	light_red: Color3.fromRGB(230, 51, 51),
 
-	dark_blue: Color3.fromRGB(0, 0, 87),
+	dark_blue: Color3.fromRGB(15, 15, 120),
 	dark_green: Color3.fromRGB(0, 74, 5),
 	dark_red: Color3.fromRGB(105, 0, 0),
 

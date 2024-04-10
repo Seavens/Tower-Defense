@@ -1,25 +1,28 @@
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Frame, Group, Image, Text } from "client/ui/components";
+import { TowerUtility } from "shared/tower/utility";
 import { useAbbreviation } from "client/ui/hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { ItemTowerUnique } from "shared/inventory/types";
+import type { ReplicatedTower } from "shared/tower/types";
 
 interface TowerBillboardProps {
-	owner: string;
-	unique: ItemTowerUnique;
+	replicatedTower: ReplicatedTower;
 }
 
-export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element {
-	const { damage, range, cooldown } = unique;
+export function TowerBillboard({ replicatedTower }: TowerBillboardProps): Element {
+	const { owner } = replicatedTower;
+	const cooldown = TowerUtility.getTotalCooldown(replicatedTower);
+	const damage = TowerUtility.getTotalDamage(replicatedTower);
+	const range = TowerUtility.getTotalRange(replicatedTower);
 
-	const damageText = useAbbreviation(math.round(damage / 0.001) * 0.001);
-	const rangeText = useAbbreviation(math.round(range / 0.001) * 0.001);
-	const cooldownText = useAbbreviation(math.round(cooldown / 0.001) * 0.001);
+	const damageText = useAbbreviation(damage);
+	const rangeText = useAbbreviation(range);
+	const cooldownText = useAbbreviation(cooldown);
 
 	return (
 		<Group
-			size={UDim2.fromOffset(225, 50)}
+			size={UDim2.fromScale(1, 1)}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
 			key={"tower-frame"}
@@ -45,15 +48,14 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 					HorizontalAlignment={Enum.HorizontalAlignment.Center}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					SortOrder={Enum.SortOrder.LayoutOrder}
-					Padding={new UDim(0, 3)}
+					Padding={new UDim(0, 2)}
 				/>
 				<Frame
-					size={UDim2.fromScale(0.33, 1)}
+					size={UDim2.fromScale(0.3, 1)}
 					cornerRadius={new UDim(0, 8)}
 					backgroundColor={PALETTE.red}
 					key={"damage-frame"}
 				>
-					<uistroke Thickness={1} Transparency={0.5} Color={PALETTE.dark_red} />
 					<uigradient
 						key={"damage-gradient"}
 						Rotation={-90}
@@ -64,39 +66,36 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 							])
 						}
 					/>
+					<Image
+						size={UDim2.fromScale(0.4, 0.9)}
+						anchorPoint={new Vector2(0, 0.5)}
+						position={UDim2.fromScale(0, 0.5)}
+						image={"rbxassetid://17075279045"}
+						scaleType={"Fit"}
+						key={"damage-image"}
+					/>
 					<Text
-						size={UDim2.fromScale(0.5, 0.78)}
+						size={UDim2.fromScale(0.55, 0.8)}
 						anchorPoint={new Vector2(0, 0.5)}
 						position={UDim2.fromScale(0.4, 0.5)}
 						font={FONTS.inter.bold}
 						textScaled={true}
-						textXAlignment="Left"
+						textXAlignment="Center"
 						textColor={PALETTE.white}
 						strokeColor={PALETTE.black}
 						strokeTransparency={0}
 						text={`${damageText}`}
 						key={"damage-text"}
 					/>
-					<Image
-						size={UDim2.fromScale(0.8, 0.8)}
-						anchorPoint={new Vector2(0, 0.5)}
-						position={UDim2.fromScale(0.05, 0.5)}
-						image={"rbxassetid://17075279045"}
-						// scaleType={"Fit"}
-						key={"damage-image"}
-					>
-						<uiaspectratioconstraint AspectRatio={1} />
-					</Image>
 				</Frame>
 				<Frame
-					size={UDim2.fromScale(0.33, 1)}
+					size={UDim2.fromScale(0.3, 1)}
 					cornerRadius={new UDim(0, 8)}
 					backgroundColor={PALETTE.green}
 					key={"range-frame"}
 				>
-					<uistroke Thickness={1} Transparency={0.5} Color={PALETTE.dark_green} />
 					<uigradient
-						key={"range-gradient"}
+						key={"damage-gradient"}
 						Rotation={-90}
 						Color={
 							new ColorSequence([
@@ -105,39 +104,36 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 							])
 						}
 					/>
+					<Image
+						size={UDim2.fromScale(0.4, 0.9)}
+						anchorPoint={new Vector2(0, 0.5)}
+						position={UDim2.fromScale(0, 0.5)}
+						image={"rbxassetid://17075536071"}
+						scaleType={"Fit"}
+						key={"range-image"}
+					/>
 					<Text
-						size={UDim2.fromScale(0.5, 0.78)}
+						size={UDim2.fromScale(0.55, 0.8)}
 						anchorPoint={new Vector2(0, 0.5)}
 						position={UDim2.fromScale(0.4, 0.5)}
 						font={FONTS.inter.bold}
 						textScaled={true}
-						textXAlignment="Left"
+						textXAlignment="Center"
 						textColor={PALETTE.white}
 						strokeColor={PALETTE.black}
 						strokeTransparency={0}
 						text={`${rangeText}`}
-						key={"range-text"}
+						key={"damage-text"}
 					/>
-					<Image
-						size={UDim2.fromScale(0.8, 0.8)}
-						anchorPoint={new Vector2(0, 0.5)}
-						position={UDim2.fromScale(0.05, 0.5)}
-						image={"rbxassetid://17075536071"}
-						// scaleType={"Fit"}
-						key={"range-image"}
-					>
-						<uiaspectratioconstraint AspectRatio={1} />
-					</Image>
 				</Frame>
 				<Frame
-					size={UDim2.fromScale(0.33, 1)}
+					size={UDim2.fromScale(0.3, 1)}
 					cornerRadius={new UDim(0, 8)}
 					backgroundColor={PALETTE.blue}
 					key={"cooldown-frame"}
 				>
-					<uistroke Thickness={1} Transparency={0.5} Color={PALETTE.dark_blue} />
 					<uigradient
-						key={"cooldown-gradient"}
+						key={"damage-gradient"}
 						Rotation={-90}
 						Color={
 							new ColorSequence([
@@ -146,29 +142,27 @@ export function TowerBillboard({ owner, unique }: TowerBillboardProps): Element 
 							])
 						}
 					/>
+					<Image
+						size={UDim2.fromScale(0.4, 0.9)}
+						anchorPoint={new Vector2(0, 0.5)}
+						position={UDim2.fromScale(0, 0.5)}
+						image={"rbxassetid://17075279299"}
+						scaleType={"Fit"}
+						key={"cooldown-image"}
+					/>
 					<Text
-						size={UDim2.fromScale(0.5, 0.78)}
+						size={UDim2.fromScale(0.55, 0.8)}
 						anchorPoint={new Vector2(0, 0.5)}
 						position={UDim2.fromScale(0.4, 0.5)}
 						font={FONTS.inter.bold}
 						textScaled={true}
-						textXAlignment="Left"
+						textXAlignment="Center"
 						textColor={PALETTE.white}
 						strokeColor={PALETTE.black}
 						strokeTransparency={0}
-						text={`${cooldownText}s`}
+						text={`${cooldownText}`}
 						key={"cooldown-text"}
 					/>
-					<Image
-						size={UDim2.fromScale(0.8, 0.8)}
-						anchorPoint={new Vector2(0, 0.52)}
-						position={UDim2.fromScale(0.05, 0.5)}
-						image={"rbxassetid://17075279299"}
-						// scaleType={"Fit"}
-						key={"cooldown-image"}
-					>
-						<uiaspectratioconstraint AspectRatio={1} />
-					</Image>
 				</Frame>
 			</Group>
 		</Group>
