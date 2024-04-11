@@ -7,6 +7,7 @@ import { Mob } from "client/mob/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
+import { SoundEffect } from "client/animation/sound";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
@@ -86,6 +87,8 @@ export class Tower extends API {
 		task.delay(duration, (): void => {
 			temporary.destroy();
 		});
+		const sound = new SoundEffect(instance, "rbxassetid://9125402735");
+		sound.destroyAfterPlay(0.5);
 		instance.Parent = placed;
 		this.instance = instance;
 		bin.add(instance);
