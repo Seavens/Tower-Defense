@@ -214,6 +214,10 @@ export class Tower extends API {
 		const { duration } = module;
 		const temporary = new Bin();
 		module.onEffect(temporary, instance, target);
+
+		const sound = new SoundEffect(this.instance, "rbxassetid://9058737882");
+		sound.destroyAfterPlay(0.5);
+
 		bin.add(temporary);
 		task.delay(duration, (): void => {
 			temporary.destroy();

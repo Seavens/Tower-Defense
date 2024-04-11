@@ -25,10 +25,8 @@ export class SoundEffect {
 	}
 
 	public playOnRemove(volume = 0.8): void {
-		this.sound.Ended.Connect(() => {
-			this.destroy();
-		});
-		this.play(volume);
+		this.sound.Volume = volume;
+		this.sound.PlayOnRemove = true;
 	}
 
 	private play(volume = 0.8): void {

@@ -135,8 +135,8 @@ export class Mob extends API {
 	}
 
 	public onDied(): void {
-		const sound = new SoundEffect(this.instance, "rbxassetid://8778476189");
-		sound.playOnRemove(0.5);
+		const sound = new SoundEffect(this.instance, "rbxassetid://155288625");
+		sound.playOnRemove(0.32);
 	}
 
 	public onDamage(damage: number, kind?: MobDamage): void {
