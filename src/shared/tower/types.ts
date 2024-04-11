@@ -28,6 +28,10 @@ export const enum TowerVisual {
 	TowerPlace = "tower_visual:tower_place",
 }
 
+export const enum TowerAnimation {
+	Summon = "tower_animation:summon",
+}
+
 export interface ReplicatedTower {
 	id: TowerItemId;
 	uuid: UUID;
@@ -43,6 +47,7 @@ export interface ReplicatedTower {
 export const isTowerTargeting = Flamework.createGuard<TowerTargeting>();
 export const isTowerGrade = Flamework.createGuard<TowerGrade>();
 export const isTowerVisual = Flamework.createGuard<TowerVisual>();
+export const isTowerAnimation = Flamework.createGuard<TowerAnimation>();
 
 export const isReplicatedTower: t.check<ReplicatedTower> = t.strictInterface({
 	id: isTowerItemId,

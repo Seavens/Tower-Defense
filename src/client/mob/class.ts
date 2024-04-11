@@ -4,7 +4,6 @@ import { GAME_TICK_RATE } from "shared/core/constants";
 import { MobAnimation } from "shared/mob/types";
 import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
-import { SoundEffect } from "shared/classes/sound";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
 import { mobDefinitions } from "shared/mob/definitions";
@@ -135,10 +134,7 @@ export class Mob extends API {
 		return duration;
 	}
 
-	public onDied(): void {
-		// const sound = new SoundEffect(this.instance, "rbxassetid://155288625");
-		// sound.playOnRemove(0.32);
-	}
+	public onDied(): void {}
 
 	public onDamage(damage: number, kind?: MobDamage): void {
 		const { onMobDamaged } = Mob;

@@ -1,6 +1,6 @@
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
-import { TowerTargeting, TowerVisual } from "shared/tower/types";
+import { TowerAnimation, TowerTargeting, TowerVisual } from "shared/tower/types";
 import type { ItemDefinition } from "..";
 
 export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
@@ -41,5 +41,12 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		],
 
 		visual: [TowerVisual.TowerPlace, TowerVisual.HolyStrike],
+
+		animations: {
+			[TowerAnimation.Summon]: ["rbxassetid://17106853494"],
+		},
+		sounds: {
+			[TowerAnimation.Summon]: ["rbxassetid://9125402735"],
+		},
 	},
 };

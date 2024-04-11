@@ -13,7 +13,6 @@ export const towerPlaceModule: TowerVisualModule<TowerVisual.TowerPlace> = {
 		if (!rootPart) return;
 		rootPart.Parent = model;
 
-		warn("TowerPlace effect");
 		const particleEmitter = new Instance("ParticleEmitter");
 		particleEmitter.Parent = rootPart;
 

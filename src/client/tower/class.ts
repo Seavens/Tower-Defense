@@ -1,4 +1,5 @@
 import { Tower as API } from "shared/tower/api";
+import { Animator } from "client/animation/animator";
 import { Bin } from "@rbxts/bin";
 import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
@@ -6,9 +7,9 @@ import { GAME_TICK_RATE } from "shared/core/constants";
 import { Mob } from "client/mob/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
-import { Signal } from "@rbxts/beacon";
 import { SoundEffect } from "shared/classes/sound";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
+import { TowerAnimation } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
@@ -44,6 +45,8 @@ export class Tower extends API {
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
+
+	protected readonly animator: Animator<TowerAnimation>;
 
 	static {
 		createSchedule({
@@ -87,11 +90,20 @@ export class Tower extends API {
 		task.delay(duration, (): void => {
 			temporary.destroy();
 		});
-		const sound = new SoundEffect(instance, "rbxassetid://9125402735");
+
+		const { sounds } = kind;
+		const sound = new SoundEffect(instance, sounds[TowerAnimation.Summon][0]);
 		sound.destroyAfterPlay(0.5);
+
+		const { animations } = kind;
+		const animator = new Animator<TowerAnimation>(instance, animations);
+
 		instance.Parent = placed;
 		this.instance = instance;
+		this.animator = animator;
+		bin.add(animator);
 		bin.add(instance);
+		warn(animator.playAnimation(TowerAnimation.Summon));
 		towers.set(key, this);
 	}
 
@@ -214,9 +226,6 @@ export class Tower extends API {
 		const { duration } = module;
 		const temporary = new Bin();
 		module.onEffect(temporary, instance, target);
-
-		// const sound = new SoundEffect(this.instance, "rbxassetid://9058737882");
-		// sound.destroyAfterPlay(0.5);
 
 		bin.add(temporary);
 		task.delay(duration, (): void => {

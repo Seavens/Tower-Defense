@@ -1,11 +1,14 @@
 import { BILLBOARD_SIZE } from "./constants";
 import { FONTS, PALETTE } from "../constants";
 import { Frame, Group, Text } from "../components";
+import { GameStatus } from "shared/game/types";
 import { MapId } from "shared/map/types";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mapDefinitions } from "shared/map/definitions";
+import { selectGameData, selectGameStatus } from "shared/game/selectors";
 import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
+import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
@@ -27,6 +30,12 @@ export function GameStatusUI({ health, wave, mapId }: GameStatusUIProps): Elemen
 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
+
+	const countdown = useMemo(() => {
+		// UWU OMG THIS IS SO FREAKING EPIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		// const {} = useSelector(selectGameData);
+		// return countdown;
+	}, [wave]);
 
 	return (
 		<Group
@@ -95,6 +104,20 @@ export function GameStatusUI({ health, wave, mapId }: GameStatusUIProps): Elemen
 				text={`Wave: ${wave}/${waves.size()}`}
 				textXAlignment="Left"
 				textSize={px(30)}
+			/>
+			<Text
+				size={UDim2.fromOffset(px(70), px(50))}
+				anchorPoint={new Vector2(0.5, 1)}
+				position={UDim2.fromScale(0.5, 1.5)}
+				font={FONTS.inter.bold}
+				textColor={PALETTE.accent}
+				strokeColor={PALETTE.black}
+				strokeTransparency={0}
+				text={`${countdown}`}
+				textXAlignment="Center"
+				textSize={px(40)}
+				backgroundColor={useDarkenedColor(PALETTE.black, 0.5)}
+				backgroundTransparency={0.5}
 			/>
 		</Group>
 	);
