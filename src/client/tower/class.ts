@@ -96,14 +96,14 @@ export class Tower extends API {
 		sound.destroyAfterPlay(0.5);
 
 		const { animations } = kind;
-		const animator = new Animator<TowerAnimation>(instance, animations);
 
 		instance.Parent = placed;
+		const animator = new Animator<TowerAnimation>(instance, animations);
 		this.instance = instance;
 		this.animator = animator;
 		bin.add(animator);
 		bin.add(instance);
-		warn(animator.playAnimation(TowerAnimation.Summon));
+		animator.playAnimation(TowerAnimation.Summon);
 		towers.set(key, this);
 	}
 

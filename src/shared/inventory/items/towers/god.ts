@@ -43,7 +43,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		visual: [TowerVisual.TowerPlace, TowerVisual.HolyStrike],
 
 		animations: {
-			[TowerAnimation.Summon]: ["rbxassetid://17106853494"],
+			[TowerAnimation.Summon]: ["rbxassetid://17107797565"],
 		},
 		sounds: {
 			[TowerAnimation.Summon]: ["rbxassetid://9125402735"],

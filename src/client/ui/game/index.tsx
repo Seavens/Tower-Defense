@@ -12,5 +12,5 @@ export function GameApp(): Option<Element> {
 	if (status === GameStatus.None) {
 		return undefined;
 	}
-	return <GameStatusUI health={health} wave={wave} mapId={map === undefined ? MapId.Test : map} />;
+	return <GameStatusUI health={health} wave={wave} map={map === undefined ? MapId.Test : map} status={status} />;
 }

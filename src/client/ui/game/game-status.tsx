@@ -2,40 +2,61 @@ import { BILLBOARD_SIZE } from "./constants";
 import { FONTS, PALETTE } from "../constants";
 import { Frame, Group, Text } from "../components";
 import { GameStatus } from "shared/game/types";
+import { INTERMISSION_TIME } from "shared/game/constants";
 import { MapId } from "shared/map/types";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { selectGameData, selectGameStatus } from "shared/game/selectors";
 import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
+import { useLifetime, usePrevious } from "@rbxts/pretty-react-hooks";
 import { useSelector } from "@rbxts/react-reflex";
-import React, { useMemo } from "@rbxts/react";
+import React, { useEffect, useMemo, useState } from "@rbxts/react";
+import type { AnyMapDefinition } from "shared/map/definitions";
 import type { Element } from "@rbxts/react";
 
 interface GameStatusUIProps {
 	health: number;
 	wave: number;
-	mapId: MapId;
+	map: MapId;
+	status: GameStatus;
 }
 
-export function GameStatusUI({ health, wave, mapId }: GameStatusUIProps): Element {
+export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): Element {
 	const px = usePx();
 
-	const mapDef = useMemo(() => (mapId === undefined ? mapDefinitions[MapId.Test] : mapDefinitions[mapId]), [mapId]);
-	const { waves } = mapDef;
+	const definition = useMemo((): AnyMapDefinition => {
+		if (map === undefined) {
+			mapDefinitions[MapId.Test];
+		}
+		return mapDefinitions[map];
+	}, [map]);
+	const { waves } = definition;
+
 	const max = useMemo((): number => {
-		const { baseHealth } = mapDefinitions[mapId];
+		const { baseHealth } = definition;
 		return baseHealth;
-	}, [mapId]);
+	}, [definition]);
 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
 
-	const countdown = useMemo(() => {
+	// const status = useSelector(selectGameStatus);
+	const [timestamp, setTimestamp] = useState(0);
+	const lifetime = useLifetime([timestamp]);
+
+	useEffect(() => {
+		if (status === GameStatus.Waiting) {
+			// Start countdown
+			warn("countdown");
+			setTimestamp(os.clock() + INTERMISSION_TIME);
+		} else {
+			setTimestamp(0);
+		}
 		// UWU OMG THIS IS SO FREAKING EPIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		// const {} = useSelector(selectGameData);
 		// return countdown;
-	}, [wave]);
+	}, [status]);
 
 	return (
 		<Group
@@ -105,20 +126,30 @@ export function GameStatusUI({ health, wave, mapId }: GameStatusUIProps): Elemen
 				textXAlignment="Left"
 				textSize={px(30)}
 			/>
-			<Text
-				size={UDim2.fromOffset(px(70), px(50))}
-				anchorPoint={new Vector2(0.5, 1)}
-				position={UDim2.fromScale(0.5, 1.5)}
-				font={FONTS.inter.bold}
-				textColor={PALETTE.accent}
-				strokeColor={PALETTE.black}
-				strokeTransparency={0}
-				text={`${countdown}`}
-				textXAlignment="Center"
-				textSize={px(40)}
-				backgroundColor={useDarkenedColor(PALETTE.black, 0.5)}
-				backgroundTransparency={0.5}
-			/>
+			{status === GameStatus.Waiting && (
+				<Text
+					size={UDim2.fromOffset(px(70), px(50))}
+					anchorPoint={new Vector2(0.5, 1)}
+					position={UDim2.fromScale(0.5, 1.5)}
+					cornerRadius={new UDim(0, px(4))}
+					font={FONTS.inter.bold}
+					textColor={PALETTE.accent}
+					strokeColor={PALETTE.black}
+					strokeTransparency={0}
+					text={lifetime.map((value: number): string =>
+						string.format(
+							"%.1f",
+							math.abs(
+								math.clamp(math.round((INTERMISSION_TIME - value) * 10) / 10, 0, INTERMISSION_TIME),
+							),
+						),
+					)}
+					textXAlignment="Center"
+					textSize={px(40)}
+					backgroundColor={useDarkenedColor(PALETTE.black, 0.5)}
+					backgroundTransparency={0.5}
+				/>
+			)}
 		</Group>
 	);
 }

@@ -1,11 +1,16 @@
-import { CreateReactStory } from "@rbxts/ui-labs";
+import { Choose, CreateReactStory, Number } from "@rbxts/ui-labs";
 import { GameStatusUI } from "./game-status";
-import { MapId } from "shared/map/types";
+import { Modding } from "@flamework/core";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
+import type { GameStatus } from "shared/game/types";
+import type { MapId } from "shared/map/types";
+
+const allMapIds = Modding.inspect<Array<MapId>>();
+const allGameStatuses = Modding.inspect<Array<GameStatus>>();
 
 export = CreateReactStory(
 	{
@@ -13,19 +18,20 @@ export = CreateReactStory(
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {
-			health: 875,
-			mapId: MapId.Test,
-			wave: 5,
+			health: Number(1000, 0, math.huge, 1),
+			map: Choose(allMapIds, 1),
+			wave: Number(1, 1, 15, 1),
+			status: Choose(allGameStatuses, 1),
 		},
 		cleanup: (): void => {
 			store.resetState();
 		},
 	},
 	({ controls }): Element => {
-		const { health, wave, mapId } = controls;
+		const { health, wave, map, status } = controls;
 		return (
 			<ReflexProvider producer={store}>
-				<GameStatusUI health={health} wave={wave} mapId={mapId} />
+				<GameStatusUI health={health} wave={wave} map={map} status={status} />
 			</ReflexProvider>
 		);
 	},
