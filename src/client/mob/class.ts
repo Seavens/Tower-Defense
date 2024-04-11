@@ -4,11 +4,12 @@ import { GAME_TICK_RATE } from "shared/core/constants";
 import { MobAnimation } from "shared/mob/types";
 import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
-import { SoundEffect } from "client/animation/sound";
+import { SoundEffect } from "shared/classes/sound";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
 import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
+import { statusModules } from "shared/mob/modules";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
@@ -135,8 +136,8 @@ export class Mob extends API {
 	}
 
 	public onDied(): void {
-		const sound = new SoundEffect(this.instance, "rbxassetid://155288625");
-		sound.playOnRemove(0.32);
+		// const sound = new SoundEffect(this.instance, "rbxassetid://155288625");
+		// sound.playOnRemove(0.32);
 	}
 
 	public onDamage(damage: number, kind?: MobDamage): void {
@@ -158,7 +159,14 @@ export class Mob extends API {
 		octree.ChangeNodePosition(node, position);
 	}
 
-	public onStatus(status: MobStatus, duration: number, added: boolean): void {}
+	public onStatus(status: MobStatus, duration: number, added: boolean): void {
+		const module = statusModules[status];
+		if (added) {
+			module?.onAdded?.(this);
+		} else {
+			module?.onRemove?.(this);
+		}
+	}
 
 	public onEnd(): void {}
 

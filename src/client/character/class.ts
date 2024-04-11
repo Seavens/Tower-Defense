@@ -4,7 +4,7 @@ import { CHARACTER_ANIMATIONS } from "shared/character/constants";
 import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
 import { Signal } from "@rbxts/beacon";
-import { SoundEffect } from "client/animation/sound";
+import { SoundEffect } from "shared/classes/sound";
 import { isCharacterAnimation } from "shared/character/types";
 import type { Bin } from "@rbxts/bin";
 import type { CharacterAnimation } from "shared/character/types";
@@ -31,8 +31,8 @@ export class Character extends API {
 		const { bin, instance } = this;
 		const anim = instance.FindFirstChildWhichIsA("Animator", true);
 		const humanoid = instance.FindFirstChildWhichIsA("Humanoid", true);
-		const sound = new SoundEffect(instance, "rbxassetid://9046740461");
-		sound.destroyAfterPlay(0.2);
+		// const sound = new SoundEffect(instance, "rbxassetid://9046740461");
+		// sound.destroyAfterPlay(0.2);
 		characters.set(user, this);
 		onCharacterAdded.FireDeferred(this);
 		if (this.isPlayer() && anim !== undefined && humanoid !== undefined) {

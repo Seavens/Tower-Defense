@@ -9,6 +9,7 @@ import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
 import { selectProfileData } from "server/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
+import { statusModules } from "shared/mob/modules";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
@@ -132,10 +133,13 @@ export class Mob extends API {
 	public onStatus(status: MobStatus, duration: number, added: boolean): void {
 		const { uuid } = this;
 		const timestamp = Workspace.GetServerTimeNow();
+		const module = statusModules[status];
 		if (!added) {
+			module?.onRemove?.(this);
 			Events.mob.statusRemoved.broadcast(uuid, status);
 			return;
 		}
+		module?.onAdded?.(this);
 		Events.mob.statusAdded.broadcast(uuid, duration, status, timestamp);
 	}
 

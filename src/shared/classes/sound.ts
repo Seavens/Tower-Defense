@@ -15,12 +15,22 @@ export class SoundEffect {
 
 	public async destroyAfterPlay(volume = 0.8): Promise<void> {
 		return new Promise((resolve) => {
-			this.sound.Ended.Connect(() => {
+			let ended: RBXScriptConnection;
+			let stopped: RBXScriptConnection;
+			// eslint-disable-next-line prefer-const
+			ended = this.sound.Ended.Once(() => {
 				this.destroy();
 				resolve();
+				ended.Disconnect();
 			});
-			this.play();
+			// eslint-disable-next-line prefer-const
+			stopped = this.sound.Stopped.Once((): void => {
+				this.destroy();
+				resolve();
+				stopped.Disconnect();
+			});
 			this.sound.Volume = volume;
+			this.play();
 		});
 	}
 
@@ -29,12 +39,12 @@ export class SoundEffect {
 		this.sound.PlayOnRemove = true;
 	}
 
-	private play(volume = 0.8): void {
+	public play(volume = 0.8): void {
 		this.sound.Volume = volume;
 		this.sound.Play();
 	}
 
-	private destroy(): void {
+	public destroy(): void {
 		this.sound.Destroy();
 	}
 }

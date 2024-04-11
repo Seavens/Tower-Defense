@@ -1,6 +1,7 @@
 import { Collision, setCollision } from "shared/utility/collision";
 import { Flamework } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
+import { SoundEffect } from "shared/classes/sound";
 import { TowerVisual } from "shared/tower/types";
 import { VisualUtil, params } from "../util";
 import Shake from "@rbxts/rbx-sleitnick-shake";
@@ -43,6 +44,8 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		setCollision(effect, Collision.Debris, true);
 		const { sky, ground } = effect;
 		const { light } = ground;
+		const incoming = new SoundEffect(sky, "rbxassetid://6903182307");
+		incoming.destroyAfterPlay();
 		const normal = raycast.Normal;
 		const position = raycast.Position;
 		const look = position.add(normal).Unit;
@@ -83,6 +86,10 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			);
 		});
 		VisualUtil.emitRocks(bin, position, 15, 1, 1);
+		const explosion = new SoundEffect(ground, "rbxassetid://2674547670");
+		const soundDelay = task.delay(0.1, (): void => {
+			explosion.destroyAfterPlay(0.25);
+		});
 		const highlight = new Instance("Highlight");
 		highlight.Name = `(${model.Name})-${TowerVisual.HolyStrike}`;
 		highlight.FillColor = Color3.fromRGB(250, 255, 176);
@@ -108,6 +115,9 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			FillTransparency: 1,
 		});
 		const delay = task.delay(1, (): void => tween.Play());
+		bin.add(incoming);
+		bin.add(explosion);
+		bin.add(soundDelay);
 		bin.add(tween);
 		bin.add(delay);
 		bin.add(effect);
