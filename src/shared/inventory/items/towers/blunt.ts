@@ -40,6 +40,6 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: TowerVisual.SniperShot,
+		visual: [TowerVisual.TowerPlace, TowerVisual.SniperShot],
 	},
 };

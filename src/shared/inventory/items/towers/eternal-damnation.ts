@@ -45,6 +45,6 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 			TowerTargeting.Closest,
 		],
 
-		visual: TowerVisual.SniperShot,
+		visual: [TowerVisual.TowerPlace, TowerVisual.SniperShot],
 	},
 };

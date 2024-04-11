@@ -28,7 +28,7 @@ interface TowerDefinition {
 	upgrades: Array<TowerUpgradeInfo>;
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
 
-	visual: TowerVisual;
+	visual: Array<TowerVisual>;
 }
 
 interface RelicDefinition {

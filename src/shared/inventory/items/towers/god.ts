@@ -40,6 +40,6 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: TowerVisual.HolyStrike,
+		visual: [TowerVisual.TowerPlace, TowerVisual.HolyStrike],
 	},
 };

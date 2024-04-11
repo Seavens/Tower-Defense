@@ -64,15 +64,28 @@ export class Tower extends API {
 		super(tower);
 		const { towers } = Tower;
 		const { id, cframe, key, bin } = this;
+
 		const model = assets.FindFirstChild(id);
 		if (model === undefined || !model.IsA("Model")) {
 			throw `Could not find model for Tower(${id})!`;
 		}
+
 		const instance = model.Clone();
 		setCollision(instance, Collision.Tower, true);
 		instance.AddTag(ComponentTag.Tower);
 		instance.PivotTo(cframe);
 		instance.SetAttribute(TOWER_KEY_ATTRIBUTE, key);
+
+		const { kind } = itemDefinitions[id];
+		const { visual } = kind;
+		const module = towerVisualModules[visual[0]];
+		const { duration } = module;
+		const temporary = new Bin();
+		module.onEffect(temporary, instance);
+		bin.add(temporary);
+		task.delay(duration, (): void => {
+			temporary.destroy();
+		});
 		instance.Parent = placed;
 		this.instance = instance;
 		bin.add(instance);
@@ -193,7 +206,8 @@ export class Tower extends API {
 		const { id, bin, instance } = this;
 		const { kind } = itemDefinitions[id];
 		const { visual } = kind;
-		const module = towerVisualModules[visual];
+		// Change for abilities later
+		const module = towerVisualModules[visual[1]];
 		const { duration } = module;
 		const temporary = new Bin();
 		module.onEffect(temporary, instance, target);

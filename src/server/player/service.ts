@@ -1,5 +1,6 @@
 import { Entity } from "server/player/class";
 import { Events } from "server/network";
+import { IS_STUDIO, USE_MOCK_DATA } from "shared/core/constants";
 import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
 import { createListener } from "shared/utility/create-listener";
@@ -74,6 +75,8 @@ export class PlayerService implements OnStart {
 	}
 
 	public onGameClosed(): void {
+		if (USE_MOCK_DATA || IS_STUDIO) return;
+
 		const { removing } = this;
 		const { entities } = Entity;
 		for (const [_, entity] of entities) {

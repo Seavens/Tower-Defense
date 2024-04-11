@@ -1,17 +1,28 @@
-// import { Bin } from "@rbxts/bin";
-// import { t } from "@rbxts/t";
-// import type { Dictionary } from "@rbxts/sift";
+import { Bin } from "@rbxts/bin";
 
-// type RBXSound = Instances["Sound"];
-// class SoundManager<T extends string> {
-// 	protected readonly sounds: { [K in T]: Array<RBXAssetId> };
-// 	protected readonly loaded = new Map<T, Array<Sound>>();
-// 	protected readonly playing: Option<Sound>;
-// 	protected readonly stopped: Option<RBXScriptConnection>;
-// 	protected readonly bin = new Bin();
-// 	protected readonly guard: (name: T) => boolean;
+export class SoundEffect {
+	private sound: Sound;
+	private bin = new Bin();
 
-// 	public constructor(guard: (name: T) => boolean) {
-// 		this.guard = guard;
-// 	}
-// }
+	public constructor(container: Instance, soundId: RBXAssetId) {
+		this.sound = new Instance("Sound");
+		this.sound.SoundId = soundId;
+		this.sound.Parent = container;
+		this.bin.add(this.sound);
+	}
+
+	public play(volume = 0.8): void {
+		this.sound.Volume = volume;
+		this.sound.Play();
+		const thread = task.delay(this.sound.TimeLength, (): void => this.destroy());
+		this.bin.add(thread);
+	}
+
+	public stop(): void {
+		this.sound.Stop();
+	}
+
+	public destroy(): void {
+		this.sound.Destroy();
+	}
+}

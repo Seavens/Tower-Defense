@@ -40,6 +40,6 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: TowerVisual.SniperShot,
+		visual: [TowerVisual.TowerPlace, TowerVisual.SniperShot],
 	},
 };

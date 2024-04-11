@@ -40,6 +40,6 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: TowerVisual.SniperShot,
+		visual: [TowerVisual.TowerPlace, TowerVisual.SniperShot],
 	},
 };
