@@ -1,10 +1,12 @@
 import { Events } from "server/network";
 import { GameStatus } from "shared/game/types";
 import { INTERMISSION_TIME } from "shared/game/constants";
+import { MapDifficulty, type MapId } from "shared/map/types";
 import { Mob } from "server/mob/class";
 import { PlayerUtility } from "shared/player/utility";
 import { Players, Workspace } from "@rbxts/services";
 import { Service } from "@flamework/core";
+import { WaveImpl } from "shared/waves/impl";
 import { createUUID } from "shared/utility/create-uuid";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/definitions";
@@ -18,17 +20,15 @@ import {
 } from "shared/game/selectors";
 import { store } from "server/state/store";
 import type { Entity } from "shared/player/api";
-import type { MapId } from "shared/map/types";
 import type { MobData } from "shared/mob/types";
 import type { OnMobEnded, OnMobRemoved } from "../mob/service";
 import type { OnPlayerReady } from "../player/service";
 import type { OnStart } from "@flamework/core";
+import type { WaveDefinition } from "shared/map/definitions";
 
 @Service({})
 export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerReady {
-	public getSpawnDuration(map: MapId, wave: number): number {
-		const { waves } = mapDefinitions[map];
-		const [definition] = waves[wave - 1];
+	public getSpawnDuration(definition: WaveDefinition): number {
 		let longest = 0;
 		for (const [_, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
@@ -47,10 +47,9 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 	}
 
 	public spawnWave(map: MapId, wave: number): void {
-		const { waves } = mapDefinitions[map];
-		const [definition] = waves[wave - 1];
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
-		const longest = this.getSpawnDuration(map, wave);
+		const definition = WaveImpl.calculateWave(map, wave, MapDifficulty.Easy);
+		const longest = this.getSpawnDuration(definition);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
 				continue;

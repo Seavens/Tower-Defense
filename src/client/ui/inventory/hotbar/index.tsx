@@ -50,6 +50,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const maxExperienceText = useAbbreviation(max, 2);
 	const gemsText = useAbbreviation(gems, 2);
 	const coinsText = useAbbreviation(coins, 2);
+	const light = useLightenedColor(Mocha.Base, 0.15);
 
 	const slots = useMemo(() => {
 		const elements: Array<Element> = [];
@@ -171,7 +172,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 						size={UDim2.fromOffset(px(HOTBAR_SIZE.X) - px(4), px(20))}
 						anchorPoint={new Vector2(0.5, 1)}
 						position={UDim2.fromScale(0.5, 1)}
-						backgroundColor={useLightenedColor(Mocha.Base, 0.15)}
+						backgroundColor={light}
 						cornerRadius={new UDim(0, px(4))}
 					>
 						<uistroke

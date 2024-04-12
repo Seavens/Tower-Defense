@@ -4,6 +4,7 @@ import { Frame, Group, Text } from "../components";
 import { GameStatus } from "shared/game/types";
 import { INTERMISSION_TIME } from "shared/game/constants";
 import { MapId } from "shared/map/types";
+import { MapUtility } from "shared/map/utility";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mapDefinitions } from "shared/map/definitions";
@@ -31,12 +32,14 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 		}
 		return mapDefinitions[map];
 	}, [map]);
-	const { waves } = definition;
 
 	const max = useMemo((): number => {
 		const { baseHealth } = definition;
 		return baseHealth;
 	}, [definition]);
+	const waves = useMemo((): number => {
+		return MapUtility.getWaveCount(map);
+	}, [map]);
 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
@@ -122,7 +125,7 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 				textColor={PALETTE.accent}
 				strokeColor={PALETTE.black}
 				strokeTransparency={0}
-				text={`Wave: ${wave}/${waves.size()}`}
+				text={`Wave: ${wave}/${waves}`}
 				textXAlignment="Left"
 				textSize={px(30)}
 			/>

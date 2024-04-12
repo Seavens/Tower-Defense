@@ -17,6 +17,12 @@ export interface MapDefinition<I extends MapId> {
 	desc: string;
 	difficulty: MapDifficulty;
 	waves: Array<[WaveDefinition, bounty: number, experience: number]>;
+
+	testing?: {
+		first: WaveDefinition;
+		appearances: { [I in MobId]: number };
+	};
+
 	baseHealth: number;
 }
 

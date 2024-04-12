@@ -132,5 +132,21 @@ export const testMap: MapDefinition<MapId.Test> = {
 			1500,
 		],
 	],
+
+	testing: {
+		first: {
+			[MobId.Rat]: {
+				count: 843,
+				delay: 0,
+				wait: 1,
+			},
+		},
+		appearances: {
+			[MobId.Rat]: 1,
+			[MobId.Alien]: 7,
+			[MobId.Monkey]: 12,
+		},
+	},
+
 	baseHealth: 1000,
 };

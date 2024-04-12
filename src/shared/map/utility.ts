@@ -1,6 +1,7 @@
+import { MapDifficulty, type MapId } from "shared/map/types";
+import { WaveImpl } from "shared/waves/impl";
 import { Workspace } from "@rbxts/services";
 import { mapDefinitions } from "shared/map/definitions";
-import type { MapId } from "shared/map/types";
 import type { WaveDefinition } from "shared/map/definitions";
 
 const { map } = Workspace;
@@ -22,14 +23,12 @@ export namespace MapUtility {
 		return ordered;
 	}
 
-	export function getMobWave(map: MapId, wave: number): Option<WaveDefinition> {
-		const { waves } = mapDefinitions[map];
-		const definition = waves[wave];
-		return definition[0];
+	export function getMobWave(map: MapId, wave: number): WaveDefinition {
+		const definition = WaveImpl.calculateWave(map, wave, MapDifficulty.Easy);
+		return definition;
 	}
 
 	export function getWaveCount(map: MapId): number {
-		const { waves } = mapDefinitions[map];
-		return waves.size();
+		return math.huge;
 	}
 }
