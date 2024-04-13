@@ -19,6 +19,7 @@ import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
 import { targetingModules } from "shared/tower/targeting";
 import { towerVisualModules } from "../visuals/definitions";
+import { tween } from "@rbxts/ripple";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
@@ -252,7 +253,15 @@ export class Tower extends API {
 	}
 
 	public onTick(): void {
-		const { instance, cframe } = this;
+		const { id, instance, cframe } = this;
+
+		// const { kind } = itemDefinitions[id];
+		// const { animations } = kind;
+		// const animator = new Animator<TowerAnimation>(instance, animations);
+		// if (!animator.isPlaying) {
+		// 	animator.playAnimation(TowerAnimation.Idle);
+		// }
+
 		const mob = this.getTarget();
 		if (mob === undefined) {
 			return;
@@ -281,8 +290,20 @@ export class Tower extends API {
 		const { animations } = kind;
 		const animator = new Animator<TowerAnimation>(instance, animations);
 		const track = animator.getAnimation(TowerAnimation.Sell);
-		task.delay(track.Length, (): void => instance.Destroy());
 		animator.playAnimation(TowerAnimation.Sell);
+
+		const incoming = new SoundEmitter(instance, {
+			Fireball: [ASSET_IDS.Fireball],
+			WarpCharge: [ASSET_IDS.WarpCharge],
+		});
+		incoming.playSound("WarpCharge", undefined, 0.8);
+
+		task.delay(0.7, (): void => {
+			incoming.playSound("Fireball");
+		});
+
+		task.delay(track.Length, (): void => instance.Destroy());
+
 		towers.delete(key);
 		sphere?.Destroy();
 		circle?.Destroy();

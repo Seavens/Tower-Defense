@@ -32,6 +32,7 @@ export const enum TowerAnimation {
 	Summon = "tower_animation:summon",
 	Attack = "tower_animation:attack",
 	Sell = "tower_animation:sell",
+	Idle = "tower_animation:idle",
 }
 
 export const enum TowerSounds {

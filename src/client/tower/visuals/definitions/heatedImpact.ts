@@ -56,13 +56,13 @@ export const heatedImpactVisual: TowerVisualModule<TowerVisual.HeatedImpact> = {
 		highlight.OutlineTransparency = 0.5;
 		highlight.FillTransparency = 0.5;
 		highlight.DepthMode = Enum.HighlightDepthMode.Occluded;
-		const tween1 = TweenService.Create(highlight, info, {
+		const tween = TweenService.Create(highlight, info, {
 			FillTransparency: 1,
 			OutlineTransparency: 1,
 		});
 
-		tween1.Play();
-		bin.add(tween1);
+		tween.Play();
+		bin.add(tween);
 		bin.add(highlight);
 		bin.add(particleEmitter);
 	},

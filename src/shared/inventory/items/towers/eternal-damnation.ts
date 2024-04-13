@@ -52,6 +52,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],
 			[TowerAnimation.Attack]: [ASSET_IDS.Attack],
 			[TowerAnimation.Sell]: [ASSET_IDS.Sell],
+			[TowerAnimation.Idle]: [ASSET_IDS.Idle],
 		},
 		sounds: {
 			[TowerSounds.Summon]: [ASSET_IDS.BoomImpact],
