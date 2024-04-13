@@ -44,7 +44,6 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);
 
-	// const status = useSelector(selectGameStatus);
 	const [timestamp, setTimestamp] = useState(0);
 	const lifetime = useLifetime([timestamp]);
 
@@ -56,9 +55,6 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 		} else {
 			setTimestamp(0);
 		}
-		// UWU OMG THIS IS SO FREAKING EPIC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		// const {} = useSelector(selectGameData);
-		// return countdown;
 	}, [status]);
 
 	return (
@@ -134,7 +130,6 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 					size={UDim2.fromOffset(px(70), px(50))}
 					anchorPoint={new Vector2(0.5, 1)}
 					position={UDim2.fromScale(0.5, 1.5)}
-					cornerRadius={new UDim(0, px(4))}
 					font={FONTS.inter.bold}
 					textColor={PALETTE.accent}
 					strokeColor={PALETTE.black}
@@ -149,8 +144,6 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 					)}
 					textXAlignment="Center"
 					textSize={px(40)}
-					backgroundColor={useDarkenedColor(PALETTE.black, 0.5)}
-					backgroundTransparency={0.5}
 				/>
 			)}
 		</Group>

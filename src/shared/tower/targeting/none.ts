@@ -1,5 +1,5 @@
 import { TowerTargeting } from "shared/tower/types";
-import type { Mob } from "server/mob/class";
+import type { Mob } from "server/mob/class/class";
 import type { TargetingModule } from ".";
 
 export const noneTargeting: TargetingModule<TowerTargeting.None> = {

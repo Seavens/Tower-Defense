@@ -30,24 +30,24 @@ export function selectCurrency(user: string): (state: SharedState) => number {
 		return currency.get(user) ?? 0;
 	};
 }
-export function selectBounty(state: SharedState): number {
-	const { map } = selectGameData(state);
-	if (map === undefined) {
-		return 0;
-	}
-	const { waves } = mapDefinitions[map];
-	const wave = selectCurrentWave(state);
-	const [_, reward] = waves[wave - 1];
-	return reward;
-}
+// export function selectBounty(state: SharedState): number {
+// 	const { map } = selectGameData(state);
+// 	if (map === undefined) {
+// 		return 0;
+// 	}
+// 	const { waves } = mapDefinitions[map];
+// 	const wave = selectCurrentWave(state);
+// 	const [_, reward] = waves[wave - 1];
+// 	return reward;
+// }
 
-export function selectExperience(state: SharedState): number {
-	const { map } = selectGameData(state);
-	if (map === undefined) {
-		return 0;
-	}
-	const { waves } = mapDefinitions[map];
-	const wave = selectCurrentWave(state);
-	const [, , reward] = waves[wave - 1];
-	return reward;
-}
+// export function selectExperience(state: SharedState): number {
+// 	const { map } = selectGameData(state);
+// 	if (map === undefined) {
+// 		return 0;
+// 	}
+// 	const { waves } = mapDefinitions[map];
+// 	const wave = selectCurrentWave(state);
+// 	const [, , reward] = waves[wave - 1];
+// 	return reward;
+// }

@@ -4,7 +4,7 @@ import { STARTING_CURRENCY } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { EntityMetadata } from "shared/replication/metadata";
+import type { UserMetadata } from "shared/replication/metadata";
 import type {
 	GameActions,
 	GameAddCurrency,
@@ -38,12 +38,12 @@ const gameState: GameState = {
 };
 
 export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameState, {
-	playerAdded: (state: GameState, payload: PlayerAdded, { user }: EntityMetadata): GameState => {
+	playerAdded: (state: GameState, payload: PlayerAdded, { user }: UserMetadata): GameState => {
 		return produce(state, ({ currency }: Draft<GameState>): void => {
 			currency.set(user, STARTING_CURRENCY);
 		});
 	},
-	playerRemoved: (state: GameState, payload: PlayerRemoved, { user }: EntityMetadata): GameState => {
+	playerRemoved: (state: GameState, payload: PlayerRemoved, { user }: UserMetadata): GameState => {
 		return produce(state, ({ currency }: Draft<GameState>): void => {
 			currency.delete(user);
 		});
@@ -123,7 +123,7 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 			return draft;
 		});
 	},
-	gameAddCurrency: (state: GameState, payload: GameAddCurrency, { user }: EntityMetadata): GameState => {
+	gameAddCurrency: (state: GameState, payload: GameAddCurrency, { user }: UserMetadata): GameState => {
 		const { amount } = payload;
 		return produce(state, ({ currency, status }: Draft<GameState>): void => {
 			const current = currency.get(user) ?? 0;

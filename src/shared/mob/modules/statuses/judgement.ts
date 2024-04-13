@@ -1,10 +1,7 @@
-import { InferType } from "@rbxts/react/src/prop-types";
 import { MobStatus } from "shared/mob/types";
 import { RunService } from "@rbxts/services";
-import { SoundEffect } from "shared/classes/sound";
 import { statusDefinitions } from "shared/mob/definitions";
-import { t } from "@rbxts/t";
-import type { Mob as ClientMob } from "client/mob/class";
+import type { Mob as ClientMob } from "client/mob/class/class";
 import type { Mob } from "shared/mob/api";
 import type { StatusModule } from ".";
 

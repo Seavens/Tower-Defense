@@ -1,8 +1,8 @@
-import type { EntityMetadata, ReplicationMetadata } from "./metadata";
+import type { ReplicationMetadata, UserMetadata } from "./metadata";
 
 export type PlayerActions<S> = {
-	playerAdded: (state: S, payload: PlayerAdded, metadata: EntityMetadata & ReplicationMetadata) => S;
-	playerRemoved: (state: S, payload: PlayerRemoved, metadata: EntityMetadata & ReplicationMetadata) => S;
+	playerAdded: (state: S, payload: PlayerAdded, metadata: UserMetadata & ReplicationMetadata) => S;
+	playerRemoved: (state: S, payload: PlayerRemoved, metadata: UserMetadata & ReplicationMetadata) => S;
 };
 
 export interface PlayerAdded {}

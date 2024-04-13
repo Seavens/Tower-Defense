@@ -4,6 +4,7 @@ export const enum MobId {
 	Rat = "mob_id:rat",
 	Alien = "mob_id:alien",
 	Monkey = "mob_id:monkey",
+	Grimace = "mob_id:grimace",
 }
 
 export interface MobData {

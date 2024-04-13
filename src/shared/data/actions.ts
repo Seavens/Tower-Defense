@@ -1,13 +1,10 @@
 import type { Data } from "shared/data/types";
-import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
+import type { UserMetadata, ReplicationMetadata } from "shared/replication/metadata";
 
 export type DataActions<S> = {
-	dataAdded: (state: S, payload: DataAdded, metadata: EntityMetadata & ReplicationMetadata) => S;
-	dataRemoved: (state: S, payload: DataRemoved, metadata: EntityMetadata & ReplicationMetadata) => S;
+	dataAdded: (state: S, payload: DataAdded, metadata: UserMetadata & ReplicationMetadata) => S;
 };
 
 export interface DataAdded {
 	data: Data;
 }
-
-export interface DataRemoved {}

@@ -1,16 +1,15 @@
-import { GAME_TICK_RATE } from "shared/core/constants";
-import { INITIAL_WAVE_ALLOCATION, WAVE_GROWTH } from "./constants";
+import { INITIAL_WAVE_ALLOCATION, SPEED_FACTOR, WAVE_GROWTH } from "./constants";
 import { MAP_DIFFICULTY_MULTIPLIERS } from "shared/map/constants";
-import { MapDifficulty } from "shared/map/types";
-import { MapId } from "shared/map/types";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/definitions";
+import type { MapDifficulty } from "shared/map/types";
+import type { MapId } from "shared/map/types";
 import type { WaveDefinition } from "shared/map/definitions";
 
 export class WaveImpl {
 	public static generateWaves(map: MapId, count: number, difficulty: MapDifficulty): Array<WaveDefinition> {
 		const waves = new Array<WaveDefinition>();
-		const { testing } = mapDefinitions[map];
+		const { waves: testing } = mapDefinitions[map];
 		const { first } = testing!;
 		for (const index of $range(2, count)) {
 			const definition = this.calculateWave(map, index, difficulty);
@@ -24,7 +23,7 @@ export class WaveImpl {
 		const multiplier = MAP_DIFFICULTY_MULTIPLIERS[difficulty];
 		let allocated = index ** (WAVE_GROWTH + multiplier) + INITIAL_WAVE_ALLOCATION;
 		const wave: WaveDefinition = {};
-		const { testing } = mapDefinitions[map];
+		const { waves: testing } = mapDefinitions[map];
 		const { first, appearances } = testing!;
 		let delay = -1;
 		for (const [id, { health }] of pairs(mobDefinitions)) {
@@ -50,12 +49,10 @@ export class WaveImpl {
 				continue;
 			}
 			const count = adding;
-			definition = { count, delay, wait: count / max };
+			definition = { count, delay, wait: (count / max) * SPEED_FACTOR };
 			allocated -= health * count;
 			wave[id] = definition;
 		}
 		return wave;
 	}
 }
-
-warn(WaveImpl.generateWaves(MapId.Test, 100, MapDifficulty.Hard));

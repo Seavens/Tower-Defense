@@ -1,14 +1,14 @@
-import type { BroadcastMetadata, EntityMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, UserMetadata } from "shared/replication/metadata";
 import type { PlayerActions } from "shared/replication/actions";
 
 export type PartyActions<S> = {
-	createParty: (state: S, payload: PartyCreate, metadata: EntityMetadata & BroadcastMetadata) => S;
-	disbandParty: (state: S, payload: PartyDisband, metadata: EntityMetadata & BroadcastMetadata) => S;
-	inviteMember: (state: S, payload: PartyInviteMember, metadata: EntityMetadata & BroadcastMetadata) => S;
-	kickMember: (state: S, payload: PartyKickMember, metadata: EntityMetadata & BroadcastMetadata) => S;
-	acceptInvite: (state: S, payload: PartyAcceptInvite, metadata: EntityMetadata & BroadcastMetadata) => S;
+	createParty: (state: S, payload: PartyCreate, metadata: UserMetadata & BroadcastMetadata) => S;
+	disbandParty: (state: S, payload: PartyDisband, metadata: UserMetadata & BroadcastMetadata) => S;
+	inviteMember: (state: S, payload: PartyInviteMember, metadata: UserMetadata & BroadcastMetadata) => S;
+	kickMember: (state: S, payload: PartyKickMember, metadata: UserMetadata & BroadcastMetadata) => S;
+	acceptInvite: (state: S, payload: PartyAcceptInvite, metadata: UserMetadata & BroadcastMetadata) => S;
 	// Internal use only.
-	inviteExpired: (state: S, payload: PartyInviteExpired, metadata: EntityMetadata & BroadcastMetadata) => S;
+	inviteExpired: (state: S, payload: PartyInviteExpired, metadata: UserMetadata & BroadcastMetadata) => S;
 } & PlayerActions<S>;
 
 export interface PartyCreate {

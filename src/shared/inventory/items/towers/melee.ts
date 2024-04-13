@@ -1,6 +1,7 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
-import { TowerAnimation, TowerTargeting, TowerVisual } from "shared/tower/types";
+import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
 import type { ItemDefinition } from "..";
 
 export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
@@ -43,10 +44,12 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		visual: [TowerVisual.TowerPlace, TowerVisual.SniperShot],
 
 		animations: {
-			[TowerAnimation.Summon]: ["rbxassetid://17106853494"],
+			[TowerAnimation.Summon]: [ASSET_IDS.Summon],
+			[TowerAnimation.Attack]: [ASSET_IDS.Attack],
+			[TowerAnimation.Sell]: [ASSET_IDS.Sell],
 		},
 		sounds: {
-			[TowerAnimation.Summon]: ["rbxassetid://9125402735"],
+			[TowerSounds.Summon]: [ASSET_IDS.BoomImpact],
 		},
 	},
 };

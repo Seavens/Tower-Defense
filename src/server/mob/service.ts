@@ -1,7 +1,7 @@
 import { GameStatus } from "shared/game/types";
-import { Mob } from "server/mob/class";
+import { Mob } from "server/mob/class/class";
 import { Service } from "@flamework/core";
-import { Tower } from "server/tower/class";
+import { Tower } from "server/tower/class/class";
 import { createListener } from "shared/utility/create-listener";
 import { mobDefinitions } from "shared/mob/definitions";
 import { selectGameStatus } from "shared/game/selectors";

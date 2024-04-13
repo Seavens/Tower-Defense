@@ -1,9 +1,9 @@
 import { LevelUtility } from "shared/profile/utility";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
-import type { DataAdded, DataRemoved } from "shared/data/actions";
+import type { DataAdded } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { EntityMetadata } from "shared/replication/metadata";
+import type { UserMetadata } from "shared/replication/metadata";
 import type {
 	ProfileActions,
 	ProfileAddExperience,
@@ -23,7 +23,7 @@ interface State {
 const state: State = {};
 
 export const profileSlice = createProducer<State, ProfileActions<State>>(state, {
-	profileAddExperience: (state: State, payload: ProfileAddExperience, metadata: EntityMetadata): State => {
+	profileAddExperience: (state: State, payload: ProfileAddExperience, metadata: UserMetadata): State => {
 		const { user } = metadata;
 		const { amount } = payload;
 		return produce(state, (draft: Draft<State>): void => {
@@ -38,7 +38,7 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			player.data.experience = newExperience;
 		});
 	},
-	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: EntityMetadata): State => {
+	profileAdjustCoins: (state: State, payload: ProfileAdjustCoins, metadata: UserMetadata): State => {
 		const { user } = metadata;
 		const { coins } = payload;
 		return produce(state, (draft: Draft<State>): void => {
@@ -50,7 +50,7 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			data.coins = math.max(data.coins + coins, 0);
 		});
 	},
-	profileAdjustGems: (state: State, payload: ProfileAdjustGems, metadata: EntityMetadata) => {
+	profileAdjustGems: (state: State, payload: ProfileAdjustGems, metadata: UserMetadata) => {
 		const { user } = metadata;
 		const { gems } = payload;
 		return produce(state, (draft: Draft<State>): void => {
@@ -62,7 +62,7 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			data.gems = math.max(data.gems + gems, 0);
 		});
 	},
-	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {
+	dataAdded: (state: State, payload: DataAdded, metadata: UserMetadata): State => {
 		const { data } = payload;
 		const { user } = metadata;
 		return produce(state, (draft: Draft<State>): void => {
@@ -71,12 +71,6 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 				data: profile,
 			};
 			draft[user] = state;
-		});
-	},
-	dataRemoved: (state: State, payload: DataRemoved, metadata: EntityMetadata): State => {
-		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			delete draft[user];
 		});
 	},
 });

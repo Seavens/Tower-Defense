@@ -1,9 +1,8 @@
 import { DATA_TEMPLATE } from "shared/data/constants";
 import { InventoryImpl } from "shared/inventory/impl";
-import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
-import type { DataAdded, DataRemoved } from "shared/data/actions";
+import type { DataAdded } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/replication/metadata";
 import type {
@@ -88,7 +87,6 @@ export const inventorySlice = createProducer<InventoryState, ExcludeMetadata<Inv
 			return draft;
 		}),
 
-	// Data actions
 	dataAdded: (state: InventoryState, payload: DataAdded): InventoryState => {
 		const { data } = payload;
 
@@ -100,11 +98,6 @@ export const inventorySlice = createProducer<InventoryState, ExcludeMetadata<Inv
 				data: inventory,
 			};
 			return state;
-		});
-	},
-	dataRemoved: (state: InventoryState, payload: DataRemoved): InventoryState => {
-		return produce(state, (draft: Draft<InventoryState>): void => {
-			clear(draft);
 		});
 	},
 });

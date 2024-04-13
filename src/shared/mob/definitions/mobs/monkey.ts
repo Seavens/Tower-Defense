@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { MobAnimation, MobId } from "shared/mob/types";
 import type { MobDefinition } from ".";
 
@@ -16,6 +17,6 @@ export const monkeyMob: MobDefinition<MobId.Monkey> = {
 	height: 1.89,
 
 	animations: {
-		[MobAnimation.Walk]: ["rbxassetid://913402848"],
+		[MobAnimation.Walk]: [ASSET_IDS.Walk],
 	},
 };

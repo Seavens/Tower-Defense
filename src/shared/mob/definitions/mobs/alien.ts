@@ -11,7 +11,7 @@ export const alienMob: MobDefinition<MobId.Alien> = {
 	health: 200,
 
 	bounty: 150,
-	experience: 35,
+	experience: 50,
 
 	height: 1.43,
 

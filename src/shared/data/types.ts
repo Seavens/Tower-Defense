@@ -12,6 +12,13 @@ export interface ProfileData {
 	experience: number;
 	coins: number;
 	gems: number;
+	settings: {
+		music: boolean;
+		sfx: boolean;
+		audioLevel: number;
+		vfx: boolean;
+		billboards: boolean;
+	};
 }
 
 export interface Data {
@@ -24,6 +31,13 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	experience: t.number,
 	coins: t.number,
 	gems: t.number,
+	settings: t.strictInterface({
+		music: t.boolean,
+		sfx: t.boolean,
+		audioLevel: t.number,
+		vfx: t.boolean,
+		billboards: t.boolean,
+	}),
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({

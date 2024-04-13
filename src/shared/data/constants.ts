@@ -7,6 +7,13 @@ export const DATA_TEMPLATE: Data = {
 		experience: 0,
 		coins: 0,
 		gems: 0,
+		settings: {
+			music: true,
+			sfx: true,
+			audioLevel: math.clamp(100, 0, 100),
+			vfx: true,
+			billboards: true,
+		},
 	},
 	inventory: {
 		stored: new Map<Slot, Item>(),

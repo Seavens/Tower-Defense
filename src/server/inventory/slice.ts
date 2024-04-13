@@ -1,9 +1,8 @@
 import { InventoryImpl } from "shared/inventory/impl";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
-import type { DataAdded, DataRemoved } from "shared/data/actions";
+import type { DataAdded } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { EntityMetadata } from "shared/replication/metadata";
 import type {
 	InventoryActions,
 	InventoryAddItems,
@@ -13,6 +12,7 @@ import type {
 	InventoryUnequipSlot,
 } from "shared/inventory/actions";
 import type { InventoryData } from "shared/data/types";
+import type { UserMetadata } from "shared/replication/metadata";
 
 export interface InventoryState {
 	readonly data: Readonly<InventoryData>;
@@ -25,7 +25,7 @@ interface State {
 const state: State = {};
 
 export const inventorySlice = createProducer<State, InventoryActions<State>>(state, {
-	inventoryAddItems: (state: State, payload: InventoryAddItems, metadata: EntityMetadata): State => {
+	inventoryAddItems: (state: State, payload: InventoryAddItems, metadata: UserMetadata): State => {
 		const { items } = payload;
 		const { user } = metadata;
 
@@ -43,7 +43,7 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		});
 	},
-	inventoryRemoveItems: (state: State, payload: InventoryRemoveItems, metadata: EntityMetadata): State => {
+	inventoryRemoveItems: (state: State, payload: InventoryRemoveItems, metadata: UserMetadata): State => {
 		const { slots } = payload;
 		const { user } = metadata;
 
@@ -61,7 +61,7 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		});
 	},
-	inventoryEquipSlot: (state: State, payload: InventoryEquipSlot, metadata: EntityMetadata): State => {
+	inventoryEquipSlot: (state: State, payload: InventoryEquipSlot, metadata: UserMetadata): State => {
 		const { slot } = payload;
 		const { user } = metadata;
 
@@ -79,7 +79,7 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		});
 	},
-	inventoryUnequipSlot: (state: State, payload: InventoryUnequipSlot, metadata: EntityMetadata): State => {
+	inventoryUnequipSlot: (state: State, payload: InventoryUnequipSlot, metadata: UserMetadata): State => {
 		const { slot } = payload;
 		const { user } = metadata;
 
@@ -97,7 +97,7 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		});
 	},
-	inventoryPatchSlot: (state: State, { slot, patch }: InventoryPatchSlot, { user }: EntityMetadata): State =>
+	inventoryPatchSlot: (state: State, { slot, patch }: InventoryPatchSlot, { user }: UserMetadata): State =>
 		produce(state, (draft: Draft<State>): State => {
 			const state = draft[user];
 			if (state === undefined) {
@@ -112,28 +112,18 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			return draft;
 		}),
 
-	// Data actions
-	dataAdded: (state: State, payload: DataAdded, metadata: EntityMetadata): State => {
+	dataAdded: (state: State, payload: DataAdded, metadata: UserMetadata): State => {
 		const { data } = payload;
 		const { user } = metadata;
 
 		return produce(state, (draft: Draft<State>): void => {
 			const { inventory } = data;
 
-			// Add the inventory state to the draft
 			const state: InventoryState = {
 				data: inventory,
 			};
 
-			// Add the inventory state to the draft
 			draft[user] = state;
-		});
-	},
-	dataRemoved: (state: State, payload: DataRemoved, metadata: EntityMetadata): State => {
-		const { user } = metadata;
-
-		return produce(state, (draft: Draft<State>): void => {
-			delete draft[user];
 		});
 	},
 });

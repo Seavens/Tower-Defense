@@ -7,7 +7,6 @@ import { ItemKind, isTowerItemId } from "shared/inventory/types";
 import { LevelUtility } from "shared/profile/utility";
 import { MAXIMUM_EQUIPPED } from "shared/inventory/constants";
 import { Macchiato, Mocha } from "@rbxts/catppuccin";
-import { PlayerUtility } from "shared/player/utility";
 import { Players } from "@rbxts/services";
 import { UIKind } from "client/ui/types";
 import { getSizeFactor } from "../utility";
@@ -29,14 +28,14 @@ export interface HotbarProps {
 }
 
 const player = Players.LocalPlayer;
-const user = PlayerUtility.getUser(player);
+const { Name } = player;
 
 export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 	const px = usePx();
 	const store = useStore();
 
 	const { experience, level, gems, coins } = useSelector(selectProfileData);
-	const currency = useSelector(selectCurrency(user));
+	const currency = useSelector(selectCurrency(Name));
 	const open = useSelector(selectOpenUI);
 
 	const [transparency, transparencyMotion] = useMotion(1);
@@ -199,6 +198,28 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							textSize={px(16)}
 							key={"experience-text"}
 						/>
+						<Frame
+							size={UDim2.fromOffset(px(25), px(25))}
+							cornerRadius={new UDim(0.5, 0)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							backgroundTransparency={0}
+							backgroundColor={Macchiato.Overlay0}
+						>
+							<uistroke Color={Macchiato.Base} />
+							<Text
+								size={UDim2.fromScale(0.9, 0.9)}
+								anchorPoint={new Vector2(0.5, 0.5)}
+								position={UDim2.fromScale(0.5, 0.5)}
+								text={`${level}`}
+								font={FONTS.inter.bold}
+								textXAlignment="Center"
+								textColor={PALETTE.accent}
+								strokeTransparency={0}
+								textScaled={true}
+								key={"experience-text"}
+							></Text>
+						</Frame>
 					</Frame>
 				</Group>
 				<Group

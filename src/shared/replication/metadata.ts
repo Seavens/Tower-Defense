@@ -4,7 +4,7 @@ export interface BroadcastMetadata {
 	broadcast: boolean;
 }
 
-export interface EntityMetadata {
+export interface UserMetadata {
 	user: string;
 }
 
@@ -13,11 +13,11 @@ export interface ReplicationMetadata {
 }
 
 export type ExcludeMetadata<T> = {
-	[K in keyof T]: Parameters<T[K]> extends [...infer U, BroadcastMetadata | EntityMetadata | ReplicationMetadata]
+	[K in keyof T]: Parameters<T[K]> extends [...infer U, BroadcastMetadata | UserMetadata | ReplicationMetadata]
 		? (...args: U) => ReturnType<T[K]>
 		: T[K];
 };
 
 export const isBroadcastMetadata = Flamework.createGuard<BroadcastMetadata>();
-export const isEntityMetadata = Flamework.createGuard<EntityMetadata>();
+export const isUserMetadata = Flamework.createGuard<UserMetadata>();
 export const isReplicationMetadata = Flamework.createGuard<ReplicationMetadata>();

@@ -1,22 +1,20 @@
 import { Events } from "server/network";
 import { IS_EDIT } from "shared/core/constants";
-import { PlayerUtility } from "shared/player/utility";
 import { createBroadcaster } from "@rbxts/reflex";
-import { isBroadcastMetadata, isEntityMetadata, isReplicationMetadata } from "shared/replication/metadata";
+import { isBroadcastMetadata, isReplicationMetadata, isUserMetadata } from "shared/replication/metadata";
 import { selectState } from "./selector";
 import type { BroadcastAction, ProducerMiddleware } from "@rbxts/reflex";
-import type { BroadcastMetadata, EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, ReplicationMetadata, UserMetadata } from "shared/replication/metadata";
 import type { ServerSlices } from "server/state/slices";
 import type { ServerState } from "../state/store";
 import type { SharedSlices } from "shared/state/slices";
 
-function getMetadata(args: Array<unknown>): (EntityMetadata & ReplicationMetadata & BroadcastMetadata) | undefined {
+function getMetadata(args: Array<unknown>): (UserMetadata & ReplicationMetadata & BroadcastMetadata) | undefined {
 	for (const arg of args) {
-		if (!isEntityMetadata(arg) && !isReplicationMetadata(arg) && !isBroadcastMetadata(arg)) {
+		if (!isUserMetadata(arg) && !isReplicationMetadata(arg) && !isBroadcastMetadata(arg)) {
 			continue;
 		}
-		// Allows deconstructing.
-		return arg as EntityMetadata & ReplicationMetadata & BroadcastMetadata;
+		return arg as UserMetadata & ReplicationMetadata & BroadcastMetadata;
 	}
 	return undefined;
 }
@@ -25,7 +23,6 @@ function getActions(producers: ServerSlices): Set<string> {
 	const filtered = new Set<string>();
 	for (const [_, producer] of pairs(producers)) {
 		const actions = producer.getActions();
-		// eslint-disable-next-line roblox-ts/no-array-pairs
 		for (const [name] of pairs(actions)) {
 			filtered.add(name);
 		}
@@ -50,7 +47,7 @@ function createFilter(filtered: Set<string>): (player: Player, actions: Broadcas
 		if (broadcast !== undefined && broadcast) {
 			return true;
 		}
-		if (user === PlayerUtility.getUser(player)) {
+		if (user === player.Name) {
 			return true;
 		}
 		return false;
@@ -70,8 +67,8 @@ export function broadcastMiddleware(slices: SharedSlices & ServerSlices, filtere
 			return allowed ? action : undefined;
 		},
 		beforeHydrate: (player: Player, state: ServerState): Partial<ServerState> => {
-			const user = PlayerUtility.getUser(player);
-			const selector = selectState(user);
+			const { Name } = player;
+			const selector = selectState(Name);
 			const selected = selector(state);
 			const hydration: Writable<Partial<ServerState>> = {
 				...state,

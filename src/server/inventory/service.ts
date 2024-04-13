@@ -1,12 +1,9 @@
 import { Events } from "server/network";
-import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
-import { PlayerUtility } from "shared/player/utility";
 import { Service } from "@flamework/core";
-import { TowerUtility } from "shared/tower/utility";
 import { isSlot } from "shared/guards";
 import { selectInventoryData } from "./selectors";
-import { selectProfileData, selectProfileState } from "server/profile/selectors";
+import { selectProfileData } from "server/profile/selectors";
 import { store } from "server/state/store";
 import type { OnStart } from "@flamework/core";
 
@@ -17,7 +14,7 @@ export class InventoryService implements OnStart {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtility.getUser(player);
+			const user = player.Name;
 			const state = store.getState(selectInventoryData(user));
 			if (state === undefined) {
 				return;
@@ -35,20 +32,20 @@ export class InventoryService implements OnStart {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtility.getUser(player);
+			const user = player.Name;
 			store.inventoryEquipSlot({ slot }, { user, replicate: true });
 		});
 		Events.inventory.unequip.connect((player: Player, slot: string): void => {
 			if (!isSlot(slot)) {
 				return;
 			}
-			const user = PlayerUtility.getUser(player);
+			const user = player.Name;
 			store.inventoryUnequipSlot({ slot }, { user, replicate: true });
 		});
 		Events.inventory.sell.connect((player: Player, slot: string): void => {
 			if (!isSlot(slot)) return;
 
-			const user = PlayerUtility.getUser(player);
+			const user = player.Name;
 			const invState = store.getState(selectInventoryData(user));
 			if (invState === undefined || !invState.stored.has(slot)) return;
 

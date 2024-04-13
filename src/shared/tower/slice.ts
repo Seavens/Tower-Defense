@@ -3,7 +3,7 @@ import { MAX_TOWER_LEVEL } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { EntityMetadata } from "shared/replication/metadata";
+import type { UserMetadata } from "shared/replication/metadata";
 import type { ReplicatedTower } from "./types";
 import type {
 	TowerActions,
@@ -26,7 +26,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 	towerPlace: (
 		state: TowerState,
 		{ id, uuid, index, key, position, targeting, unique }: TowerPlace,
-		{ user }: EntityMetadata,
+		{ user }: UserMetadata,
 	): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower: ReplicatedTower = {
@@ -42,7 +42,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 			};
 			placed.set(key, tower);
 		}),
-	towerSell: (state: TowerState, { key }: TowerSell, { user }: EntityMetadata): TowerState =>
+	towerSell: (state: TowerState, { key }: TowerSell, { user }: UserMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
 			const owner = tower?.owner;
@@ -53,7 +53,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 	towerSetTargeting: (
 		state: TowerState,
 		{ key, targeting }: TowerSetTargeting,
-		{ user }: EntityMetadata,
+		{ user }: UserMetadata,
 	): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
@@ -62,7 +62,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 
 			tower.targeting = targeting;
 		}),
-	towerUpgrade: (state: TowerState, { key }: TowerUpgrade, { user }: EntityMetadata): TowerState =>
+	towerUpgrade: (state: TowerState, { key }: TowerUpgrade, { user }: UserMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
 			const owner = tower?.owner;

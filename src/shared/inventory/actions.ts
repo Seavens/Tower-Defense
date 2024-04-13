@@ -1,22 +1,22 @@
 import type {} from "shared/tower/types";
 import type { DataActions } from "shared/data/actions";
-import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
+import type { UserMetadata, ReplicationMetadata } from "shared/replication/metadata";
 import type { Item, ItemUnique } from "./types";
 
 export type InventoryActions<S> = {
-	inventoryAddItems: (state: S, payload: InventoryAddItems, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryAddItems: (state: S, payload: InventoryAddItems, metadata: UserMetadata & ReplicationMetadata) => S;
 	inventoryRemoveItems: (
 		state: S,
 		payload: InventoryRemoveItems,
-		metadata: EntityMetadata & ReplicationMetadata,
+		metadata: UserMetadata & ReplicationMetadata,
 	) => S;
-	inventoryEquipSlot: (state: S, payload: InventoryEquipSlot, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryEquipSlot: (state: S, payload: InventoryEquipSlot, metadata: UserMetadata & ReplicationMetadata) => S;
 	inventoryUnequipSlot: (
 		state: S,
 		payload: InventoryUnequipSlot,
-		metadata: EntityMetadata & ReplicationMetadata,
+		metadata: UserMetadata & ReplicationMetadata,
 	) => S;
-	inventoryPatchSlot: (state: S, payload: InventoryPatchSlot, metadata: EntityMetadata & ReplicationMetadata) => S;
+	inventoryPatchSlot: (state: S, payload: InventoryPatchSlot, metadata: UserMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
 export interface InventoryAddItems {

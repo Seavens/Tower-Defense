@@ -1,84 +1,126 @@
-import { CHARACTER_RESPAWN_WAIT } from "shared/character/constants";
-import { Character } from "./class";
-import { Entity } from "server/player/class";
-import { Events, Functions } from "server/network";
+import { Bin } from "@rbxts/bin";
+import { CHARACTER_RESPAWN_DELAY } from "./constants";
+import { Collision, setCollision } from "shared/utility/collision";
 import { Service } from "@flamework/core";
+import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/create-listener";
-import { reuseThread } from "shared/utility/reuse-thread";
-import type { OnPlayerAdded } from "../player/service";
-import type { OnStart } from "@flamework/core";
+import { promiseR15 } from "@rbxts/promise-character";
+import type { CharacterRigR15 } from "@rbxts/promise-character";
+import type { OnPlayerAdded, OnPlayerReady, OnPlayerRemoving } from "server/players/service";
 
 export interface OnCharacterAdded {
 	/** @hideinherited */
-	onCharacterAdded(character: Character): void;
+	onCharacterAdded(player: Player, character: CharacterRigR15): void;
 }
 
-export interface OnCharacterRemoved {
+export interface OnCharacterRemoving {
 	/** @hideinherited */
-	onCharacterRemoved(character: Character): void;
+	onCharacterRemoving(player: Player, character: Model): void;
 }
 
 export interface OnCharacterDied {
 	/** @hideinherited */
-	onCharacterDied(character: Character): void;
+	onCharacterDied(player: Player, character: Model): void;
 }
 
 const characterAdded = createListener<OnCharacterAdded>();
-const characterRemoved = createListener<OnCharacterRemoved>();
+const characterRemoving = createListener<OnCharacterRemoving>();
 const characterDied = createListener<OnCharacterDied>();
 
+const { characters } = Workspace;
+
 @Service({})
-export class CharacterService implements OnStart, OnPlayerAdded {
-	public onCharacterAdded(character: Character): void {
-		characterAdded.fire(character);
+export class CharacterService implements OnPlayerAdded, OnPlayerRemoving, OnPlayerReady {
+	protected static readonly characters = new Map<Player, CharacterRigR15>();
+
+	protected readonly connections = new Map<Player, Bin>();
+	protected readonly bins = new Map<Player, Bin>();
+
+	public static getCharacter(player: Player): Option<CharacterRigR15> {
+		const { characters } = this;
+		return characters.get(player);
 	}
 
-	public onCharacterRemoved(character: Character): void {
-		characterRemoved.fire(character);
-	}
-
-	public onCharacterDied(character: Character): void {
-		characterDied.fire(character);
-		const { user } = character;
-		const entity = Entity.getEntity(user);
-		if (entity === undefined) {
-			return;
-		}
-		task.delay(CHARACTER_RESPAWN_WAIT, (): void => {
-			if (!entity.isRespawnable() || !entity.canRespawn()) {
-				character.destroy();
+	public async onCharacterAdded(player: Player, model: Model): Promise<void> {
+		const { characters: loaded } = CharacterService;
+		const { bins } = this;
+		const character = await promiseR15(model).timeout(10);
+		const bin = new Bin();
+		const humanoid = character.Humanoid;
+		setCollision(character, Collision.Character, true);
+		const ancestry = character.AncestryChanged.Connect((_: Instance, parent?: Instance): void => {
+			if (parent === characters) {
 				return;
 			}
-			entity.loadCharacter();
+			task.defer((): void => {
+				character.Parent = characters;
+			});
+		});
+		const descendant = character.DescendantAdded.Connect((descendant: Instance): void => {
+			setCollision(descendant, Collision.Character, true);
+		});
+		const died = humanoid.Died.Connect((): void => this.onCharacterDied(player, character));
+		task.defer((): void => {
+			character.Parent = characters;
+		});
+		bin.add(ancestry);
+		bin.add(descendant);
+		bin.add(died);
+		bins.set(player, bin);
+		loaded.set(player, character);
+		characterAdded.fire(player, character);
+	}
+
+	public onCharacterRemoving(player: Player, character: Model): void {
+		const { characters } = CharacterService;
+		const { bins } = this;
+		const bin = bins.get(player);
+		characters.delete(player);
+		bins.delete(player);
+		bin?.destroy();
+		characterRemoving.fire(player, character);
+	}
+
+	public onCharacterDied(player: Player, character: Model): void {
+		const { characters } = CharacterService;
+		characters.delete(player);
+		characterDied.fire(player, character);
+		task.delay(CHARACTER_RESPAWN_DELAY, (): void => {
+			pcall((): void => {
+				player.LoadCharacter();
+			});
 		});
 	}
 
-	public onPlayerAdded(entity: Entity): void {
-		if (!entity.isPlayer()) {
-			return;
-		}
-		const { player } = entity;
-		const { characters } = Character;
-		for (const [user, character] of characters) {
-			const instance = character.getInstance();
-			Events.character.add(player, user, instance);
-		}
+	public onPlayerReady(player: Player): void {
+		player.LoadCharacter();
 	}
 
-	public onStart(): void {
-		Functions.character.requestReset.setCallback((player: Player): void => {
-			const entity = Entity.fromPlayer(player);
-			if (!entity.isRespawnable() || !entity.canRespawn()) {
-				return;
-			}
-			entity.loadCharacter();
-		});
-		Character.onCharacterAdded.Connect((character: Character): void => this.onCharacterAdded(character));
-		Character.onCharacterRemoved.Connect((character: Character): void => this.onCharacterRemoved(character));
-		Character.onCharacterDied.Connect((character: Character): void => this.onCharacterDied(character));
-		const { characters } = Character;
-		for (const [_, character] of characters) {
-			reuseThread((): void => this.onCharacterAdded(character));
+	public onPlayerAdded(player: Player): void {
+		const { connections } = this;
+		const bin = new Bin();
+		const character = player.Character;
+		if (character !== undefined) {
+			this.onCharacterAdded(player, character);
 		}
+		const added = player.CharacterAdded.Connect(
+			(model: Model): Promise<void> => this.onCharacterAdded(player, model),
+		);
+		const removed = player.CharacterRemoving.Connect((model: Model): void =>
+			this.onCharacterRemoving(player, model),
+		);
+		bin.add(added);
+		bin.add(removed);
+		connections.set(player, bin);
+	}
+
+	public onPlayerRemoving(player: Player): void {
+		const { connections, bins } = this;
+		const conns = connections.get(player);
+		const bin = bins.get(player);
+		connections.delete(player);
+		bins.delete(player);
+		conns?.destroy();
+		bin?.destroy();
 	}
 }

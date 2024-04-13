@@ -1,5 +1,5 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { Mob } from "client/mob/class";
+import { Mob } from "client/mob/class/class";
 import { MobHealthbar } from "./health-bar";
 import { MobId } from "shared/mob/types";
 import { ReflexProvider } from "@rbxts/react-reflex";

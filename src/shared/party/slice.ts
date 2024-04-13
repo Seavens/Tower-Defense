@@ -4,7 +4,7 @@ import type { Draft } from "@rbxts/immut/src/types-external";
 //
 import { PARTY_INVITE_EXPIRATION } from "./constants";
 import { createProducer } from "@rbxts/reflex";
-import type { EntityMetadata } from "shared/replication/metadata";
+import type { UserMetadata } from "shared/replication/metadata";
 import type { Party, PartyInvite } from "./types";
 import type {
 	PartyAcceptInvite,
@@ -30,7 +30,7 @@ const partyState: PartyState = {
 };
 
 export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(partyState, {
-	createParty: (state: PartyState, { id }: PartyCreate, { user }: EntityMetadata): PartyState =>
+	createParty: (state: PartyState, { id }: PartyCreate, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, users }: Draft<PartyState>): void => {
 			const owner = user;
 			if (users.has(owner)) {
@@ -46,7 +46,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			// Map the user to the party id for easier lookup.
 			users.set(owner, id);
 		}),
-	disbandParty: (state: PartyState, _: PartyDisband, { user }: EntityMetadata): PartyState =>
+	disbandParty: (state: PartyState, _: PartyDisband, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, users }: Draft<PartyState>): void => {
 			const owner = user;
 			const id = users.get(user);
@@ -70,7 +70,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 	inviteMember: (
 		state: PartyState,
 		{ invitee, timestamp }: PartyInviteMember,
-		{ user }: EntityMetadata,
+		{ user }: UserMetadata,
 	): PartyState =>
 		produce(state, ({ parties, invites, users }: Draft<PartyState>): void => {
 			const sender = user;
@@ -101,7 +101,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			// If we have an invite from the same party id, replace it with the most recent (this invite)
 			pending.set(id, invite);
 		}),
-	kickMember: (state: PartyState, { member }: PartyKickMember, { user }: EntityMetadata): PartyState =>
+	kickMember: (state: PartyState, { member }: PartyKickMember, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, invites, users }: Draft<PartyState>): void => {
 			const kicker = user;
 			const id = users.get(kicker);
@@ -124,7 +124,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			// Delete any invites they have, incase they have an invite to the party they were just kicked from.
 			pending?.delete(id);
 		}),
-	acceptInvite: (state: PartyState, { id, timestamp }: PartyAcceptInvite, { user }: EntityMetadata): PartyState =>
+	acceptInvite: (state: PartyState, { id, timestamp }: PartyAcceptInvite, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, invites, users }: Draft<PartyState>): void => {
 			const invitee = user;
 			// Invitee is in a party.
@@ -153,7 +153,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			users.set(invitee, id);
 		}),
 	// Internal use only.
-	inviteExpired: (state: PartyState, { id }: PartyInviteExpired, { user }: EntityMetadata): PartyState =>
+	inviteExpired: (state: PartyState, { id }: PartyInviteExpired, { user }: UserMetadata): PartyState =>
 		produce(state, ({ invites }: Draft<PartyState>): void => {
 			const pending = invites.get(user);
 			if (pending === undefined) {
@@ -161,10 +161,10 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			}
 			pending.delete(id);
 		}),
-	playerAdded: (state: PartyState, _1: PlayerAdded, _2: EntityMetadata): PartyState => {
+	playerAdded: (state: PartyState, _1: PlayerAdded, _2: UserMetadata): PartyState => {
 		return state;
 	},
-	playerRemoved: (state: PartyState, _: PlayerRemoved, { user }: EntityMetadata): PartyState =>
+	playerRemoved: (state: PartyState, _: PlayerRemoved, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, invites, users }: Draft<PartyState>): void => {
 			const id = users.get(user);
 			invites.delete(user);

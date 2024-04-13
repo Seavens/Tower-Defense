@@ -1,5 +1,5 @@
 import { ItemId } from "shared/inventory/types";
-import { Mob } from "server/mob/class";
+import { Mob } from "server/mob/class/class";
 import { MobStatus } from "shared/mob/types";
 import { TowerUtility } from "shared/tower/utility";
 import type { ReplicatedTower } from "shared/tower/types";

@@ -1,9 +1,8 @@
 import { DATA_TEMPLATE } from "shared/data/constants";
 import { LevelUtility } from "shared/profile/utility";
-import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
-import type { DataAdded, DataRemoved } from "shared/data/actions";
+import type { DataAdded } from "shared/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/replication/metadata";
 import type {
@@ -53,9 +52,5 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 			return state;
 		});
 	},
-	dataRemoved: (state: ProfileState, payload: DataRemoved): ProfileState => {
-		return produce(state, (draft: Draft<ProfileState>): void => {
-			clear(draft);
-		});
-	},
+	// Add Settings
 });

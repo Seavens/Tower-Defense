@@ -1,14 +1,10 @@
 import type { DataActions } from "shared/data/actions";
-import type { EntityMetadata, ReplicationMetadata } from "shared/replication/metadata";
+import type { ReplicationMetadata, UserMetadata } from "shared/replication/metadata";
 
 export type ProfileActions<S> = {
-	profileAddExperience: (
-		state: S,
-		payload: ProfileAddExperience,
-		metadata: EntityMetadata & ReplicationMetadata,
-	) => S;
-	profileAdjustGems: (state: S, payload: ProfileAdjustGems, metadata: EntityMetadata & ReplicationMetadata) => S;
-	profileAdjustCoins: (state: S, payload: ProfileAdjustCoins, metadata: EntityMetadata & ReplicationMetadata) => S;
+	profileAddExperience: (state: S, payload: ProfileAddExperience, metadata: UserMetadata & ReplicationMetadata) => S;
+	profileAdjustGems: (state: S, payload: ProfileAdjustGems, metadata: UserMetadata & ReplicationMetadata) => S;
+	profileAdjustCoins: (state: S, payload: ProfileAdjustCoins, metadata: UserMetadata & ReplicationMetadata) => S;
 } & DataActions<S>;
 
 export interface ProfileAddExperience {

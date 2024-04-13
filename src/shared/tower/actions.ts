@@ -1,12 +1,12 @@
-import type { BroadcastMetadata, EntityMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, UserMetadata } from "shared/replication/metadata";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { TowerTargeting } from "./types";
 
 export type TowerActions<S> = {
-	towerPlace: (state: S, payload: TowerPlace, metadata: EntityMetadata & BroadcastMetadata) => S;
-	towerUpgrade: (state: S, payload: TowerUpgrade, metadata: EntityMetadata & BroadcastMetadata) => S;
-	towerSell: (state: S, payload: TowerSell, metadata: EntityMetadata & BroadcastMetadata) => S;
-	towerSetTargeting: (state: S, payload: TowerSetTargeting, metadata: EntityMetadata & BroadcastMetadata) => S;
+	towerPlace: (state: S, payload: TowerPlace, metadata: UserMetadata & BroadcastMetadata) => S;
+	towerUpgrade: (state: S, payload: TowerUpgrade, metadata: UserMetadata & BroadcastMetadata) => S;
+	towerSell: (state: S, payload: TowerSell, metadata: UserMetadata & BroadcastMetadata) => S;
+	towerSetTargeting: (state: S, payload: TowerSetTargeting, metadata: UserMetadata & BroadcastMetadata) => S;
 	towerAddExperience: (state: S, payload: TowerAddExperience, metadata: BroadcastMetadata) => S;
 };
 
