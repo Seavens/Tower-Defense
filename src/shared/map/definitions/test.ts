@@ -7,7 +7,6 @@ export const testMap: MapDefinition<MapId.Test> = {
 	name: "Test",
 	desc: "...",
 	difficulty: MapDifficulty.Easy,
-	// waves: [[{ [MobId.Rat]: { count: 10, delay: 3, wait: 1.7 } }, 1000, 100]],
 
 	waves: {
 		first: {
@@ -25,5 +24,5 @@ export const testMap: MapDefinition<MapId.Test> = {
 		},
 	},
 
-	baseHealth: 1000,
+	baseHealth: math.huge,
 };

@@ -125,9 +125,11 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			}
 			const placed = placedTowers.get(uuid) ?? 0;
 			if (placed <= 0) {
+				warn(uuid, placed);
 				return;
 			}
 			placedTowers.set(uuid, placed - 1);
+			warn(placedTowers);
 			tower.sellTower();
 		});
 	}

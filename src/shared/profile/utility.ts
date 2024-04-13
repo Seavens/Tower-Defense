@@ -3,7 +3,7 @@ import { TOWER_BASE_EXPERIENCE, TOWER_GROWTH_RATE } from "shared/tower/constants
 
 export namespace LevelUtility {
 	export function getMaxExp(level: number, tower = false): number {
-		if (level >= 100) return level;
+		if (level >= (tower ? 100 : math.huge)) return level;
 
 		const baseExperience = tower ? TOWER_BASE_EXPERIENCE : PROFILE_BASE_EXPERIENCE;
 		const growthRate = tower ? TOWER_GROWTH_RATE : PROFILE_GROWTH_RATE;
@@ -12,7 +12,7 @@ export namespace LevelUtility {
 	}
 
 	export function calculateIncrease(startLevel: number, exp: number, tower = false): [level: number, exp: number] {
-		if (exp === math.huge) {
+		if (exp >= math.huge) {
 			return [1, 0];
 		}
 		let level = startLevel;

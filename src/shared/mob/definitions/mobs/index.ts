@@ -23,6 +23,8 @@ export interface MobDefinition<I extends MobId> {
 	animations: { [K in MobAnimation]: Array<RBXAssetId> };
 }
 
+export type AnyMobDefinition = (typeof mobDefinitions)[MobId];
+
 export const mobDefinitions: { [I in MobId]: MobDefinition<I> } = {
 	[MobId.Rat]: ratMob,
 	[MobId.Alien]: alienMob,

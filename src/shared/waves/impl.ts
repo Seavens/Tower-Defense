@@ -1,7 +1,9 @@
+import { Dictionary } from "@rbxts/sift";
 import { INITIAL_WAVE_ALLOCATION, SPEED_FACTOR, WAVE_GROWTH } from "./constants";
 import { MAP_DIFFICULTY_MULTIPLIERS } from "shared/map/constants";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/definitions";
+import type { AnyMobDefinition } from "shared/mob/definitions/mobs";
 import type { MapDifficulty } from "shared/map/types";
 import type { MapId } from "shared/map/types";
 import type { WaveDefinition } from "shared/map/definitions";
@@ -23,10 +25,11 @@ export class WaveImpl {
 		const multiplier = MAP_DIFFICULTY_MULTIPLIERS[difficulty];
 		let allocated = index ** (WAVE_GROWTH + multiplier) + INITIAL_WAVE_ALLOCATION;
 		const wave: WaveDefinition = {};
-		const { waves: testing } = mapDefinitions[map];
-		const { first, appearances } = testing!;
+		const { waves } = mapDefinitions[map];
+		const { first, appearances } = waves!;
+		const definitions = this.orderDefinitions();
 		let delay = -1;
-		for (const [id, { health }] of pairs(mobDefinitions)) {
+		for (const { id, health } of definitions) {
 			delay += 1;
 			if (allocated <= 0) {
 				break;
@@ -54,5 +57,14 @@ export class WaveImpl {
 			wave[id] = definition;
 		}
 		return wave;
+	}
+
+	protected static orderDefinitions(): Array<AnyMobDefinition> {
+		const definitions = new Array<AnyMobDefinition>();
+		for (const [, definition] of pairs(mobDefinitions)) {
+			definitions.push(definition);
+		}
+		definitions.sort(({ health: a }, { health: b }): boolean => a > b);
+		return definitions;
 	}
 }
