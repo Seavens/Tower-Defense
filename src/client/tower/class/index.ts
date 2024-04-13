@@ -76,15 +76,16 @@ export class Tower extends API {
 		}
 
 		const instance = model.Clone();
+
 		setCollision(instance, Collision.Tower, true);
 		instance.AddTag(ComponentTag.Tower);
 		instance.PivotTo(cframe);
 		instance.SetAttribute(TOWER_KEY_ATTRIBUTE, key);
 
-		const module = towerVisualModules[TowerVisual.TowerPlace];
+		const module = towerVisualModules[TowerVisual.HeatedImpact];
 		const { duration } = module;
 		const temporary = new Bin();
-		module.onEffect(temporary, instance);
+		module.onEffect(temporary, instance, undefined, id);
 		bin.add(temporary);
 		task.delay(duration, (): void => {
 			temporary.destroy();
@@ -231,7 +232,7 @@ export class Tower extends API {
 		const module = towerVisualModules[visual[1]];
 		const { duration } = module;
 		const temporary = new Bin();
-		module.onEffect(temporary, instance, target);
+		module.onEffect(temporary, instance, target, id);
 
 		const { animations } = kind;
 		instance.Parent = placed;
@@ -265,10 +266,24 @@ export class Tower extends API {
 
 	public destroy(): void {
 		const { towers } = Tower;
-		const { instance, sphere, circle, key, bin } = this;
-		bin.destroy();
+		const { instance, sphere, circle, key, bin, id } = this;
+
+		const module = towerVisualModules[TowerVisual.HeatedImpact];
+		const { duration } = module;
+		const temporary = new Bin();
+		module.onEffect(temporary, instance, undefined, id);
+		bin.add(temporary);
+		task.delay(duration, (): void => {
+			temporary.destroy();
+		});
+
+		const { kind } = itemDefinitions[id];
+		const { animations } = kind;
+		const animator = new Animator<TowerAnimation>(instance, animations);
+		const track = animator.getAnimation(TowerAnimation.Sell);
+		task.delay(track.Length, (): void => instance.Destroy());
+		animator.playAnimation(TowerAnimation.Sell);
 		towers.delete(key);
-		instance.Destroy();
 		sphere?.Destroy();
 		circle?.Destroy();
 	}

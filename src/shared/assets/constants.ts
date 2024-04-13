@@ -9,8 +9,8 @@ export const ASSET_IDS = {
 	// Animations
 	Walk: "rbxassetid://17071612480",
 	Jump: "rbxassetid://125750702",
-	Summon: "rbxassetid://17107797565",
+	Summon: "rbxassetid://17125440368",
 	Attack: "rbxassetid://17109034511",
-	Sell: "rbxassetid://17123581417",
+	Sell: "rbxassetid://17125215758",
 } as const;
 ASSET_IDS satisfies { [K in keyof typeof ASSET_IDS]: RBXAssetId };
