@@ -10,17 +10,27 @@ export const testMap: MapDefinition<MapId.Test> = {
 
 	waves: {
 		first: {
-			[MobId.Rat]: {
-				count: 25,
-				delay: 0,
+			[MobId.UrbanOne]: {
+				count: 12,
+				delay: 0.5,
 				wait: 1,
 			},
 		},
 		appearances: {
-			[MobId.Rat]: 1,
-			[MobId.Alien]: 7,
-			[MobId.Monkey]: 12,
-			[MobId.Grimace]: 15,
+			[MobId.UrbanOne]: 1,
+			[MobId.UrbanTwo]: 4,
+			[MobId.UrbanThree]: 8,
+			[MobId.SoldierOne]: 11,
+			[MobId.SoldierTwo]: 15,
+			[MobId.SoldierThree]: 18,
+			[MobId.NavyOne]: 21,
+			[MobId.NavyTwo]: 25,
+			[MobId.NavyThree]: 28,
+			[MobId.NavyFour]: 31,
+			[MobId.AirforceOne]: 35,
+			[MobId.AirforceTwo]: 38,
+			[MobId.AirforceThree]: 42,
+			[MobId.AirforceFour]: 45,
 		},
 	},
 

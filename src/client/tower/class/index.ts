@@ -5,7 +5,6 @@ import { Bin } from "@rbxts/bin";
 import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 import { GAME_TICK_RATE } from "shared/core/constants";
-import { ItemUtility } from "shared/inventory/utility";
 import { Mob } from "client/mob/class/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
@@ -21,7 +20,6 @@ import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
 import { targetingModules } from "shared/tower/targeting";
 import { towerVisualModules } from "../visuals/definitions";
-import { tween } from "@rbxts/ripple";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
 

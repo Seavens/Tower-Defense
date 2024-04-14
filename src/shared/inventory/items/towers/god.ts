@@ -17,7 +17,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 		kind: ItemKind.Tower,
 
 		damage: 84,
-		range: 16,
+		range: 12,
 		cooldown: 3,
 
 		damageKind: MobDamage.Magic,
@@ -41,7 +41,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.Tornado],
+		visual: [TowerVisual.Neutron],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

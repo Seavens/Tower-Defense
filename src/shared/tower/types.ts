@@ -25,7 +25,7 @@ export const enum TowerGrade {
 export const enum TowerVisual {
 	SniperShot = "tower_visual:sniper_shot",
 	HolyStrike = "tower_visual:holy_strike",
-	Tornado = "tower_visual:tornado",
+	Neutron = "tower_visual:neutron",
 	HeatedImpact = "tower_visual:tower_place",
 }
 

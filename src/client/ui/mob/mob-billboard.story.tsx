@@ -15,7 +15,7 @@ export = CreateReactStory(
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {
-			mobId: MobId.Rat,
+			mobId: MobId.UrbanOne,
 			currentHealth: 75,
 		},
 		cleanup: (): void => {

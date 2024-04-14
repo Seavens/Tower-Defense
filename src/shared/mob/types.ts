@@ -1,10 +1,20 @@
 import { Flamework } from "@flamework/core";
 
 export const enum MobId {
-	Rat = "mob_id:rat",
-	Alien = "mob_id:alien",
-	Monkey = "mob_id:monkey",
-	Grimace = "mob_id:grimace",
+	UrbanOne = "mob_id:urban_one",
+	UrbanTwo = "mob_id:urban_two",
+	UrbanThree = "mob_id:urban_three",
+	SoldierOne = "mob_id:soldier_one",
+	SoldierTwo = "mob_id:soldier_two",
+	SoldierThree = "mob_id:soldier_three",
+	NavyOne = "mob_id:navy_one",
+	NavyTwo = "mob_id:navytwo",
+	NavyThree = "mob_id:navy_three",
+	NavyFour = "mob_id:navy_four",
+	AirforceOne = "mob_id:airforce_one",
+	AirforceTwo = "mob_id:airforce_two",
+	AirforceThree = "mob_id:airforce_three",
+	AirforceFour = "mob_id:airforce_four",
 }
 
 export interface MobData {

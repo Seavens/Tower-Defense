@@ -10,8 +10,14 @@ export const ASSET_IDS = {
 	PistolBlast: "rbxassetid://1145253456",
 	Fireball: "rbxassetid://6289220757",
 	Lobby: "rbxassetid://1839945406",
+	WhooshSuction: "rbxassetid://9120736816",
+	ElectricSpark: "rbxassetid://624552683",
+	LightningFlashes: "rbxassetid://9116272906",
+	SilentGlitcher: "rbxassetid://7390331288",
+
 	// Animations
-	Walk: "rbxassetid://17071612480",
+	WalkR6: "rbxassetid://17140384803",
+	WalkR15: "rbxassetid://913402848",
 	Jump: "rbxassetid://125750702",
 	Summon: "rbxassetid://17125440368",
 	Attack: "rbxassetid://17109034511",

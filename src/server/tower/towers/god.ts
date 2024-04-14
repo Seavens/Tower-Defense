@@ -12,9 +12,10 @@ export const godTower: TowerModule<ItemId.God> = {
 		const { unique } = tower;
 		const multiplier = TowerUtility.getLevelMultiplier(unique);
 		const duration = 8 + 8 * multiplier;
+		warn(duration, duration / 1.5);
 		const position = target.getCFrame().Position;
 		const radius = TowerUtility.getTotalRange(tower);
-		const mobs = Mob.getMobsInRadius(position, radius / 4);
+		const mobs = Mob.getMobsInRadius(position, radius / 3);
 		for (const node of mobs) {
 			const mob = node.Object;
 			mob.takeDamage(TowerUtility.getTotalDamage(tower) * 0.5, MobDamage.Projectile);
