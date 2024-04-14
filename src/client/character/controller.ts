@@ -1,8 +1,10 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { Animator } from "shared/assets/animator";
 import { Bin } from "@rbxts/bin";
 import { CHARACTER_ANIMATIONS } from "./constants";
 import { Collision, setCollision } from "shared/utility/collision";
 import { Controller } from "@flamework/core";
+import { SoundEmitter } from "shared/assets/sound";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/create-listener";
 import { promiseR15 } from "@rbxts/promise-character";
@@ -94,8 +96,14 @@ export class CharacterController implements OnPlayerAdded, OnPlayerRemoving {
 		const { connections } = this;
 		const bin = new Bin();
 		const character = player.Character;
+
 		if (character !== undefined) {
 			this.onCharacterAdded(player, character);
+
+			const incoming = new SoundEmitter(character, {
+				Lobby: [ASSET_IDS.Lobby],
+			});
+			incoming.playSound("Lobby");
 		}
 		const added = player.CharacterAdded.Connect(
 			(model: Model): Promise<void> => this.onCharacterAdded(player, model),

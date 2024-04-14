@@ -41,7 +41,7 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.HeatedImpact, TowerVisual.HolyStrike],
+		visual: [TowerVisual.HeatedImpact, TowerVisual.Tornado],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

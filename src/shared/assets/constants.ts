@@ -9,6 +9,7 @@ export const ASSET_IDS = {
 	Blast: "rbxassetid://618826713",
 	PistolBlast: "rbxassetid://1145253456",
 	Fireball: "rbxassetid://6289220757",
+	Lobby: "rbxassetid://1839945406",
 	// Animations
 	Walk: "rbxassetid://17071612480",
 	Jump: "rbxassetid://125750702",
