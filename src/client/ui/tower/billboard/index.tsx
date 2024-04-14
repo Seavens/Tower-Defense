@@ -17,12 +17,17 @@ export function TowerBillboards(): Element {
 				continue;
 			}
 			const { instance } = tower;
+			const root = instance.FindFirstChild("HumanoidRootPart");
+			let adornee: Model | BasePart = instance;
+			if (root !== undefined && root.IsA("BasePart")) {
+				adornee = root;
+			}
 			const size = instance.GetExtentsSize().div(2);
 			const height = size.Y;
 			const element = (
 				<billboardgui
 					Size={UDim2.fromScale(BILLBOARD_SIZE.X, BILLBOARD_SIZE.Y)}
-					Adornee={instance}
+					Adornee={adornee}
 					AlwaysOnTop={false}
 					Enabled={true}
 					MaxDistance={100}

@@ -13,7 +13,7 @@ export const ratMob: MobDefinition<MobId.Rat> = {
 	bounty: 75,
 	experience: 15,
 
-	height: 1.13,
+	height: 2.8,
 
 	animations: {
 		[MobAnimation.Walk]: ["rbxassetid://913402848"],

@@ -123,5 +123,6 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		bin.add(tween);
 		bin.add(delay);
 		bin.add(effect);
+		bin.add(shake);
 	},
 };

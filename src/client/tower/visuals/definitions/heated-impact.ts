@@ -6,6 +6,7 @@ import { meleeTowerItem } from "shared/inventory/items/towers/melee";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";
+import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerItemId } from "shared/inventory/types";
 import type { TowerVisualModule } from ".";
 
@@ -14,12 +15,12 @@ const info = new TweenInfo(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
 export const heatedImpactVisual: TowerVisualModule<TowerVisual.HeatedImpact> = {
 	id: TowerVisual.HeatedImpact,
 	duration: 2,
-	onEffect: (bin: Bin, model: Model, target: Option<Mob>, towerId?: TowerItemId): void => {
+	onEffect: (bin: Bin, model: Model, target: Option<Mob>, tower: ReplicatedTower): void => {
 		const rootPart = model.FindFirstChild("HumanoidRootPart");
 		if (!rootPart) return;
 		rootPart.Parent = model;
-
-		const def = itemDefinitions[towerId === undefined ? meleeTowerItem.id : towerId];
+		const { id } = tower;
+		const def = itemDefinitions[id];
 		const { rarity } = def;
 		const { color } = rarityDefinitions[rarity];
 

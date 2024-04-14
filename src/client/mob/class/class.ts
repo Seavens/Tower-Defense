@@ -1,6 +1,6 @@
 import { Mob as API } from "shared/mob/api";
 import { Animator } from "shared/assets/animator";
-import { GAME_TICK_RATE } from "shared/core/constants";
+import { GAME_TICK_RATE, GAME_TIMESTEP } from "shared/core/constants";
 import { MobAnimation } from "shared/mob/types";
 import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
@@ -81,7 +81,9 @@ export class Mob extends API {
 		this.instance = model;
 		this.animator = animator;
 		onMobAdded.FireDeferred(this);
-		animator.playAnimation(MobAnimation.Walk);
+		const track = animator.playAnimation(MobAnimation.Walk);
+		// !! Whenever timestep changes, adjust speeds.
+		track.AdjustSpeed(GAME_TIMESTEP);
 		mobs.set(uuid, this);
 	}
 

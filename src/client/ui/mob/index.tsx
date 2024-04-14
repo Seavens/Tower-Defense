@@ -17,16 +17,22 @@ export function MobApp(): Element {
 		const billboards = new Array<Element>();
 		for (const [, mob] of Mob.getMobs()) {
 			const { id } = mob;
+			const instance = mob.getInstance();
+			const root = instance.FindFirstChild("HumanoidRootPart");
+			let adornee: Model | BasePart = instance;
+			if (root !== undefined && root.IsA("BasePart")) {
+				adornee = root;
+			}
 			const { height } = mobDefinitions[id];
 			const health = mob.getHealth();
 			const element = (
 				<billboardgui
 					Size={UDim2.fromScale(px(BILLBOARD_SIZE.X), px(BILLBOARD_SIZE.Y))}
-					Adornee={mob.getInstance()}
+					Adornee={adornee}
 					AlwaysOnTop={false}
 					Enabled={true}
 					MaxDistance={100}
-					ExtentsOffsetWorldSpace={new Vector3(0, height + 0.25, 0)}
+					ExtentsOffsetWorldSpace={new Vector3(0, height + 1.5, 0)}
 				>
 					<MobHealthbar id={id} health={health} />
 				</billboardgui>

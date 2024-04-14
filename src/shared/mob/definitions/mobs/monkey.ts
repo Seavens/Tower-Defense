@@ -14,7 +14,7 @@ export const monkeyMob: MobDefinition<MobId.Monkey> = {
 	bounty: 500,
 	experience: 300,
 
-	height: 1.89,
+	height: 4,
 
 	animations: {
 		[MobAnimation.Walk]: [ASSET_IDS.Walk],

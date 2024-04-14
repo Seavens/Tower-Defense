@@ -25,7 +25,7 @@
     "rbxts-transform-env": "^2.2.0",
     "rbxts-transformer-flamework": "^1.2.2",
     "roblox-ts": "^2.3.0-dev-539482e",
-    "typescript": "^5.3.3"
+    "typescript": "^5.4.2"
   },
   "dependencies": {
     "@flamework/components": "^1.2.2",

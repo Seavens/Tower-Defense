@@ -95,8 +95,8 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 
 		// Wait for intermission time before starting the next wave
 		for (const index of $range(0, INTERMISSION_TIME - 1)) {
-			task.wait(1);
 			warn(INTERMISSION_TIME - index, INTERMISSION_TIME - index > 1 ? "s" : "");
+			task.wait(1);
 		}
 
 		warn("Wave started.");

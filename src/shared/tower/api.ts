@@ -9,6 +9,7 @@ export abstract class Tower {
 	public readonly owner: string;
 
 	protected readonly key: string;
+	/** @deprecated */
 	protected readonly unique: ItemTowerUnique;
 
 	public constructor(tower: ReplicatedTower) {

@@ -13,7 +13,7 @@ export const grimaceMob: MobDefinition<MobId.Grimace> = {
 	bounty: 800,
 	experience: 500,
 
-	height: 2.5,
+	height: 4.7,
 
 	animations: {
 		[MobAnimation.Walk]: ["rbxassetid://913402848"],

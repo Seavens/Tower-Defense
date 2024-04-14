@@ -1,24 +1,23 @@
-import { ASSET_IDS } from "shared/assets/constants";
 import { Collision, setCollision } from "shared/utility/collision";
 import { Flamework } from "@flamework/core";
-import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
-import { SoundEmitter } from "shared/assets/sound";
+import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { TowerUtility } from "shared/tower/utility";
 import { TowerVisual } from "shared/tower/types";
 import { VisualUtility, params } from "../utility";
 import Shake from "@rbxts/rbx-sleitnick-shake";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class/class";
+import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerVisualModule } from ".";
 
 const { assets } = ReplicatedStorage;
 const { effects } = assets;
 
-const guard = Flamework.createGuard<BasePart & { sky: Attachment; ground: Attachment & { light: PointLight } }>();
+const guard = Flamework.createGuard<
+	BasePart & { inner: Attachment; outer: Attachment; area: Attachment & { ParticleEmitter: ParticleEmitter } }
+>();
 const prefab = effects.FindFirstChild(TowerVisual.Tornado);
 
-const reverses = new TweenInfo(0.25, Enum.EasingStyle.Circular, Enum.EasingDirection.InOut, 0, true);
-const fast = new TweenInfo(0.5, Enum.EasingStyle.Circular, Enum.EasingDirection.Out);
-const info = new TweenInfo(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out);
 const priority = Enum.RenderPriority.Last.Value;
 
 const { debris } = Workspace;
@@ -26,9 +25,9 @@ const camera = Workspace.CurrentCamera;
 
 export const tornadoVisual: TowerVisualModule<TowerVisual.Tornado> = {
 	id: TowerVisual.Tornado,
-	duration: 4,
+	duration: 9,
 
-	onEffect: (bin: Bin, model: Model, target: Option<Mob>): void => {
+	onEffect: (bin: Bin, model: Model, target: Option<Mob>, tower: ReplicatedTower): void => {
 		if (prefab === undefined || !guard(prefab) || target === undefined) {
 			return;
 		}
@@ -43,41 +42,23 @@ export const tornadoVisual: TowerVisualModule<TowerVisual.Tornado> = {
 		}
 		const effect = prefab.Clone();
 		setCollision(effect, Collision.Debris, true);
-		const { sky, ground } = effect;
-		const { light } = ground;
-		const incoming = new SoundEmitter(sky, {
-			ThunderSpear: [ASSET_IDS.ThunderSpear],
-			ElectricExplosion: [ASSET_IDS.ElectricExplosion],
-		});
-		incoming.playSound("ThunderSpear");
+		const { area } = effect;
+		const { ParticleEmitter: emitter } = area;
+		const range = TowerUtility.getTotalRange(tower) / 4;
+		emitter.Size = new NumberSequence(range);
 		const normal = raycast.Normal;
 		const position = raycast.Position;
 		const look = position.add(normal).Unit;
-		const cframe = CFrame.fromMatrix(position, look.Cross(normal), normal);
-		effect.CFrame = pivot;
-		sky.WorldPosition = origin;
-		ground.WorldCFrame = cframe;
+		const cframe = CFrame.fromMatrix(position, look.Cross(normal), normal.mul(-1));
+		effect.CFrame = cframe;
 		effect.Name = `(${model.Name})-${TowerVisual.Tornado}`;
 		effect.Parent = debris;
-		light.Enabled = true;
-		const beams = sky.GetChildren();
-		for (const beam of beams) {
-			if (!beam.IsA("Beam")) {
-				continue;
-			}
-			const tween = TweenService.Create(beam, reverses, {
-				Width0: 65,
-				Width1: 25,
-			});
-			tween.Play();
-			bin.add(tween);
-		}
 		const shake = new Shake();
 		shake.FadeInTime = 0;
 		shake.FadeOutTime = 0.25;
 		shake.Frequency = 0.1;
-		shake.Amplitude = 0.1;
-		shake.SustainTime = 0.25;
+		shake.Amplitude = 0.01;
+		shake.SustainTime = 2.5;
 		shake.Start();
 		VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
 			if (camera === undefined) {
@@ -89,39 +70,34 @@ export const tornadoVisual: TowerVisualModule<TowerVisual.Tornado> = {
 				math.clamp(delta * 60, 0, 1),
 			);
 		});
-		VisualUtility.emitRocks(bin, position, 15, 1, 1);
-		const soundDelay = task.delay(0.1, (): void => {
-			incoming.playSound("ElectricExplosion");
-		});
-		const highlight = new Instance("Highlight");
-		highlight.Name = `(${model.Name})-${TowerVisual.Tornado}`;
-		highlight.FillColor = Color3.fromRGB(250, 255, 176);
-		highlight.OutlineColor = Color3.fromRGB(250, 255, 176);
-		highlight.FillTransparency = 0.5;
-		highlight.OutlineTransparency = 1;
-		highlight.DepthMode = Enum.HighlightDepthMode.Occluded;
-		highlight.Adornee = instance;
-		highlight.Parent = debris;
-		bin.add(highlight);
-		const emitters = ground.GetChildren();
-		for (const emitter of emitters) {
-			if (!emitter.IsA("ParticleEmitter")) {
-				continue;
+		const thread = task.delay(2, (): void => {
+			const emitters = effect.GetDescendants();
+			for (const emitter of emitters) {
+				if (!emitter.IsA("ParticleEmitter")) {
+					continue;
+				}
+				emitter.Enabled = false;
 			}
-			VisualUtility.emitParticle(emitter, 25);
-		}
-		const lightning = TweenService.Create(light, fast, {
-			Brightness: 0,
 		});
-		lightning.Play();
-		const tween = TweenService.Create(highlight, info, {
-			FillTransparency: 1,
-		});
-		const delay = task.delay(1, (): void => tween.Play());
-		bin.add(incoming);
-		bin.add(soundDelay);
-		bin.add(tween);
-		bin.add(delay);
+		// const highlight = new Instance("Highlight");
+		// highlight.Name = `(${model.Name})-${TowerVisual.Tornado}`;
+		// highlight.FillColor = Color3.fromRGB(250, 255, 176);
+		// highlight.OutlineColor = Color3.fromRGB(250, 255, 176);
+		// highlight.FillTransparency = 0.5;
+		// highlight.OutlineTransparency = 1;
+		// highlight.DepthMode = Enum.HighlightDepthMode.Occluded;
+		// highlight.Adornee = instance;
+		// highlight.Parent = debris;
+		// bin.add(highlight);
+		// const tween = TweenService.Create(highlight, info, {
+		// 	FillTransparency: 1,
+		// });
+		// const delay = task.delay(1, (): void => tween.Play());
+		// bin.add(soundDelay);
+		// bin.add(tween);
+		// bin.add(delay);
+		bin.add(shake);
+		bin.add(thread);
 		bin.add(effect);
 	},
 };

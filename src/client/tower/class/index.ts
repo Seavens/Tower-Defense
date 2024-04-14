@@ -5,12 +5,14 @@ import { Bin } from "@rbxts/bin";
 import { Collision, setCollision } from "shared/utility/collision";
 import { ComponentTag } from "shared/components/types";
 import { GAME_TICK_RATE } from "shared/core/constants";
+import { ItemUtility } from "shared/inventory/utility";
 import { Mob } from "client/mob/class/class";
 import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TOWER_KEY_ATTRIBUTE } from "../constants";
 import { TowerAnimation, TowerSounds, TowerVisual } from "shared/tower/types";
+import { TowerTargeting } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
 import { itemDefinitions } from "shared/inventory/items";
@@ -21,7 +23,7 @@ import { targetingModules } from "shared/tower/targeting";
 import { towerVisualModules } from "../visuals/definitions";
 import { tween } from "@rbxts/ripple";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
-import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
+import type { ReplicatedTower } from "shared/tower/types";
 
 const {
 	assets: { towers: assets },
@@ -86,7 +88,7 @@ export class Tower extends API {
 		const module = towerVisualModules[TowerVisual.HeatedImpact];
 		const { duration } = module;
 		const temporary = new Bin();
-		module.onEffect(temporary, instance, undefined, id);
+		module.onEffect(temporary, instance, undefined, tower);
 		bin.add(temporary);
 		task.delay(duration, (): void => {
 			temporary.destroy();
@@ -228,12 +230,15 @@ export class Tower extends API {
 	public attackTarget(target: Option<Mob>): void {
 		const { id, bin, instance } = this;
 		const { kind } = itemDefinitions[id];
-		const { visual } = kind;
+		const {
+			visual: [visual],
+		} = kind;
 		// Change for abilities later
-		const module = towerVisualModules[visual[1]];
+		const module = towerVisualModules[visual];
 		const { duration } = module;
+		const replicated = this.getReplicated();
 		const temporary = new Bin();
-		module.onEffect(temporary, instance, target, id);
+		module.onEffect(temporary, instance, target, replicated);
 
 		const { animations } = kind;
 		instance.Parent = placed;
@@ -275,12 +280,26 @@ export class Tower extends API {
 
 	public destroy(): void {
 		const { towers } = Tower;
-		const { instance, sphere, circle, key, bin, id } = this;
+		const { instance, sphere, circle, key, bin, id, index, cframe, uuid, unique } = this;
 
 		const module = towerVisualModules[TowerVisual.HeatedImpact];
 		const { duration } = module;
 		const temporary = new Bin();
-		module.onEffect(temporary, instance, undefined, id);
+		// onEffect requires a `ReplicatedTower`, at this point, the tower is already out of state
+		// therefore we just create a fake `ReplicatedTower` to appease it -- also because we need
+		// id from it.
+		const fake: ReplicatedTower = {
+			id,
+			index,
+			key,
+			owner: "",
+			position: cframe.Position,
+			targeting: TowerTargeting.First,
+			unique,
+			upgrades: 1,
+			uuid,
+		};
+		module.onEffect(temporary, instance, undefined, fake);
 		bin.add(temporary);
 		task.delay(duration, (): void => {
 			temporary.destroy();
