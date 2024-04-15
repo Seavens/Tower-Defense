@@ -16,7 +16,7 @@ import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
-	protected placed = new Map<UUID, number>();
+	protected placed = new Map<UUID, Array<number>>();
 
 	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
 		const { placed } = this;
@@ -32,11 +32,26 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		}
 		const { kind } = itemDefinitions[id];
 		const { cost, limit, targeting } = kind;
-		const count = placed.get(uuid) ?? 0;
+		let indices = placed.get(uuid);
+		if (indices === undefined) {
+			indices = new Array<number>();
+			placed.set(uuid, indices);
+		}
+		const count = indices.size();
 		if (count >= limit || cost > currency) {
 			return;
 		}
-		const index = count + 1;
+		let index: Option<number>;
+		for (const i of $range(1, limit)) {
+			if (indices.includes(i)) {
+				continue;
+			}
+			index = i;
+			break;
+		}
+		if (index === undefined) {
+			return;
+		}
 		const key = `${uuid}_${index}`;
 		const tower: ReplicatedTower = {
 			id,
@@ -50,7 +65,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			uuid,
 		};
 		new Tower(tower);
-		placed.set(uuid, index);
+		indices.push(index);
 		store.towerPlace(tower, { user: Name, broadcast: true });
 		store.gameAddCurrency({ amount: -cost }, { user: Name, broadcast: true });
 	}
@@ -63,13 +78,13 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 		}
 		const { placed } = this;
 		for (const { uuid, key } of towers) {
-			const count = placed.get(uuid);
-			if (count === undefined) {
+			const indices = placed.get(uuid);
+			if (indices === undefined) {
 				continue;
 			}
 			const tower = Tower.getTower(key);
 			tower?.sellTower();
-			placed.set(uuid, count - 1);
+			placed.delete(uuid);
 		}
 	}
 
@@ -119,17 +134,16 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			if (tower === undefined) {
 				return;
 			}
-			const { uuid, owner } = tower;
+			const { uuid, owner, index } = tower;
 			if (Name !== owner) {
 				return;
 			}
-			const placed = placedTowers.get(uuid) ?? 0;
-			if (placed <= 0) {
-				warn(uuid, placed);
+			const indices = placedTowers.get(uuid);
+			if (indices === undefined) {
 				return;
 			}
-			placedTowers.set(uuid, placed - 1);
-			warn(placedTowers);
+			const i = indices.indexOf(index);
+			indices.remove(i);
 			tower.sellTower();
 		});
 	}

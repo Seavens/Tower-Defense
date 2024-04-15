@@ -17,7 +17,7 @@ export const godTower: TowerModule<ItemId.God> = {
 		const mobs = Mob.getMobsInRadius(position, radius / 3);
 		for (const node of mobs) {
 			const mob = node.Object;
-			mob.takeDamage(TowerUtility.getTotalDamage(tower) * 0.5, MobDamage.Projectile);
+			mob.takeDamage(TowerUtility.getTotalDamage(tower) * 0.5, MobDamage.Magic);
 			target?.applyStatus(MobStatus.Judgement, duration);
 			target?.applyStatus(MobStatus.Slowed, duration / 2);
 		}

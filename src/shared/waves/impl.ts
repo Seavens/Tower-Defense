@@ -30,17 +30,18 @@ export class WaveImpl {
 		const { first, appearances } = waves!;
 		const definitions = this.orderDefinitions();
 		let delay = -1;
-		for (const { id, health } of definitions) {
-			delay += 1;
+		for (const { id } of definitions) {
 			if (allocated <= 0) {
 				break;
 			}
+			const health = MobUtility.getMobHealth(id, index);
 			const appearance = appearances[id];
 			const entry = first[id];
 			const initial = entry?.count ?? 0;
 			if (health > allocated || appearance > index) {
 				continue;
 			}
+			delay += 1;
 			const max = math.ceil(30 + 5 ** WAVE_GROWTH);
 			const adding = math.clamp(initial + math.ceil((index - appearance) ** WAVE_GROWTH), 1, max);
 			let definition = wave[id];
@@ -49,7 +50,7 @@ export class WaveImpl {
 				const clamped = math.clamp(count + adding, 1, max);
 				const added = adding - count;
 				definition.count = clamped;
-				added > 0 && (allocated -= MobUtility.getMobHealth(id, index) * added);
+				added > 0 && (allocated -= health * added);
 				continue;
 			}
 			const count = adding;

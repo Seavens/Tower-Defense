@@ -257,7 +257,7 @@ export class Tower extends API {
 	public onTick(): void {
 		const { id, instance, cframe } = this;
 		const mob = this.getTarget();
-		if (mob === undefined) {
+		if (mob === undefined || mob.isDead()) {
 			return;
 		}
 		const target = mob.getCFrame();

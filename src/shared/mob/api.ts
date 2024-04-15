@@ -55,6 +55,9 @@ export abstract class Mob {
 
 	public getCFrame(): CFrame {
 		const { current, target, waypoints, last } = this;
+		if (this.isDead()) {
+			return last;
+		}
 		const a = waypoints[current - 1].GetPivot();
 		const b = waypoints[target - 1].GetPivot();
 		const alpha = this.getAlpha();

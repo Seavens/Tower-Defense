@@ -1,6 +1,6 @@
 import { ASSET_IDS } from "shared/assets/constants";
 import { Collision, setCollision } from "shared/utility/collision";
-import { Flamework } from "@flamework/core";
+import { Flamework, Modding } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TowerUtility } from "shared/tower/utility";
@@ -15,6 +15,10 @@ import type { TowerVisualModule } from ".";
 const { assets } = ReplicatedStorage;
 const { effects } = assets;
 
+type Sounds = "WhooshSuction" | "ElectricSpark" | "LightningFlashes" | "SilentGlitcher";
+
+const soundNames = Modding.inspect<Array<Sounds>>();
+
 const guard = Flamework.createGuard<
 	BasePart & {
 		top1: Attachment & { ParticleEmitter: ParticleEmitter };
@@ -25,6 +29,8 @@ const guard = Flamework.createGuard<
 const prefab = effects.FindFirstChild(TowerVisual.Neutron);
 
 const priority = Enum.RenderPriority.Last.Value;
+
+const info = new TweenInfo(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out, 0, false, 2.5);
 
 const { debris } = Workspace;
 const camera = Workspace.CurrentCamera;
@@ -40,8 +46,8 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 		const instance = target.getInstance();
 		const pivot = instance.GetPivot();
 		const point = pivot.Position;
-		const origin = point.add(Vector3.yAxis.mul(30));
-		const direction = Vector3.yAxis.mul(-35);
+		const origin = point.add(Vector3.yAxis.mul(5));
+		const direction = Vector3.yAxis.mul(-10);
 		const raycast = Workspace.Raycast(origin, direction, params);
 		if (raycast === undefined) {
 			return;
@@ -93,12 +99,25 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 			SilentGlitcher: [ASSET_IDS.SilentGlitcher],
 		});
 
-		sounds.playSound("SilentGlitcher");
-		sounds.playSound("LightningFlashes", undefined, 0.5);
-		sounds.playSound("ElectricSpark", undefined, 0.5);
-		sounds.playSound("WhooshSuction", undefined, 0.5);
+		for (const key of soundNames) {
+			const sound = sounds.playSound(key);
+			const tween = TweenService.Create(sound, info, { Volume: 0 });
+			tween.Play();
+			bin.add(tween);
+		}
+
+		// sounds.playSound("SilentGlitcher");
+		// sounds.playSound("ElectricSpark", undefined, 0.5);
+		// sounds.playSound("WhooshSuction", undefined, 0.5);
+		// const sound = sounds.playSound("LightningFlashes", undefined, 0.5);
+		// sound.PlaybackSpeed = 1.1;
+
+		const delay = task.delay(3.25, (): void => {
+			sounds.destroy();
+		});
 
 		bin.add(sounds);
+		bin.add(delay);
 		bin.add(shake);
 		bin.add(thread);
 		bin.add(effect);

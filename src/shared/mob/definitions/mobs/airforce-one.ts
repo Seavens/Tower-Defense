@@ -1,5 +1,5 @@
 import { ASSET_IDS } from "shared/assets/constants";
-import { MobAnimation, MobId } from "shared/mob/types";
+import { MobAnimation, MobDamage, MobId } from "shared/mob/types";
 import type { MobDefinition } from ".";
 
 export const airforceOne: MobDefinition<MobId.AirforceOne> = {
@@ -8,7 +8,7 @@ export const airforceOne: MobDefinition<MobId.AirforceOne> = {
 	desc: "...",
 
 	speed: 6,
-	resistances: [],
+	resistances: [MobDamage.Blunt],
 	health: 2276,
 
 	bounty: 1838,

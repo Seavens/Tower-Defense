@@ -3,7 +3,6 @@ import { MAX_TOWER_LEVEL } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { UserMetadata } from "shared/replication/metadata";
 import type { ReplicatedTower } from "./types";
 import type {
 	TowerActions,
@@ -13,6 +12,7 @@ import type {
 	TowerSetTargeting,
 	TowerUpgrade,
 } from "./actions";
+import type { UserMetadata } from "shared/replication/metadata";
 
 export interface TowerState {
 	readonly placed: Map<string, Readonly<ReplicatedTower>>; // Map<{{Tower UUID}_{Tower Index}}, Readonly<ReplicatedTower>>;
@@ -50,11 +50,7 @@ export const towerSlice = createProducer<TowerState, TowerActions<TowerState>>(t
 
 			placed.delete(key);
 		}),
-	towerSetTargeting: (
-		state: TowerState,
-		{ key, targeting }: TowerSetTargeting,
-		{ user }: UserMetadata,
-	): TowerState =>
+	towerSetTargeting: (state: TowerState, { key, targeting }: TowerSetTargeting, { user }: UserMetadata): TowerState =>
 		produce(state, ({ placed }: Draft<TowerState>): void => {
 			const tower = placed.get(key);
 			const owner = tower?.owner;

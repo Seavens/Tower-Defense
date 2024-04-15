@@ -21,7 +21,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 		cooldown: 1.5,
 
 		damageKind: MobDamage.Magic,
-		limit: 1,
+		limit: 2,
 		cost: 1000,
 
 		upgrades: [
@@ -46,7 +46,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.HeatedImpact, TowerVisual.SniperShot],
+		visual: [TowerVisual.Neutron],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

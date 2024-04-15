@@ -1,6 +1,6 @@
 import { ItemId } from "shared/inventory/types";
 import { Mob } from "server/mob/class/class";
-import { MobStatus } from "shared/mob/types";
+import { MobDamage, MobStatus } from "shared/mob/types";
 import { TowerUtility } from "shared/tower/utility";
 import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerModule } from ".";
@@ -8,13 +8,17 @@ import type { TowerModule } from ".";
 export const eternalDamnationTower: TowerModule<ItemId.EternalDamnation> = {
 	id: ItemId.EternalDamnation,
 
-	onAttack: (tower: ReplicatedTower): void => {
-		const { position } = tower;
+	onAttack: (tower: ReplicatedTower, target: Mob): void => {
+		const { unique } = tower;
+		const multiplier = TowerUtility.getLevelMultiplier(unique);
+		const duration = 8 + 8 * multiplier;
+		const position = target.getCFrame().Position;
 		const radius = TowerUtility.getTotalRange(tower);
-		const mobs = Mob.getMobsInRadius(position, radius);
+		const mobs = Mob.getMobsInRadius(position, radius / 3);
 		for (const node of mobs) {
 			const mob = node.Object;
-			mob.applyStatus(MobStatus.Frozen, 5);
+			mob.takeDamage(TowerUtility.getTotalDamage(tower) * 0.5, MobDamage.Magic);
+			target?.applyStatus(MobStatus.Slowed, duration / 2);
 		}
 	},
 };
