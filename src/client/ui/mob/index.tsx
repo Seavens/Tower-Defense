@@ -32,7 +32,7 @@ export function MobApp(): Element {
 					AlwaysOnTop={false}
 					Enabled={true}
 					MaxDistance={100}
-					ExtentsOffsetWorldSpace={new Vector3(0, height + 1.5, 0)}
+					ExtentsOffsetWorldSpace={new Vector3(0, height + 2.25, 0)}
 				>
 					<MobHealthbar id={id} health={health} />
 				</billboardgui>

@@ -43,7 +43,7 @@ export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
 			>
 				<uistroke Color={Mocha.Base} Thickness={2} ApplyStrokeMode={Enum.ApplyStrokeMode.Border} />
 				<Text
-					size={UDim2.fromScale(1, 1)}
+					size={UDim2.fromScale(1, 0.8)}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					position={UDim2.fromScale(0.5, 0.5)}
 					cornerRadius={new UDim(0, 2)}

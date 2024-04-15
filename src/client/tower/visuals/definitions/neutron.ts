@@ -34,7 +34,6 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 	duration: 4,
 
 	onEffect: (bin: Bin, model: Model, target: Option<Mob>, tower: ReplicatedTower): void => {
-		warn(prefab, guard(prefab));
 		if (prefab === undefined || !guard(prefab) || target === undefined) {
 			return;
 		}

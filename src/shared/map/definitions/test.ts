@@ -6,14 +6,14 @@ export const testMap: MapDefinition<MapId.Test> = {
 	id: MapId.Test,
 	name: "Test",
 	desc: "...",
-	difficulty: MapDifficulty.Easy,
+	difficulty: MapDifficulty.Hard,
 
 	waves: {
 		first: {
 			[MobId.UrbanOne]: {
 				count: 12,
 				delay: 0.5,
-				wait: 1,
+				wait: 0.5,
 			},
 		},
 		appearances: {
@@ -34,5 +34,5 @@ export const testMap: MapDefinition<MapId.Test> = {
 		},
 	},
 
-	baseHealth: math.huge,
+	baseHealth: 1000,
 };

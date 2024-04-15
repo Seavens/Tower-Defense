@@ -1,6 +1,6 @@
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
-import { MAXIMUM_STORED } from "shared/inventory/constants";
+import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
 import { Service } from "@flamework/core";
 import { USE_MOCK_DATA } from "shared/core/constants";
 import { store } from "server/state/store";
@@ -19,7 +19,7 @@ export class TestService implements OnStart, OnDataLoaded {
 		const broadcast: UserMetadata & BroadcastMetadata = { user: Name, broadcast: true };
 		const items = ItemUtility.createItems(UserId, MAXIMUM_STORED - 1, ItemKind.Tower);
 		store.inventoryAddItems({ items }, metadata);
-		store.gameAddCurrency({ amount: 100000 }, broadcast);
+		store.gameAddCurrency({ amount: 10000000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
 	}

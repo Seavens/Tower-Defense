@@ -40,7 +40,7 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 	public spawnWave(map: MapId, wave: number): void {
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		const definition = WaveImpl.calculateWave(map, wave, MapDifficulty.Easy);
-		warn(definition);
+		// warn(definition);
 		const longest = this.getSpawnDuration(definition);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {

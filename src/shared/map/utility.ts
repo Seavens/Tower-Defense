@@ -1,7 +1,6 @@
 import { MapDifficulty, type MapId } from "shared/map/types";
 import { WaveImpl } from "shared/waves/impl";
 import { Workspace } from "@rbxts/services";
-import { mapDefinitions } from "shared/map/definitions";
 import type { WaveDefinition } from "shared/map/definitions";
 
 const { map } = Workspace;
