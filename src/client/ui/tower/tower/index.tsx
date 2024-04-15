@@ -310,6 +310,37 @@ export function Tower({ tower }: TowerProps): Element {
 					/>
 				</Group>
 			</Frame>
+			<Frame
+				size={UDim2.fromOffset(px(115), px(TOWER_SIZE.Y))}
+				anchorPoint={new Vector2(0, 0.5)}
+				position={UDim2.fromScale(1.005, 0.5)}
+				cornerRadius={new UDim(0, px(3))}
+				backgroundColor={Mocha.Base}
+			>
+				<Button
+					size={UDim2.fromOffset(px(107), px(TOWER_SIZE.Y - 8))}
+					anchorPoint={new Vector2(0.5, 0.5)}
+					position={UDim2.fromScale(0.5, 0.5)}
+					cornerRadius={new UDim(0, px(3))}
+					backgroundColor={darker}
+				>
+					<Frame
+						size={UDim2.fromOffset(px(107), px(10))}
+						anchorPoint={new Vector2(0.5, 0)}
+						position={UDim2.fromScale(0.5, 0.655)}
+						backgroundColor={medium}
+					/>
+					<Image
+						size={UDim2.fromOffset(px(107), px(TOWER_SIZE.Y - 48))}
+						anchorPoint={new Vector2(0.5, 0)}
+						position={UDim2.fromScale(0.5, 0)}
+						backgroundColor={medium}
+						cornerRadius={new UDim(0, px(3))}
+						backgroundTransparency={0}
+						image={""}
+					/>
+				</Button>
+			</Frame>
 		</Group>
 	);
 }

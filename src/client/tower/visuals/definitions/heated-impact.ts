@@ -2,12 +2,10 @@ import { ColorUtil } from "client/ui/utility";
 import { TowerVisual } from "shared/tower/types";
 import { TweenService } from "@rbxts/services";
 import { itemDefinitions } from "shared/inventory/items";
-import { meleeTowerItem } from "shared/inventory/items/towers/melee";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";
 import type { ReplicatedTower } from "shared/tower/types";
-import type { TowerItemId } from "shared/inventory/types";
 import type { TowerVisualModule } from ".";
 
 const info = new TweenInfo(2, Enum.EasingStyle.Linear, Enum.EasingDirection.Out);
@@ -27,20 +25,20 @@ export const heatedImpactVisual: TowerVisualModule<TowerVisual.HeatedImpact> = {
 		const particleEmitter = new Instance("ParticleEmitter");
 		particleEmitter.Parent = rootPart;
 
-		particleEmitter.Brightness = 1;
-		particleEmitter.LightEmission = 1;
+		particleEmitter.Brightness = 0.5;
+		particleEmitter.LightEmission = 0.5;
 		particleEmitter.Orientation = Enum.ParticleOrientation.FacingCamera;
 		particleEmitter.EmissionDirection = Enum.NormalId.Top;
-		particleEmitter.Size = new NumberSequence(5, 1);
+		particleEmitter.Size = new NumberSequence(3, 1);
 		particleEmitter.Transparency = new NumberSequence([
 			new NumberSequenceKeypoint(0, 0),
 			new NumberSequenceKeypoint(0.5, 1),
 			new NumberSequenceKeypoint(1, 1),
 		]);
-		particleEmitter.Texture = "rbxassetid://17125571576";
+		particleEmitter.Texture = "rbxassetid://17164073691";
 		particleEmitter.Color = new ColorSequence(color);
 		particleEmitter.Lifetime = new NumberRange(2, 4);
-		particleEmitter.Rate = 50;
+		particleEmitter.Rate = 10;
 		particleEmitter.Speed = new NumberRange(5, 50);
 		particleEmitter.Shape = Enum.ParticleEmitterShape.Sphere;
 		particleEmitter.ShapePartial = 1;

@@ -4,6 +4,7 @@ import type { ItemId } from "../types";
 import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
+import type { TowerAbility } from "../../abilities";
 import type { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
 
 export type TowerUpgradeInfo = {
@@ -28,7 +29,9 @@ interface TowerDefinition {
 	upgrades: Array<TowerUpgradeInfo>;
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
 
-	visual: Array<TowerVisual>;
+	visuals: Array<TowerVisual>;
+
+	abilities: Array<TowerAbility>;
 
 	animations: { [K in TowerAnimation]: Array<RBXAssetId> };
 	sounds: { [K in TowerSounds]: Array<RBXAssetId> };

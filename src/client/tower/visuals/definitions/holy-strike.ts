@@ -72,23 +72,23 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			tween.Play();
 			bin.add(tween);
 		}
-		const shake = new Shake();
-		shake.FadeInTime = 0;
-		shake.FadeOutTime = 0.25;
-		shake.Frequency = 0.1;
-		shake.Amplitude = 0.1;
-		shake.SustainTime = 0.25;
-		shake.Start();
-		VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
-			if (camera === undefined) {
-				return;
-			}
-			const current = camera.CFrame;
-			camera.CFrame = current.Lerp(
-				current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
-				math.clamp(delta * 60, 0, 1),
-			);
-		});
+		// const shake = new Shake();
+		// shake.FadeInTime = 0;
+		// shake.FadeOutTime = 0.25;
+		// shake.Frequency = 0.1;
+		// shake.Amplitude = 0.1;
+		// shake.SustainTime = 0.25;
+		// shake.Start();
+		// VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
+		// 	if (camera === undefined) {
+		// 		return;
+		// 	}
+		// 	const current = camera.CFrame;
+		// 	camera.CFrame = current.Lerp(
+		// 		current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
+		// 		math.clamp(delta * 60, 0, 1),
+		// 	);
+		// });
 		VisualUtility.emitRocks(bin, position, 15, 1, 1);
 		const soundDelay = task.delay(0.1, (): void => {
 			incoming.playSound("ElectricExplosion");
@@ -123,6 +123,6 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		bin.add(tween);
 		bin.add(delay);
 		bin.add(effect);
-		bin.add(shake);
+		// bin.add(shake);
 	},
 };

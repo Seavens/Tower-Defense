@@ -13,7 +13,6 @@ import { reuseThread } from "shared/utility/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
-import { towerModules } from "../towers";
 import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerTargeting } from "shared/tower/types";
 
@@ -125,9 +124,9 @@ export class Tower extends API {
 			return;
 		}
 		const { damageKind } = kind;
-		const module = towerModules[id];
+		// const module = towerModules[id];
 		const died = currentTarget.takeDamage(damage, damageKind, key);
-		module?.onAttack(replicated, currentTarget);
+		// module?.onAttack(replicated, currentTarget);
 		if (!died) {
 			return;
 		}

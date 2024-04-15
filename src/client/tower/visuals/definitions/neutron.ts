@@ -65,23 +65,25 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 		effect.CFrame = cframe;
 		effect.Name = `(${model.Name})-${TowerVisual.Neutron}`;
 		effect.Parent = debris;
-		const shake = new Shake();
-		shake.FadeInTime = 0;
-		shake.FadeOutTime = 0.25;
-		shake.Frequency = 0.1;
-		shake.Amplitude = 0.01;
-		shake.SustainTime = 3;
-		shake.Start();
-		VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
-			if (camera === undefined) {
-				return;
-			}
-			const current = camera.CFrame;
-			camera.CFrame = current.Lerp(
-				current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
-				math.clamp(delta * 60, 0, 1),
-			);
-		});
+
+		// const shake = new Shake();
+		// shake.FadeInTime = 0;
+		// shake.FadeOutTime = 0.25;
+		// shake.Frequency = 0.1;
+		// shake.Amplitude = 0.01;
+		// shake.SustainTime = 3;
+		// shake.Start();
+		// VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
+		// 	if (camera === undefined) {
+		// 		return;
+		// 	}
+		// 	const current = camera.CFrame;
+		// 	camera.CFrame = current.Lerp(
+		// 		current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
+		// 		math.clamp(delta * 60, 0, 1),
+		// 	);
+		// });
+
 		const thread = task.delay(2.5, (): void => {
 			const emitters = effect.GetDescendants();
 			for (const emitter of emitters) {
@@ -106,19 +108,13 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 			bin.add(tween);
 		}
 
-		// sounds.playSound("SilentGlitcher");
-		// sounds.playSound("ElectricSpark", undefined, 0.5);
-		// sounds.playSound("WhooshSuction", undefined, 0.5);
-		// const sound = sounds.playSound("LightningFlashes", undefined, 0.5);
-		// sound.PlaybackSpeed = 1.1;
-
 		const delay = task.delay(3.25, (): void => {
 			sounds.destroy();
 		});
 
 		bin.add(sounds);
 		bin.add(delay);
-		bin.add(shake);
+		// bin.add(shake);
 		bin.add(thread);
 		bin.add(effect);
 	},

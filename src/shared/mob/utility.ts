@@ -20,6 +20,6 @@ export namespace MobUtility {
 
 	export function getMobHealth(id: MobId, wave: number): number {
 		const { health } = mobDefinitions[id];
-		return math.ceil(math.round(health + health * (HEALTH_INCREASE * wave)));
+		return math.ceil(math.round(health + health ** (HEALTH_INCREASE * wave)));
 	}
 }

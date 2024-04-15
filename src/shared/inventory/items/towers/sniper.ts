@@ -41,7 +41,9 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.HeatedImpact, TowerVisual.SniperShot],
+		visuals: [TowerVisual.SniperShot],
+
+		abilities: [],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

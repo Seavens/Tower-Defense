@@ -41,7 +41,9 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.HeatedImpact, TowerVisual.SniperShot],
+		visuals: [TowerVisual.SniperShot],
+
+		abilities: [],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

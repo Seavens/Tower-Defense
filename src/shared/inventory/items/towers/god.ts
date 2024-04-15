@@ -1,8 +1,9 @@
 import { ASSET_IDS } from "shared/assets/constants";
+import { type ItemDefinition } from "..";
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
+import { TowerAbility } from "../../../abilities";
 import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
-import type { ItemDefinition } from "..";
 
 export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 	id: ItemId.God,
@@ -41,7 +42,9 @@ export const godTowerItem: ItemDefinition<ItemId.God, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visual: [TowerVisual.HolyStrike],
+		visuals: [TowerVisual.SniperShot],
+
+		abilities: [TowerAbility.HolyStrike],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

@@ -230,15 +230,15 @@ export class Tower extends API {
 		const { id, bin, instance } = this;
 		const { kind } = itemDefinitions[id];
 		const {
-			visual: [visual],
+			visuals: [visual],
 		} = kind;
 
 		// Change for abilities later
-		const module = towerVisualModules[visual];
-		const { duration } = module;
-		const replicated = this.getReplicated();
-		const temporary = new Bin();
-		module.onEffect(temporary, instance, target, replicated);
+		// const module = towerVisualModules[visual];
+		// const { duration } = module;
+		// const replicated = this.getReplicated();
+		// const temporary = new Bin();
+		// module.onEffect(temporary, instance, target, replicated);
 
 		instance.Parent = placed;
 
@@ -248,10 +248,10 @@ export class Tower extends API {
 			track.Stop();
 		});
 
-		bin.add(temporary);
-		task.delay(duration, (): void => {
-			temporary.destroy();
-		});
+		// bin.add(temporary);
+		// task.delay(duration, (): void => {
+		// 	temporary.destroy();
+		// });
 	}
 
 	public onTick(): void {
@@ -288,15 +288,16 @@ export class Tower extends API {
 			upgrades: 1,
 			uuid,
 		};
-		module.onEffect(temporary, instance, undefined, fake);
-		bin.add(temporary);
-		task.delay(duration, (): void => {
-			temporary.destroy();
-		});
 
 		const { animator } = this;
 		const track = animator.getAnimation(TowerAnimation.Sell);
 		animator.playAnimation(TowerAnimation.Sell);
+
+		module.onEffect(temporary, instance, undefined, fake);
+		bin.add(temporary);
+		task.delay(track.Length, (): void => {
+			temporary.destroy();
+		});
 
 		const { sounds } = this;
 		sounds.playSound(TowerSounds.Sell, 1);
