@@ -1,12 +1,14 @@
 import { Mob as API } from "shared/mob/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
+import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
 import { Tower } from "server/tower/class/class";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
 import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
+import { selectGameData } from "shared/game/selectors";
 import { selectProfileData } from "server/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { statusModules } from "shared/mob/modules";
@@ -65,6 +67,9 @@ export class Mob extends API {
 	public constructor(uuid: UUID, id: MobId) {
 		const { mobs, octree, onMobAdded } = Mob;
 		super(uuid, id);
+		const gameStore = store.getState(selectGameData);
+		const { wave } = gameStore;
+		this.health = MobUtility.getMobHealth(id, wave);
 		const { waypoints } = this;
 		const [first] = waypoints;
 		const position = first.Position;

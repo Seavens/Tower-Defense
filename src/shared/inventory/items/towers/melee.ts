@@ -51,6 +51,7 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 		},
 		sounds: {
 			[TowerSounds.Summon]: [ASSET_IDS.BoomImpact],
+			[TowerSounds.Sell]: [ASSET_IDS.Fireball, ASSET_IDS.WarpCharge],
 		},
 	},
 };

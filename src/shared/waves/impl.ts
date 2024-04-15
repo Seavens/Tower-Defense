@@ -1,6 +1,7 @@
 import { Dictionary } from "@rbxts/sift";
 import { INITIAL_WAVE_ALLOCATION, SPEED_FACTOR, WAVE_GROWTH } from "./constants";
 import { MAP_DIFFICULTY_MULTIPLIERS } from "shared/map/constants";
+import { MobUtility } from "shared/mob/utility";
 import { mapDefinitions } from "shared/map/definitions";
 import { mobDefinitions } from "shared/mob/definitions";
 import type { AnyMobDefinition } from "shared/mob/definitions/mobs";
@@ -48,7 +49,7 @@ export class WaveImpl {
 				const clamped = math.clamp(count + adding, 1, max);
 				const added = adding - count;
 				definition.count = clamped;
-				added > 0 && (allocated -= health * added);
+				added > 0 && (allocated -= MobUtility.getMobHealth(id, index) * added);
 				continue;
 			}
 			const count = adding;

@@ -56,6 +56,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 		},
 		sounds: {
 			[TowerSounds.Summon]: [ASSET_IDS.BoomImpact],
+			[TowerSounds.Sell]: [ASSET_IDS.Fireball, ASSET_IDS.WarpCharge],
 		},
 	},
 };

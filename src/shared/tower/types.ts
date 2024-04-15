@@ -38,6 +38,7 @@ export const enum TowerAnimation {
 
 export const enum TowerSounds {
 	Summon = "tower_sounds:summon",
+	Sell = "tower_sounds:sell",
 }
 
 export interface ReplicatedTower {

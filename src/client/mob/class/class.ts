@@ -8,7 +8,9 @@ import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/create-schedule";
 import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/reuse-thread";
+import { selectGameData } from "shared/game/selectors";
 import { statusModules } from "shared/mob/modules";
+import { store } from "client/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
 import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
@@ -67,6 +69,9 @@ export class Mob extends API {
 		super(uuid, id);
 		const { mobs, onMobAdded, octree } = Mob;
 		const { waypoints, bin } = this;
+		const gameStore = store.getState(selectGameData);
+		const { wave } = gameStore;
+		this.health = MobUtility.getMobHealth(id, wave);
 		const model = MobUtility.getMobModel(id);
 		const [first] = waypoints;
 		const position = first.Position;
@@ -82,6 +87,7 @@ export class Mob extends API {
 		this.animator = animator;
 		onMobAdded.FireDeferred(this);
 		const track = animator.playAnimation(MobAnimation.Walk);
+
 		// !! Whenever timestep changes, adjust speeds.
 		track.AdjustSpeed(GAME_TIMESTEP);
 		mobs.set(uuid, this);

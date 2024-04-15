@@ -84,16 +84,6 @@ export class SoundEmitter<T extends string> {
 		sound.Stop();
 	}
 
-	public volumeSound(key: T, index = 0, volume = 1): void {
-		const { playing } = this;
-		const sounds = playing.get(key);
-		if (sounds === undefined) {
-			return;
-		}
-		const sound = sounds[index];
-		sound.Volume = volume;
-	}
-
 	public destroy(): void {
 		const { loaded, cache, bin, playing } = this;
 		for (const [, sounds] of loaded) {
@@ -134,12 +124,21 @@ export class SoundEmitter<T extends string> {
 		sound.SoundId = id;
 		sound.Name = key;
 		sound.Parent = container;
-		const thread = sound.Ended.Once((): void => {
+		const ended = sound.Ended.Once((): void => {
 			cache.delete(sound);
-			task.defer((): void => sound.Destroy());
+			task.defer((): void => {
+				sound.Destroy();
+			});
+		});
+		const stopped = sound.Stopped.Once((): void => {
+			cache.delete(sound);
+			task.defer((): void => {
+				sound.Destroy();
+			});
 		});
 		cache.add(sound);
-		bin.add(thread);
+		bin.add(ended);
+		bin.add(stopped);
 		return sound;
 	}
 

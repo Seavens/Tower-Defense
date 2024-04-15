@@ -10,7 +10,8 @@ import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TOWER_KEY_ATTRIBUTE } from "../constants";
-import { TowerAnimation, TowerSounds, TowerVisual } from "shared/tower/types";
+import { TowerAnimation, TowerVisual } from "shared/tower/types";
+import { TowerSounds } from "shared/tower/types";
 import { TowerTargeting } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/create-schedule";
@@ -44,11 +45,11 @@ export class Tower extends API {
 	protected declare readonly unique: ItemTowerUnique;
 
 	protected readonly bin = new Bin();
+	protected readonly sounds: SoundEmitter<TowerSounds>;
+	protected readonly animator: Animator<TowerAnimation>;
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
-
-	protected readonly animator: Animator<TowerAnimation>;
 
 	static {
 		createSchedule({
@@ -75,7 +76,6 @@ export class Tower extends API {
 		if (model === undefined || !model.IsA("Model")) {
 			throw `Could not find model for Tower(${id})!`;
 		}
-
 		const instance = model.Clone();
 
 		setCollision(instance, Collision.Tower, true);
@@ -93,23 +93,24 @@ export class Tower extends API {
 		});
 
 		const { kind } = itemDefinitions[id];
-		const { sounds } = kind;
-		const incoming = new SoundEmitter(model, sounds);
-		incoming.playSound(TowerSounds.Summon);
+		const { sounds, animations } = kind;
 
-		const { animations } = kind;
-		instance.Parent = placed;
+		const soundEmitter = new SoundEmitter<TowerSounds>(instance, sounds);
 		const animator = new Animator<TowerAnimation>(instance, animations);
-		const track = animator.getAnimation(TowerAnimation.Summon);
-
-		this.instance = instance;
-		this.animator = animator;
-
-		animator.playAnimation(TowerAnimation.Summon);
-		task.delay(track.Length - 0.25, (): void => {
-			track.Stop();
+		task.defer((): void => {
+			const track = animator.playAnimation(TowerAnimation.Summon);
+			soundEmitter.playSound(TowerSounds.Summon);
+			task.delay(track.Length - 0.25, (): void => {
+				track.Stop();
+			});
 		});
 
+		instance.Parent = placed;
+		this.instance = instance;
+		this.animator = animator;
+		this.sounds = soundEmitter;
+
+		bin.add(soundEmitter);
 		bin.add(animator);
 		bin.add(instance);
 		towers.set(key, this);
@@ -231,6 +232,7 @@ export class Tower extends API {
 		const {
 			visual: [visual],
 		} = kind;
+
 		// Change for abilities later
 		const module = towerVisualModules[visual];
 		const { duration } = module;
@@ -238,18 +240,15 @@ export class Tower extends API {
 		const temporary = new Bin();
 		module.onEffect(temporary, instance, target, replicated);
 
-		const { animations } = kind;
 		instance.Parent = placed;
-		const animator = new Animator<TowerAnimation>(instance, animations);
-		const track = animator.getAnimation(TowerAnimation.Attack);
 
-		animator.playAnimation(TowerAnimation.Attack);
+		const { animator } = this;
+		const track = animator.playAnimation(TowerAnimation.Attack);
 		task.delay(track.Length - 0.25, (): void => {
 			track.Stop();
 		});
 
 		bin.add(temporary);
-		bin.add(animator);
 		task.delay(duration, (): void => {
 			temporary.destroy();
 		});
@@ -257,14 +256,6 @@ export class Tower extends API {
 
 	public onTick(): void {
 		const { id, instance, cframe } = this;
-
-		// const { kind } = itemDefinitions[id];
-		// const { animations } = kind;
-		// const animator = new Animator<TowerAnimation>(instance, animations);
-		// if (!animator.isPlaying) {
-		// 	animator.playAnimation(TowerAnimation.Idle);
-		// }
-
 		const mob = this.getTarget();
 		if (mob === undefined) {
 			return;
@@ -303,23 +294,18 @@ export class Tower extends API {
 			temporary.destroy();
 		});
 
-		const { kind } = itemDefinitions[id];
-		const { animations } = kind;
-		const animator = new Animator<TowerAnimation>(instance, animations);
+		const { animator } = this;
 		const track = animator.getAnimation(TowerAnimation.Sell);
 		animator.playAnimation(TowerAnimation.Sell);
 
-		const incoming = new SoundEmitter(instance, {
-			Fireball: [ASSET_IDS.Fireball],
-			WarpCharge: [ASSET_IDS.WarpCharge],
-		});
-		incoming.playSound("WarpCharge", undefined, 0.8);
+		const { sounds } = this;
+		sounds.playSound(TowerSounds.Sell, 1);
 
 		task.delay(0.7, (): void => {
-			incoming.playSound("Fireball");
+			sounds.playSound(TowerSounds.Sell, 0);
 		});
 
-		task.delay(track.Length, (): void => instance.Destroy());
+		task.delay(track.Length, (): void => bin.destroy());
 
 		towers.delete(key);
 		sphere?.Destroy();

@@ -2,10 +2,14 @@ import { BILLBOARD_SIZE } from "./constants";
 import { ColorUtil } from "../utility";
 import { FONTS, PALETTE } from "../constants";
 import { Frame, Text } from "../components";
+import { MobUtility } from "shared/mob/utility";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
 import { mobDefinitions } from "shared/mob/definitions";
+import { selectCurrentWave, selectGameData } from "shared/game/selectors";
+import { store } from "client/state/store";
 import { useAbbreviation, useDarkenedColor } from "../hooks";
+import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 import type { MobId } from "shared/mob/types";
@@ -16,10 +20,11 @@ interface MobHealthbarProps {
 }
 
 export function MobHealthbar({ id, health }: MobHealthbarProps): Element {
+	const wave = useSelector(selectCurrentWave);
 	const max = useMemo((): number => {
-		const { health } = mobDefinitions[id];
+		const health = MobUtility.getMobHealth(id, wave);
 		return health;
-	}, [id]);
+	}, [id, wave]);
 
 	const healthText = useAbbreviation(math.ceil(health));
 	const maxText = useAbbreviation(max);

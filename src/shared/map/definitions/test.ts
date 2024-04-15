@@ -13,7 +13,7 @@ export const testMap: MapDefinition<MapId.Test> = {
 			[MobId.UrbanOne]: {
 				count: 12,
 				delay: 0.5,
-				wait: 0.5,
+				wait: 1,
 			},
 		},
 		appearances: {
