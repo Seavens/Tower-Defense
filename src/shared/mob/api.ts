@@ -55,13 +55,15 @@ export abstract class Mob {
 
 	public getCFrame(): CFrame {
 		const { current, target, waypoints, last } = this;
-		if (this.isDead()) {
+		const a = waypoints[current - 1];
+		const b = waypoints[target - 1];
+		if (this.isDead() || a === undefined || b === undefined) {
 			return last;
 		}
-		const a = waypoints[current - 1].GetPivot();
-		const b = waypoints[target - 1].GetPivot();
+		const aCFrame = a.GetPivot();
+		const bCFrame = b.GetPivot();
 		const alpha = this.getAlpha();
-		const cframe = a.Lerp(b, math.clamp(alpha, 0, 1));
+		const cframe = aCFrame.Lerp(bCFrame, math.clamp(alpha, 0, 1));
 		const interpolated = last.Lerp(cframe, INTERPOLATION_SMOOTHNESS);
 		this.last = interpolated;
 		return interpolated;
