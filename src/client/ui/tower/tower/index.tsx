@@ -1,9 +1,10 @@
-import { Button, Frame, Group, Image, Text } from "client/ui/components";
+import { Button, Frame, Group, Image, ScrollingFrame, Text } from "client/ui/components";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
 import { LevelUtility } from "shared/profile/utility";
 import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
-import { TOWER_IMAGE_SIZE, TOWER_SIZE } from "../constants";
+import { TOWER_ABILITIES_SIZE, TOWER_ABILITY_SIZE, TOWER_IMAGE_SIZE, TOWER_INFO_SIZE, TOWER_SIZE } from "../constants";
+import { TowerAbility } from "./ability";
 import { TowerAction } from "./action";
 import { TowerImpl } from "client/tower/class/impl";
 import { TowerStat } from "./stat";
@@ -29,6 +30,7 @@ export function Tower({ tower }: TowerProps): Element {
 
 	const px = usePx();
 	const definition = useTowerDefintion(id);
+	const { kind } = definition;
 
 	const rarity = useRarityColor(definition.rarity);
 	const light = useDarkenedColor(rarity, 0.25);
@@ -55,17 +57,30 @@ export function Tower({ tower }: TowerProps): Element {
 		return max;
 	}, [unique]);
 
+	const abilities = useMemo((): Array<Element> => {
+		const elements = new Array<Element>();
+		const { abilities } = kind;
+		if (abilities === undefined) {
+			return elements;
+		}
+		for (const ability of abilities) {
+			const element = <TowerAbility id={id} ability={ability} />;
+			elements.push(element);
+		}
+		return elements;
+	}, [id, definition]);
+
 	return (
 		<Group
-			size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
+			size={UDim2.fromOffset(px(TOWER_SIZE.X) + px(4), px(TOWER_SIZE.Y) + px(4))}
 			anchorPoint={Vector2.one.mul(0.5)}
 			position={UDim2.fromScale(0.5, 0.5)}
 			key={"tower-group"}
 		>
 			<Frame
-				size={UDim2.fromOffset(px(TOWER_SIZE.X), px(TOWER_SIZE.Y))}
-				anchorPoint={Vector2.one.mul(0.5)}
-				position={UDim2.fromScale(0.5, 0.5)}
+				size={UDim2.fromOffset(px(TOWER_INFO_SIZE.X), px(TOWER_INFO_SIZE.Y))}
+				anchorPoint={new Vector2(0, 0.5)}
+				position={UDim2.fromScale(0, 0.5)}
 				cornerRadius={new UDim(0, px(3))}
 				backgroundColor={Mocha.Base}
 				key={"tower-frame"}
@@ -146,7 +161,7 @@ export function Tower({ tower }: TowerProps): Element {
 					</Group>
 					<Group
 						size={UDim2.fromOffset(
-							px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(4) * 2,
+							px(TOWER_INFO_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(4) * 2,
 							px(TOWER_IMAGE_SIZE.Y),
 						)}
 						position={UDim2.fromScale(1, 0)}
@@ -208,7 +223,7 @@ export function Tower({ tower }: TowerProps): Element {
 							</Button>
 						</Group>
 						<Frame
-							size={new UDim2(1, -px(4), 0, px(20 * 4))}
+							size={new UDim2(1, -px(4), 0, px(TOWER_IMAGE_SIZE.Y) - px(20) - px(4))}
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							cornerRadius={new UDim(0, px(3))}
@@ -240,7 +255,7 @@ export function Tower({ tower }: TowerProps): Element {
 					/>
 				</Group>
 				<Group
-					size={new UDim2(1, 0, 0, px(TOWER_SIZE.Y) - px(TOWER_IMAGE_SIZE.Y) - px(4))}
+					size={new UDim2(1, 0, 0, px(TOWER_INFO_SIZE.Y) - px(TOWER_IMAGE_SIZE.Y) - px(4))}
 					anchorPoint={Vector2.one}
 					position={UDim2.fromScale(1, 1)}
 					key={"tower-lower"}
@@ -261,13 +276,15 @@ export function Tower({ tower }: TowerProps): Element {
 						}}
 					/>
 					<Group
-						size={new UDim2(0, px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(4) * 3, 1, 0)}
+						size={new UDim2(0, px(TOWER_INFO_SIZE.X) - px(TOWER_IMAGE_SIZE.X) - px(4) * 3, 1, 0)}
 						position={UDim2.fromScale(1, 1)}
 						anchorPoint={Vector2.one}
 						key={"tower-actions-group"}
 					>
 						<TowerAction
-							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2 + 1, 1, 0)}
+							size={
+								new UDim2(0, (px(TOWER_INFO_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2 + 1, 1, 0)
+							}
 							position={UDim2.fromScale(0, 0)}
 							anchorPoint={Vector2.zero}
 							backgroundColor={PALETTE.light_blue}
@@ -280,7 +297,7 @@ export function Tower({ tower }: TowerProps): Element {
 							}}
 						/>
 						<TowerAction
-							size={new UDim2(0, (px(TOWER_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2, 1, 0)}
+							size={new UDim2(0, (px(TOWER_INFO_SIZE.X) - px(TOWER_IMAGE_SIZE.X)) / 2 - px(4) * 2, 1, 0)}
 							position={UDim2.fromScale(1, 1)}
 							anchorPoint={Vector2.one}
 							backgroundColor={PALETTE.light_red}
@@ -310,37 +327,43 @@ export function Tower({ tower }: TowerProps): Element {
 					/>
 				</Group>
 			</Frame>
-			<Frame
-				size={UDim2.fromOffset(px(115), px(TOWER_SIZE.Y))}
-				anchorPoint={new Vector2(0, 0.5)}
-				position={UDim2.fromScale(1.005, 0.5)}
-				cornerRadius={new UDim(0, px(3))}
-				backgroundColor={Mocha.Base}
-			>
-				<Button
-					size={UDim2.fromOffset(px(107), px(TOWER_SIZE.Y - 8))}
-					anchorPoint={new Vector2(0.5, 0.5)}
-					position={UDim2.fromScale(0.5, 0.5)}
+			{abilities.size() > 0 ? (
+				<Frame
+					size={UDim2.fromOffset(px(TOWER_ABILITIES_SIZE.X) - px(2), px(TOWER_ABILITIES_SIZE.Y))}
+					anchorPoint={new Vector2(1, 0.5)}
+					position={UDim2.fromScale(1, 0.5)}
 					cornerRadius={new UDim(0, px(3))}
-					backgroundColor={darker}
+					backgroundColor={Mocha.Base}
+					key={"abilities-background"}
 				>
-					<Frame
-						size={UDim2.fromOffset(px(107), px(10))}
-						anchorPoint={new Vector2(0.5, 0)}
-						position={UDim2.fromScale(0.5, 0.655)}
-						backgroundColor={medium}
-					/>
-					<Image
-						size={UDim2.fromOffset(px(107), px(TOWER_SIZE.Y - 48))}
-						anchorPoint={new Vector2(0.5, 0)}
-						position={UDim2.fromScale(0.5, 0)}
-						backgroundColor={medium}
+					<ScrollingFrame
+						size={new UDim2(1, px(2), 1, 0)}
+						anchorPoint={new Vector2(0, 0.5)}
+						position={UDim2.fromScale(0, 0.5)}
 						cornerRadius={new UDim(0, px(3))}
-						backgroundTransparency={0}
-						image={""}
+						backgroundTransparency={1}
+						canvasSize={UDim2.fromOffset(0, (px(TOWER_ABILITY_SIZE.Y) + px(2)) * abilities.size() - px(2))}
+						enabled={true}
+						key={"tower-abilities"}
+					>
+						{abilities}
+						<uilistlayout
+							Padding={new UDim(0, px(2))}
+							HorizontalAlignment={Enum.HorizontalAlignment.Left}
+							VerticalAlignment={Enum.VerticalAlignment.Top}
+							SortOrder={Enum.SortOrder.LayoutOrder}
+							key={"tower-layout"}
+						/>
+					</ScrollingFrame>
+					<uipadding
+						PaddingBottom={new UDim(0, px(4))}
+						PaddingLeft={new UDim(0, px(4))}
+						PaddingRight={new UDim(0, px(4))}
+						PaddingTop={new UDim(0, px(4))}
+						key={"tower-padding"}
 					/>
-				</Button>
-			</Frame>
+				</Frame>
+			) : undefined}
 		</Group>
 	);
 }

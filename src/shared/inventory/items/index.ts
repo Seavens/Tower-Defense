@@ -31,7 +31,7 @@ interface TowerDefinition {
 
 	visuals: Array<TowerVisual>;
 
-	abilities: Array<TowerAbility>;
+	abilities?: [TowerAbility, ...Array<TowerAbility>];
 
 	animations: { [K in TowerAnimation]: Array<RBXAssetId> };
 	sounds: { [K in TowerSounds]: Array<RBXAssetId> };

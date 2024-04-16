@@ -24,7 +24,7 @@ export class WaveImpl {
 
 	public static calculateWave(map: MapId, index: number, difficulty: MapDifficulty): WaveDefinition {
 		const multiplier = MAP_DIFFICULTY_MULTIPLIERS[difficulty];
-		let allocated = index ** (WAVE_GROWTH + multiplier) + INITIAL_WAVE_ALLOCATION;
+		let allocated = math.round((index ** (WAVE_GROWTH + multiplier) + INITIAL_WAVE_ALLOCATION) / 5) * 5;
 		const wave: WaveDefinition = {};
 		const { waves } = mapDefinitions[map];
 		const { first, appearances } = waves!;
@@ -35,6 +35,7 @@ export class WaveImpl {
 				break;
 			}
 			const health = MobUtility.getMobHealth(id, index);
+			warn(health, allocated);
 			const appearance = appearances[id];
 			const entry = first[id];
 			const initial = entry?.count ?? 0;

@@ -1,6 +1,6 @@
 import { DelayRender, Transition } from "../components";
 import { SPRINGS } from "../constants";
-import { TOWER_SIZE } from "./constants";
+import { TOWER_INFO_SIZE, TOWER_SIZE } from "./constants";
 import { Tower } from "./tower";
 import { TowerBillboards } from "./billboard";
 import { selectSelectedTower } from "client/tower/selectors";
@@ -46,7 +46,7 @@ export function TowerApp(): Element {
 		<>
 			<DelayRender shouldRender={visible} unmountDelay={1}>
 				<Transition
-					size={UDim2.fromOffset(px(TOWER_SIZE.X + 4), px(TOWER_SIZE.Y + 4))}
+					size={UDim2.fromOffset(px(TOWER_SIZE.X) + px(4), px(TOWER_SIZE.Y) + px(4))}
 					anchorPoint={new Vector2((visible ? side : last) === "Left" ? 0 : 1, 0.5)}
 					position={
 						new UDim2(

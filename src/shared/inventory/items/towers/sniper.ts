@@ -43,7 +43,7 @@ export const sniperTowerItem: ItemDefinition<ItemId.Sniper, ItemKind.Tower> = {
 
 		visuals: [TowerVisual.SniperShot],
 
-		abilities: [],
+		abilities: undefined,
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

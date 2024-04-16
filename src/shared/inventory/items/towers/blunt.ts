@@ -43,7 +43,7 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 
 		visuals: [TowerVisual.SniperShot],
 
-		abilities: [],
+		abilities: undefined,
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],

@@ -1,6 +1,8 @@
 import { Collision, setCollision } from "shared/utility/collision";
-import { HEALTH_INCREASE, WAVE_GROWTH } from "shared/waves/constants";
+import { MAP_DIFFICULTY_MULTIPLIERS } from "shared/map/constants";
+import { MapDifficulty } from "shared/map/types";
 import { ReplicatedStorage } from "@rbxts/services";
+import { WAVE_GROWTH } from "shared/waves/constants";
 import { mobDefinitions } from "./definitions";
 import type { MobId } from "./types";
 
@@ -18,8 +20,9 @@ export namespace MobUtility {
 		return model;
 	}
 
-	export function getMobHealth(id: MobId, wave: number): number {
+	export function getMobHealth(id: MobId, wave: number, difficulty = MapDifficulty.Easy): number {
+		const multiplier = MAP_DIFFICULTY_MULTIPLIERS[difficulty];
 		const { health } = mobDefinitions[id];
-		return math.ceil(math.round(health + health ** (HEALTH_INCREASE * wave)));
+		return math.round((health + wave ** (WAVE_GROWTH + multiplier)) / 5) * 5;
 	}
 }

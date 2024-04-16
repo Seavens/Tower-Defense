@@ -233,12 +233,11 @@ export class Tower extends API {
 			visuals: [visual],
 		} = kind;
 
-		// Change for abilities later
-		// const module = towerVisualModules[visual];
-		// const { duration } = module;
-		// const replicated = this.getReplicated();
-		// const temporary = new Bin();
-		// module.onEffect(temporary, instance, target, replicated);
+		const module = towerVisualModules[visual];
+		const { duration } = module;
+		const replicated = this.getReplicated();
+		const temporary = new Bin();
+		module.onEffect(temporary, instance, target, replicated);
 
 		instance.Parent = placed;
 
@@ -248,10 +247,10 @@ export class Tower extends API {
 			track.Stop();
 		});
 
-		// bin.add(temporary);
-		// task.delay(duration, (): void => {
-		// 	temporary.destroy();
-		// });
+		bin.add(temporary);
+		task.delay(duration, (): void => {
+			temporary.destroy();
+		});
 	}
 
 	public onTick(): void {

@@ -43,7 +43,7 @@ export const meleeTowerItem: ItemDefinition<ItemId.Melee, ItemKind.Tower> = {
 
 		visuals: [TowerVisual.SniperShot],
 
-		abilities: [],
+		abilities: undefined,
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.Summon],
