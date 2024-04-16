@@ -35,7 +35,7 @@ export function TowerApp(): Element {
 			return "Left";
 		}
 		return "Right";
-	}, [camera, tower]);
+	}, [camera, tower?.position]);
 	const last = usePrevious(side);
 
 	useEffect((): void => {
