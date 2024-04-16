@@ -1,5 +1,6 @@
 export const ASSET_IDS = {
 	// Images
+	RPG: "rbxassetid://14448210845",
 
 	// Sounds
 	ElectricExplosion: "rbxassetid://2674547670",

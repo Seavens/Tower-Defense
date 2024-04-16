@@ -23,6 +23,7 @@ export const enum ItemId {
 	God = "item_id:god",
 	EternalDamnation = "item_id:eternal_damnation",
 	Chalice = "item_id:chalice",
+	RPG = "item_id:rpg",
 }
 type KindItemIds<K extends ItemKind> = {
 	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, K> ? I : never;

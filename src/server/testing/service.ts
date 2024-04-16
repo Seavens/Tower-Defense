@@ -1,4 +1,4 @@
-import { ITEM_RNG_MAX, ITEM_RNG_MIN, MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "shared/inventory/constants";
+import { ITEM_RNG_MAX, ITEM_RNG_MIN, MAXIMUM_STORED } from "shared/inventory/constants";
 import { ItemId, ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
@@ -20,7 +20,7 @@ export class TestService implements OnStart, OnDataLoaded {
 		const { Name, UserId } = player;
 		const metadata: UserMetadata & ReplicationMetadata = { user: Name, replicate: true };
 		const broadcast: UserMetadata & BroadcastMetadata = { user: Name, broadcast: true };
-		const items = ItemUtility.createItems(UserId, MAXIMUM_STORED - 3, ItemKind.Tower);
+		const items = ItemUtility.createItems(UserId, MAXIMUM_STORED - 3);
 		for (const _ of $range(1, 3)) {
 			const unique: ItemTowerUnique = {
 				kind: ItemKind.Tower,
