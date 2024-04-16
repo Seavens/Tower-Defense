@@ -13,6 +13,7 @@ import type { MapId } from "shared/map/types";
 import type { OnPlayerRemoving } from "server/players/service";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
+import type { TowerAbility } from "shared/abilities";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
@@ -145,6 +146,9 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			const i = indices.indexOf(index);
 			indices.remove(i);
 			tower.sellTower();
+		});
+		Events.tower.ability.connect((player: Player, ability: TowerAbility): void => {
+			warn("😱 try to use ability!", ability, "🗿🗿🗿😨😱😓😩😱😱😱😱😱👾👻💀💯💯");
 		});
 	}
 }

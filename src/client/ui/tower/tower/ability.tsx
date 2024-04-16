@@ -1,4 +1,5 @@
 import { Button, Frame, Group, Text } from "client/ui/components";
+import { Events } from "client/network";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
 import { TOWER_ABILITY_SIZE } from "../constants";
@@ -36,6 +37,10 @@ export function TowerAbility({ id, ability }: TowerAbilityProps): Element {
 				position={UDim2.fromScale(0, 0.5)}
 				cornerRadius={new UDim(0, px(3))}
 				backgroundColor={darker}
+				onClick={(): void => {
+					// TROLLING!!!
+					Events.tower.ability(ability);
+				}}
 				key={"ability-button"}
 			>
 				<Text
