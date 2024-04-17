@@ -4,7 +4,7 @@ import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { RarityUtility } from "./rarities/utility";
 import { TowerUtility } from "./items/towers/utility";
-import { createUUID } from "shared/utility/create-uuid";
+import { createUUID } from "shared/utility/functions/create-uuid";
 import { itemDefinitions } from "./items";
 import type {
 	Item,

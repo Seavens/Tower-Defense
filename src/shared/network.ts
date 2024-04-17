@@ -1,7 +1,7 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
 import type { MobDamage, MobData, MobId, MobStatus } from "./mob/types";
-import type { TowerAbility } from "./abilities";
+import type { TowerAbility } from "./inventory/items/towers/abilities";
 import type { TowerTargeting, TowerVisual } from "./tower/types";
 
 interface ClientToServerEvents {
@@ -41,7 +41,6 @@ interface ServerToClientEvents {
 	};
 
 	tower: {
-		// attack: Networking.Unreliable<(key: string, target?: UUID) => void>;
 		place: Networking.Unreliable<(uuid: UUID, position: Vector3) => void>;
 		attack(key: string, target?: UUID): void;
 	};

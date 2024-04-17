@@ -1,5 +1,5 @@
-import { dataSlice } from "server/data/slice";
-import type { InventoryState, ProfileState } from "server/data/slice";
+import { dataSlice } from "server/players/data/slice";
+import type { InventoryState, ProfileState } from "server/players/data/slice";
 
 export type ServerSlices = typeof serverSlices;
 

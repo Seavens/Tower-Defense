@@ -1,6 +1,6 @@
-import { DATA_TEMPLATE } from "shared/data/constants";
+import { DATA_TEMPLATE } from "shared/players/data/constants";
 import type { ClientState } from "client/state/store";
-import type { InventoryData } from "shared/data/types";
+import type { InventoryData } from "shared/players/data/types";
 import type { InventoryState } from "./slice";
 
 export function selectInventoryState(state: ClientState): InventoryState {

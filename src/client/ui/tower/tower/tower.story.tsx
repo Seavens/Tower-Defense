@@ -4,7 +4,7 @@ import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { ReflexProvider } from "@rbxts/react-reflex";
 import { Tower } from ".";
-import { createUUID } from "shared/utility/create-uuid";
+import { createUUID } from "shared/utility/functions/create-uuid";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";

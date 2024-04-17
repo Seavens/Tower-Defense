@@ -1,13 +1,13 @@
 import { Collision, setCollision } from "shared/utility/collision";
-import { ComponentTag } from "shared/components/types";
+import { ComponentTag } from "shared/utility/components/types";
 import { Controller } from "@flamework/core";
 import { ReplicatedStorage, UserInputService, Workspace } from "@rbxts/services";
 import { getMouseCFrame } from "client/utility/get-mouse-cframe";
-import { reuseThread } from "shared/utility/reuse-thread";
+import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectCurrentMap } from "shared/game/selectors";
 import { selectPlacing } from "./selectors";
 import { store } from "client/state/store";
-import type { MapId } from "shared/map/types";
+import type { MapId } from "shared/game/map/types";
 import type { OnStart, OnTick } from "@flamework/core";
 
 const { assets } = ReplicatedStorage;

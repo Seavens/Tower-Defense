@@ -1,7 +1,7 @@
 import { InventoryImpl } from "shared/inventory/impl";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
-import type { DataAdded } from "shared/data/actions";
+import type { DataAdded } from "shared/players/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type {
 	InventoryActions,
@@ -11,8 +11,8 @@ import type {
 	InventoryRemoveItems,
 	InventoryUnequipSlot,
 } from "shared/inventory/actions";
-import type { InventoryData } from "shared/data/types";
-import type { UserMetadata } from "shared/replication/metadata";
+import type { InventoryData } from "shared/players/data/types";
+import type { UserMetadata } from "shared/state/replication/metadata";
 
 export interface InventoryState {
 	readonly data: Readonly<InventoryData>;

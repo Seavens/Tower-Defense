@@ -1,4 +1,4 @@
-import { LevelUtility } from "shared/profile/utility";
+import { LevelUtility } from "shared/players/profile/utility";
 import { MAX_TOWER_LEVEL } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
@@ -12,7 +12,7 @@ import type {
 	TowerSetTargeting,
 	TowerUpgrade,
 } from "./actions";
-import type { UserMetadata } from "shared/replication/metadata";
+import type { UserMetadata } from "shared/state/replication/metadata";
 
 export interface TowerState {
 	readonly placed: Map<string, Readonly<ReplicatedTower>>; // Map<{{Tower UUID}_{Tower Index}}, Readonly<ReplicatedTower>>;

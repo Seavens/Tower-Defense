@@ -21,6 +21,7 @@ export const ASSET_IDS = {
 	WalkR15: "rbxassetid://913402848",
 	Jump: "rbxassetid://125750702",
 	Summon: "rbxassetid://17125440368",
+	EDSummon: "rbxassetid://17167166005",
 	Attack: "rbxassetid://17109034511",
 	Sell: "rbxassetid://17125215758",
 	Idle: "rbxassetid://17133735528",

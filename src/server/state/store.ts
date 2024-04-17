@@ -1,8 +1,8 @@
-import { broadcastMiddleware } from "server/replication/middleware";
+import { broadcastMiddleware } from "server/state/replication/middleware";
 import { combineProducers } from "@rbxts/reflex";
 import { serverSlices } from "./slices";
 import { sharedSlices } from "shared/state/slices";
-import type { DataState } from "server/data/slice";
+import type { DataState } from "server/players/data/slice";
 import type { InferActions, InferState } from "@rbxts/reflex";
 
 export type ServerEntityState = {

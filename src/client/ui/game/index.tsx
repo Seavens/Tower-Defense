@@ -1,8 +1,7 @@
 import { GameStatus } from "shared/game/types";
 import { GameStatusUI } from "./game-status";
-import { MapId } from "shared/map/types";
-import { selectCurrentMap, selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
-import { store } from "client/state/store";
+import { MapId } from "shared/game/map/types";
+import { selectGameData } from "shared/game/selectors";
 import { useSelector } from "@rbxts/react-reflex";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";

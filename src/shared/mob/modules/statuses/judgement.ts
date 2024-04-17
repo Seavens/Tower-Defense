@@ -1,7 +1,7 @@
 import { MobStatus } from "shared/mob/types";
 import { RunService } from "@rbxts/services";
 import { statusDefinitions } from "shared/mob/definitions";
-import type { Mob as ClientMob } from "client/mob/class/class";
+import type { Mob as ClientMob } from "client/mob/class";
 import type { Mob } from "shared/mob/api";
 import type { StatusModule } from ".";
 

@@ -1,5 +1,5 @@
 import { BILLBOARD_SIZE } from "./constants";
-import { Tower } from "client/tower/class";
+import { Tower } from "client/tower";
 import { TowerBillboard } from "./billboard";
 import { selectPlacedTowers } from "shared/tower/selectors";
 import { useSelector } from "@rbxts/react-reflex";

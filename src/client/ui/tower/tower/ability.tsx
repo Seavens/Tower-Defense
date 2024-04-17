@@ -7,7 +7,7 @@ import { useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
 import { useTowerDefintion } from "../hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { TowerAbility as TowerAbilityEnum } from "shared/abilities";
+import type { TowerAbility as TowerAbilityEnum } from "shared/inventory/items/towers/abilities";
 import type { TowerItemId } from "shared/inventory/types";
 
 interface TowerAbilityProps {

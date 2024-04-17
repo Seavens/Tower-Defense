@@ -7,7 +7,7 @@ import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
 import type { Element } from "@rbxts/react";
 import type { GameStatus } from "shared/game/types";
-import type { MapId } from "shared/map/types";
+import type { MapId } from "shared/game/map/types";
 
 const allMapIds = Modding.inspect<Array<MapId>>();
 const allGameStatuses = Modding.inspect<Array<GameStatus>>();

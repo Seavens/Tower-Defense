@@ -1,7 +1,7 @@
-import type { BroadcastMetadata, UserMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, UserMetadata } from "shared/state/replication/metadata";
 import type { GameStatus } from "./types";
-import type { MapId } from "shared/map/types";
-import type { PlayerActions } from "shared/replication/actions";
+import type { MapId } from "./map/types";
+import type { PlayerActions } from "shared/state/replication/actions";
 
 export type GameActions<S> = {
 	gameStartRound: (state: S, payload: GameStartRound, metadata: BroadcastMetadata) => S;

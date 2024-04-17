@@ -1,9 +1,9 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { Mob } from "client/mob/class/class";
+import { Mob } from "client/mob/class";
 import { MobHealthbar } from "./health-bar";
 import { MobId } from "shared/mob/types";
 import { ReflexProvider } from "@rbxts/react-reflex";
-import { createUUID } from "shared/utility/create-uuid";
+import { createUUID } from "shared/utility/functions/create-uuid";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";

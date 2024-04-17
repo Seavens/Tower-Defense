@@ -1,6 +1,6 @@
 import type {} from "shared/tower/types";
-import type { DataActions } from "shared/data/actions";
-import type { UserMetadata, ReplicationMetadata } from "shared/replication/metadata";
+import type { DataActions } from "shared/players/data/actions";
+import type { UserMetadata, ReplicationMetadata } from "shared/state/replication/metadata";
 import type { Item, ItemUnique } from "./types";
 
 export type InventoryActions<S> = {

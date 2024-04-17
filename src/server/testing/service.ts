@@ -4,11 +4,11 @@ import { ItemUtility } from "shared/inventory/utility";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Service } from "@flamework/core";
 import { USE_MOCK_DATA } from "shared/core/constants";
-import { createUUID } from "shared/utility/create-uuid";
+import { createUUID } from "shared/utility/functions/create-uuid";
 import { store } from "server/state/store";
-import type { BroadcastMetadata, ReplicationMetadata, UserMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, ReplicationMetadata, UserMetadata } from "shared/state/replication/metadata";
 import type { Item, ItemTowerUnique } from "shared/inventory/types";
-import type { OnDataLoaded } from "../data/service";
+import type { OnDataLoaded } from "../players/data/service";
 import type { OnStart } from "@flamework/core";
 
 @Service({})

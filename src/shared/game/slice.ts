@@ -1,10 +1,9 @@
 import { GameStatus } from "./types";
-import { MapUtility } from "shared/map/utility";
+import { MapUtility } from "./map/utility";
 import { STARTING_CURRENCY } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
 import type { Draft } from "@rbxts/immut/src/types-external";
-import type { UserMetadata } from "shared/replication/metadata";
 import type {
 	GameActions,
 	GameAddCurrency,
@@ -16,8 +15,9 @@ import type {
 	GameStartRound,
 	GameStartWave,
 } from "./actions";
-import type { MapId } from "shared/map/types";
-import type { PlayerAdded, PlayerRemoved } from "shared/replication/actions";
+import type { MapId } from "./map/types";
+import type { PlayerAdded, PlayerRemoved } from "shared/state/replication/actions";
+import type { UserMetadata } from "shared/state/replication/metadata";
 
 export interface GameState {
 	readonly status: GameStatus;
@@ -118,8 +118,6 @@ export const gameSlice = createProducer<GameState, GameActions<GameState>>(gameS
 				return draft;
 			}
 			draft.status = GameStatus.Ended;
-			// Not Needed since the game is over.
-			// draft.wave = -1;
 			return draft;
 		});
 	},

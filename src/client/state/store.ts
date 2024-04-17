@@ -1,6 +1,6 @@
 import { clientSlices } from "./slices";
 import { combineProducers } from "@rbxts/reflex";
-import { receiverMiddleware } from "client/replication/middleware";
+import { receiverMiddleware } from "client/state/replication/middleware";
 import { sharedSlices } from "shared/state/slices";
 import type { InferActions, InferState } from "@rbxts/reflex";
 

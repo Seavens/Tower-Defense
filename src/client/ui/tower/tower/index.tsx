@@ -1,12 +1,12 @@
 import { Button, Frame, Group, Image, ScrollingFrame, Text } from "client/ui/components";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Latte, Mocha } from "@rbxts/catppuccin";
-import { LevelUtility } from "shared/profile/utility";
+import { LevelUtility } from "shared/players/profile/utility";
 import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TOWER_ABILITIES_SIZE, TOWER_ABILITY_SIZE, TOWER_IMAGE_SIZE, TOWER_INFO_SIZE, TOWER_SIZE } from "../constants";
 import { TowerAbility } from "./ability";
 import { TowerAction } from "./action";
-import { TowerImpl } from "client/tower/class/impl";
+import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
 import { TowerUtility } from "shared/tower/utility";
 import { formatCooldown, formatDamage, formatRange, formatUpgrade } from "../utility";

@@ -1,6 +1,6 @@
 import { Flamework } from "@flamework/core";
 import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
-import { isUUID } from "shared/guards";
+import { isUUID } from "shared/utility/guards";
 import { t } from "@rbxts/t";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 
@@ -27,6 +27,7 @@ export const enum TowerVisual {
 	HolyStrike = "tower_visual:holy_strike",
 	Neutron = "tower_visual:neutron",
 	HeatedImpact = "tower_visual:tower_place",
+	EDSummon = "tower_visual:ed_summon",
 }
 
 export const enum TowerAnimation {

@@ -1,7 +1,7 @@
 import { Controller } from "@flamework/core";
 import { Events } from "client/network";
 import { GameStatus } from "shared/game/types";
-import { Mob } from "client/mob/class/class";
+import { Mob } from "client/mob/class";
 import { Workspace } from "@rbxts/services";
 import { selectCurrentWave, selectGameData, selectGameStatus } from "shared/game/selectors";
 import { store } from "client/state/store";

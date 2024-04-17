@@ -1,6 +1,6 @@
 import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
-import { MapUtility } from "shared/map/utility";
+import { MapUtility } from "shared/game/map/utility";
 import { Workspace } from "@rbxts/services";
 import { mobDefinitions } from "./definitions/mobs";
 import { statusDefinitions } from "./definitions";

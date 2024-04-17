@@ -2,7 +2,7 @@ import { Dictionary } from "@rbxts/sift";
 import { type Item, ItemKind, type ItemUnique } from "./types";
 import { MAXIMUM_EQUIPPED, MAXIMUM_STORED } from "./constants";
 import { find, remove } from "@rbxts/immut/src/table";
-import Immut, { createDraft, isDraft } from "@rbxts/immut";
+import Immut, { isDraft } from "@rbxts/immut";
 
 export namespace InventoryImpl {
 	export function getAvailableSlot(storage: Map<Slot, Item>): Option<Slot> {

@@ -29,7 +29,7 @@ import { ItemUtility } from "shared/inventory/utility";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { formatStats } from "../utility";
-import { idToName } from "shared/utility/id-to-name";
+import { idToName } from "shared/utility/functions/id-to-name";
 import { itemDefinitions } from "shared/inventory/items";
 import { useAsync } from "@rbxts/pretty-react-hooks";
 import { useDarkenedColor, useMotion, usePx, useRarityColor, useStore } from "client/ui/hooks";

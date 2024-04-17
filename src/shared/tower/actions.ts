@@ -1,4 +1,4 @@
-import type { BroadcastMetadata, UserMetadata } from "shared/replication/metadata";
+import type { BroadcastMetadata, UserMetadata } from "shared/state/replication/metadata";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { TowerTargeting } from "./types";
 

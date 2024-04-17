@@ -30,8 +30,9 @@ export class AssetController implements OnStart {
 			ids.push(id);
 		}
 		const instances = assets.GetDescendants();
-		ContentProvider.PreloadAsync([...ids, ...instances], (content: string, status: Enum.AssetFetchStatus): void => {
-			//
-		});
+		ContentProvider.PreloadAsync(
+			[...ids, ...instances],
+			(content: string, status: Enum.AssetFetchStatus): void => {},
+		);
 	}
 }

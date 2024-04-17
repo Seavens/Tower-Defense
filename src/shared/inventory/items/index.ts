@@ -1,10 +1,10 @@
-import { relics } from "./relics";
-import { towers } from "./towers";
+import { relics } from "./relics/definitions";
+import { towers } from "./towers/definitions";
 import type { ItemId } from "../types";
 import type { ItemKind } from "../types";
 import type { ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
-import type { TowerAbility } from "../../abilities";
+import type { TowerAbility } from "./towers/abilities";
 import type { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
 
 export type TowerUpgradeInfo = {

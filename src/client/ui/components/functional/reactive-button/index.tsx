@@ -1,9 +1,9 @@
 import { type BindingOrValue, composeBindings, lerp, map } from "@rbxts/pretty-react-hooks";
-import type { Element, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
-import React, { forwardRef, useEffect } from "@rbxts/react";
+import { Button, Group } from "../../basic";
 import { PALETTE, SPRINGS } from "client/ui/constants";
 import { useButtonAnimation, useButtonState, useMotion, usePx } from "client/ui/hooks";
-import { Button, Group } from "../../basic";
+import React, { forwardRef, useEffect } from "@rbxts/react";
+import type { Element, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
 
 interface ReactiveButtonProps extends PropsWithChildren {
 	size: BindingOrValue<UDim2>;

@@ -1,9 +1,9 @@
 import { Events } from "server/network";
 import { ItemUtility } from "shared/inventory/utility";
 import { Service } from "@flamework/core";
-import { isSlot } from "shared/guards";
+import { isSlot } from "shared/utility/guards";
 import { selectInventoryData } from "./selectors";
-import { selectProfileData } from "server/profile/selectors";
+import { selectProfileData } from "server/players/profile/selectors";
 import { store } from "server/state/store";
 import type { OnStart } from "@flamework/core";
 

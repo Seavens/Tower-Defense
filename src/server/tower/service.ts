@@ -1,19 +1,19 @@
 import { Events } from "server/network";
 import { Service } from "@flamework/core";
-import { Tower } from "server/tower/class/class";
-import { TowerInventoryUtility } from "./class/util";
+import { Tower } from "server/tower/class";
+import { TowerInventoryUtility } from "./utility";
 import { TowerUtility } from "shared/tower/utility";
 import { isItemTowerUnique, isTowerItemId } from "shared/inventory/types";
-import { isUUID } from "shared/guards";
+import { isUUID } from "shared/utility/guards";
 import { itemDefinitions } from "shared/inventory/items";
 import { selectCurrency, selectCurrentMap } from "shared/game/selectors";
 import { selectTowersByOwner } from "shared/tower/selectors";
 import { store } from "server/state/store";
-import type { MapId } from "shared/map/types";
+import type { MapId } from "shared/game/map/types";
 import type { OnPlayerRemoving } from "server/players/service";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
-import type { TowerAbility } from "shared/abilities";
+import type { TowerAbility } from "shared/inventory/items/towers/abilities";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {

@@ -9,8 +9,6 @@ export abstract class Tower {
 	public readonly owner: string;
 
 	protected readonly key: string;
-	/** @deprecated */
-	protected readonly unique: ItemTowerUnique;
 
 	public constructor(tower: ReplicatedTower) {
 		const { id, index, key, owner, position, unique, uuid } = tower;
@@ -19,18 +17,12 @@ export abstract class Tower {
 		this.key = key;
 		this.owner = owner;
 		this.cframe = new CFrame(position);
-		this.unique = unique;
 		this.uuid = uuid;
 	}
 
 	public getKey(): string {
 		const { key } = this;
 		return key;
-	}
-
-	public getUnique(): Readonly<ItemTowerUnique> {
-		const { unique } = this;
-		return unique;
 	}
 
 	public abstract getReplicated(): ReplicatedTower;

@@ -1,5 +1,5 @@
-import { DATA_TEMPLATE } from "shared/data/constants";
-import type { InventoryData } from "shared/data/types";
+import { DATA_TEMPLATE } from "shared/players/data/constants";
+import type { InventoryData } from "shared/players/data/types";
 import type { InventoryState } from "./slice";
 import type { ServerState } from "server/state/store";
 

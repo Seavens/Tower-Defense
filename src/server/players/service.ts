@@ -1,8 +1,8 @@
 import { Events } from "server/network";
 import { Players } from "@rbxts/services";
 import { Service } from "@flamework/core";
-import { createListener } from "shared/utility/create-listener";
-import { reuseThread } from "shared/utility/reuse-thread";
+import { createListener } from "shared/utility/functions/create-listener";
+import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { store } from "server/state/store";
 import type { OnStart } from "@flamework/core";
 

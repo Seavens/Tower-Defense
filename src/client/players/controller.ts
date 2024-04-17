@@ -1,7 +1,7 @@
 import { Controller } from "@flamework/core";
 import { Players } from "@rbxts/services";
-import { createListener } from "shared/utility/create-listener";
-import { reuseThread } from "shared/utility/reuse-thread";
+import { createListener } from "shared/utility/functions/create-listener";
+import { reuseThread } from "shared/utility/functions/reuse-thread";
 import type { OnStart } from "@flamework/core";
 
 export interface OnPlayerAdded {

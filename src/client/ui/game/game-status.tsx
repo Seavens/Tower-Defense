@@ -3,17 +3,15 @@ import { FONTS, PALETTE } from "../constants";
 import { Frame, Group, Text } from "../components";
 import { GameStatus } from "shared/game/types";
 import { INTERMISSION_TIME } from "shared/game/constants";
-import { MapId } from "shared/map/types";
-import { MapUtility } from "shared/map/utility";
+import { MapId } from "shared/game/map/types";
+import { MapUtility } from "shared/game/map/utility";
 import { Mocha } from "@rbxts/catppuccin";
 import { getSizeFactor } from "../inventory/utility";
-import { mapDefinitions } from "shared/map/definitions";
-import { selectGameData, selectGameStatus } from "shared/game/selectors";
-import { useAbbreviation, useDarkenedColor, usePx } from "../hooks";
-import { useLifetime, usePrevious } from "@rbxts/pretty-react-hooks";
-import { useSelector } from "@rbxts/react-reflex";
+import { mapDefinitions } from "shared/game/map/definitions";
+import { useAbbreviation, usePx } from "../hooks";
+import { useLifetime } from "@rbxts/pretty-react-hooks";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";
-import type { AnyMapDefinition } from "shared/map/definitions";
+import type { AnyMapDefinition } from "shared/game/map/definitions";
 import type { Element } from "@rbxts/react";
 
 interface GameStatusUIProps {
