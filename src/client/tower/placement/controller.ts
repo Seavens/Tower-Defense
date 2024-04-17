@@ -11,7 +11,7 @@ import type { MapId } from "shared/game/map/types";
 import type { OnStart, OnTick } from "@flamework/core";
 
 const { assets } = ReplicatedStorage;
-const { towers } = assets;
+const { items } = assets;
 const { placed, debris, characters, mobs, map } = Workspace;
 
 const params = new RaycastParams();
@@ -82,7 +82,7 @@ export class PlacementController implements OnStart, OnTick {
 	}
 
 	public getAsset(name: string, ghost = true): Option<Model> {
-		const asset = towers.FindFirstChild(name);
+		const asset = items.FindFirstChild(name);
 		if (asset === undefined || !asset.IsA("Model")) {
 			return undefined;
 		}

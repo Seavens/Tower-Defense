@@ -1,3 +1,4 @@
+/* eslint-disable roblox-ts/lua-truthiness */
 import { Tower as API } from "shared/tower/api";
 import { Animator } from "shared/assets/animator";
 import { Bin } from "@rbxts/bin";
@@ -24,7 +25,7 @@ import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "shared/tower/types";
 
 const {
-	assets: { towers: assets },
+	assets: { items: assets },
 } = ReplicatedStorage;
 const { map, placed, debris } = Workspace;
 

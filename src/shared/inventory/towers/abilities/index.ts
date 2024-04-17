@@ -1,10 +1,15 @@
-import { holyStrikeAbility } from "./holy-strike";
-import { neutronAbility } from "./neutron";
+import { TowerAbility } from "./types";
+import { atomicVoidAbility } from "./atmoic-void";
+import { godSpeakAbility as godSpeakAbility } from "./god-speak";
+import type { AbilityTarget } from "./types";
 import type { TowerVisual } from "shared/tower/types";
 
-export const enum TowerAbility {
-	Neutron = "tower_ability:neutron",
-	HolyStrike = "tower_ability:holy_strike",
+export interface AbilityEffect {
+	damageMultiplier: number;
+	rangeMultiplier: number;
+	cooldownMultiplier: number;
+
+	incomeMultiplier?: number;
 }
 
 export interface AbilityDefinition<I extends TowerAbility> {
@@ -13,14 +18,17 @@ export interface AbilityDefinition<I extends TowerAbility> {
 	desc: string;
 
 	visual: Array<TowerVisual>;
-	damage: number;
-	cooldown: number;
-	range: number;
+
+	coolDown: number;
+	duration: number;
+	areaEffect: boolean;
+	targetType: AbilityTarget;
+	effect: AbilityEffect;
 }
 
-export type AnyAbilityDefinition = (typeof abilityDefinitions)[TowerAbility];
+export type AnyAbilityDefinition = AbilityDefinition<TowerAbility>;
 
-export const abilityDefinitions: { [I in TowerAbility]: AbilityDefinition<I> } = {
-	[TowerAbility.Neutron]: neutronAbility,
-	[TowerAbility.HolyStrike]: holyStrikeAbility,
+export const abilityDefinitions: Record<TowerAbility, AnyAbilityDefinition> = {
+	[TowerAbility.AtomicVoid]: atomicVoidAbility,
+	[TowerAbility.GodSpeak]: godSpeakAbility,
 } as const;

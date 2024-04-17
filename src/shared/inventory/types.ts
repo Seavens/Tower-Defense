@@ -17,11 +17,16 @@ export const enum ItemKind {
 }
 
 export const enum ItemId {
+	// Towers
 	Sniper = "item_id:sniper",
 	Melee = "item_id:melee",
 	Blunt = "item_id:blunt",
 	God = "item_id:god",
 	EternalDamnation = "item_id:eternal_damnation",
+	Farmer = "item_id:farmer",
+	Supporter = "item_id:supporter",
+
+	// Relics
 	Chalice = "item_id:chalice",
 	RPG = "item_id:rpg",
 }
@@ -34,9 +39,12 @@ export type TowerItemId = KindItemIds<ItemKind.Tower>;
 
 export interface ItemTowerUnique {
 	kind: ItemKind.Tower;
+
 	damage: number;
 	range: number;
 	cooldown: number;
+	income?: number;
+
 	owner: number;
 	level: number;
 	experience: number;

@@ -20,7 +20,7 @@ export class TestService implements OnStart, OnDataLoaded {
 		const { Name, UserId } = player;
 		const metadata: UserMetadata & ReplicationMetadata = { user: Name, replicate: true };
 		const broadcast: UserMetadata & BroadcastMetadata = { user: Name, broadcast: true };
-		const items = ItemUtility.createItems(UserId, MAXIMUM_STORED - 3);
+		const items = ItemUtility.createItems(UserId, MAXIMUM_STORED - 3, ItemKind.Tower);
 		for (const _ of $range(1, 3)) {
 			const unique: ItemTowerUnique = {
 				kind: ItemKind.Tower,

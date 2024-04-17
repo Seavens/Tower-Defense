@@ -31,6 +31,7 @@ export const enum MobDamage {
 	Blunt = "mob_damage:blunt",
 	Magic = "mob_damage:magic",
 	Projectile = "mob_damage:projectile",
+	None = "mob_damage:none",
 }
 
 export const enum MobStatus {

@@ -2,7 +2,7 @@ import { relics } from "./relics";
 import { towers } from "./towers/definitions";
 import type { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
-import type { TowerAbility } from "./towers/abilities";
+import type { TowerAbility } from "./towers/abilities/types";
 import type { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
 
 export type TowerUpgradeInfo = {
@@ -11,12 +11,14 @@ export type TowerUpgradeInfo = {
 		damage: number;
 		range: number;
 		cooldown: number;
+		income?: number;
 	};
 	cost: number;
 };
 
 interface TowerDefinition {
 	kind: ItemKind.Tower;
+
 	damage: number;
 	range: number;
 	cooldown: number;
@@ -25,8 +27,11 @@ interface TowerDefinition {
 	cost: number;
 	upgrades: Array<TowerUpgradeInfo>;
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
+
 	visuals: Array<TowerVisual>;
+
 	abilities?: [TowerAbility, ...Array<TowerAbility>];
+
 	animations: { [K in TowerAnimation]: Array<RBXAssetId> };
 	sounds: { [K in TowerSounds]: Array<RBXAssetId> };
 }
@@ -45,9 +50,11 @@ export interface ItemDefinition<I extends ItemId, C extends ItemKind> {
 	id: I;
 	name: string;
 	desc: string;
+
 	rarity: ItemRarity;
 	image: RBXAssetId;
 	value: number;
+
 	kind: DefinitionKinds[C];
 }
 

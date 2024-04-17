@@ -25,6 +25,7 @@ export const MOB_DAMAGE_DISPLAY: { [K in MobDamage]: string } = {
 	[MobDamage.Blunt]: "Blunt",
 	[MobDamage.Magic]: "Magic",
 	[MobDamage.Projectile]: "Projectile",
+	[MobDamage.None]: "None",
 } as const;
 
 export const ITEM_SELL_MULTIPLIER = 0.5;

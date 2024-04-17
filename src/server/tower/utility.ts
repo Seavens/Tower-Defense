@@ -1,6 +1,9 @@
+import { itemDefinitions } from "shared/inventory";
 import { selectInventoryData } from "server/inventory/selectors";
 import { store } from "server/state/store";
 import type { Item } from "shared/inventory/types";
+import type { Tower } from "./class";
+import type { TowerTargeting } from "shared/tower/types";
 
 export namespace TowerInventoryUtility {
 	export function getTowerItem(player: Player, uuid: UUID): Option<Item> {

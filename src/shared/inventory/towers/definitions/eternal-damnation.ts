@@ -1,7 +1,7 @@
 import { ASSET_IDS } from "shared/assets/constants";
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
-import { TowerAbility } from "../abilities";
+import { TowerAbility } from "../abilities/types";
 import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
 import type { ItemDefinition } from "../..";
 
@@ -49,7 +49,7 @@ export const eternalDamnationTowerItem: ItemDefinition<ItemId.EternalDamnation, 
 
 		visuals: [TowerVisual.SniperShot, TowerVisual.EDSummon],
 
-		abilities: [TowerAbility.Neutron],
+		abilities: [TowerAbility.AtomicVoid],
 
 		animations: {
 			[TowerAnimation.Summon]: [ASSET_IDS.EDSummon],

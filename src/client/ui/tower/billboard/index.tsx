@@ -31,7 +31,7 @@ export function TowerBillboards(): Element {
 					AlwaysOnTop={false}
 					Enabled={true}
 					MaxDistance={100}
-					ExtentsOffsetWorldSpace={new Vector3(0, height + 1, 0)}
+					ExtentsOffsetWorldSpace={new Vector3(0, height + 3, 0)}
 				>
 					<TowerBillboard replicatedTower={replcated} />
 				</billboardgui>

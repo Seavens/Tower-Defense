@@ -13,7 +13,7 @@ import type { MapId } from "shared/game/map/types";
 import type { OnPlayerRemoving } from "server/players/service";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
-import type { TowerAbility } from "shared/inventory/towers/abilities";
+import type { TowerAbility } from "shared/inventory/towers/abilities/types";
 
 @Service({})
 export class TowerService implements OnStart, OnPlayerRemoving {
@@ -21,7 +21,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 
 	public onPlaceTower(player: Player, uuid: UUID, position: Vector3): void {
 		const { placed } = this;
-		const { Name, UserId } = player;
+		const { Name } = player;
 		const currency = store.getState(selectCurrency(Name));
 		const item = TowerInventoryUtility.getTowerItem(player, uuid);
 		if (item === undefined) {
@@ -148,7 +148,7 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			tower.sellTower();
 		});
 		Events.tower.ability.connect((player: Player, ability: TowerAbility): void => {
-			warn("😱 try to use ability!", ability, "🗿🗿🗿😨😱😓😩😱😱😱😱😱👾👻💀💯💯");
+			warn("Implement abilities bruh!");
 		});
 	}
 }
