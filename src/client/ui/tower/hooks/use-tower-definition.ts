@@ -1,7 +1,7 @@
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { useMemo } from "@rbxts/react";
 import type { ItemKind, TowerItemId } from "shared/inventory/types";
-import type { KindItemDefinition } from "shared/inventory/items";
+import type { KindItemDefinition } from "shared/inventory";
 
 export function useTowerDefintion<T extends Option<TowerItemId>>(
 	id?: T,

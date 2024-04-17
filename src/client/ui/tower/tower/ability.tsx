@@ -1,4 +1,4 @@
-import { Button, Frame, Group, Text } from "client/ui/components";
+import { Button, Group, Text } from "client/ui/components";
 import { Events } from "client/network";
 import { FONTS } from "client/ui/constants";
 import { Latte } from "@rbxts/catppuccin";
@@ -7,21 +7,20 @@ import { useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
 import { useTowerDefintion } from "../hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
-import type { TowerAbility as TowerAbilityEnum } from "shared/inventory/items/towers/abilities";
+import type { TowerAbility } from "shared/inventory/towers/abilities";
 import type { TowerItemId } from "shared/inventory/types";
 
 interface TowerAbilityProps {
 	id: TowerItemId;
-	ability: TowerAbilityEnum;
+	ability: TowerAbility;
 }
 
-export function TowerAbility({ id, ability }: TowerAbilityProps): Element {
+export function TowerAbilityUI({ id, ability }: TowerAbilityProps): Element {
 	const px = usePx();
 
 	const definition = useTowerDefintion(id);
 
 	const rarity = useRarityColor(definition.rarity);
-	const medium = useDarkenedColor(rarity, 0.45);
 	const darker = useDarkenedColor(rarity, 0.7);
 
 	return (

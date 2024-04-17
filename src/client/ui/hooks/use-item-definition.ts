@@ -1,7 +1,7 @@
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { useMemo } from "@rbxts/react";
-import type { AnyItemDefinition, ItemDefinition } from "shared/inventory/items";
-import type { ItemId, ItemKind } from "shared/inventory/types";
+import type { AnyItemDefinition } from "shared/inventory";
+import type { ItemId } from "shared/inventory/types";
 
 export function useItemDefinition(id?: ItemId): Option<AnyItemDefinition> {
 	return useMemo((): Option<AnyItemDefinition> => {

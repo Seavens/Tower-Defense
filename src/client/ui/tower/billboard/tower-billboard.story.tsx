@@ -5,7 +5,7 @@ import { ReflexProvider } from "@rbxts/react-reflex";
 import { type ReplicatedTower, TowerTargeting } from "shared/tower/types";
 import { TowerBillboard } from "./billboard";
 import { createUUID } from "shared/utility/functions/create-uuid";
-import { godTowerItem } from "shared/inventory/items/towers/definitions/god";
+import { godTowerItem } from "shared/inventory/towers/definitions/god";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";

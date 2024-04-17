@@ -34,7 +34,6 @@ export class WaveImpl {
 				break;
 			}
 			const health = MobUtility.getMobHealth(id, index);
-			warn(health, allocated);
 			const appearance = appearances[id];
 			const entry = first[id];
 			const initial = entry?.count ?? 0;

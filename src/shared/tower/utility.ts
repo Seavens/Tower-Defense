@@ -2,7 +2,7 @@ import { ITEM_RNG_MAX, ITEM_RNG_MIN } from "shared/inventory/constants";
 import { MAX_TOWER_LEVEL, SELL_RATIO, TOWER_GRADE_RANGES, TOWER_LEVEL_MULTIPLIER } from "./constants";
 import { Modding } from "@flamework/core";
 import { TowerGrade } from "./types";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "./types";
 

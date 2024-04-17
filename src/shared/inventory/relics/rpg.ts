@@ -1,6 +1,6 @@
 import { ASSET_IDS } from "shared/assets/constants";
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
-import type { ItemDefinition } from "../..";
+import type { ItemDefinition } from "..";
 
 export const rpgItem: ItemDefinition<ItemId.RPG, ItemKind.Relic> = {
 	id: ItemId.RPG,

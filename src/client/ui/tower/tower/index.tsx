@@ -4,7 +4,7 @@ import { Latte, Mocha } from "@rbxts/catppuccin";
 import { LevelUtility } from "shared/players/profile/utility";
 import { MAX_TOWER_LEVEL, TOWER_TARGETING_DISPLAY } from "shared/tower/constants";
 import { TOWER_ABILITIES_SIZE, TOWER_ABILITY_SIZE, TOWER_IMAGE_SIZE, TOWER_INFO_SIZE, TOWER_SIZE } from "../constants";
-import { TowerAbility } from "./ability";
+import { TowerAbilityUI } from "./ability";
 import { TowerAction } from "./action";
 import { TowerImpl } from "client/tower/impl";
 import { TowerStat } from "./stat";
@@ -64,7 +64,7 @@ export function Tower({ tower }: TowerProps): Element {
 			return elements;
 		}
 		for (const ability of abilities) {
-			const element = <TowerAbility id={id} ability={ability} />;
+			const element = <TowerAbilityUI id={id} ability={ability} />;
 			elements.push(element);
 		}
 		return elements;

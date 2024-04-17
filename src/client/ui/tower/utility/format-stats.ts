@@ -1,6 +1,6 @@
 import { PALETTE } from "client/ui/constants";
 import { TowerUtility } from "shared/tower/utility";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import Abbreviator from "@rbxts/abbreviate";
 import type { ReplicatedTower } from "shared/tower/types";
 

@@ -1,7 +1,7 @@
 import { ColorUtil } from "client/ui/utility";
 import { TowerVisual } from "shared/tower/types";
 import { TweenService } from "@rbxts/services";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";

@@ -3,9 +3,9 @@ import { ItemKind } from "shared/inventory/types";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { RarityUtility } from "./rarities/utility";
-import { TowerUtility } from "./items/towers/utility";
+import { TowerUtility } from "./towers/utility";
 import { createUUID } from "shared/utility/functions/create-uuid";
-import { itemDefinitions } from "./items";
+import { itemDefinitions } from ".";
 import type {
 	Item,
 	ItemId,

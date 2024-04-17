@@ -1,7 +1,7 @@
 import { type BindingOrValue, mapBinding } from "@rbxts/pretty-react-hooks";
 import { ItemKind } from "shared/inventory/types";
 import { MOB_DAMAGE_DISPLAY } from "shared/inventory/constants";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { rarityDefinitions } from "shared/inventory/rarities";
 import { truncateNumber } from "shared/utility/functions/truncate-number";
 import type { Binding } from "@rbxts/react";

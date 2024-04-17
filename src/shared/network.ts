@@ -1,8 +1,8 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
 import type { MobDamage, MobData, MobId, MobStatus } from "./mob/types";
-import type { TowerAbility } from "./inventory/items/towers/abilities";
-import type { TowerTargeting, TowerVisual } from "./tower/types";
+import type { TowerAbility } from "./inventory/towers/abilities";
+import type { TowerTargeting } from "./tower/types";
 
 interface ClientToServerEvents {
 	state: {

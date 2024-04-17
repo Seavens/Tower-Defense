@@ -1,7 +1,5 @@
-import { ItemId } from "../../../types";
-import { ItemKind } from "../../../types";
-import { ItemRarity } from "shared/inventory/types";
-import type { ItemDefinition } from "../..";
+import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
+import type { ItemDefinition } from "..";
 
 export const chaliceItem: ItemDefinition<ItemId.Chalice, ItemKind.Relic> = {
 	id: ItemId.Chalice,

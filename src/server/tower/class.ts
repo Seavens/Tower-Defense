@@ -7,7 +7,7 @@ import { Players } from "@rbxts/services";
 import { TowerInventoryUtility } from "./utility";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/functions/create-schedule";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";

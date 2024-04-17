@@ -10,7 +10,7 @@ import { Macchiato, Mocha } from "@rbxts/catppuccin";
 import { Players } from "@rbxts/services";
 import { UIKind } from "client/ui/types";
 import { getSizeFactor } from "../utility";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { selectCurrency } from "shared/game/selectors";
 import { selectOpenUI } from "client/ui/selectors";
 import { selectProfileData } from "client/players/profile/selectors";

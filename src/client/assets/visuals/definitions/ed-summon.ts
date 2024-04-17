@@ -1,9 +1,6 @@
-import { ColorUtil } from "client/ui/utility";
-import { Debris, ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { Flamework } from "@flamework/core";
+import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { TowerVisual } from "shared/tower/types";
-import { itemDefinitions } from "shared/inventory/items";
-import { rarityDefinitions } from "shared/inventory/rarities";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "shared/mob/api";
 import type { ReplicatedTower } from "shared/tower/types";

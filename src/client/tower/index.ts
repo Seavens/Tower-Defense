@@ -1,5 +1,4 @@
 import { Tower as API } from "shared/tower/api";
-import { ASSET_IDS } from "shared/assets/constants";
 import { Animator } from "shared/assets/animator";
 import { Bin } from "@rbxts/bin";
 import { Collision, setCollision } from "shared/utility/collision";
@@ -15,7 +14,7 @@ import { TowerSounds } from "shared/tower/types";
 import { TowerTargeting } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
 import { createSchedule } from "shared/utility/functions/create-schedule";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";

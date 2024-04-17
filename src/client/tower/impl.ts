@@ -2,7 +2,7 @@ import { Events } from "client/network";
 import { Players } from "@rbxts/services";
 import { Tower } from ".";
 import { TowerUtility } from "shared/tower/utility";
-import { itemDefinitions } from "shared/inventory/items";
+import { itemDefinitions } from "shared/inventory";
 import { selectCurrency } from "shared/game/selectors";
 import { store } from "client/state/store";
 
