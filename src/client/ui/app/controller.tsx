@@ -1,4 +1,4 @@
-import { App } from "client/app/app";
+import { App } from "client/ui/app/app";
 import { Controller } from "@flamework/core";
 import { Players } from "@rbxts/services";
 import { StrictMode } from "@rbxts/react";
