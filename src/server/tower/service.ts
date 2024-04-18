@@ -65,10 +65,10 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			upgrades: 1,
 			uuid,
 		};
-		new Tower(tower);
-		indices.push(index);
 		store.towerPlace(tower, { user: Name, broadcast: true });
 		store.gameAddCurrency({ amount: -cost }, { user: Name, broadcast: true });
+		indices.push(index);
+		new Tower(tower);
 	}
 
 	public onPlayerRemoving(player: Player): void {

@@ -16,8 +16,7 @@ import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
 import Octree from "@rbxts/octo-tree";
 import type { Node } from "@rbxts/octo-tree";
-import type { ReplicatedTower } from "shared/tower/types";
-import type { TowerTargeting } from "shared/tower/types";
+import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
@@ -30,7 +29,7 @@ export class Tower extends API {
 	public declare readonly cframe: CFrame;
 	public declare readonly owner: string;
 
-	public towersInRange: Set<Tower> = new Set();
+	public towers: Set<Tower> = new Set();
 
 	protected declare readonly key: string;
 	protected declare readonly unique: ItemTowerUnique;
@@ -65,6 +64,7 @@ export class Tower extends API {
 		this.node = node;
 		const { key } = this;
 		towers.set(key, this);
+		Tower.updateTowersInRange();
 	}
 
 	public static getTowersInRadius(position: Vector3, radius: number): Array<Node<Tower>> {
@@ -78,13 +78,25 @@ export class Tower extends API {
 		return towers.get(key);
 	}
 
-	public updateTowersInRange(): void {
-		const replicated = this.getReplicated();
-		const def = itemDefinitions[replicated.id];
-		const { kind } = def;
+	protected static updateTowersInRange(): void {
+		const { towers } = this;
+		warn("update");
+		for (const [, tower] of towers) {
+			const { towers } = tower;
+			const replicated = tower.getReplicated();
+			const { position } = replicated;
+			const range = TowerUtility.getTotalRange(replicated);
+			const nodes = this.getTowersInRadius(position, range);
+			towers.clear();
+			for (const { Object: tower } of nodes) {
+				towers.add(tower);
+			}
+		}
+	}
 
-		const towersInRange = Tower.getTowersInRadius(this.cframe.Position, kind.range);
-		this.towersInRange = new Set<Tower>(towersInRange.map((node) => node.Object));
+	public getTowersInRange(): Set<Tower> {
+		const { towers } = this;
+		return towers;
 	}
 
 	public isTargetingValid(targeting: TowerTargeting): boolean {
@@ -115,8 +127,9 @@ export class Tower extends API {
 
 	public attackTarget(delta: number): void {
 		const replicated = this.getReplicated();
-		const def = itemDefinitions[replicated.id];
-		const { kind } = def;
+		const { id } = replicated;
+		const definition = itemDefinitions[id];
+		const { kind } = definition;
 
 		const damage = TowerUtility.getTotalDamage(replicated);
 		const range = TowerUtility.getTotalRange(replicated);
@@ -127,9 +140,8 @@ export class Tower extends API {
 		this.updateLastAttackTime();
 
 		if (kind.damageKind === MobDamage.None) {
-			const towersInRange = Tower.getTowersInRadius(this.cframe.Position, kind.range);
-			for (const node of towersInRange) {
-				const tower = node.Object;
+			const towers = this.getTowersInRange();
+			for (const tower of towers) {
 				const target = tower.getReplicated();
 				let _damage = TowerUtility.getTotalDamage(target);
 				let _range = TowerUtility.getTotalRange(target);
@@ -138,11 +150,9 @@ export class Tower extends API {
 				_damage += _damage * damage;
 				_range += _range * range;
 				_cooldown += _cooldown * cooldown;
-				warn(_damage, _range, _cooldown);
 			}
 		} else {
 			const currentTarget = this.getTarget();
-			if (currentTarget === undefined) return;
 			this.broadcastAttackEvent(currentTarget);
 			this.attackTargetIfPossible(currentTarget);
 		}
@@ -167,10 +177,10 @@ export class Tower extends API {
 		const { key, node } = this;
 		octree.RemoveNode(node);
 		towers.delete(key);
-		this.updateTowersInRange();
+		Tower.updateTowersInRange();
 	}
 
-	private addExperience(mob: Mob): void {
+	protected addExperience(mob: Mob): void {
 		if (!mob.isDead()) {
 			return;
 		}
@@ -194,12 +204,15 @@ export class Tower extends API {
 		);
 	}
 
-	private updateLastAttackTime(): void {
+	protected updateLastAttackTime(): void {
 		const now = os.clock();
 		this.lastAttack = now;
 	}
 
-	private broadcastAttackEvent(currentTarget: Mob): void {
+	protected broadcastAttackEvent(currentTarget?: Mob): void {
+		if (currentTarget === undefined) {
+			return;
+		}
 		if (currentTarget !== this.lastTarget) {
 			const target = currentTarget?.uuid;
 			Events.tower.attack.broadcast(this.key, target);
@@ -207,7 +220,7 @@ export class Tower extends API {
 		this.lastTarget = currentTarget;
 	}
 
-	private attackTargetIfPossible(currentTarget: Mob): void {
+	protected attackTargetIfPossible(currentTarget: Option<Mob>): void {
 		if (currentTarget === undefined) {
 			this.lastAttack = 0;
 			return;
@@ -225,12 +238,12 @@ export class Tower extends API {
 		this.addExperience(currentTarget);
 	}
 
-	private getTargeting(): TowerTargeting {
+	protected getTargeting(): TowerTargeting {
 		const { targeting } = this.getReplicated();
 		return targeting;
 	}
 
-	private getTarget(): Option<Mob> {
+	protected getTarget(): Option<Mob> {
 		const { cframe } = this;
 		const position = cframe.Position;
 		const replicated = this.getReplicated();
