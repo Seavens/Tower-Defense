@@ -13,11 +13,13 @@ export interface ProfileData {
 	coins: number;
 	gems: number;
 	settings: {
-		music: boolean;
-		sfx: boolean;
-		audioLevel: number;
-		vfx: boolean;
-		billboards: boolean;
+		musicEnabled: boolean;
+		musicVolume: number;
+		sfxEnabled: boolean;
+		sfxVolume: number;
+		vfxEnabled: boolean;
+		mobBillboardsEnabled: boolean;
+		towerBillboardsEnabled: boolean;
 	};
 }
 
@@ -32,11 +34,13 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	coins: t.number,
 	gems: t.number,
 	settings: t.strictInterface({
-		music: t.boolean,
-		sfx: t.boolean,
-		audioLevel: t.number,
-		vfx: t.boolean,
-		billboards: t.boolean,
+		musicEnabled: t.boolean,
+		musicVolume: t.number,
+		sfxEnabled: t.boolean,
+		sfxVolume: t.number,
+		vfxEnabled: t.boolean,
+		mobBillboardsEnabled: t.boolean,
+		towerBillboardsEnabled: t.boolean,
 	}),
 });
 

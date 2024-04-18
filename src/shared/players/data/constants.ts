@@ -8,11 +8,13 @@ export const DATA_TEMPLATE: Data = {
 		coins: 0,
 		gems: 0,
 		settings: {
-			music: true,
-			sfx: true,
-			audioLevel: math.clamp(100, 0, 100),
-			vfx: true,
-			billboards: true,
+			musicEnabled: true,
+			musicVolume: math.clamp(100, 0, 100),
+			sfxEnabled: true,
+			sfxVolume: math.clamp(100, 0, 100),
+			vfxEnabled: true,
+			mobBillboardsEnabled: true,
+			towerBillboardsEnabled: true,
 		},
 	},
 	inventory: {

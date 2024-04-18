@@ -5,6 +5,8 @@ import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Service } from "@flamework/core";
 import { USE_MOCK_DATA } from "shared/core/constants";
 import { createUUID } from "shared/utility/functions/create-uuid";
+import { selectProfileData, selectProfileState } from "server/players/profile/selectors";
+import { selectState } from "server/state/replication/selector";
 import { store } from "server/state/store";
 import type { BroadcastMetadata, ReplicationMetadata, UserMetadata } from "shared/state/replication/metadata";
 import type { Item, ItemTowerUnique } from "shared/inventory/types";
@@ -43,6 +45,12 @@ export class TestService implements OnStart, OnDataLoaded {
 		store.gameAddCurrency({ amount: 10000000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
+		store.profileAdjustVfx({ mobBillboards: false }, metadata);
+		const x = store.getState().data.profile;
+		warn(x);
+
+		task.wait(5);
+		warn(x);
 	}
 
 	public onStart(): void {}

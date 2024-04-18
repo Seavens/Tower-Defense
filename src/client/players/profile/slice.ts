@@ -7,9 +7,12 @@ import type { Draft } from "@rbxts/immut/src/types-external";
 import type { ExcludeMetadata } from "shared/state/replication/metadata";
 import type {
 	ProfileActions,
+	ProfileAddCoins,
 	ProfileAddExperience,
-	ProfileAdjustCoins,
-	ProfileAdjustGems,
+	ProfileAddGems,
+	ProfileAdjustMusic,
+	ProfileAdjustSfx,
+	ProfileAdjustVfx,
 } from "shared/players/profile/actions";
 import type { ProfileData } from "shared/players/data/types";
 
@@ -30,16 +33,44 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 			draft.data.experience = leftover;
 		});
 	},
-	profileAdjustCoins: (state: ProfileState, payload: ProfileAdjustCoins): ProfileState => {
+	profileAdjustCoins: (state: ProfileState, payload: ProfileAddCoins): ProfileState => {
 		const { coins } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			draft.data.coins += coins;
 		});
 	},
-	profileAdjustGems: (state: ProfileState, payload: ProfileAdjustGems): ProfileState => {
+	profileAdjustGems: (state: ProfileState, payload: ProfileAddGems): ProfileState => {
 		const { gems } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			draft.data.gems += gems;
+		});
+	},
+	profileAdjustMusic: (state: ProfileState, payload: ProfileAdjustMusic): ProfileState => {
+		const { musicEnabled, volume } = payload;
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			const { settings } = draft.data;
+
+			if (musicEnabled !== undefined) settings.musicEnabled = musicEnabled;
+			if (volume !== undefined) settings.musicVolume = math.clamp(volume, 0, 100);
+		});
+	},
+	profileAdjustSfx: (state: ProfileState, payload: ProfileAdjustSfx): ProfileState => {
+		const { sfxEnabled, volume: level } = payload;
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			const { settings } = draft.data;
+
+			if (sfxEnabled !== undefined) settings.sfxEnabled = sfxEnabled;
+			if (level !== undefined) settings.sfxVolume = math.clamp(level, 0, 100);
+		});
+	},
+	profileAdjustVfx: (state: ProfileState, payload: ProfileAdjustVfx): ProfileState => {
+		const { vfxEnabled, mobBillboards, towerBillboards } = payload;
+		return produce(state, (draft: Draft<ProfileState>): void => {
+			const { settings } = draft.data;
+
+			if (vfxEnabled !== undefined) settings.vfxEnabled = vfxEnabled;
+			if (mobBillboards !== undefined) settings.mobBillboardsEnabled = mobBillboards;
+			if (towerBillboards !== undefined) settings.towerBillboardsEnabled = towerBillboards;
 		});
 	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {
@@ -52,5 +83,4 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 			return state;
 		});
 	},
-	// Add Settings
 });

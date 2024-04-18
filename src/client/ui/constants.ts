@@ -32,6 +32,7 @@ export const PALETTE = {
 	red: Color3.fromRGB(247, 87, 87),
 	green: Color3.fromRGB(82, 217, 77),
 	blue: Color3.fromRGB(56, 87, 207),
+	yellow: Color3.fromRGB(255, 255, 64),
 
 	light_white: Color3.fromRGB(199, 199, 199),
 	light_gray: Color3.fromRGB(130, 130, 130),
@@ -42,6 +43,7 @@ export const PALETTE = {
 	dark_blue: Color3.fromRGB(15, 15, 120),
 	dark_green: Color3.fromRGB(0, 74, 5),
 	dark_red: Color3.fromRGB(105, 0, 0),
+	dark_yellow: Color3.fromRGB(199, 199, 0),
 
 	black: Color3.fromRGB(30, 30, 30),
 	white: Color3.fromRGB(230, 230, 230),
@@ -56,4 +58,5 @@ export const PADDING = 3;
 
 export const UI_PRIORITIES: { [K in UIKind]: number } = {
 	[UIKind.Inventory]: 5,
+	[UIKind.Settings]: 10,
 } as const;

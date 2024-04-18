@@ -1,5 +1,6 @@
 import { Hotbar } from "./hotbar";
 import { Inventory } from "./inventory";
+import { SettingsMenu } from "../settings";
 import { UIKind } from "../types";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectOpenUI } from "../selectors";
@@ -14,10 +15,12 @@ export function InventoryApp(): Element {
 	const open = useSelector(selectOpenUI);
 	const { stored, equipped } = useSelector(selectInventoryData);
 
-	const [visible, setVisibility] = useState(false);
+	const [inventoryVisible, setInventoryVisibility] = useState(false);
+	const [settingsVisible, setSettingsVisibility] = useState(false);
 
 	useEffect((): void => {
-		setVisibility(open === UIKind.Inventory);
+		setInventoryVisibility(open === UIKind.Inventory);
+		setSettingsVisibility(open === UIKind.Settings);
 	}, [open]);
 
 	return (
@@ -26,9 +29,15 @@ export function InventoryApp(): Element {
 			<Inventory
 				items={stored}
 				equipped={equipped}
-				visible={visible}
+				visible={inventoryVisible}
 				onClose={(): void => {
 					store.closeUI({ kind: UIKind.Inventory });
+				}}
+			/>
+			<SettingsMenu
+				visible={settingsVisible}
+				onClose={(): void => {
+					store.closeUI({ kind: UIKind.Settings });
 				}}
 			/>
 		</>

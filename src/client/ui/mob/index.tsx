@@ -3,12 +3,18 @@ import { Frame } from "../components";
 import { Mob } from "client/mob/class";
 import { MobHealthbar } from "./health-bar";
 import { mobDefinitions } from "shared/mob/definitions";
+import { selectProfileData } from "client/players/profile/selectors";
 import { useEventListener, useUpdate } from "@rbxts/pretty-react-hooks";
 import { usePx } from "../hooks";
+import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
-export function MobApp(): Element {
+export function MobApp(): Option<Element> {
+	const store = useSelector(selectProfileData);
+	const { settings } = store;
+	const { mobBillboardsEnabled } = settings;
+
 	const px = usePx();
 
 	const update = useUpdate();
@@ -53,6 +59,10 @@ export function MobApp(): Element {
 	useEventListener(Mob.onMobDamaged, (): void => {
 		update();
 	});
+
+	if (!mobBillboardsEnabled) {
+		return undefined;
+	}
 
 	return <>{billboards}</>;
 }

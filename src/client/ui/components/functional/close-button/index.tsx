@@ -1,10 +1,10 @@
 import { type BindingOrValue } from "@rbxts/pretty-react-hooks";
-import type { Element } from "@rbxts/react";
-import React from "@rbxts/react";
 import { PALETTE } from "client/ui/constants";
-import { usePx } from "client/ui/hooks";
-import { Text } from "../../basic";
 import { ReactiveButton } from "../reactive-button";
+import { Text } from "../../basic";
+import { usePx } from "client/ui/hooks";
+import React from "@rbxts/react";
+import type { Element } from "@rbxts/react";
 
 interface CloseButtonProps {
 	size: BindingOrValue<UDim2>;

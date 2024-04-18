@@ -106,7 +106,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 				/>
 				<Group
 					size={UDim2.fromOffset(px(SLOT_SIZE.X) * 1.7, px(SLOT_SIZE.Y) + px(50))}
-					key={"left-hotbar-frame"}
+					key={"left-hotbar-group"}
 				/>
 				<Group size={UDim2.fromOffset(px(HOTBAR_SIZE.X), px(SLOT_SIZE.Y) + px(75))} key={"center-hotbar-Frame"}>
 					<uilistlayout
@@ -226,6 +226,13 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 					size={UDim2.fromOffset(px(SLOT_SIZE.X) * 1.7, px(SLOT_SIZE.Y) + px(50))}
 					key={"right-hotbar-group"}
 				>
+					<uilistlayout
+						FillDirection={Enum.FillDirection.Vertical}
+						HorizontalAlignment={Enum.HorizontalAlignment.Center}
+						VerticalAlignment={Enum.VerticalAlignment.Center}
+						SortOrder={Enum.SortOrder.LayoutOrder}
+						Padding={new UDim(0, px(8))}
+					/>
 					<ReactiveButton
 						size={new UDim2(0.9, 0, 0, px(45))}
 						anchorPoint={new Vector2(0.5, 0.5)}
@@ -250,6 +257,37 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 							anchorPoint={new Vector2(0.5, 0.5)}
 							position={UDim2.fromScale(0.5, 0.5)}
 							text={"Inventory"}
+							font={FONTS.inter.bold}
+							textColor={PALETTE.accent}
+							strokeTransparency={0.25}
+							textSize={px(18)}
+							key={"settings-text"}
+						/>
+					</ReactiveButton>
+					<ReactiveButton
+						size={new UDim2(0.9, 0, 0, px(20))}
+						anchorPoint={new Vector2(0.5, 1)}
+						position={UDim2.fromScale(0.5, 0.92)}
+						backgroundColor={ColorUtil.darken(PALETTE.gray, 0.25)}
+						backgroundTransparency={0}
+						cornerRadius={new UDim(0, px(4))}
+						onClick={(): void => {
+							open === UIKind.Settings
+								? store.closeUI({ kind: UIKind.Settings })
+								: store.openUI({ kind: UIKind.Settings });
+						}}
+						enabled={true}
+					>
+						<uistroke
+							Color={ColorUtil.darken(PALETTE.gray, 0.5)}
+							ApplyStrokeMode={Enum.ApplyStrokeMode.Border}
+							Thickness={px(1)}
+						/>
+						<Text
+							size={UDim2.fromOffset(px(70), px(50))}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							position={UDim2.fromScale(0.5, 0.5)}
+							text={"Settings"}
 							font={FONTS.inter.bold}
 							textColor={PALETTE.accent}
 							strokeTransparency={0.25}

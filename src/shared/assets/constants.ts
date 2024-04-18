@@ -15,6 +15,7 @@ export const ASSET_IDS = {
 	ElectricSpark: "rbxassetid://624552683",
 	LightningFlashes: "rbxassetid://9116272906",
 	SilentGlitcher: "rbxassetid://7390331288",
+	Click: "rbxassetid://452267918",
 
 	// Animations
 	WalkR6: "rbxassetid://17140384803",

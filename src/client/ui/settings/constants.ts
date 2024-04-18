@@ -1,0 +1,2 @@
+export const SETTINGS_MENU_SIZE = new Vector2(1100, 550);
+export const SETTINGS_MENU_ROW_SIZE = new Vector2(SETTINGS_MENU_SIZE.X / 1.29, SETTINGS_MENU_SIZE.Y / 13.5);

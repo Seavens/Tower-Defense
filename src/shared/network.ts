@@ -23,6 +23,18 @@ interface ClientToServerEvents {
 		unequip(slot: string): void;
 		sell(slot: string): void;
 	};
+
+	profile: {
+		settings: {
+			enableMobBillboards(enable: boolean): void;
+			enableTowerBillboards(enable: boolean): void;
+			enableMusic(enable: boolean): void;
+			enableSFX(enable: boolean): void;
+			enableVFX(enable: boolean): void;
+			setMusicVolume(volume: number): void;
+			setSFXVolume(volume: number): void;
+		};
+	};
 }
 
 interface ServerToClientEvents {

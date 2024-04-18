@@ -1,6 +1,6 @@
+import { UI_PRIORITIES } from "./constants";
 import { createProducer } from "@rbxts/reflex";
 import type { UIActions, UIClose, UIOpen } from "./actions";
-import { UI_PRIORITIES } from "./constants";
 import type { UIKind } from "./types";
 
 export interface UIState {

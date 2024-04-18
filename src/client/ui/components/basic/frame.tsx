@@ -1,7 +1,7 @@
+import { forwardRef } from "@rbxts/react";
+import React from "@rbxts/react";
 import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
 import type { InstanceChangeEvent, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
-import React from "@rbxts/react";
-import { forwardRef } from "@rbxts/react";
 
 export interface FrameProps<T extends Instance = Frame> extends PropsWithChildren {
 	event?: InstanceEvent<T>;
