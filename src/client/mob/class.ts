@@ -9,7 +9,6 @@ import { createSchedule } from "shared/utility/functions/create-schedule";
 import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectGameData } from "shared/game/selectors";
-import { statusModules } from "shared/mob/modules";
 import { store } from "client/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
@@ -164,12 +163,12 @@ export class Mob extends API {
 	}
 
 	public onStatus(status: MobStatus, duration: number, added: boolean): void {
-		const module = statusModules[status];
-		if (added) {
-			module?.onAdded?.(this);
-		} else {
-			module?.onRemove?.(this);
-		}
+		// const module = statusModules[status];
+		// if (added) {
+		// 	module?.onAdded?.(this);
+		// } else {
+		// 	module?.onRemove?.(this);
+		// }
 	}
 
 	public onEnd(): void {}

@@ -47,8 +47,6 @@ export function GameStatusUI({ health, wave, map, status }: GameStatusUIProps): 
 
 	useEffect(() => {
 		if (status === GameStatus.Waiting) {
-			// Start countdown
-			warn("countdown");
 			setTimestamp(os.clock() + INTERMISSION_TIME);
 		} else {
 			setTimestamp(0);

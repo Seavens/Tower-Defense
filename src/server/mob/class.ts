@@ -3,15 +3,10 @@ import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
 import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
-import { Tower } from "server/tower/class";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/functions/create-schedule";
-import { mobDefinitions } from "shared/mob/definitions";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectGameData } from "shared/game/selectors";
-import { selectProfileData } from "server/players/profile/selectors";
-import { selectSpecificTower } from "shared/tower/selectors";
-import { statusModules } from "shared/mob/modules";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
@@ -138,14 +133,14 @@ export class Mob extends API {
 	public onStatus(status: MobStatus, duration: number, added: boolean): void {
 		const { uuid } = this;
 		const timestamp = Workspace.GetServerTimeNow();
-		const module = statusModules[status];
-		if (!added) {
-			module?.onRemove?.(this);
-			Events.mob.statusRemoved.broadcast(uuid, status);
-			return;
-		}
-		module?.onAdded?.(this);
-		Events.mob.statusAdded.broadcast(uuid, duration, status, timestamp);
+		// const module = statusModules[status];
+		// if (!added) {
+		// 	module?.onRemove?.(this);
+		// 	Events.mob.statusRemoved.broadcast(uuid, status);
+		// 	return;
+		// }
+		// module?.onAdded?.(this);
+		// Events.mob.statusAdded.broadcast(uuid, duration, status, timestamp);
 	}
 
 	public onEnd(): void {

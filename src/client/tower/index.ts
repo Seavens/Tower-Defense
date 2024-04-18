@@ -14,9 +14,11 @@ import { TowerAnimation, TowerVisual } from "shared/tower/types";
 import { TowerSounds } from "shared/tower/types";
 import { TowerTargeting } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
+import { VisualController } from "client/assets/visuals/controller";
 import { createSchedule } from "shared/utility/functions/create-schedule";
 import { itemDefinitions } from "shared/inventory";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
+import { selectProfileData } from "client/players/profile/selectors";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "client/state/store";
 import { targetingModules } from "shared/tower/targeting";
@@ -83,14 +85,7 @@ export class Tower extends API {
 		instance.PivotTo(cframe);
 		instance.SetAttribute(TOWER_KEY_ATTRIBUTE, key);
 
-		const module = towerVisualModules[TowerVisual.HeatedImpact];
-		const { duration } = module;
-		const temporary = new Bin();
-		module.onEffect(temporary, instance, undefined, tower);
-		bin.add(temporary);
-		task.delay(duration, (): void => {
-			temporary.destroy();
-		});
+		VisualController.onEffect(TowerVisual.SniperShot, instance, undefined, this.getReplicated());
 
 		const { kind } = itemDefinitions[id];
 		const { sounds, animations } = kind;
@@ -227,18 +222,9 @@ export class Tower extends API {
 	}
 
 	public attackTarget(target: Option<Mob>): void {
-		const { id, bin, instance } = this;
-		const { kind } = itemDefinitions[id];
-		const {
-			visuals: [visual],
-		} = kind;
+		const { instance } = this;
 
-		const module = towerVisualModules[visual];
-		const { duration } = module;
-		const replicated = this.getReplicated();
-		const temporary = new Bin();
-		module.onEffect(temporary, instance, target, replicated);
-
+		VisualController.onEffect(TowerVisual.SniperShot, instance, target, this.getReplicated());
 		instance.Parent = placed;
 
 		const { animator } = this;
@@ -246,15 +232,10 @@ export class Tower extends API {
 		task.delay(track.Length - 0.25, (): void => {
 			track.Stop();
 		});
-
-		bin.add(temporary);
-		task.delay(duration, (): void => {
-			temporary.destroy();
-		});
 	}
 
 	public onTick(): void {
-		const { id, instance, cframe } = this;
+		const { instance, cframe } = this;
 		const mob = this.getTarget();
 		if (mob === undefined || mob.isDead()) {
 			return;
@@ -270,8 +251,6 @@ export class Tower extends API {
 		const { towers } = Tower;
 		const { instance, sphere, circle, key, bin, id, index, cframe, uuid, unique } = this;
 
-		const module = towerVisualModules[TowerVisual.HeatedImpact];
-		const temporary = new Bin();
 		// onEffect requires a `ReplicatedTower`, at this point, the tower is already out of state
 		// therefore we just create a fake `ReplicatedTower` to appease it -- also because we need
 		// id from it.
@@ -286,16 +265,11 @@ export class Tower extends API {
 			upgrades: 1,
 			uuid,
 		};
+		VisualController.onEffect(TowerVisual.HeatedImpact, instance, undefined, fake);
 
 		const { animator } = this;
 		const track = animator.getAnimation(TowerAnimation.Sell);
 		animator.playAnimation(TowerAnimation.Sell);
-
-		module.onEffect(temporary, instance, undefined, fake);
-		bin.add(temporary);
-		task.delay(track.Length, (): void => {
-			temporary.destroy();
-		});
 
 		const { sounds } = this;
 		sounds.playSound(TowerSounds.Sell, 1);

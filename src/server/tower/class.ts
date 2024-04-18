@@ -80,7 +80,6 @@ export class Tower extends API {
 
 	protected static updateTowersInRange(): void {
 		const { towers } = this;
-		warn("update");
 		for (const [, tower] of towers) {
 			const { towers } = tower;
 			const replicated = tower.getReplicated();
@@ -127,35 +126,17 @@ export class Tower extends API {
 
 	public attackTarget(delta: number): void {
 		const replicated = this.getReplicated();
-		const { id } = replicated;
-		const definition = itemDefinitions[id];
-		const { kind } = definition;
+		const { id } = this;
 
-		const damage = TowerUtility.getTotalDamage(replicated);
-		const range = TowerUtility.getTotalRange(replicated);
 		const cooldown = TowerUtility.getTotalCooldown(replicated);
 		if (os.clock() - this.lastAttack < cooldown) {
 			return;
 		}
 		this.updateLastAttackTime();
 
-		if (kind.damageKind === MobDamage.None) {
-			const towers = this.getTowersInRange();
-			for (const tower of towers) {
-				const target = tower.getReplicated();
-				let _damage = TowerUtility.getTotalDamage(target);
-				let _range = TowerUtility.getTotalRange(target);
-				let _cooldown = TowerUtility.getTotalCooldown(target);
-
-				_damage += _damage * damage;
-				_range += _range * range;
-				_cooldown += _cooldown * cooldown;
-			}
-		} else {
-			const currentTarget = this.getTarget();
-			this.broadcastAttackEvent(currentTarget);
-			this.attackTargetIfPossible(currentTarget);
-		}
+		const currentTarget = this.getTarget();
+		this.broadcastAttackEvent(currentTarget);
+		this.attackTargetIfPossible(currentTarget);
 	}
 
 	public sellTower(): void {
@@ -227,9 +208,8 @@ export class Tower extends API {
 		}
 		const { id } = this;
 		const { damageKind } = itemDefinitions[id].kind;
-
-		const { unique } = this.getReplicated();
-		const { damage } = unique;
+		const replicated = this.getReplicated();
+		const damage = TowerUtility.getTotalDamage(replicated);
 
 		const died = currentTarget.takeDamage(damage, damageKind, this.key);
 		if (died === false) {

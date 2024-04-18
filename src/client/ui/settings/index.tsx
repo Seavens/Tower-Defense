@@ -21,36 +21,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 
 	const light = ColorUtil.lighten(PALETTE.gray, 0.5);
 
-	// const [audioSelected, setAudioSelected] = useState(true);
-	// const [videoSelected, setVideoSelected] = useState(false);
-	// const [controlSelected, setControlSelected] = useState(false);
 	const [tab, setTab] = useState<"Audio" | "Video" | "Controls">("Audio");
 	const [transparency, transparencyMotion] = useMotion(1);
-
-	// const [settings, setSettings] = useState({
-	// 	musicEnabled: false,
-	// 	sfxEnabled: false,
-	// 	vfxEnabled: false,
-	// 	mobBillboardsEnabled: false,
-	// 	towerBillboardsEnabled: false,
-	// 	musicVolume: 0,
-	// 	sfxVolume: 0,
-	// });
-
 	const { settings } = useSelector(selectProfileData);
-	// useEffect(() => {
-	// 	if (profile) {
-	// 		setSettings({
-	// 			musicEnabled: profile.settings.musicEnabled,
-	// 			sfxEnabled: profile.settings.sfxEnabled,
-	// 			vfxEnabled: profile.settings.vfxEnabled,
-	// 			mobBillboardsEnabled: profile.settings.mobBillboardsEnabled,
-	// 			towerBillboardsEnabled: profile.settings.towerBillboardsEnabled,
-	// 			musicVolume: profile.settings.musicVolume,
-	// 			sfxVolume: profile.settings.sfxVolume,
-	// 		});
-	// 	}
-	// }, [settings]);
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);
@@ -92,7 +65,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 						<Button
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={tab === "Audio" ? light : PALETTE.gray}
-							backgroundTransparency={0.7}
+							backgroundTransparency={0.5}
 							onClick={() => {
 								setTab("Audio");
 							}}
@@ -122,7 +95,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 						<Button
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={tab === "Video" ? light : PALETTE.gray}
-							backgroundTransparency={0.7}
+							backgroundTransparency={0.5}
 							onClick={() => {
 								setTab("Video");
 							}}
@@ -152,7 +125,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 						<Button
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={tab === "Controls" ? light : PALETTE.gray}
-							backgroundTransparency={0.7}
+							backgroundTransparency={0.5}
 							onClick={() => {
 								setTab;
 							}}
@@ -182,7 +155,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 						<Button
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={PALETTE.gray}
-							backgroundTransparency={0.7}
+							backgroundTransparency={0.5}
 							onClick={() => {
 								onClose?.();
 							}}
@@ -236,6 +209,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										<PercentSettingsRow
 											percent={settings.musicVolume}
 											settingName={"Music Volume"}
+											onClick={(percent: number): void => {
+												store.profileAdjustMusic({ volume: percent });
+											}}
 											layoutOrder={2}
 										/>
 									)}
@@ -251,6 +227,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										<PercentSettingsRow
 											percent={settings.sfxVolume}
 											settingName={"Effect Volume"}
+											onClick={(percent: number): void => {
+												store.profileAdjustSfx({ volume: percent });
+											}}
 											layoutOrder={4}
 										/>
 									)}

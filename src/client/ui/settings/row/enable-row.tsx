@@ -14,7 +14,6 @@ interface EnableSettingsRowProps {
 
 export function EnableSettingsRow({ enable, settingName, layoutOrder, onClick }: EnableSettingsRowProps): Element {
 	const px = usePx();
-
 	return (
 		<Group
 			size={UDim2.fromOffset(px(SETTINGS_MENU_ROW_SIZE.X), px(SETTINGS_MENU_ROW_SIZE.Y))}

@@ -2,9 +2,7 @@ import { Bin } from "@rbxts/bin";
 import { GAME_TIMESTEP, INTERPOLATION_SMOOTHNESS } from "shared/core/constants";
 import { MapUtility } from "shared/game/map/utility";
 import { Workspace } from "@rbxts/services";
-import { mobDefinitions } from "./definitions/mobs";
-import { statusDefinitions } from "./definitions";
-import { statusModules } from "./modules";
+import { mobDefinitions } from "./definitions";
 import type { MobDamage, MobData, MobId } from "./types";
 import type { MobStatus } from "./types";
 
@@ -217,17 +215,17 @@ export abstract class Mob {
 		const { statuses } = this;
 		const now = os.clock();
 		let totalSpeed = 1;
-		for (const [status, timestamp] of statuses) {
-			if (timestamp <= now) {
-				this.removeStatus(status);
-				continue;
-			}
-			const { speed } = statusDefinitions[status];
-			const remaining = math.max(timestamp - now, 0);
-			const module = statusModules[status];
-			module?.onTick(this, remaining);
-			totalSpeed += speed;
-		}
+		// for (const [status, timestamp] of statuses) {
+		// 	if (timestamp <= now) {
+		// 		this.removeStatus(status);
+		// 		continue;
+		// 	}
+		// 	const { speed } = statusDefinitions[status];
+		// 	const remaining = math.max(timestamp - now, 0);
+		// 	const module = statusModules[status];
+		// 	module?.onTick(this, remaining);
+		// 	totalSpeed += speed;
+		// }
 		totalSpeed = math.max(totalSpeed, 0);
 		const { target, current, final } = this;
 		if (current >= final) {

@@ -2,11 +2,16 @@ import { BILLBOARD_SIZE } from "./constants";
 import { Tower } from "client/tower";
 import { TowerBillboard } from "./billboard";
 import { selectPlacedTowers } from "shared/tower/selectors";
+import { selectProfileData } from "client/players/profile/selectors";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
-export function TowerBillboards(): Element {
+export function TowerBillboards(): Option<Element> {
+	const profile = useSelector(selectProfileData);
+	const { settings } = profile;
+	const { towerBillboardsEnabled } = settings;
+
 	const towers = useSelector(selectPlacedTowers);
 
 	const billboards = useMemo((): Array<Element> => {
@@ -40,6 +45,10 @@ export function TowerBillboards(): Element {
 		}
 		return billboards;
 	}, [towers]);
+
+	if (!towerBillboardsEnabled) {
+		return undefined;
+	}
 
 	return <>{billboards}</>;
 }

@@ -4,7 +4,7 @@ import { MAP_DIFFICULTY_MULTIPLIERS } from "../map/constants";
 import { MobUtility } from "shared/mob/utility";
 import { mapDefinitions } from "../map/definitions";
 import { mobDefinitions } from "shared/mob/definitions";
-import type { AnyMobDefinition } from "shared/mob/definitions/mobs";
+import type { AnyMobDefinition } from "shared/mob/definitions";
 import type { MapDifficulty, MapId } from "../map/types";
 import type { WaveDefinition } from "../map/definitions";
 

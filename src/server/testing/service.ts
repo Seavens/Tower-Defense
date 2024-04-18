@@ -45,12 +45,6 @@ export class TestService implements OnStart, OnDataLoaded {
 		store.gameAddCurrency({ amount: 10000000 }, broadcast);
 		store.profileAdjustCoins({ coins: 100000 }, metadata);
 		store.profileAdjustGems({ gems: 100000 }, metadata);
-		store.profileAdjustVfx({ mobBillboards: false }, metadata);
-		const x = store.getState().data.profile;
-		warn(x);
-
-		task.wait(5);
-		warn(x);
 	}
 
 	public onStart(): void {}

@@ -1,4 +1,4 @@
-import { Button, Frame, Group, Image, Text } from "../../components";
+import { Button, Frame, Group, Image, ReactiveButton, Text } from "../../components";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { SETTINGS_MENU_ROW_SIZE } from "../constants";
 import { usePx } from "../../hooks";
@@ -9,9 +9,10 @@ interface PercentSettingsRowProps {
 	settingName: string;
 	percent: number;
 	layoutOrder?: number;
+	onClick?: (percent: number) => void;
 }
 
-export function PercentSettingsRow({ percent, settingName, layoutOrder }: PercentSettingsRowProps): Element {
+export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick }: PercentSettingsRowProps): Element {
 	const px = usePx();
 	return (
 		<Group
@@ -47,11 +48,15 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder }: Percen
 					SortOrder={Enum.SortOrder.LayoutOrder}
 					Padding={new UDim(0, px(4))}
 				/>
-				<Button
+				<ReactiveButton
 					size={UDim2.fromOffset(px(40), px(40))}
+					position={UDim2.fromScale(1, 1)}
+					anchorPoint={new Vector2(1, 1)}
 					backgroundTransparency={0.2}
 					backgroundColor={PALETTE.light_gray}
 					cornerRadius={new UDim(0, px(4))}
+					onClick={(): void => onClick?.(percent - 5 < 0 ? 0 : percent - 5)}
+					enabled={true}
 					key={"left-button"}
 				>
 					<Image
@@ -63,7 +68,7 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder }: Percen
 						scaleType="Fit"
 						key={"left-image"}
 					/>
-				</Button>
+				</ReactiveButton>
 				<Group size={UDim2.fromOffset(px(400), px(40))} key={"center-group"}>
 					<Frame
 						size={UDim2.fromScale(percent / 100, 1)}
@@ -83,11 +88,15 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder }: Percen
 						key={"music-volume-text"}
 					/>
 				</Group>
-				<Button
+				<ReactiveButton
 					size={UDim2.fromOffset(px(40), px(40))}
+					position={UDim2.fromScale(1, 1)}
+					anchorPoint={new Vector2(1, 1)}
 					backgroundTransparency={0.2}
 					backgroundColor={PALETTE.light_gray}
 					cornerRadius={new UDim(0, px(4))}
+					onClick={(): void => onClick?.(percent + 5 > 100 ? 100 : percent + 5)}
+					enabled={true}
 					key={"right-button"}
 				>
 					<Image
@@ -98,7 +107,7 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder }: Percen
 						scaleType="Fit"
 						key={"right-image"}
 					/>
-				</Button>
+				</ReactiveButton>
 			</Group>
 		</Group>
 	);
