@@ -1,7 +1,10 @@
-import { CharacterController } from "client/players/character/controller";
 import { Controller } from "@flamework/core";
+import { Mob } from "client/mob/class";
+import { StatusKind } from "shared/statuses/types";
+import { Tower } from "client/tower";
 import { createSchedule } from "shared/utility/functions/create-schedule";
 import { getPlayer } from "shared/utility/functions/get-player";
+import { isUUID } from "shared/utility/guards";
 import { selectStatusState, selectStatusesByUser } from "shared/statuses/selectors";
 import { statusDefinitions } from "shared/statuses/definitions/statuses";
 import { statusModules } from "./modules/statuses";
@@ -25,14 +28,23 @@ export class StatusController implements OnStart {
 					selectStatusesByUser(user),
 					({ stacks }: Status, id: StatusId): defined => `${user}-(${id}_${stacks})`,
 					(status: Status, id: StatusId): (() => void) | void => {
-						const character = CharacterController.getCharacter(player);
-						if (character === undefined) {
+						const result = this.getOwner(`${user}`);
+						if (result === undefined) {
 							return undefined;
 						}
+						const [owner, kind] = result;
 						const module = statusModules[id];
-						module.onAdded(character, status);
+						if (kind === StatusKind.Tower) {
+							module.onAdded(owner, status, kind);
+						} else if (kind === StatusKind.Mob) {
+							module.onAdded(owner, status, kind);
+						}
 						return (): void => {
-							module.onRemove(character, status);
+							if (kind === StatusKind.Tower) {
+								module.onRemove(owner, status, kind);
+							} else if (kind === StatusKind.Mob) {
+								module.onRemove(owner, status, kind);
+							}
 						};
 					},
 				);
@@ -46,20 +58,41 @@ export class StatusController implements OnStart {
 				onTick: (): void => {
 					const state = store.getState(selectStatusState);
 					for (const [user, statuses] of pairs(state)) {
-						const character = CharacterController.getCharacter(`${user}`);
-						if (character === undefined) {
+						const result = this.getOwner(`${user}`);
+						if (result === undefined) {
 							continue;
 						}
+						const [owner, kind] = result;
 						for (const [, status] of statuses) {
 							if (status.id !== id) {
 								continue;
 							}
 							const module = statusModules[id];
-							module.onTick(character, status);
+							// Unnecessary just so typescript can shut up
+							if (kind === StatusKind.Tower) {
+								module.onTick(owner, status, kind);
+							} else if (kind === StatusKind.Mob) {
+								module.onTick(owner, status, kind);
+							}
 						}
 					}
 				},
 			});
 		}
+	}
+
+	protected getOwner(user: string): Option<[Tower, StatusKind.Tower] | [Mob, StatusKind.Mob]> {
+		if (isUUID(user)) {
+			const mob = Mob.getMob(user);
+			if (mob === undefined) {
+				return undefined;
+			}
+			return [mob, StatusKind.Mob];
+		}
+		const tower = Tower.getTower(user);
+		if (tower === undefined) {
+			return undefined;
+		}
+		return [tower, StatusKind.Tower];
 	}
 }

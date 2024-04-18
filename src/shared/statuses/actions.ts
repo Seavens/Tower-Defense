@@ -5,6 +5,7 @@ import type { StatusId } from "./types";
 export type StatusActions<S> = {
 	addStatus: (state: S, payload: StatusAdd, metadata: UserMetadata & BroadcastMetadata) => S;
 	removeStatus: (state: S, payload: StatusRemove, metadata: UserMetadata & BroadcastMetadata) => S;
+	deleteStatus: (state: S, payload: StatusDelete, metadata: UserMetadata & BroadcastMetadata) => S;
 } & PlayerActions<S>;
 
 export interface StatusAdd {
@@ -17,3 +18,5 @@ export interface StatusAdd {
 export interface StatusRemove {
 	id: StatusId;
 }
+
+export interface StatusDelete {}

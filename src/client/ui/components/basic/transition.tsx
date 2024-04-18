@@ -1,10 +1,10 @@
-import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
-import { getBindingValue, useEventListener, useUnmountEffect } from "@rbxts/pretty-react-hooks";
-import type { Element, InstanceChangeEvent, InstanceEvent, PropsWithChildren, ReactNode } from "@rbxts/react";
-import React, { useMemo, useState } from "@rbxts/react";
-import { createPortal } from "@rbxts/react-roblox";
-import { RunService } from "@rbxts/services";
 import { PALETTE } from "../../constants";
+import { RunService } from "@rbxts/services";
+import { createPortal } from "@rbxts/react-roblox";
+import { getBindingValue, useEventListener, useUnmountEffect } from "@rbxts/pretty-react-hooks";
+import React, { useMemo, useState } from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element, InstanceChangeEvent, InstanceEvent, PropsWithChildren, ReactNode } from "@rbxts/react";
 
 interface TransitionProps extends PropsWithChildren {
 	groupColor?: BindingOrValue<Color3>;

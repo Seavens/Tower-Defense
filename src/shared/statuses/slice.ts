@@ -18,9 +18,10 @@ export const statusSlice = createProducer<StatusState, StatusActions<StatusState
 		{ user }: UserMetadata,
 	): StatusState =>
 		produce(state, (draft: Draft<StatusState>): void => {
-			const statuses = draft[user];
+			let statuses = draft[user];
 			if (statuses === undefined) {
-				return;
+				statuses = new Map<StatusId, Status>();
+				draft[user] = statuses;
 			}
 			const existing = statuses.get(id);
 			if (existing !== undefined) {
@@ -39,6 +40,10 @@ export const statusSlice = createProducer<StatusState, StatusActions<StatusState
 		produce(state, (draft: Draft<StatusState>): void => {
 			const statuses = draft[user];
 			statuses?.delete(id);
+		}),
+	deleteStatus: (state: StatusState, _, { user }: UserMetadata): StatusState =>
+		produce(state, (draft: Draft<StatusState>): void => {
+			delete draft[user];
 		}),
 	playerAdded: (state: StatusState, _, { user }: UserMetadata): StatusState =>
 		produce(state, (draft: Draft<StatusState>): void => {

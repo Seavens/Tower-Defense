@@ -1,18 +1,19 @@
 import { StatusId } from "shared/statuses/types";
-import type { CharacterRigR15 } from "@rbxts/promise-character";
-import type { Status } from "shared/statuses/types";
+import type { Mob } from "client/mob/class";
+import type { Status, StatusKind } from "shared/statuses/types";
 import type { StatusModule } from ".";
+import type { Tower } from "client/tower";
 
 export const slowedStatus: StatusModule<StatusId.Slowed> = {
 	id: StatusId.Slowed,
 
-	onAdded: (character: CharacterRigR15, status: Status): void => {
+	onAdded: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
 		//
 	},
-	onTick: (character: CharacterRigR15, { stacks }: Status): void => {
+	onTick: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
 		//
 	},
-	onRemove: (character: CharacterRigR15, status: Status): void => {
+	onRemove: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
 		//
 	},
 };

@@ -22,6 +22,8 @@ interface TowerDefinition {
 	damage: number;
 	range: number;
 	cooldown: number;
+	income?: number;
+
 	damageKind: MobDamage;
 	limit: number;
 	cost: number;

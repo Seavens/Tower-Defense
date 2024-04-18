@@ -4,7 +4,6 @@ import type { Draft } from "@rbxts/immut/src/types-external";
 //
 import { PARTY_INVITE_EXPIRATION } from "./constants";
 import { createProducer } from "@rbxts/reflex";
-import type { UserMetadata } from "shared/state/replication/metadata";
 import type { Party, PartyInvite } from "./types";
 import type {
 	PartyAcceptInvite,
@@ -16,6 +15,7 @@ import type {
 	PartyKickMember,
 } from "./actions";
 import type { PlayerAdded, PlayerRemoved } from "shared/state/replication/actions";
+import type { UserMetadata } from "shared/state/replication/metadata";
 
 export interface PartyState {
 	readonly parties: Map<string, Readonly<Party>>; // Map<{Party Owner}, Party>
@@ -67,11 +67,7 @@ export const partySlice = createProducer<PartyState, PartyActions<PartyState>>(p
 			// Delete party.
 			parties.delete(id);
 		}),
-	inviteMember: (
-		state: PartyState,
-		{ invitee, timestamp }: PartyInviteMember,
-		{ user }: UserMetadata,
-	): PartyState =>
+	inviteMember: (state: PartyState, { invitee, timestamp }: PartyInviteMember, { user }: UserMetadata): PartyState =>
 		produce(state, ({ parties, invites, users }: Draft<PartyState>): void => {
 			const sender = user;
 			const id = users.get(sender);

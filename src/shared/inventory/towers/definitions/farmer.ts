@@ -18,7 +18,8 @@ export const farmerTowerItem: ItemDefinition<ItemId.Farmer, ItemKind.Tower> = {
 
 		damage: 0,
 		range: 0,
-		cooldown: 0,
+		cooldown: 5,
+		income: 50 * 10 ** 8,
 
 		limit: 1,
 		cost: 1000,

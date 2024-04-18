@@ -1,10 +1,10 @@
-import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
-import { blend, composeBindings } from "@rbxts/pretty-react-hooks";
-import type { Element, PropsWithChildren } from "@rbxts/react";
-import React, { useMemo } from "@rbxts/react";
-import { PALETTE } from "../../constants";
-import { usePx } from "../../hooks";
 import { Group } from "./group";
+import { PALETTE } from "../../constants";
+import { blend, composeBindings } from "@rbxts/pretty-react-hooks";
+import { usePx } from "../../hooks";
+import React, { useMemo } from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element, PropsWithChildren } from "@rbxts/react";
 
 interface OutlineProps extends PropsWithChildren {
 	outlineTransparency?: BindingOrValue<number>;

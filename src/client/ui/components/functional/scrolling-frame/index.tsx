@@ -1,10 +1,10 @@
 import { type BindingOrValue, composeBindings, lerp, mapBinding } from "@rbxts/pretty-react-hooks";
-import type { InstanceChangeEvent, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
-import React, { useEffect } from "@rbxts/react";
-import { forwardRef } from "@rbxts/react";
-import { SPRINGS } from "client/ui/constants";
-import { useMotion, usePx } from "client/ui/hooks";
 import { Frame, Group } from "../../basic";
+import { SPRINGS } from "client/ui/constants";
+import { forwardRef } from "@rbxts/react";
+import { useMotion, usePx } from "client/ui/hooks";
+import React, { useEffect } from "@rbxts/react";
+import type { InstanceChangeEvent, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
 
 interface ScrollingFrameProps extends PropsWithChildren {
 	event?: InstanceEvent<ScrollingFrame>;

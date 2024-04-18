@@ -1,6 +1,6 @@
+import React, { forwardRef } from "@rbxts/react";
 import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
 import type { InstanceChangeEvent, InstanceEvent, PropsWithChildren } from "@rbxts/react";
-import React, { forwardRef } from "@rbxts/react";
 
 interface GroupProps extends PropsWithChildren {
 	event?: InstanceEvent<Frame>;

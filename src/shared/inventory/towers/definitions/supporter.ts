@@ -18,7 +18,7 @@ export const supporterTowerItem: ItemDefinition<ItemId.Supporter, ItemKind.Tower
 
 		damage: 0,
 		range: 8,
-		cooldown: 0,
+		cooldown: 1,
 
 		limit: 3,
 		cost: 800,

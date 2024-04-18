@@ -4,8 +4,8 @@ import { Collision, setCollision } from "shared/utility/collision";
 import { Service } from "@flamework/core";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/functions/create-listener";
-import { promiseR15 } from "@rbxts/promise-character";
-import type { CharacterRigR15 } from "@rbxts/promise-character";
+import { promiseR15 } from "@rbxts/character-promise";
+import type { CharacterRigR15 } from "@rbxts/character-promise";
 import type { OnPlayerAdded, OnPlayerReady, OnPlayerRemoving } from "server/players/service";
 
 export interface OnCharacterAdded {

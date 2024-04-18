@@ -6,15 +6,28 @@ import { healingStatus } from "./healing";
 import { shieldedStatus } from "./shielded";
 import { slowedStatus } from "./slowed";
 import { stunnedStatus } from "./stunned";
-import type { CharacterRigR15 } from "@rbxts/promise-character";
-import type { Status } from "shared/statuses/types";
+import type { Mob } from "server/mob/class";
+import type { Status, StatusKind } from "shared/statuses/types";
+import type { Tower } from "server/tower/class";
 
 export interface StatusModule<I extends StatusId> {
 	id: I;
 
-	onAdded: (character: CharacterRigR15, status: Status) => void;
-	onTick: (character: CharacterRigR15, status: Status) => void;
-	onRemove: (character: CharacterRigR15, status: Status) => void;
+	onAdded: {
+		(owner: Tower | Mob, status: Status, kind: StatusKind.Shared): void;
+		(owner: Tower, status: Status, kind: StatusKind.Tower): void;
+		(owner: Mob, status: Status, kind: StatusKind.Mob): void;
+	};
+	onTick: {
+		(owner: Tower | Mob, status: Status, kind: StatusKind.Shared): void;
+		(owner: Tower, status: Status, kind: StatusKind.Tower): void;
+		(owner: Mob, status: Status, kind: StatusKind.Mob): void;
+	};
+	onRemove: {
+		(owner: Tower | Mob, status: Status, kind: StatusKind.Shared): void;
+		(owner: Tower, status: Status, kind: StatusKind.Tower): void;
+		(owner: Mob, status: Status, kind: StatusKind.Mob): void;
+	};
 }
 
 export const statusModules: { [I in StatusId]: StatusModule<I> } = {

@@ -1,4 +1,3 @@
-import { ASSET_IDS } from "shared/assets/constants";
 import { Animator } from "shared/assets/animator";
 import { Bin } from "@rbxts/bin";
 import { CHARACTER_ANIMATIONS } from "./constants";
@@ -6,8 +5,8 @@ import { Collision, setCollision } from "shared/utility/collision";
 import { Controller } from "@flamework/core";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/functions/create-listener";
-import { promiseR15 } from "@rbxts/promise-character";
-import type { CharacterRigR15 } from "@rbxts/promise-character";
+import { promiseR15 } from "@rbxts/character-promise";
+import type { CharacterRigR15 } from "@rbxts/character-promise";
 import type { OnPlayerAdded, OnPlayerRemoving } from "client/players/controller";
 
 export interface OnCharacterAdded {

@@ -16,6 +16,13 @@ export const enum StatusId {
 	Slowed = "status_effect:slowed",
 }
 
+export const enum StatusKind {
+	// Character = "status_kind:character",
+	Tower = "status_kind:tower",
+	Mob = "status_kind:mob",
+	Shared = "status_kind:shared",
+}
+
 export interface Status {
 	id: StatusId;
 	stacks: number;
@@ -24,6 +31,7 @@ export interface Status {
 }
 
 export const isStatusId = Flamework.createGuard<StatusId>();
+export const isStatusKind = Flamework.createGuard<StatusKind>();
 
 export const isStatus: t.check<Status> = t.strictInterface({
 	id: isStatusId,

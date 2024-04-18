@@ -1,7 +1,7 @@
 import { Tower as API } from "shared/tower/api";
 import { Events } from "server/network";
 import { GAME_TICK_RATE } from "shared/core/constants";
-import { ItemKind, type ItemTowerUnique, type TowerItemId } from "shared/inventory/types";
+import { ItemKind } from "shared/inventory/types";
 import { Mob } from "../mob/class";
 import { MobDamage } from "shared/mob/types";
 import { Players } from "@rbxts/services";
@@ -14,7 +14,9 @@ import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectSpecificTower } from "shared/tower/selectors";
 import { store } from "server/state/store";
 import { targetingModules } from "shared/tower/targeting";
+import { towerModules } from "./modules";
 import Octree from "@rbxts/octo-tree";
+import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { Node } from "@rbxts/octo-tree";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
 
@@ -36,6 +38,7 @@ export class Tower extends API {
 
 	protected lastAttack = 0;
 	protected lastTarget: Option<Mob>;
+	protected speedBuff = 0;
 
 	protected readonly node: Node<Tower>;
 
@@ -87,8 +90,11 @@ export class Tower extends API {
 			const range = TowerUtility.getTotalRange(replicated);
 			const nodes = this.getTowersInRadius(position, range);
 			towers.clear();
-			for (const { Object: tower } of nodes) {
-				towers.add(tower);
+			for (const { Object: within } of nodes) {
+				if (tower === within) {
+					continue;
+				}
+				towers.add(within);
 			}
 		}
 	}
@@ -115,6 +121,15 @@ export class Tower extends API {
 		store.towerSetTargeting({ key, targeting }, { user: owner, broadcast: true });
 	}
 
+	public setSpeedBuff(buff: number): void {
+		this.speedBuff = buff;
+	}
+
+	public getSpeedBuff(): number {
+		const { speedBuff } = this;
+		return speedBuff;
+	}
+
 	public getReplicated(): ReplicatedTower {
 		const { key } = this;
 		const tower = store.getState(selectSpecificTower(key));
@@ -126,10 +141,10 @@ export class Tower extends API {
 
 	public attackTarget(delta: number): void {
 		const replicated = this.getReplicated();
-		const { id } = this;
+		const { id, speedBuff } = this;
 
 		const cooldown = TowerUtility.getTotalCooldown(replicated);
-		if (os.clock() - this.lastAttack < cooldown) {
+		if (os.clock() - this.lastAttack < cooldown - cooldown * speedBuff) {
 			return;
 		}
 		this.updateLastAttackTime();
@@ -156,6 +171,7 @@ export class Tower extends API {
 	public destroy(): void {
 		const { towers, octree } = Tower;
 		const { key, node } = this;
+		store.deleteStatus({}, { user: key, broadcast: true });
 		octree.RemoveNode(node);
 		towers.delete(key);
 		Tower.updateTowersInRange();
@@ -202,15 +218,20 @@ export class Tower extends API {
 	}
 
 	protected attackTargetIfPossible(currentTarget: Option<Mob>): void {
-		if (currentTarget === undefined) {
-			this.lastAttack = 0;
-			return;
-		}
 		const { id } = this;
 		const { damageKind } = itemDefinitions[id].kind;
 		const replicated = this.getReplicated();
 		const damage = TowerUtility.getTotalDamage(replicated);
-
+		const module = towerModules[id];
+		module?.onAttack(this, currentTarget);
+		// !! Cleanup
+		if (damageKind === MobDamage.None) {
+			return;
+		}
+		if (currentTarget === undefined) {
+			this.lastAttack = 0;
+			return;
+		}
 		const died = currentTarget.takeDamage(damage, damageKind, this.key);
 		if (died === false) {
 			return;

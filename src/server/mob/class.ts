@@ -158,12 +158,13 @@ export class Mob extends API {
 
 	public destroy(): void {
 		const { mobs, octree, onMobRemoved } = Mob;
-		const { node, uuid: index } = this;
+		const { node, uuid } = this;
 		if (this.isDestroyed()) return;
 
 		octree.RemoveNode(node);
+		store.deleteStatus({}, { user: uuid, broadcast: true });
 		onMobRemoved.FireDeferred(this);
-		mobs.delete(index);
+		mobs.delete(uuid);
 		super.destroy();
 	}
 }

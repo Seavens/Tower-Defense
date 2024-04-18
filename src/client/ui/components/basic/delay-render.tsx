@@ -1,6 +1,6 @@
-import type { Element, PropsWithChildren } from "@rbxts/react";
-import React, { useEffect, useState } from "@rbxts/react";
 import { setTimeout } from "@rbxts/set-timeout";
+import React, { useEffect, useState } from "@rbxts/react";
+import type { Element, PropsWithChildren } from "@rbxts/react";
 
 interface DelayRenderProps extends PropsWithChildren {
 	shouldRender: boolean;

@@ -1,8 +1,8 @@
-import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
-import type { Element, Ref } from "@rbxts/react";
-import React, { forwardRef, useEffect, useState } from "@rbxts/react";
 import { FONTS } from "../../constants";
 import { Group } from "./group";
+import React, { forwardRef, useEffect, useState } from "@rbxts/react";
+import type { BindingOrValue } from "@rbxts/pretty-react-hooks";
+import type { Element, Ref } from "@rbxts/react";
 import type { TextProps } from "./text";
 
 interface TextFieldProps extends TextProps<TextBox> {
