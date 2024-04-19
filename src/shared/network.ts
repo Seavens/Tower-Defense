@@ -1,7 +1,7 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
-import type { KeybindSetting, ProfileSetting } from "./players/profile/types";
 import type { MobDamage, MobData, MobId } from "./mob/types";
+import type { SettingId } from "./players/settings";
 import type { TowerAbility } from "./inventory/towers/abilities/types";
 import type { TowerTargeting } from "./tower/types";
 
@@ -25,8 +25,9 @@ interface ClientToServerEvents {
 		sell(slot: string): void;
 	};
 
-	profile: {
-		adjustSetting(setting: ProfileSetting | KeybindSetting, value: boolean | number | Enum.KeyCode): void;
+	settings: {
+		set<I extends SettingId>(id: I, value: defined): void;
+		reset(id: SettingId): void;
 	};
 }
 

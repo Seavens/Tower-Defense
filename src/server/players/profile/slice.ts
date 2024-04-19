@@ -1,5 +1,4 @@
 import { LevelUtility } from "shared/players/profile/utility";
-import { ProfileSetting } from "shared/players/profile/types";
 import { createProducer } from "@rbxts/reflex";
 import { produce } from "@rbxts/immut";
 import type { DataAdded } from "shared/players/data/actions";
@@ -9,7 +8,6 @@ import type {
 	ProfileAddCoins,
 	ProfileAddExperience,
 	ProfileAddGems,
-	ProfileAdjustSetting,
 } from "shared/players/profile/actions";
 import type { ProfileData } from "shared/players/data/types";
 import type { UserMetadata } from "shared/state/replication/metadata";
@@ -64,44 +62,6 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			data.gems = math.max(data.gems + gems, 0);
 		});
 	},
-	profileAdjustSetting: (state: State, payload: ProfileAdjustSetting, metadata: UserMetadata) => {
-		const { user } = metadata;
-		return produce(state, (draft: Draft<State>): void => {
-			const player = draft[user];
-			if (player === undefined) {
-				return;
-			}
-			const { data } = player;
-			const { settings } = data;
-			const { setting, value } = payload;
-
-			if (setting === ProfileSetting.Music && typeIs(value, "boolean")) {
-				settings.audio.music = value;
-			}
-			if (setting === ProfileSetting.MusicVol && typeIs(value, "number")) {
-				settings.audio.musicVol = value;
-			}
-			if (setting === ProfileSetting.Sfx && typeIs(value, "boolean")) {
-				settings.audio.sfx = value;
-			}
-			if (setting === ProfileSetting.SfxVol && typeIs(value, "number")) {
-				settings.audio.sfxVol = value;
-			}
-			if (setting === ProfileSetting.Vfx && typeIs(value, "boolean")) {
-				settings.visual.vfx = value;
-			}
-			if (setting === ProfileSetting.Shake && typeIs(value, "boolean")) {
-				settings.visual.shake = value;
-			}
-			if (setting === ProfileSetting.MobBB && typeIs(value, "boolean")) {
-				settings.visual.mobBB = value;
-			}
-			if (setting === ProfileSetting.TowerBB && typeIs(value, "boolean")) {
-				settings.visual.towerBB = value;
-			}
-			warn(`[Slice] Setting ${setting} for ${user} to ${value}`);
-		});
-	},
 	dataAdded: (state: State, payload: DataAdded, metadata: UserMetadata): State => {
 		const { data } = payload;
 		const { user } = metadata;
@@ -113,4 +73,8 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			draft[user] = state;
 		});
 	},
+	dataRemoved: (state: State, _, { user }: UserMetadata): State =>
+		produce(state, (draft: Draft<State>): void => {
+			delete draft[user];
+		}),
 });

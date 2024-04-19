@@ -6,6 +6,7 @@ import { Controller } from "@flamework/core";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/functions/create-listener";
 import { promiseR15 } from "@rbxts/character-promise";
+import { store } from "client/state/store";
 import type { CharacterRigR15 } from "@rbxts/character-promise";
 import type { OnPlayerAdded, OnPlayerRemoving } from "client/players/controller";
 

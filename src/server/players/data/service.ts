@@ -67,6 +67,13 @@ export class DataService implements OnPlayerAdded, OnPlayerRemoving {
 		const { Name } = player;
 		const document = documents.get(Name);
 		loaded.delete(player);
+		store.dataRemoved(
+			{},
+			{
+				user: Name,
+				replicate: true,
+			},
+		);
 		await document
 			?.close()
 			.catch(warn)

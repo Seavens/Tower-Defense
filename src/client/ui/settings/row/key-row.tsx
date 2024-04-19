@@ -11,7 +11,7 @@ interface KeySettingsRowProps {
 	layoutOrder?: number;
 	keyCode: Enum.KeyCode;
 	onResetClick?: (reset: boolean) => void;
-	onSubmitClick?: (keyCode: Enum.KeyCode) => void;
+	onSubmitClick?: (keycode: Keycode) => void;
 }
 
 export function KeySettingsRow({
@@ -46,7 +46,7 @@ export function KeySettingsRow({
 
 	const handleSubmitClick = useCallback((): void => {
 		if (onSubmitClick && text !== keyCode.Name) {
-			onSubmitClick(Enum.KeyCode[text]);
+			onSubmitClick(text);
 		}
 	}, [onSubmitClick, keyCode.Name]);
 

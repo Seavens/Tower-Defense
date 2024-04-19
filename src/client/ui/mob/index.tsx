@@ -1,21 +1,18 @@
 import { BILLBOARD_SIZE } from "./constants";
-import { Frame } from "../components";
 import { Mob } from "client/mob/class";
 import { MobHealthbar } from "./health-bar";
+import { SettingId } from "shared/players/settings";
 import { mobDefinitions } from "shared/mob/definitions";
-import { selectProfileData } from "client/players/profile/selectors";
+import { selectSettingValues } from "client/players/profile/settings";
 import { useEventListener, useUpdate } from "@rbxts/pretty-react-hooks";
 import { usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
-export function MobApp(): Option<Element> {
-	const store = useSelector(selectProfileData);
-	const { settings } = store;
-	const { visual } = settings;
-	const { mobBB } = visual;
-
+export function MobApp(): Element {
+	const store = useSelector(selectSettingValues);
+	const enabled = store.get(SettingId.ToggleMobBB);
 	const px = usePx();
 
 	const update = useUpdate();
@@ -61,8 +58,8 @@ export function MobApp(): Option<Element> {
 		update();
 	});
 
-	if (!mobBB) {
-		return undefined;
+	if (enabled === false) {
+		return undefined!;
 	}
 
 	return <>{billboards}</>;

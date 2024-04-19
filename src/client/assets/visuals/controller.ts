@@ -1,7 +1,9 @@
 import { Bin } from "@rbxts/bin";
 import { Controller } from "@flamework/core";
+import { SettingId } from "shared/players/settings";
 import { VisualUtility } from "./utility";
 import { selectProfileData } from "client/players/profile/selectors";
+import { selectSettingValues } from "client/players/profile/settings";
 import { store } from "client/state/store";
 import { towerVisualModules } from "./definitions";
 import Shake from "@rbxts/rbx-sleitnick-shake";
@@ -38,11 +40,10 @@ export class VisualController {
 		amplitude: number = 0.01,
 		sustainTime: number = 3,
 	): void {
-		const state = store.getState(selectProfileData);
-		const { settings } = state;
-		const { visual } = settings;
-		const { shake: userSetting } = visual;
-		if (!userSetting) {
+		const values = store.getState(selectSettingValues);
+		const enabled = values.get(SettingId.ToggleShake);
+
+		if (enabled === false) {
 			return;
 		}
 

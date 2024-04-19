@@ -1,17 +1,17 @@
 import { BILLBOARD_SIZE } from "./constants";
+import { SettingId } from "shared/players/settings";
 import { Tower } from "client/tower";
 import { TowerBillboard } from "./billboard";
 import { selectPlacedTowers } from "shared/tower/selectors";
 import { selectProfileData } from "client/players/profile/selectors";
+import { selectSettingState, selectSettingValues } from "client/players/profile/settings";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function TowerBillboards(): Option<Element> {
-	const profile = useSelector(selectProfileData);
-	const { settings } = profile;
-	const { visual } = settings;
-	const { towerBB } = visual;
+	const store = useSelector(selectSettingValues);
+	const enabled = store.get(SettingId.ToggleMobBB);
 
 	const towers = useSelector(selectPlacedTowers);
 
@@ -47,8 +47,8 @@ export function TowerBillboards(): Option<Element> {
 		return billboards;
 	}, [towers]);
 
-	if (!towerBB) {
-		return undefined;
+	if (enabled === false) {
+		return undefined!;
 	}
 
 	return <>{billboards}</>;

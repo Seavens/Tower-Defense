@@ -1,13 +1,12 @@
 import { Button, DelayRender, Frame, Group, Text, Transition } from "../components";
 import { ColorUtil } from "../utility";
 import { EnableSettingsRow } from "./row/enable-row";
-import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "../constants";
 import { KeySettingsRow } from "./row/key-row";
-import { KeybindSetting, ProfileSetting } from "shared/players/profile/types";
 import { PercentSettingsRow } from "./row/percent-row";
 import { SETTINGS_MENU_SIZE } from "./constants";
-import { selectProfileData } from "client/players/profile/selectors";
+import { SettingId } from "shared/players/settings";
+import { selectSettingValues } from "client/players/profile/settings";
 import { store } from "client/state/store";
 import { useMotion, usePx } from "../hooks";
 import { useSelector } from "@rbxts/react-reflex";
@@ -26,8 +25,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 
 	const [tab, setTab] = useState<"Audio" | "Video" | "Controls">("Audio");
 	const [transparency, transparencyMotion] = useMotion(1);
-	const { settings } = useSelector(selectProfileData);
-	const { visual, audio } = settings;
+	const values = useSelector(selectSettingValues);
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);
@@ -415,10 +413,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										settingName={"Slot 6"}
 										onResetClick={(reset: boolean): void => {
 											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotSix,
-													value: Enum.KeyCode.Six,
-												});
+												store.resetSetting({ id: SettingId.SlotSix });
 											}
 										}}
 										layoutOrder={6}

@@ -1,7 +1,7 @@
 import { InventoryImpl } from "shared/inventory/impl";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
-import type { DataAdded } from "shared/players/data/actions";
+import type { DataAdded, DataRemoved } from "shared/players/data/actions";
 import type { Draft } from "@rbxts/immut/src/types-external";
 import type {
 	InventoryActions,
@@ -124,6 +124,12 @@ export const inventorySlice = createProducer<State, InventoryActions<State>>(sta
 			};
 
 			draft[user] = state;
+		});
+	},
+	dataRemoved: (state: State, payload: DataRemoved, metadata: UserMetadata): State => {
+		const { user } = metadata;
+		return produce(state, (draft: Draft<State>): void => {
+			delete draft[user];
 		});
 	},
 });

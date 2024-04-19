@@ -1,5 +1,6 @@
 import { DATA_TEMPLATE } from "shared/players/data/constants";
 import { InventoryImpl } from "shared/inventory/impl";
+import { clear } from "@rbxts/immut/src/table";
 import { createProducer } from "@rbxts/reflex";
 import { original, produce } from "@rbxts/immut";
 import type { DataAdded } from "shared/players/data/actions";
@@ -93,11 +94,15 @@ export const inventorySlice = createProducer<InventoryState, ExcludeMetadata<Inv
 		return produce(state, (draft: Draft<InventoryState>): InventoryState => {
 			const { inventory } = data;
 
-			// Return the updated state
 			const state: InventoryState = {
 				data: inventory,
 			};
 			return state;
+		});
+	},
+	dataRemoved: (state: InventoryState): InventoryState => {
+		return produce(state, (draft: Draft<InventoryState>): void => {
+			clear(draft);
 		});
 	},
 });

@@ -1,46 +1,25 @@
 import { type Item, isItem } from "shared/inventory/types";
+import { isSettings } from "../settings";
 import { isSlot } from "shared/utility/guards";
 import { t } from "@rbxts/t";
-
-export interface InventoryData {
-	stored: Map<Slot, Item>;
-	equipped: Array<Slot>;
-}
-
-interface Settings {
-	visual: {
-		vfx: boolean;
-		shake: boolean;
-		mobBB: boolean;
-		towerBB: boolean;
-	};
-	audio: {
-		music: boolean;
-		musicVol: number;
-		sfx: boolean;
-		sfxVol: number;
-	};
-	keybinds: {
-		slotOne: string;
-		slotTwo: string;
-		slotThree: string;
-		slotFour: string;
-		slotFive: string;
-		slotSix: string;
-	};
-}
+import type { Settings } from "../settings";
 
 export interface ProfileData {
 	level: number;
 	experience: number;
 	coins: number;
 	gems: number;
-	settings: Settings;
+}
+
+export interface InventoryData {
+	stored: Map<Slot, Item>;
+	equipped: Array<Slot>;
 }
 
 export interface Data {
 	profile: ProfileData;
 	inventory: InventoryData;
+	settings: Settings;
 }
 
 export const isProfileData: t.check<ProfileData> = t.strictInterface({
@@ -48,29 +27,6 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	experience: t.number,
 	coins: t.number,
 	gems: t.number,
-
-	settings: t.strictInterface({
-		visual: t.strictInterface({
-			vfx: t.boolean,
-			shake: t.boolean,
-			mobBB: t.boolean,
-			towerBB: t.boolean,
-		}),
-		audio: t.strictInterface({
-			music: t.boolean,
-			musicVol: t.number,
-			sfx: t.boolean,
-			sfxVol: t.number,
-		}),
-		keybinds: t.strictInterface({
-			slotOne: t.string,
-			slotTwo: t.string,
-			slotThree: t.string,
-			slotFour: t.string,
-			slotFive: t.string,
-			slotSix: t.string,
-		}),
-	}),
 });
 
 export const isInventoryData: t.check<InventoryData> = t.strictInterface({
@@ -81,4 +37,5 @@ export const isInventoryData: t.check<InventoryData> = t.strictInterface({
 export const isData: t.check<Data> = t.strictInterface({
 	profile: isProfileData,
 	inventory: isInventoryData,
+	settings: isSettings,
 });
