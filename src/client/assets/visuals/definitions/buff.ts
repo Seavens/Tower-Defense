@@ -5,9 +5,7 @@ import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TowerUtility } from "shared/tower/utility";
 import { TowerVisual } from "shared/tower/types";
-import { VisualController } from "../controller";
-import { VisualUtility, params } from "../utility";
-import Shake from "@rbxts/rbx-sleitnick-shake";
+import { params } from "../utility";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -22,22 +20,19 @@ const soundNames = Modding.inspect<Array<Sounds>>();
 
 const guard = Flamework.createGuard<
 	BasePart & {
-		top1: Attachment & { ParticleEmitter: ParticleEmitter };
-		top2: Attachment & { ParticleEmitter: ParticleEmitter };
-		bottom: Attachment & { ParticleEmitter: ParticleEmitter };
+		blue: ParticleEmitter;
+		green: ParticleEmitter;
+		yellow: ParticleEmitter;
 	}
 >();
 const prefab = effects.FindFirstChild(TowerVisual.Neutron);
 
-const priority = Enum.RenderPriority.Last.Value;
-
 const info = new TweenInfo(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out, 0, false, 2.5);
 
 const { debris } = Workspace;
-const camera = Workspace.CurrentCamera;
 
-export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
-	id: TowerVisual.Neutron,
+export const buffVisual: TowerVisualModule<TowerVisual.Buff> = {
+	id: TowerVisual.Buff,
 	duration: 4,
 
 	onEffect: (bin: Bin, model: Model, target: Option<Mob>, tower: ReplicatedTower): void => {
@@ -54,11 +49,8 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 			return;
 		}
 		const effect = prefab.Clone();
-		const { bottom } = effect;
-		const { ParticleEmitter: emitter } = bottom;
+
 		setCollision(effect, Collision.Debris, true);
-		const range = TowerUtility.getTotalRange(tower) / 3;
-		emitter.Size = new NumberSequence(range);
 		const normal = raycast.Normal;
 		const position = raycast.Position;
 		const look = position.add(normal).Unit;
@@ -66,8 +58,6 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 		effect.CFrame = cframe;
 		effect.Name = `(${model.Name})-${TowerVisual.Neutron}`;
 		effect.Parent = debris;
-
-		VisualController.onShake(priority, camera);
 
 		const thread = task.delay(2.5, (): void => {
 			const emitters = effect.GetDescendants();
@@ -79,26 +69,6 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 			}
 		});
 
-		const sounds = new SoundEmitter(model, {
-			WhooshSuction: [ASSET_IDS.WhooshSuction],
-			ElectricSpark: [ASSET_IDS.ElectricSpark],
-			LightningFlashes: [ASSET_IDS.LightningFlashes],
-			SilentGlitcher: [ASSET_IDS.SilentGlitcher],
-		});
-
-		for (const key of soundNames) {
-			const sound = sounds.playSound(key);
-			const tween = TweenService.Create(sound, info, { Volume: 0 });
-			tween.Play();
-			bin.add(tween);
-		}
-
-		const delay = task.delay(3.25, (): void => {
-			sounds.destroy();
-		});
-
-		bin.add(sounds);
-		bin.add(delay);
 		bin.add(thread);
 		bin.add(effect);
 	},

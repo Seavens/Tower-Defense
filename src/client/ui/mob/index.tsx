@@ -13,7 +13,8 @@ import type { Element } from "@rbxts/react";
 export function MobApp(): Option<Element> {
 	const store = useSelector(selectProfileData);
 	const { settings } = store;
-	const { mobBillboardsEnabled } = settings;
+	const { visual } = settings;
+	const { mobBB } = visual;
 
 	const px = usePx();
 
@@ -60,7 +61,7 @@ export function MobApp(): Option<Element> {
 		update();
 	});
 
-	if (!mobBillboardsEnabled) {
+	if (!mobBB) {
 		return undefined;
 	}
 

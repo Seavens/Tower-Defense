@@ -3,7 +3,7 @@ import { Events } from "client/network";
 import { Mob } from "./class";
 import { Workspace } from "@rbxts/services";
 import { createListener } from "shared/utility/functions/create-listener";
-import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
+import type { MobDamage, MobId } from "shared/mob/types";
 import type { OnStart } from "@flamework/core";
 
 /** @hideinherited */
@@ -59,22 +59,6 @@ export class MobController implements OnStart {
 				return;
 			}
 			mob.forceKill();
-		});
-		Events.mob.statusAdded.connect((uuid: UUID, duration: number, status: MobStatus, timestamp: number): void => {
-			const mob = Mob.getMob(uuid);
-			if (mob === undefined) {
-				return;
-			}
-			const now = Workspace.GetServerTimeNow();
-			const delta = now - timestamp;
-			mob.applyStatus(status, duration - delta);
-		});
-		Events.mob.statusRemoved.connect((uuid: UUID, status: MobStatus): void => {
-			const mob = Mob.getMob(uuid);
-			if (mob === undefined) {
-				return;
-			}
-			mob.removeStatus(status);
 		});
 		Events.mob.resync.connect((uuid: UUID, current: number, alpha: number, timestamp: number): void => {
 			const mob = Mob.getMob(uuid);

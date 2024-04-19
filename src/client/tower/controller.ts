@@ -99,19 +99,20 @@ export class TowerController implements OnStart {
 	public onStart(): void {
 		PlacementController.onPlaced(async (placing: string, asset: Model): Promise<void> => {
 			const { slot } = store.getState(selectPlacementState);
-			if (slot === undefined) {
-				return;
-			}
+			if (slot === undefined) return;
 			const { stored, equipped } = store.getState(selectInventoryData);
 			const tower = stored.get(slot);
-			if (!equipped.includes(slot) || tower === undefined) {
-				return;
-			}
+
+			if (!equipped.includes(slot) || tower === undefined) return;
 			const { uuid } = tower;
-			const cframe = asset.GetPivot();
-			const position = cframe.Position;
-			// !! Raycast downward to confirm valid placement location
-			Events.tower.place(uuid, position);
+
+			const raycast = this.getMouseRaycast();
+			if (raycast === undefined) return;
+
+			const { Instance, Position } = raycast;
+			if (!Instance.HasTag(ComponentTag.Placeable)) return;
+
+			Events.tower.place(uuid, Position);
 			store.endPlacement({});
 		});
 		store.observe(

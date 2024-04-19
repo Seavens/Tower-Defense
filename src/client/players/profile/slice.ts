@@ -1,4 +1,5 @@
 import { DATA_TEMPLATE } from "shared/players/data/constants";
+import { Events } from "client/network";
 import { LevelUtility } from "shared/players/profile/utility";
 import { ProfileSetting } from "shared/players/profile/types";
 import { createProducer } from "@rbxts/reflex";
@@ -48,27 +49,39 @@ export const profileSlice = createProducer<ProfileState, ExcludeMetadata<Profile
 		const { setting, value } = payload;
 		return produce(state, (draft: Draft<ProfileState>): void => {
 			const { settings } = draft.data;
-			if (setting === ProfileSetting.MusicEnable && typeIs(value, "boolean")) {
-				settings.musicEnabled = value;
+			if (setting === ProfileSetting.Music && typeIs(value, "boolean")) {
+				settings.audio.music = value;
+				Events.profile.adjustSetting(ProfileSetting.Music, value);
 			}
-			if (setting === ProfileSetting.MusicVolume && typeIs(value, "number")) {
-				settings.musicVolume = value;
+			if (setting === ProfileSetting.MusicVol && typeIs(value, "number")) {
+				settings.audio.musicVol = value;
+				Events.profile.adjustSetting(ProfileSetting.MusicVol, value);
 			}
-			if (setting === ProfileSetting.SfxEnable && typeIs(value, "boolean")) {
-				settings.sfxEnabled = value;
+			if (setting === ProfileSetting.Sfx && typeIs(value, "boolean")) {
+				settings.audio.sfx = value;
+				Events.profile.adjustSetting(ProfileSetting.Sfx, value);
 			}
-			if (setting === ProfileSetting.SfxVolume && typeIs(value, "number")) {
-				settings.sfxVolume = value;
+			if (setting === ProfileSetting.SfxVol && typeIs(value, "number")) {
+				settings.audio.sfxVol = value;
+				Events.profile.adjustSetting(ProfileSetting.SfxVol, value);
 			}
-			if (setting === ProfileSetting.VfxEnable && typeIs(value, "boolean")) {
-				settings.vfxEnabled = value;
+			if (setting === ProfileSetting.Vfx && typeIs(value, "boolean")) {
+				settings.visual.vfx = value;
+				Events.profile.adjustSetting(ProfileSetting.Vfx, value);
 			}
-			if (setting === ProfileSetting.MobBillboardsEnable && typeIs(value, "boolean")) {
-				settings.mobBillboardsEnabled = value;
+			if (setting === ProfileSetting.Shake && typeIs(value, "boolean")) {
+				settings.visual.shake = value;
+				Events.profile.adjustSetting(ProfileSetting.Shake, value);
 			}
-			if (setting === ProfileSetting.TowerBillboardsEnable && typeIs(value, "boolean")) {
-				settings.towerBillboardsEnabled = value;
+			if (setting === ProfileSetting.MobBB && typeIs(value, "boolean")) {
+				settings.visual.mobBB = value;
+				Events.profile.adjustSetting(ProfileSetting.MobBB, value);
 			}
+			if (setting === ProfileSetting.TowerBB && typeIs(value, "boolean")) {
+				settings.visual.towerBB = value;
+				Events.profile.adjustSetting(ProfileSetting.TowerBB, value);
+			}
+			warn(`[Slice] Setting ${setting} to ${value}`);
 		});
 	},
 	dataAdded: (state: ProfileState, payload: DataAdded): ProfileState => {

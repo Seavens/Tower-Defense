@@ -12,7 +12,7 @@ import { selectGameData } from "shared/game/selectors";
 import { store } from "client/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
-import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
+import type { MobDamage, MobId } from "shared/mob/types";
 import type { Node } from "@rbxts/octo-tree";
 
 export class Mob extends API {
@@ -31,7 +31,6 @@ export class Mob extends API {
 
 	protected declare readonly bin: Bin;
 	protected declare readonly waypoints: Array<BasePart>;
-	protected declare readonly statuses: Map<MobStatus, number>;
 	protected declare readonly max: number;
 
 	protected declare health: number;
@@ -86,8 +85,6 @@ export class Mob extends API {
 		this.animator = animator;
 		onMobAdded.FireDeferred(this);
 		const track = animator.playAnimation(MobAnimation.Walk);
-
-		// !! Whenever timestep changes, adjust speeds.
 		track.AdjustSpeed(GAME_TIMESTEP);
 		mobs.set(uuid, this);
 	}
@@ -160,15 +157,6 @@ export class Mob extends API {
 		this.movement = now;
 		const position = cframe.Position;
 		octree.ChangeNodePosition(node, position);
-	}
-
-	public onStatus(status: MobStatus, duration: number, added: boolean): void {
-		// const module = statusModules[status];
-		// if (added) {
-		// 	module?.onAdded?.(this);
-		// } else {
-		// 	module?.onRemove?.(this);
-		// }
 	}
 
 	public onEnd(): void {}

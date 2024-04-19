@@ -5,5 +5,11 @@ import type { OnStart } from "@flamework/core";
 
 @Service({})
 export class ProfileService implements OnStart {
-	public onStart(): void {}
+	public onStart(): void {
+		Events.profile.adjustSetting.connect((player, setting, value) => {
+			const { Name } = player;
+			store.profileAdjustSetting({ setting, value }, { user: Name, replicate: true });
+			warn(`[Service] Setting ${setting} for ${Name} to ${value}`);
+		});
+	}
 }

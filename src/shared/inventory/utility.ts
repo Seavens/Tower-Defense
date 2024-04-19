@@ -69,15 +69,14 @@ export namespace ItemUtility {
 		const damage = TowerUtility.getMultiplier();
 		const range = TowerUtility.getMultiplier();
 
-		// !! Change when done
 		const unique: ItemTowerUnique = {
 			kind: ItemKind.Tower,
 			cooldown,
 			damage,
-			level: math.random(1, 100),
-			experience: math.random(1, 1000),
-			locked: math.random() > 0.5 ? true : false,
-			owner: math.random(1, 100),
+			level: 1,
+			experience: 0,
+			locked: false,
+			owner: owner,
 			range,
 		};
 		const item: Item = {

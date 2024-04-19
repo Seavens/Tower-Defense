@@ -7,28 +7,35 @@ export interface InventoryData {
 	equipped: Array<Slot>;
 }
 
+interface Settings {
+	visual: {
+		vfx: boolean;
+		shake: boolean;
+		mobBB: boolean;
+		towerBB: boolean;
+	};
+	audio: {
+		music: boolean;
+		musicVol: number;
+		sfx: boolean;
+		sfxVol: number;
+	};
+	keybinds: {
+		slotOne: string;
+		slotTwo: string;
+		slotThree: string;
+		slotFour: string;
+		slotFive: string;
+		slotSix: string;
+	};
+}
+
 export interface ProfileData {
 	level: number;
 	experience: number;
 	coins: number;
 	gems: number;
-	settings: {
-		musicEnabled: boolean;
-		musicVolume: number;
-		sfxEnabled: boolean;
-		sfxVolume: number;
-		vfxEnabled: boolean;
-		mobBillboardsEnabled: boolean;
-		towerBillboardsEnabled: boolean;
-		keybinds: {
-			slotOne: Enum.KeyCode;
-			slotTwo: Enum.KeyCode;
-			slotThree: Enum.KeyCode;
-			slotFour: Enum.KeyCode;
-			slotFive: Enum.KeyCode;
-			slotSix: Enum.KeyCode;
-		};
-	};
+	settings: Settings;
 }
 
 export interface Data {
@@ -43,21 +50,25 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	gems: t.number,
 
 	settings: t.strictInterface({
-		musicEnabled: t.boolean,
-		musicVolume: t.number,
-		sfxEnabled: t.boolean,
-		sfxVolume: t.number,
-		vfxEnabled: t.boolean,
-		mobBillboardsEnabled: t.boolean,
-		towerBillboardsEnabled: t.boolean,
-
+		visual: t.strictInterface({
+			vfx: t.boolean,
+			shake: t.boolean,
+			mobBB: t.boolean,
+			towerBB: t.boolean,
+		}),
+		audio: t.strictInterface({
+			music: t.boolean,
+			musicVol: t.number,
+			sfx: t.boolean,
+			sfxVol: t.number,
+		}),
 		keybinds: t.strictInterface({
-			slotOne: t.enum(Enum.KeyCode),
-			slotTwo: t.enum(Enum.KeyCode),
-			slotThree: t.enum(Enum.KeyCode),
-			slotFour: t.enum(Enum.KeyCode),
-			slotFive: t.enum(Enum.KeyCode),
-			slotSix: t.enum(Enum.KeyCode),
+			slotOne: t.string,
+			slotTwo: t.string,
+			slotThree: t.string,
+			slotFour: t.string,
+			slotFive: t.string,
+			slotSix: t.string,
 		}),
 	}),
 });

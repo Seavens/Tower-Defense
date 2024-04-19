@@ -10,7 +10,7 @@ import { selectGameData } from "shared/game/selectors";
 import { store } from "server/state/store";
 import Octree from "@rbxts/octo-tree";
 import type { Bin } from "@rbxts/bin";
-import type { MobDamage, MobId, MobStatus } from "shared/mob/types";
+import type { MobDamage, MobId } from "shared/mob/types";
 import type { Node } from "@rbxts/octo-tree";
 
 export class Mob extends API {
@@ -28,7 +28,6 @@ export class Mob extends API {
 
 	protected declare readonly bin: Bin;
 	protected declare readonly waypoints: Array<BasePart>;
-	protected declare readonly statuses: Map<MobStatus, number>;
 	protected declare readonly max: number;
 
 	protected declare health: number;
@@ -128,19 +127,6 @@ export class Mob extends API {
 		const cframe = this.getCFrame();
 		const position = cframe.Position;
 		octree.ChangeNodePosition(node, position);
-	}
-
-	public onStatus(status: MobStatus, duration: number, added: boolean): void {
-		const { uuid } = this;
-		const timestamp = Workspace.GetServerTimeNow();
-		// const module = statusModules[status];
-		// if (!added) {
-		// 	module?.onRemove?.(this);
-		// 	Events.mob.statusRemoved.broadcast(uuid, status);
-		// 	return;
-		// }
-		// module?.onAdded?.(this);
-		// Events.mob.statusAdded.broadcast(uuid, duration, status, timestamp);
 	}
 
 	public onEnd(): void {

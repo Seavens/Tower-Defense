@@ -75,27 +75,31 @@ export const profileSlice = createProducer<State, ProfileActions<State>>(state, 
 			const { settings } = data;
 			const { setting, value } = payload;
 
-			if (setting === ProfileSetting.MusicEnable && typeIs(value, "boolean")) {
-				settings.musicEnabled = value;
+			if (setting === ProfileSetting.Music && typeIs(value, "boolean")) {
+				settings.audio.music = value;
 			}
-			if (setting === ProfileSetting.MusicVolume && typeIs(value, "number")) {
-				settings.musicVolume = value;
+			if (setting === ProfileSetting.MusicVol && typeIs(value, "number")) {
+				settings.audio.musicVol = value;
 			}
-			if (setting === ProfileSetting.SfxEnable && typeIs(value, "boolean")) {
-				settings.sfxEnabled = value;
+			if (setting === ProfileSetting.Sfx && typeIs(value, "boolean")) {
+				settings.audio.sfx = value;
 			}
-			if (setting === ProfileSetting.SfxVolume && typeIs(value, "number")) {
-				settings.sfxVolume = value;
+			if (setting === ProfileSetting.SfxVol && typeIs(value, "number")) {
+				settings.audio.sfxVol = value;
 			}
-			if (setting === ProfileSetting.VfxEnable && typeIs(value, "boolean")) {
-				settings.vfxEnabled = value;
+			if (setting === ProfileSetting.Vfx && typeIs(value, "boolean")) {
+				settings.visual.vfx = value;
 			}
-			if (setting === ProfileSetting.MobBillboardsEnable && typeIs(value, "boolean")) {
-				settings.mobBillboardsEnabled = value;
+			if (setting === ProfileSetting.Shake && typeIs(value, "boolean")) {
+				settings.visual.shake = value;
 			}
-			if (setting === ProfileSetting.TowerBillboardsEnable && typeIs(value, "boolean")) {
-				settings.towerBillboardsEnabled = value;
+			if (setting === ProfileSetting.MobBB && typeIs(value, "boolean")) {
+				settings.visual.mobBB = value;
 			}
+			if (setting === ProfileSetting.TowerBB && typeIs(value, "boolean")) {
+				settings.visual.towerBB = value;
+			}
+			warn(`[Slice] Setting ${setting} for ${user} to ${value}`);
 		});
 	},
 	dataAdded: (state: State, payload: DataAdded, metadata: UserMetadata): State => {

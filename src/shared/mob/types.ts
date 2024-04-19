@@ -23,7 +23,6 @@ export interface MobData {
 	current: number;
 	alpha: number;
 	timestamp: number;
-	statuses: Map<MobStatus, number>;
 }
 
 export const enum MobDamage {
@@ -34,18 +33,10 @@ export const enum MobDamage {
 	None = "mob_damage:none",
 }
 
-export const enum MobStatus {
-	Slowed = "mob_status:slowed",
-	Fast = "mob_status:fast",
-	Frozen = "mob_status:frozen",
-	Judgement = "mob_status:judgement",
-}
-
 export const enum MobAnimation {
 	Walk = "mob_animation:walk",
 }
 
 export const isMobId = Flamework.createGuard<MobId>();
 export const isMobDamage = Flamework.createGuard<MobDamage>();
-export const isMobStatus = Flamework.createGuard<MobStatus>();
 export const isMobAnimation = Flamework.createGuard<MobAnimation>();

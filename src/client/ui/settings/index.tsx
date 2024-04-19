@@ -27,6 +27,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 	const [tab, setTab] = useState<"Audio" | "Video" | "Controls">("Audio");
 	const [transparency, transparencyMotion] = useMotion(1);
 	const { settings } = useSelector(selectProfileData);
+	const { visual, audio } = settings;
 
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);
@@ -201,33 +202,33 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Audio" && (
 								<>
 									<EnableSettingsRow
-										enable={settings.musicEnabled}
+										enable={audio.music}
 										settingName={"Music"}
 										onClick={(enabled: boolean): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.MusicEnable,
+												setting: ProfileSetting.Music,
 												value: enabled,
 											});
 										}}
 										onReset={(): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.MusicEnable,
+												setting: ProfileSetting.Music,
 												value: true,
 											});
 											store.profileAdjustSetting({
-												setting: ProfileSetting.MusicVolume,
+												setting: ProfileSetting.MusicVol,
 												value: 100,
 											});
 										}}
 										layoutOrder={1}
 									/>
-									{settings.musicEnabled === true && (
+									{audio.music === true && (
 										<PercentSettingsRow
-											percent={settings.musicVolume}
+											percent={audio.musicVol}
 											settingName={"Music Volume"}
 											onClick={(percent: number): void => {
 												store.profileAdjustSetting({
-													setting: ProfileSetting.MusicVolume,
+													setting: ProfileSetting.MusicVol,
 													value: percent,
 												});
 											}}
@@ -235,33 +236,33 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										/>
 									)}
 									<EnableSettingsRow
-										enable={settings.sfxEnabled}
+										enable={audio.sfx}
 										settingName={"Sound Effects"}
 										onClick={(enabled: boolean): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.SfxEnable,
+												setting: ProfileSetting.Sfx,
 												value: enabled,
 											});
 										}}
 										onReset={(): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.SfxEnable,
+												setting: ProfileSetting.Sfx,
 												value: true,
 											});
 											store.profileAdjustSetting({
-												setting: ProfileSetting.SfxVolume,
+												setting: ProfileSetting.SfxVol,
 												value: 100,
 											});
 										}}
 										layoutOrder={3}
 									/>
-									{settings.sfxEnabled && (
+									{audio.sfx && (
 										<PercentSettingsRow
-											percent={settings.sfxVolume}
+											percent={audio.sfxVol}
 											settingName={"Effect Volume"}
 											onClick={(percent: number): void => {
 												store.profileAdjustSetting({
-													setting: ProfileSetting.SfxVolume,
+													setting: ProfileSetting.SfxVol,
 													value: percent,
 												});
 											}}
@@ -273,51 +274,68 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Video" && (
 								<>
 									<EnableSettingsRow
-										enable={settings.vfxEnabled}
+										enable={visual.vfx}
 										settingName={"Visual Effects"}
 										onClick={(enabled: boolean): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.VfxEnable,
+												setting: ProfileSetting.Vfx,
 												value: enabled,
 											});
 										}}
 										onReset={(): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.VfxEnable,
+												setting: ProfileSetting.Vfx,
 												value: true,
 											});
 										}}
 										layoutOrder={1}
 									/>
 									<EnableSettingsRow
-										enable={settings.mobBillboardsEnabled}
-										settingName={"Mob Billboards"}
+										enable={visual.shake}
+										settingName={"Visual Shake"}
 										onClick={(enabled: boolean): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.MobBillboardsEnable,
+												setting: ProfileSetting.Shake,
 												value: enabled,
 											});
 										}}
 										onReset={(): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.MobBillboardsEnable,
+												setting: ProfileSetting.Shake,
+												value: true,
+											});
+										}}
+										layoutOrder={1}
+									/>
+									<EnableSettingsRow
+										enable={visual.mobBB}
+										settingName={"Mob Healthbars"}
+										onClick={(enabled: boolean): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MobBB,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MobBB,
 												value: true,
 											});
 										}}
 										layoutOrder={2}
 									/>
 									<EnableSettingsRow
-										enable={settings.towerBillboardsEnabled}
-										settingName={"Tower Billboards"}
+										enable={visual.towerBB}
+										settingName={"Tower Statbars"}
 										onClick={(enabled: boolean): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.TowerBillboardsEnable,
+												setting: ProfileSetting.TowerBB,
 												value: enabled,
 											});
 										}}
 										onReset={(): void => {
 											store.profileAdjustSetting({
-												setting: ProfileSetting.TowerBillboardsEnable,
+												setting: ProfileSetting.TowerBB,
 												value: true,
 											});
 										}}

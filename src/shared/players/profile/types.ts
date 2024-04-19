@@ -10,13 +10,14 @@ export const enum KeybindSetting {
 }
 
 export const enum ProfileSetting {
-	MusicEnable = "profile_setting:music_enable",
-	MusicVolume = "profile_setting:music_volume",
-	SfxEnable = "profile_setting:sfx_enable",
-	SfxVolume = "profile_setting:sfx_volume",
-	VfxEnable = "profile_setting:vfx_enable",
-	MobBillboardsEnable = "profile_setting:mob_billboards",
-	TowerBillboardsEnable = "profile_setting:tower_billboards",
+	Music = "profile_setting:music",
+	MusicVol = "profile_setting:music_vol",
+	Sfx = "profile_setting:sfx",
+	SfxVol = "profile_setting:sfx_vol",
+	Vfx = "profile_setting:vfx",
+	Shake = "profile_setting:shake",
+	MobBB = "profile_setting:mob_bb",
+	TowerBB = "profile_setting:tower_bb",
 }
 
 export const isprofileSetting = Flamework.createGuard<ProfileSetting>();

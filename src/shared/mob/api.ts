@@ -4,14 +4,12 @@ import { MapUtility } from "shared/game/map/utility";
 import { Workspace } from "@rbxts/services";
 import { mobDefinitions } from "./definitions";
 import type { MobDamage, MobData, MobId } from "./types";
-import type { MobStatus } from "./types";
 
 export abstract class Mob {
 	public readonly uuid: UUID;
 	public readonly id: MobId;
 
 	protected readonly bin = new Bin();
-	protected readonly statuses = new Map<MobStatus, number>();
 	protected readonly max: number;
 
 	protected waypoints: Array<BasePart>;
@@ -131,20 +129,6 @@ export abstract class Mob {
 		this.calculateDuration();
 	}
 
-	public applyStatus(status: MobStatus, duration: number): void {
-		// !! Account for resistances.
-		const { statuses } = this;
-		const timestamp = os.clock() + duration;
-		statuses.set(status, timestamp);
-		this.onStatus(status, duration, true);
-	}
-
-	public removeStatus(status: MobStatus): void {
-		const { statuses } = this;
-		statuses.delete(status);
-		this.onStatus(status, 0, false);
-	}
-
 	public takeDamage(damage: number, kind: MobDamage, tower?: string): boolean {
 		if (damage <= 0) {
 			return false;
@@ -175,7 +159,7 @@ export abstract class Mob {
 	}
 
 	public serialize(): MobData {
-		const { id, health, current, statuses } = this;
+		const { id, health, current } = this;
 		const alpha = this.getAlpha();
 		const timestamp = Workspace.GetServerTimeNow();
 		const data: MobData = {
@@ -184,7 +168,6 @@ export abstract class Mob {
 			current,
 			timestamp,
 			alpha,
-			statuses,
 		};
 		return data;
 	}
@@ -212,20 +195,8 @@ export abstract class Mob {
 			this.destroy();
 			return;
 		}
-		const { statuses } = this;
-		const now = os.clock();
+
 		let totalSpeed = 1;
-		// for (const [status, timestamp] of statuses) {
-		// 	if (timestamp <= now) {
-		// 		this.removeStatus(status);
-		// 		continue;
-		// 	}
-		// 	const { speed } = statusDefinitions[status];
-		// 	const remaining = math.max(timestamp - now, 0);
-		// 	const module = statusModules[status];
-		// 	module?.onTick(this, remaining);
-		// 	totalSpeed += speed;
-		// }
 		totalSpeed = math.max(totalSpeed, 0);
 		const { target, current, final } = this;
 		if (current >= final) {
@@ -256,7 +227,6 @@ export abstract class Mob {
 	public abstract onDamage(damage: number, kind?: MobDamage): void;
 	public abstract onMovement(delta: number): void;
 	public abstract onWaypoint(index: number): void;
-	public abstract onStatus(status: MobStatus, duration: number, added: boolean): void;
 	public abstract onEnd(): void;
 	public abstract onResync?(): void;
 }

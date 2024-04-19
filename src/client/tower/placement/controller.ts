@@ -138,8 +138,7 @@ export class PlacementController implements OnStart, OnTick {
 		}
 		const position = this.getPosition(prefab);
 		const interpolated = last.Lerp(position, 0.25);
-		// !! It's likely more ideal to check if the cframe is valid here rather than
-		// !! another function calling raycast, just for now though, it's like this.
+		// !! It's likely more ideal to check if the cframe is valid here rather than another function calling raycast, just for now though, it's like this.
 		const valid = this.isValidPosition(interpolated);
 		if (wasValid !== valid) {
 			this.valid = valid;

@@ -28,6 +28,7 @@ export const enum TowerVisual {
 	Neutron = "tower_visual:neutron",
 	HeatedImpact = "tower_visual:tower_place",
 	EDSummon = "tower_visual:ed_summon",
+	Buff = "tower_visual:buff",
 }
 
 export const enum TowerAnimation {

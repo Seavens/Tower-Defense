@@ -39,13 +39,12 @@ export class WaveController implements OnStart, OnMobEnded, OnMobRemoved {
 
 		Events.mob.sync.connect((data: Map<UUID, MobData>): void => {
 			const now = Workspace.GetServerTimeNow();
-			for (const [uuid, { id, current, alpha, health, timestamp, statuses }] of data) {
+			for (const [uuid, { id, current, alpha, health, timestamp }] of data) {
 				const delta = now - timestamp;
 				const mob = new Mob(uuid, id);
 				mob.start(current);
 				mob.setAlpha(alpha, delta);
 				mob.setHealth(health);
-				// Apply statuses.
 			}
 		});
 	}

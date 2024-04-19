@@ -10,7 +10,8 @@ import type { Element } from "@rbxts/react";
 export function TowerBillboards(): Option<Element> {
 	const profile = useSelector(selectProfileData);
 	const { settings } = profile;
-	const { towerBillboardsEnabled } = settings;
+	const { visual } = settings;
+	const { towerBB } = visual;
 
 	const towers = useSelector(selectPlacedTowers);
 
@@ -46,7 +47,7 @@ export function TowerBillboards(): Option<Element> {
 		return billboards;
 	}, [towers]);
 
-	if (!towerBillboardsEnabled) {
+	if (!towerBB) {
 		return undefined;
 	}
 

@@ -1,4 +1,5 @@
 import { TowerVisual } from "shared/tower/types";
+import { buffVisual } from "./buff";
 import { edSummonVisual } from "./ed-summon";
 import { heatedImpactVisual } from "./heated-impact";
 import { holyStrikeVisual } from "./holy-strike";
@@ -21,4 +22,5 @@ export const towerVisualModules: { [T in TowerVisual]: TowerVisualModule<T> } = 
 	[TowerVisual.HeatedImpact]: heatedImpactVisual,
 	[TowerVisual.Neutron]: neutronVisual,
 	[TowerVisual.EDSummon]: edSummonVisual,
+	[TowerVisual.Buff]: buffVisual,
 } as const;

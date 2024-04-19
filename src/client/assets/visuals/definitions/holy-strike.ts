@@ -4,6 +4,7 @@ import { Flamework } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TowerVisual } from "shared/tower/types";
+import { VisualController } from "../controller";
 import { VisualUtility, params } from "../utility";
 import Shake from "@rbxts/rbx-sleitnick-shake";
 import type { Bin } from "@rbxts/bin";
@@ -38,9 +39,8 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		const origin = point.add(Vector3.yAxis.mul(30));
 		const direction = Vector3.yAxis.mul(-35);
 		const raycast = Workspace.Raycast(origin, direction, params);
-		if (raycast === undefined) {
-			return;
-		}
+		if (raycast === undefined) return;
+
 		const effect = prefab.Clone();
 		setCollision(effect, Collision.Debris, true);
 		const { sky, ground } = effect;
@@ -50,6 +50,7 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			ElectricExplosion: [ASSET_IDS.ElectricExplosion],
 		});
 		incoming.playSound("ThunderSpear");
+
 		const normal = raycast.Normal;
 		const position = raycast.Position;
 		const look = position.add(normal).Unit;
@@ -72,27 +73,14 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			tween.Play();
 			bin.add(tween);
 		}
-		// const shake = new Shake();
-		// shake.FadeInTime = 0;
-		// shake.FadeOutTime = 0.25;
-		// shake.Frequency = 0.1;
-		// shake.Amplitude = 0.1;
-		// shake.SustainTime = 0.25;
-		// shake.Start();
-		// VisualUtility.connectShake(shake, priority, (delta: number, position: Vector3, rotation: Vector3): void => {
-		// 	if (camera === undefined) {
-		// 		return;
-		// 	}
-		// 	const current = camera.CFrame;
-		// 	camera.CFrame = current.Lerp(
-		// 		current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
-		// 		math.clamp(delta * 60, 0, 1),
-		// 	);
-		// });
+
+		VisualController.onShake(priority, camera);
+
 		VisualUtility.emitRocks(bin, position, 15, 1, 1);
 		const soundDelay = task.delay(0.1, (): void => {
 			incoming.playSound("ElectricExplosion");
 		});
+
 		const highlight = new Instance("Highlight");
 		highlight.Name = `(${model.Name})-${TowerVisual.HolyStrike}`;
 		highlight.FillColor = Color3.fromRGB(250, 255, 176);
@@ -103,6 +91,7 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		highlight.Adornee = instance;
 		highlight.Parent = debris;
 		bin.add(highlight);
+
 		const emitters = ground.GetChildren();
 		for (const emitter of emitters) {
 			if (!emitter.IsA("ParticleEmitter")) {
@@ -118,11 +107,11 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			FillTransparency: 1,
 		});
 		const delay = task.delay(1, (): void => tween.Play());
+
 		bin.add(incoming);
 		bin.add(soundDelay);
 		bin.add(tween);
 		bin.add(delay);
 		bin.add(effect);
-		// bin.add(shake);
 	},
 };
