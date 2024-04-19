@@ -5,9 +5,7 @@ import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TowerUtility } from "shared/tower/utility";
 import { TowerVisual } from "shared/tower/types";
-import { VisualController } from "../controller";
 import { VisualUtility, params } from "../utility";
-import Shake from "@rbxts/rbx-sleitnick-shake";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -67,7 +65,7 @@ export const neutronVisual: TowerVisualModule<TowerVisual.Neutron> = {
 		effect.Name = `(${model.Name})-${TowerVisual.Neutron}`;
 		effect.Parent = debris;
 
-		VisualController.onShake(priority, camera);
+		VisualUtility.onShake(priority, camera);
 
 		const thread = task.delay(2.5, (): void => {
 			const emitters = effect.GetDescendants();

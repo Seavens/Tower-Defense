@@ -36,6 +36,7 @@
     "@rbxts/bin": "^1.3.0",
     "@rbxts/catppuccin": "^1.0.2",
     "@rbxts/character-promise": "^1.0.2",
+    "@rbxts/gizmo": "^2.0.5",
     "@rbxts/immut": "^0.4.4-ts.0",
     "@rbxts/lapis": "^0.2.11",
     "@rbxts/octo-tree": "^0.3.1",

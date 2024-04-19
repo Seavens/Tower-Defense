@@ -1,7 +1,9 @@
+import { Bin } from "@rbxts/bin";
 import { Collision } from "shared/utility/collision";
 import { TweenService, Workspace } from "@rbxts/services";
+import { selectProfileData } from "client/players/profile/selectors";
+import { store } from "client/state/store";
 import Shake from "@rbxts/rbx-sleitnick-shake";
-import type { Bin } from "@rbxts/bin";
 
 const { debris, characters, placed, mobs } = Workspace;
 
@@ -56,16 +58,48 @@ export namespace VisualUtility {
 		}
 	}
 
-	export function connectShake(
-		shake: Shake,
+	export function onShake(
 		priority: number,
-		callback: (delta: number, position: Vector3, rotation: Vector3) => void,
+		camera?: Camera,
+		fadeInTime: number = 0,
+		fadeOutTime: number = 0.25,
+		frequency: number = 0.1,
+		amplitude: number = 0.01,
+		sustainTime: number = 3,
 	): void {
+		const state = store.getState(selectProfileData);
+		const { settings } = state;
+		const { visual } = settings;
+		const { shake: userSetting } = visual;
+		if (!userSetting) {
+			return;
+		}
+
+		const bin = new Bin();
+		const shake = new Shake();
+		shake.FadeInTime = fadeInTime;
+		shake.FadeOutTime = fadeOutTime;
+		shake.Frequency = frequency;
+		shake.Amplitude = amplitude;
+		shake.SustainTime = sustainTime;
+		bin.add(shake);
+
 		let last = 0;
+		shake.Start();
 		shake.BindToRenderStep(Shake.NextRenderName(), priority, (position: Vector3, rotation: Vector3): void => {
 			const delta = time() - last;
-			callback(delta, position, rotation);
+			if (camera === undefined) {
+				return;
+			}
+			const current = camera.CFrame;
+			camera.CFrame = current.Lerp(
+				current.mul(new CFrame(position).mul(CFrame.Angles(rotation.X, rotation.Y, rotation.Z))),
+				math.clamp(delta * 60, 0, 1),
+			);
 			last = time();
+		});
+		task.delay(sustainTime + fadeInTime + fadeOutTime, (): void => {
+			bin.destroy();
 		});
 	}
 }
