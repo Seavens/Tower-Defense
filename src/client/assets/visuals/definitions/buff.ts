@@ -2,10 +2,12 @@ import { ASSET_IDS } from "shared/assets/constants";
 import { Collision, setCollision } from "shared/utility/collision";
 import { Flamework, Modding } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
+import { SettingId, SettingKind } from "shared/players/settings";
 import { SoundEmitter } from "shared/assets/sound";
-import { TowerUtility } from "shared/tower/utility";
 import { TowerVisual } from "shared/tower/types";
 import { params } from "../utility";
+import { selectSettingValues, settingSlice } from "client/players/profile/settings";
+import { store } from "client/state/store";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class";
 import type { ReplicatedTower } from "shared/tower/types";
@@ -14,7 +16,7 @@ import type { TowerVisualModule } from ".";
 const { assets } = ReplicatedStorage;
 const { effects } = assets;
 
-type Sounds = "WhooshSuction" | "ElectricSpark" | "LightningFlashes" | "SilentGlitcher";
+type Sounds = "TwinkleMagic" | "LightSpell";
 
 const soundNames = Modding.inspect<Array<Sounds>>();
 
@@ -25,11 +27,15 @@ const guard = Flamework.createGuard<
 		yellow: ParticleEmitter;
 	}
 >();
-const prefab = effects.FindFirstChild(TowerVisual.Neutron);
+const prefab = effects.FindFirstChild(TowerVisual.Buff);
 
 const info = new TweenInfo(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out, 0, false, 2.5);
 
 const { debris } = Workspace;
+
+const values = store.getState(selectSettingValues);
+const sfxEnabled = values.get(SettingId.ToggleSfx);
+const sfxVolume = values.get(SettingId.SfxVolume);
 
 export const buffVisual: TowerVisualModule<TowerVisual.Buff> = {
 	id: TowerVisual.Buff,
@@ -58,6 +64,27 @@ export const buffVisual: TowerVisualModule<TowerVisual.Buff> = {
 		effect.CFrame = cframe;
 		effect.Name = `(${model.Name})-${TowerVisual.Neutron}`;
 		effect.Parent = debris;
+
+		if (sfxEnabled === true) {
+			const sounds = new SoundEmitter(model, {
+				TwinkleMagic: [ASSET_IDS.TwinkleMagic],
+				LightSpell: [ASSET_IDS.LightSpell],
+			});
+
+			for (const key of soundNames) {
+				const sound = sounds.playSound(key, 0, (sfxVolume as number) / 100);
+				const tween = TweenService.Create(sound, info, { Volume: 0 });
+				tween.Play();
+				bin.add(tween);
+			}
+
+			const delay = task.delay(3.25, (): void => {
+				sounds.destroy();
+			});
+
+			bin.add(sounds);
+			bin.add(delay);
+		}
 
 		const thread = task.delay(2.5, (): void => {
 			const emitters = effect.GetDescendants();

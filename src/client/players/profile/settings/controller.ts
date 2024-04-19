@@ -67,7 +67,7 @@ export class KeybindController implements OnStart {
 			selectSettingValues,
 			(key: SettingValueOfId<SettingId>, keybind: SettingId): defined => `${key}_${keybind}`,
 			(key: SettingValueOfId<SettingId>, keybind: SettingId): void => {
-				warn(key, keybind);
+				// warn(key, keybind);
 				if (!isKeycode(key) || !isKeybindId(keybind)) {
 					return;
 				}

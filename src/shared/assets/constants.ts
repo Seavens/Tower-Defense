@@ -16,6 +16,15 @@ export const ASSET_IDS = {
 	LightningFlashes: "rbxassetid://9116272906",
 	SilentGlitcher: "rbxassetid://7390331288",
 	Click: "rbxassetid://452267918",
+	WinterHolidays: "rbxassetid://9046740461",
+	LightSpell: "rbxassetid://5405460805",
+	TwinkleMagic: "rbxassetid://5405460805",
+	DownTen: "rbxassetid://9043357509",
+	DemonOne: "rbxassetid://9114228578",
+	DemonTwo: "rbxassetid://9114228524",
+	DemonThree: "rbxassetid://9067471663",
+	DemonFour: "rbxassetid://9114038256",
+	DemonFive: "rbxassetid://9067394653",
 
 	// Animations
 	WalkR6: "rbxassetid://17140384803",
