@@ -11,17 +11,24 @@ import { selectPlacedTowers, selectSpecificTower } from "shared/tower/selectors"
 import { selectPlacementState } from "client/tower/placement/selectors";
 import { selectSelectedTower } from "./selectors";
 import { store } from "client/state/store";
+import Gizmo from "@rbxts/gizmo";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower } from "shared/tower/types";
 
-const { placed } = Workspace;
+const { placed, characters, mobs, debris } = Workspace;
 
 const player = Players.LocalPlayer;
 const camera = Workspace.CurrentCamera;
 
-const params = new RaycastParams();
-params.AddToFilter([placed]);
-params.FilterType = Enum.RaycastFilterType.Include;
+const includes = new RaycastParams();
+includes.AddToFilter([placed]);
+includes.FilterType = Enum.RaycastFilterType.Include;
+
+const excludes = new RaycastParams();
+excludes.AddToFilter([characters, mobs, debris]);
+excludes.FilterType = Enum.RaycastFilterType.Exclude;
+
+Gizmo.enable();
 
 @Controller({})
 export class TowerController implements OnStart {
@@ -40,7 +47,7 @@ export class TowerController implements OnStart {
 		const ray = camera.ViewportPointToRay(location.X, location.Y);
 		const origin = ray.Origin;
 		const direction = ray.Direction.mul(100);
-		const results = Workspace.Raycast(origin, direction, params);
+		const results = Workspace.Raycast(origin, direction, includes);
 		return results;
 	}
 
@@ -102,17 +109,17 @@ export class TowerController implements OnStart {
 			if (slot === undefined) return;
 			const { stored, equipped } = store.getState(selectInventoryData);
 			const tower = stored.get(slot);
-
-			if (!equipped.includes(slot) || tower === undefined) return;
+			if (!equipped.includes(slot) || tower === undefined) {
+				return;
+			}
 			const { uuid } = tower;
-
-			const raycast = this.getMouseRaycast();
-			if (raycast === undefined) return;
-
-			const { Instance, Position } = raycast;
-			if (!Instance.HasTag(ComponentTag.Placeable)) return;
-
-			Events.tower.place(uuid, Position);
+			const cframe = asset.GetPivot();
+			const size = asset.GetExtentsSize();
+			const boxcast = Workspace.Blockcast(cframe.add(Vector3.yAxis), size, Vector3.yAxis.mul(-0.95), excludes);
+			if (boxcast !== undefined) {
+				return;
+			}
+			Events.tower.place(uuid, cframe.Position);
 			store.endPlacement({});
 		});
 		store.observe(

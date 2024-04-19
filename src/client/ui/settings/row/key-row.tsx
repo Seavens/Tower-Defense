@@ -26,9 +26,10 @@ export function KeySettingsRow({
 	const [text, setText] = useState(keyCode.Name);
 
 	const handleTextChange = useCallback(
-		(rbx: TextBox): void => {
+		(rbx: TextBox, enter: boolean): void => {
+			warn(enter);
 			const text = rbx.Text;
-			if (!isKeycode(text)) {
+			if (!isKeycode(text) || !enter) {
 				setText(keyCode.Name);
 				return;
 			}
@@ -121,8 +122,8 @@ export function KeySettingsRow({
 					font={FONTS.inter.medium}
 					textColor={PALETTE.accent}
 					text={text}
-					change={{
-						Text: handleTextChange,
+					event={{
+						FocusLost: handleTextChange,
 					}}
 					layoutOrder={2}
 					key={"center-text-field"}

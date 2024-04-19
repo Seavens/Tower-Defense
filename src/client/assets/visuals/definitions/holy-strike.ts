@@ -6,7 +6,6 @@ import { SoundEmitter } from "shared/assets/sound";
 import { TowerVisual } from "shared/tower/types";
 import { VisualController } from "../controller";
 import { VisualUtility, params } from "../utility";
-import Shake from "@rbxts/rbx-sleitnick-shake";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class";
 import type { TowerVisualModule } from ".";
@@ -74,7 +73,7 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			bin.add(tween);
 		}
 
-		VisualController.onShake(priority, camera);
+		VisualUtility.onShake(priority, camera);
 
 		VisualUtility.emitRocks(bin, position, 15, 1, 1);
 		const soundDelay = task.delay(0.1, (): void => {

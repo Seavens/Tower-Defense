@@ -58,5 +58,5 @@ export const PADDING = 3;
 
 export const UI_PRIORITIES: { [K in UIKind]: number } = {
 	[UIKind.Inventory]: 5,
-	[UIKind.Settings]: 10,
+	[UIKind.Settings]: 5,
 } as const;
