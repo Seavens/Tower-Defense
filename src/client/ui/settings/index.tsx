@@ -1,6 +1,7 @@
 import { Button, DelayRender, Frame, Group, Text, Transition } from "../components";
 import { ColorUtil } from "../utility";
 import { EnableSettingsRow } from "./row/enable-row";
+import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "../constants";
 import { KeySettingsRow } from "./row/key-row";
 import { PercentSettingsRow } from "./row/percent-row";
@@ -200,71 +201,53 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Audio" && (
 								<>
 									<EnableSettingsRow
-										enable={audio.music}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleMusic)}
 										settingName={"Music"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Music,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleMusic, value: enabled });
+											Events.settings.set(SettingId.ToggleMusic, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Music,
-												value: true,
-											});
-											store.profileAdjustSetting({
-												setting: ProfileSetting.MusicVol,
-												value: 100,
-											});
+											store.resetSetting({ id: SettingId.ToggleMusic });
+											Events.settings.reset(SettingId.ToggleMusic);
 										}}
 										layoutOrder={1}
 									/>
-									{audio.music === true && (
+									{!!values.get(SettingId.ToggleMusic) === true && (
 										<PercentSettingsRow
-											percent={audio.musicVol}
+											percent={values.get(SettingId.MusicVolume) as number}
 											settingName={"Music Volume"}
 											onClick={(percent: number): void => {
-												store.profileAdjustSetting({
-													setting: ProfileSetting.MusicVol,
-													value: percent,
-												});
+												store.setSetting({ id: SettingId.MusicVolume, value: percent });
+												Events.settings.set(SettingId.MusicVolume, percent);
 											}}
 											layoutOrder={2}
 										/>
 									)}
 									<EnableSettingsRow
-										enable={audio.sfx}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleSfx)}
 										settingName={"Sound Effects"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Sfx,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleSfx, value: enabled });
+											Events.settings.set(SettingId.ToggleSfx, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Sfx,
-												value: true,
-											});
-											store.profileAdjustSetting({
-												setting: ProfileSetting.SfxVol,
-												value: 100,
-											});
+											store.resetSetting({ id: SettingId.ToggleSfx });
+											Events.settings.reset(SettingId.ToggleSfx);
 										}}
-										layoutOrder={3}
+										layoutOrder={1}
 									/>
-									{audio.sfx && (
+									{!!values.get(SettingId.SfxVolume) === true && (
 										<PercentSettingsRow
-											percent={audio.sfxVol}
-											settingName={"Effect Volume"}
+											percent={values.get(SettingId.SfxVolume) as number}
+											settingName={"Sound Volume"}
 											onClick={(percent: number): void => {
-												store.profileAdjustSetting({
-													setting: ProfileSetting.SfxVol,
-													value: percent,
-												});
+												store.setSetting({ id: SettingId.SfxVolume, value: percent });
+												Events.settings.set(SettingId.SfxVolume, percent);
 											}}
-											layoutOrder={4}
+											layoutOrder={2}
 										/>
 									)}
 								</>
@@ -272,70 +255,57 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Video" && (
 								<>
 									<EnableSettingsRow
-										enable={visual.vfx}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleVfx)}
 										settingName={"Visual Effects"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Vfx,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleVfx, value: enabled });
+											Events.settings.set(SettingId.ToggleVfx, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Vfx,
-												value: true,
-											});
+											store.resetSetting({ id: SettingId.ToggleVfx });
+											Events.settings.reset(SettingId.ToggleVfx);
 										}}
-										layoutOrder={1}
 									/>
 									<EnableSettingsRow
-										enable={visual.shake}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleShake)}
 										settingName={"Visual Shake"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Shake,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleShake, value: enabled });
+											Events.settings.set(SettingId.ToggleShake, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.Shake,
-												value: true,
-											});
+											store.resetSetting({ id: SettingId.ToggleShake });
+											Events.settings.reset(SettingId.ToggleShake);
 										}}
 										layoutOrder={1}
 									/>
 									<EnableSettingsRow
-										enable={visual.mobBB}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleMobBB)}
 										settingName={"Mob Healthbars"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.MobBB,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleMobBB, value: enabled });
+											Events.settings.set(SettingId.ToggleMobBB, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.MobBB,
-												value: true,
-											});
+											store.resetSetting({ id: SettingId.ToggleMobBB });
+											Events.settings.reset(SettingId.ToggleMobBB);
 										}}
 										layoutOrder={2}
 									/>
 									<EnableSettingsRow
-										enable={visual.towerBB}
+										// eslint-disable-next-line roblox-ts/lua-truthiness
+										enable={!!values.get(SettingId.ToggleTowerBB)}
 										settingName={"Tower Statbars"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.TowerBB,
-												value: enabled,
-											});
+											store.setSetting({ id: SettingId.ToggleTowerBB, value: enabled });
+											Events.settings.set(SettingId.ToggleTowerBB, enabled);
 										}}
 										onReset={(): void => {
-											store.profileAdjustSetting({
-												setting: ProfileSetting.TowerBB,
-												value: true,
-											});
+											store.resetSetting({ id: SettingId.ToggleTowerBB });
+											Events.settings.reset(SettingId.ToggleTowerBB);
 										}}
 										layoutOrder={2}
 									/>
@@ -346,75 +316,78 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.One}
 										settingName={"Slot 1"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotOne,
-													value: Enum.KeyCode.One,
-												});
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotOne });
+											Events.settings.reset(SettingId.SlotOne);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotOne, value: keycode });
+											Events.settings.set(SettingId.SlotOne, keycode);
 										}}
 										layoutOrder={1}
 									/>
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.Two}
 										settingName={"Slot 2"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotTwo,
-													value: Enum.KeyCode.Two,
-												});
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotTwo });
+											Events.settings.reset(SettingId.SlotTwo);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotTwo, value: keycode });
+											Events.settings.set(SettingId.SlotTwo, keycode);
 										}}
 										layoutOrder={2}
 									/>
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.Three}
 										settingName={"Slot 3"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotThree,
-													value: Enum.KeyCode.Three,
-												});
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotThree });
+											Events.settings.reset(SettingId.SlotThree);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotThree, value: keycode });
+											Events.settings.set(SettingId.SlotThree, keycode);
 										}}
 										layoutOrder={3}
 									/>
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.Four}
 										settingName={"Slot 4"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotFour,
-													value: Enum.KeyCode.Four,
-												});
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotFour });
+											Events.settings.reset(SettingId.SlotFour);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotFour, value: keycode });
+											Events.settings.set(SettingId.SlotFour, keycode);
 										}}
 										layoutOrder={4}
 									/>
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.Five}
 										settingName={"Slot 5"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.profileAdjustSetting({
-													setting: KeybindSetting.SlotFive,
-													value: Enum.KeyCode.Five,
-												});
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotFive });
+											Events.settings.reset(SettingId.SlotFive);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotFive, value: keycode });
+											Events.settings.set(SettingId.SlotFive, keycode);
 										}}
 										layoutOrder={5}
 									/>
 									<KeySettingsRow
 										keyCode={Enum.KeyCode.Six}
 										settingName={"Slot 6"}
-										onResetClick={(reset: boolean): void => {
-											if (reset) {
-												store.resetSetting({ id: SettingId.SlotSix });
-											}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.SlotSix });
+											Events.settings.reset(SettingId.SlotSix);
+										}}
+										onSubmit={(keycode: Keycode): void => {
+											store.setSetting({ id: SettingId.SlotSix, value: keycode });
+											Events.settings.set(SettingId.SlotSix, keycode);
 										}}
 										layoutOrder={6}
 									/>

@@ -10,46 +10,41 @@ interface KeySettingsRowProps {
 	settingName: string;
 	layoutOrder?: number;
 	keyCode: Enum.KeyCode;
-	onResetClick?: (reset: boolean) => void;
-	onSubmitClick?: (keycode: Keycode) => void;
+	onReset?: () => void;
+	onSubmit?: (keycode: Keycode) => void;
 }
 
-export function KeySettingsRow({
-	settingName,
-	layoutOrder,
-	keyCode,
-	onResetClick,
-	onSubmitClick,
-}: KeySettingsRowProps): Element {
+export function KeySettingsRow({ settingName, layoutOrder, keyCode, onReset, onSubmit }: KeySettingsRowProps): Element {
 	const px = usePx();
 
 	const [text, setText] = useState(keyCode.Name);
 
 	const handleTextChange = useCallback(
 		(rbx: TextBox, enter: boolean): void => {
-			warn(enter);
 			const text = rbx.Text;
 			if (!isKeycode(text) || !enter) {
 				setText(keyCode.Name);
+				onReset?.();
 				return;
 			}
 			setText(text);
 		},
-		[text, keyCode.Name],
+		[text, keyCode],
 	);
 
 	const handleResetClick = useCallback((): void => {
 		setText(keyCode.Name);
-		if (onResetClick) {
-			onResetClick(true);
-		}
-	}, [onResetClick]);
+		onReset?.();
+	}, [onReset, keyCode]);
 
 	const handleSubmitClick = useCallback((): void => {
-		if (onSubmitClick && text !== keyCode.Name) {
-			onSubmitClick(text);
+		if (!isKeycode(text)) {
+			setText(keyCode.Name);
+			onReset?.();
+			return;
 		}
-	}, [onSubmitClick, keyCode.Name]);
+		onSubmit?.(text);
+	}, [onSubmit, text, keyCode]);
 
 	const isEditing = text !== keyCode.Name;
 

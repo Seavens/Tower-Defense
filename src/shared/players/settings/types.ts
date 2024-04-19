@@ -38,5 +38,5 @@ export const isSettingId = Flamework.createGuard<SettingId>();
 export const isSettingKind = Flamework.createGuard<SettingKind>();
 
 export const isSettings: t.check<Settings> = t.strictInterface({
-	values: t.map(isSettingId, t.union(t.number, isKeycode)),
+	values: t.map(isSettingId, t.union(t.number, t.boolean, isKeycode)),
 });

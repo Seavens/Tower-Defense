@@ -1,11 +1,14 @@
 import { ContextActionService } from "@rbxts/services";
 import { Controller, Flamework } from "@flamework/core";
+import { SettingId } from "shared/players/settings";
+import { UIKind } from "client/ui/types";
 import { isKeycode } from "shared/utility/guards";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
+import { selectOpenUI } from "client/ui/selectors";
 import { selectSettingValues } from "./selectors";
 import { store } from "client/state/store";
 import type { OnStart } from "@flamework/core";
-import type { SettingId, SettingIdOfKind, SettingKind, SettingValueOfId } from "shared/players/settings";
+import type { SettingIdOfKind, SettingKind, SettingValueOfId } from "shared/players/settings";
 
 type KeybindId = SettingIdOfKind<SettingKind.Keybind>;
 type KeybindCallback = (state: Enum.UserInputState) => void;
@@ -62,13 +65,25 @@ export class KeybindController implements OnStart {
 	public onStart(): void {
 		store.observe(
 			selectSettingValues,
-			(_, key: SettingId): defined => key,
+			(key: SettingValueOfId<SettingId>, keybind: SettingId): defined => `${key}_${keybind}`,
 			(key: SettingValueOfId<SettingId>, keybind: SettingId): void => {
+				warn(key, keybind);
 				if (!isKeycode(key) || !isKeybindId(keybind)) {
 					return;
 				}
 				this.remapKeybind(keybind, key);
 			},
 		);
+		KeybindController.connectKeybind(SettingId.ToggleSettings, (state: Enum.UserInputState): void => {
+			if (state !== Enum.UserInputState.Begin) {
+				return;
+			}
+			const open = store.getState(selectOpenUI);
+			if (open === UIKind.Settings) {
+				store.closeUI({ kind: UIKind.Settings });
+				return;
+			}
+			store.openUI({ kind: UIKind.Settings });
+		});
 	}
 }

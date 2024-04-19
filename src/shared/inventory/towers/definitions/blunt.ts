@@ -1,7 +1,7 @@
 import { ASSET_IDS } from "shared/assets/constants";
 import { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import { MobDamage } from "shared/mob/types";
-import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
+import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual, TowerVisuals } from "shared/tower/types";
 import type { ItemDefinition } from "../..";
 
 export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
@@ -41,7 +41,10 @@ export const bluntTowerItem: ItemDefinition<ItemId.Blunt, ItemKind.Tower> = {
 			TowerTargeting.Closest,
 		],
 
-		visuals: [TowerVisual.SniperShot],
+		visuals: {
+			[TowerVisuals.Summon]: TowerVisual.HeatedImpact,
+			[TowerVisuals.Attack]: TowerVisual.SniperShot,
+		},
 
 		abilities: undefined,
 

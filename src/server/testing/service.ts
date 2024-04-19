@@ -3,10 +3,7 @@ import { ItemId, ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
 import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Service } from "@flamework/core";
-import { USE_MOCK_DATA } from "shared/core/constants";
 import { createUUID } from "shared/utility/functions/create-uuid";
-import { selectProfileData, selectProfileState } from "server/players/profile/selectors";
-import { selectState } from "server/state/replication/selector";
 import { store } from "server/state/store";
 import type { BroadcastMetadata, ReplicationMetadata, UserMetadata } from "shared/state/replication/metadata";
 import type { Item, ItemTowerUnique } from "shared/inventory/types";
@@ -16,9 +13,9 @@ import type { OnStart } from "@flamework/core";
 @Service({})
 export class TestService implements OnStart, OnDataLoaded {
 	public async onDataLoaded(player: Player): Promise<void> {
-		if (!USE_MOCK_DATA) {
-			return;
-		}
+		// if (!USE_MOCK_DATA) {
+		// 	return;
+		// }
 		const { Name, UserId } = player;
 		const metadata: UserMetadata & ReplicationMetadata = { user: Name, replicate: true };
 		const broadcast: UserMetadata & BroadcastMetadata = { user: Name, broadcast: true };

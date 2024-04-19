@@ -85,7 +85,7 @@ export class Mob extends API {
 		this.animator = animator;
 		onMobAdded.FireDeferred(this);
 		const track = animator.playAnimation(MobAnimation.Walk);
-		track.AdjustSpeed(GAME_TIMESTEP);
+		track.AdjustSpeed(GAME_TIMESTEP * 16);
 		mobs.set(uuid, this);
 	}
 

@@ -3,7 +3,7 @@ import { towers } from "./towers/definitions";
 import type { ItemId, ItemKind, ItemRarity } from "shared/inventory/types";
 import type { MobDamage } from "shared/mob/types";
 import type { TowerAbility } from "./towers/abilities/types";
-import type { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
+import type { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual, TowerVisuals } from "shared/tower/types";
 
 export type TowerUpgradeInfo = {
 	upgrade: number;
@@ -30,7 +30,7 @@ interface TowerDefinition {
 	upgrades: Array<TowerUpgradeInfo>;
 	targeting: [TowerTargeting, ...Array<TowerTargeting>];
 
-	visuals: Array<TowerVisual>;
+	visuals: { [K in TowerVisuals]: TowerVisual };
 
 	abilities?: [TowerAbility, ...Array<TowerAbility>];
 

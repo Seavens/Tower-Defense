@@ -1,7 +1,8 @@
-import { type Item, isItem } from "shared/inventory/types";
+import { isItem } from "shared/inventory/types";
 import { isSettings } from "../settings";
 import { isSlot } from "shared/utility/guards";
 import { t } from "@rbxts/t";
+import type { Item } from "shared/inventory/types";
 import type { Settings } from "../settings";
 
 export interface ProfileData {

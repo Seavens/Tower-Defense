@@ -10,7 +10,7 @@ import { PALETTE } from "client/ui/constants";
 import { ReplicatedStorage, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
-import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual } from "shared/tower/types";
+import { TowerAnimation, TowerSounds, TowerTargeting, TowerVisual, TowerVisuals } from "shared/tower/types";
 import { TowerUtility } from "shared/tower/utility";
 import { VisualController } from "client/assets/visuals/controller";
 import { createSchedule } from "shared/utility/functions/create-schedule";
@@ -81,10 +81,10 @@ export class Tower extends API {
 		instance.PivotTo(cframe);
 		instance.SetAttribute(TOWER_KEY_ATTRIBUTE, key);
 
-		VisualController.onEffect(TowerVisual.SniperShot, instance, undefined, this.getReplicated());
-
 		const { kind } = itemDefinitions[id];
-		const { sounds, animations } = kind;
+		const { visuals, sounds, animations } = kind;
+		const visual = visuals[TowerVisuals.Summon];
+		VisualController.onEffect(visual, instance, undefined, this.getReplicated());
 
 		const soundEmitter = new SoundEmitter<TowerSounds>(instance, sounds);
 		const animator = new Animator<TowerAnimation>(instance, animations);

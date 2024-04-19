@@ -31,6 +31,11 @@ export const enum TowerVisual {
 	Buff = "tower_visual:buff",
 }
 
+export const enum TowerVisuals {
+	Summon = "tower_visuals:summon",
+	Attack = "tower_visuals:attack",
+}
+
 export const enum TowerAnimation {
 	Summon = "tower_animation:summon",
 	Attack = "tower_animation:attack",

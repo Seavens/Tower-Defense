@@ -1,7 +1,7 @@
 import { inventorySlice } from "client/inventory/slice";
 import { placementSlice } from "client/tower/placement/slice";
 import { profileSlice } from "client/players/profile/slice";
-import { settingSlice } from "client/players/profile/settings";
+import { settingSlice } from "client/players/profile/settings/slice";
 import { towerUISlice } from "client/tower/slice";
 import { uiSlice } from "client/ui/slice";
 
