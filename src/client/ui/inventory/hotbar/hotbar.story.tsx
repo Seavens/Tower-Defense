@@ -32,7 +32,7 @@ export = CreateReactStory(
 		for (const index of $range(1, MAXIMUM_EQUIPPED)) {
 			const slot: Slot = `${index}`;
 			if (index % 2 !== 0) {
-				const item = ItemUtility.createItem(1);
+				const item = ItemUtility.createItem(undefined, 1);
 				items.set(slot, item);
 			}
 			equipped.push(slot);

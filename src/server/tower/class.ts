@@ -122,7 +122,7 @@ export class Tower extends API {
 	}
 
 	public setSpeedBuff(buff: number): void {
-		this.speedBuff = buff;
+		this.speedBuff = math.clamp(buff, 0, 5);
 	}
 
 	public getSpeedBuff(): number {

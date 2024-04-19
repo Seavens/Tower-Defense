@@ -22,7 +22,7 @@ export = CreateReactStory(
 		const items = new Map<Slot, Item>();
 		const equipped = new Array<Slot>();
 		for (const index of $range(1, MAXIMUM_STORED)) {
-			const item = ItemUtility.createItem(1);
+			const item = ItemUtility.createItem(undefined, 1);
 			items.set(`${index}`, item);
 		}
 

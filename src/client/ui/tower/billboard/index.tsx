@@ -3,15 +3,14 @@ import { SettingId } from "shared/players/settings";
 import { Tower } from "client/tower";
 import { TowerBillboard } from "./billboard";
 import { selectPlacedTowers } from "shared/tower/selectors";
-import { selectProfileData } from "client/players/profile/selectors";
-import { selectSettingState, selectSettingValues } from "client/players/profile/settings";
+import { selectSettingValues } from "client/players/profile/settings";
 import { useSelector } from "@rbxts/react-reflex";
 import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 export function TowerBillboards(): Option<Element> {
 	const store = useSelector(selectSettingValues);
-	const enabled = store.get(SettingId.ToggleMobBB);
+	const enabled = store.get(SettingId.ToggleTowerBB);
 
 	const towers = useSelector(selectPlacedTowers);
 

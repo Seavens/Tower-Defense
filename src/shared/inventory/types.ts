@@ -30,12 +30,12 @@ export const enum ItemId {
 	Chalice = "item_id:chalice",
 	RPG = "item_id:rpg",
 }
-type KindItemIds<K extends ItemKind> = {
+export type ItemIdOfKind<K extends ItemKind> = {
 	[I in keyof typeof itemDefinitions]: (typeof itemDefinitions)[I] extends ItemDefinition<I, K> ? I : never;
 }[ItemId];
 
-export type RelicItemId = KindItemIds<ItemKind.Relic>;
-export type TowerItemId = KindItemIds<ItemKind.Tower>;
+export type RelicItemId = ItemIdOfKind<ItemKind.Relic>;
+export type TowerItemId = ItemIdOfKind<ItemKind.Tower>;
 
 export interface ItemTowerUnique {
 	kind: ItemKind.Tower;

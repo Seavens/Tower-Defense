@@ -9,6 +9,7 @@ import { itemDefinitions } from ".";
 import type {
 	Item,
 	ItemId,
+	ItemIdOfKind,
 	ItemRelicUnique,
 	ItemTowerUnique,
 	ItemUnique,
@@ -25,29 +26,22 @@ const mappedItemIds = {
 };
 
 export namespace ItemUtility {
-	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item;
+	export function createItem<T extends ItemKind>(id?: ItemId, owner?: number, kind?: T): Item;
 
-	export function createItem<T extends Option<ItemKind>>(
+	export function createItem<T extends ItemKind>(
+		id: ItemIdOfKind<T>,
 		owner: number,
 		kind: T,
 	): T extends ItemKind.Tower ? ItemTowerUnique : Item;
-	export function createItem<T extends Option<ItemKind>>(
+	export function createItem<T extends ItemKind>(
+		id: ItemIdOfKind<T>,
 		owner: number,
 		kind: T,
 	): T extends ItemKind.Relic ? ItemRelicUnique : Item;
 
-	export function createItem<T extends Option<ItemKind>>(owner: number, kind?: T): Item {
-		let id: ItemId;
-		if (kind !== undefined) {
-			const rarity = RarityUtility.getRarity();
-			const ids = mappedItemIds[kind];
-			const filteredIds = ids.filter(
-				(id) => itemDefinitions[id].rarity === rarity && itemDefinitions[id].kind.kind === kind,
-			);
-			id = filteredIds[math.random(1, filteredIds.size()) - 1];
-		} else {
-			id = allItemIds[math.random(1, allItemIds.size()) - 1];
-		}
+	export function createItem<T extends ItemKind>(id?: ItemId, owner?: number, kind?: T): Item {
+		id ??= getItemId(kind);
+		owner ??= 0;
 		const definition = itemDefinitions[id];
 		const { kind: itemKind } = definition.kind;
 		const uuid = createUUID();
@@ -76,7 +70,7 @@ export namespace ItemUtility {
 			level: 1,
 			experience: 0,
 			locked: false,
-			owner: owner,
+			owner,
 			range,
 		};
 		const item: Item = {
@@ -103,7 +97,7 @@ export namespace ItemUtility {
 	export function createItems<T extends Option<ItemKind>>(owner: number, count: number, kind?: T): Array<Item> {
 		const items = new Array<Item>();
 		for (const _ of $range(1, count)) {
-			const item = createItem(owner, kind);
+			const item = createItem(undefined, owner, kind);
 			items.push(item);
 		}
 		return items;
@@ -133,5 +127,19 @@ export namespace ItemUtility {
 		const levelMultiplier = (level - 1) / (MAX_TOWER_LEVEL - 1);
 		const alpha = (cooldownMultiplier + damageMultiplier + rangeMultiplier + levelMultiplier) / 4;
 		return value * alpha;
+	}
+
+	export function getItemId(kind?: ItemKind): ItemId {
+		if (kind === undefined) {
+			const id = allItemIds[math.random(1, allItemIds.size()) - 1];
+			return id;
+		}
+		const rarity = RarityUtility.getRarity();
+		const ids = mappedItemIds[kind];
+		const filteredIds = ids.filter(
+			(id) => itemDefinitions[id].rarity === rarity && itemDefinitions[id].kind.kind === kind,
+		);
+		const id = filteredIds[math.random(1, filteredIds.size()) - 1];
+		return id;
 	}
 }
