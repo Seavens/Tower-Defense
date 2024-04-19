@@ -14,6 +14,7 @@ interface PercentSettingsRowProps {
 
 export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick }: PercentSettingsRowProps): Element {
 	const px = usePx();
+
 	return (
 		<Group
 			size={UDim2.fromOffset(px(SETTINGS_MENU_ROW_SIZE.X), px(SETTINGS_MENU_ROW_SIZE.Y))}
@@ -43,7 +44,7 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick 
 			<Group size={UDim2.fromScale(0.58, 1)} key={"main-group"}>
 				<uilistlayout
 					FillDirection={Enum.FillDirection.Horizontal}
-					HorizontalAlignment={Enum.HorizontalAlignment.Center}
+					HorizontalAlignment={Enum.HorizontalAlignment.Right}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					SortOrder={Enum.SortOrder.LayoutOrder}
 					Padding={new UDim(0, px(4))}
@@ -69,7 +70,7 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick 
 						key={"left-image"}
 					/>
 				</ReactiveButton>
-				<Group size={UDim2.fromOffset(px(400), px(40))} key={"center-group"}>
+				<Group size={UDim2.fromOffset(px(355), px(40))} key={"center-group"}>
 					<Frame
 						size={UDim2.fromScale(percent / 100, 1)}
 						cornerRadius={new UDim(0, px(4))}

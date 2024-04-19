@@ -20,6 +20,14 @@ export interface ProfileData {
 		vfxEnabled: boolean;
 		mobBillboardsEnabled: boolean;
 		towerBillboardsEnabled: boolean;
+		keybinds: {
+			slotOne: Enum.KeyCode;
+			slotTwo: Enum.KeyCode;
+			slotThree: Enum.KeyCode;
+			slotFour: Enum.KeyCode;
+			slotFive: Enum.KeyCode;
+			slotSix: Enum.KeyCode;
+		};
 	};
 }
 
@@ -33,6 +41,7 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 	experience: t.number,
 	coins: t.number,
 	gems: t.number,
+
 	settings: t.strictInterface({
 		musicEnabled: t.boolean,
 		musicVolume: t.number,
@@ -41,6 +50,15 @@ export const isProfileData: t.check<ProfileData> = t.strictInterface({
 		vfxEnabled: t.boolean,
 		mobBillboardsEnabled: t.boolean,
 		towerBillboardsEnabled: t.boolean,
+
+		keybinds: t.strictInterface({
+			slotOne: t.enum(Enum.KeyCode),
+			slotTwo: t.enum(Enum.KeyCode),
+			slotThree: t.enum(Enum.KeyCode),
+			slotFour: t.enum(Enum.KeyCode),
+			slotFive: t.enum(Enum.KeyCode),
+			slotSix: t.enum(Enum.KeyCode),
+		}),
 	}),
 });
 

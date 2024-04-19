@@ -1,5 +1,6 @@
 import { Networking } from "@flamework/networking";
 import type { BroadcastAction } from "@rbxts/reflex";
+import type { KeybindSetting, ProfileSetting } from "./players/profile/types";
 import type { MobDamage, MobData, MobId, MobStatus } from "./mob/types";
 import type { TowerAbility } from "./inventory/towers/abilities/types";
 import type { TowerTargeting } from "./tower/types";
@@ -25,15 +26,7 @@ interface ClientToServerEvents {
 	};
 
 	profile: {
-		settings: {
-			enableMobBillboards(enable: boolean): void;
-			enableTowerBillboards(enable: boolean): void;
-			enableMusic(enable: boolean): void;
-			enableSFX(enable: boolean): void;
-			enableVFX(enable: boolean): void;
-			setMusicVolume(volume: number): void;
-			setSFXVolume(volume: number): void;
-		};
+		adjustSetting(setting: ProfileSetting | KeybindSetting, value: boolean | number | Enum.KeyCode): void;
 	};
 }
 

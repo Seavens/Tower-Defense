@@ -1,7 +1,10 @@
 import { Button, DelayRender, Frame, Group, Text, Transition } from "../components";
 import { ColorUtil } from "../utility";
 import { EnableSettingsRow } from "./row/enable-row";
+import { Events } from "client/network";
 import { FONTS, PALETTE, SPRINGS } from "../constants";
+import { KeySettingsRow } from "./row/key-row";
+import { KeybindSetting, ProfileSetting } from "shared/players/profile/types";
 import { PercentSettingsRow } from "./row/percent-row";
 import { SETTINGS_MENU_SIZE } from "./constants";
 import { selectProfileData } from "client/players/profile/selectors";
@@ -127,7 +130,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							backgroundColor={tab === "Controls" ? light : PALETTE.gray}
 							backgroundTransparency={0.5}
 							onClick={() => {
-								setTab;
+								setTab("Controls");
 							}}
 							key={"controls-button"}
 						>
@@ -201,7 +204,20 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										enable={settings.musicEnabled}
 										settingName={"Music"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustMusic({ musicEnabled: enabled });
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MusicEnable,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MusicEnable,
+												value: true,
+											});
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MusicVolume,
+												value: 100,
+											});
 										}}
 										layoutOrder={1}
 									/>
@@ -210,7 +226,10 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											percent={settings.musicVolume}
 											settingName={"Music Volume"}
 											onClick={(percent: number): void => {
-												store.profileAdjustMusic({ volume: percent });
+												store.profileAdjustSetting({
+													setting: ProfileSetting.MusicVolume,
+													value: percent,
+												});
 											}}
 											layoutOrder={2}
 										/>
@@ -219,7 +238,20 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										enable={settings.sfxEnabled}
 										settingName={"Sound Effects"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustSfx({ sfxEnabled: enabled });
+											store.profileAdjustSetting({
+												setting: ProfileSetting.SfxEnable,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.SfxEnable,
+												value: true,
+											});
+											store.profileAdjustSetting({
+												setting: ProfileSetting.SfxVolume,
+												value: 100,
+											});
 										}}
 										layoutOrder={3}
 									/>
@@ -228,7 +260,10 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											percent={settings.sfxVolume}
 											settingName={"Effect Volume"}
 											onClick={(percent: number): void => {
-												store.profileAdjustSfx({ volume: percent });
+												store.profileAdjustSetting({
+													setting: ProfileSetting.SfxVolume,
+													value: percent,
+												});
 											}}
 											layoutOrder={4}
 										/>
@@ -241,7 +276,16 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										enable={settings.vfxEnabled}
 										settingName={"Visual Effects"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustVfx({ vfxEnabled: enabled });
+											store.profileAdjustSetting({
+												setting: ProfileSetting.VfxEnable,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.VfxEnable,
+												value: true,
+											});
 										}}
 										layoutOrder={1}
 									/>
@@ -249,7 +293,16 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										enable={settings.mobBillboardsEnabled}
 										settingName={"Mob Billboards"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustVfx({ mobBillboards: enabled });
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MobBillboardsEnable,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.MobBillboardsEnable,
+												value: true,
+											});
 										}}
 										layoutOrder={2}
 									/>
@@ -257,9 +310,100 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										enable={settings.towerBillboardsEnabled}
 										settingName={"Tower Billboards"}
 										onClick={(enabled: boolean): void => {
-											store.profileAdjustVfx({ towerBillboards: enabled });
+											store.profileAdjustSetting({
+												setting: ProfileSetting.TowerBillboardsEnable,
+												value: enabled,
+											});
+										}}
+										onReset={(): void => {
+											store.profileAdjustSetting({
+												setting: ProfileSetting.TowerBillboardsEnable,
+												value: true,
+											});
 										}}
 										layoutOrder={2}
+									/>
+								</>
+							)}
+							{tab === "Controls" && (
+								<>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.One}
+										settingName={"Slot 1"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotOne,
+													value: Enum.KeyCode.One,
+												});
+											}
+										}}
+										layoutOrder={1}
+									/>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.Two}
+										settingName={"Slot 2"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotTwo,
+													value: Enum.KeyCode.Two,
+												});
+											}
+										}}
+										layoutOrder={2}
+									/>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.Three}
+										settingName={"Slot 3"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotThree,
+													value: Enum.KeyCode.Three,
+												});
+											}
+										}}
+										layoutOrder={3}
+									/>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.Four}
+										settingName={"Slot 4"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotFour,
+													value: Enum.KeyCode.Four,
+												});
+											}
+										}}
+										layoutOrder={4}
+									/>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.Five}
+										settingName={"Slot 5"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotFive,
+													value: Enum.KeyCode.Five,
+												});
+											}
+										}}
+										layoutOrder={5}
+									/>
+									<KeySettingsRow
+										keyCode={Enum.KeyCode.Six}
+										settingName={"Slot 6"}
+										onResetClick={(reset: boolean): void => {
+											if (reset) {
+												store.profileAdjustSetting({
+													setting: KeybindSetting.SlotSix,
+													value: Enum.KeyCode.Six,
+												});
+											}
+										}}
+										layoutOrder={6}
 									/>
 								</>
 							)}

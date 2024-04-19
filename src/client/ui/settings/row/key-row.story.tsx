@@ -1,7 +1,6 @@
 import { CreateReactStory } from "@rbxts/ui-labs";
-import { Players } from "@rbxts/services";
+import { KeySettingsRow } from "./key-row";
 import { ReflexProvider } from "@rbxts/react-reflex";
-import { SettingsMenu } from ".";
 import { store } from "client/state/store";
 import React from "@rbxts/react";
 import ReactRoblox from "@rbxts/react-roblox";
@@ -9,24 +8,22 @@ import type { Element } from "@rbxts/react";
 
 export = CreateReactStory(
 	{
-		name: "Settings",
+		name: "Key Settings",
 		react: React,
 		reactRoblox: ReactRoblox,
 		controls: {
-			visable: true,
+			name: "Slot One",
 		},
 		cleanup: (): void => {
 			store.resetState();
 		},
 	},
 	({ controls }): Element => {
-		const { visable } = controls;
-
-		store.resetState();
+		const { name } = controls;
 
 		return (
 			<ReflexProvider producer={store}>
-				<SettingsMenu visible={visable} />
+				<KeySettingsRow keyCode={Enum.KeyCode.One} layoutOrder={0} settingName={name} />
 			</ReflexProvider>
 		);
 	},

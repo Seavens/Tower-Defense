@@ -1,8 +1,8 @@
-import { Button, Frame, Group, Image, ReactiveButton, Text } from "../../components";
 import { FONTS, PALETTE } from "client/ui/constants";
+import { Group, Image, ReactiveButton, Text } from "../../components";
 import { SETTINGS_MENU_ROW_SIZE } from "../constants";
 import { usePx } from "../../hooks";
-import React from "@rbxts/react";
+import React, { useState } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 interface EnableSettingsRowProps {
@@ -10,10 +10,18 @@ interface EnableSettingsRowProps {
 	enable: boolean;
 	layoutOrder?: number;
 	onClick?: (enabled: boolean) => void;
+	onReset?: () => void;
 }
 
-export function EnableSettingsRow({ enable, settingName, layoutOrder, onClick }: EnableSettingsRowProps): Element {
+export function EnableSettingsRow({
+	enable,
+	settingName,
+	layoutOrder,
+	onClick,
+	onReset,
+}: EnableSettingsRowProps): Element {
 	const px = usePx();
+
 	return (
 		<Group
 			size={UDim2.fromOffset(px(SETTINGS_MENU_ROW_SIZE.X), px(SETTINGS_MENU_ROW_SIZE.Y))}
@@ -43,37 +51,21 @@ export function EnableSettingsRow({ enable, settingName, layoutOrder, onClick }:
 			<Group size={UDim2.fromScale(0.58, 1)} key={"main-group"}>
 				<uilistlayout
 					FillDirection={Enum.FillDirection.Horizontal}
-					HorizontalAlignment={Enum.HorizontalAlignment.Center}
+					HorizontalAlignment={Enum.HorizontalAlignment.Right}
 					VerticalAlignment={Enum.VerticalAlignment.Center}
 					SortOrder={Enum.SortOrder.LayoutOrder}
 					Padding={new UDim(0, px(4))}
 				/>
 				<ReactiveButton
-					size={UDim2.fromOffset(px(40), px(40))}
-					position={UDim2.fromScale(1, 1)}
-					anchorPoint={new Vector2(1, 1)}
-					backgroundTransparency={0.2}
-					backgroundColor={PALETTE.light_gray}
-					cornerRadius={new UDim(0, px(4))}
+					size={UDim2.fromOffset(px(400), px(40))}
 					onClick={(): void => onClick?.(!enable)}
 					enabled={true}
-					key={"left-button"}
-				>
-					<Image
-						size={UDim2.fromOffset(px(30), px(30))}
-						anchorPoint={new Vector2(0.5, 0.5)}
-						position={UDim2.fromScale(0.5, 0.5)}
-						image={"rbxassetid://17183391337"}
-						rotation={180}
-						scaleType="Fit"
-						key={"left-image"}
-					/>
-				</ReactiveButton>
-				<Frame
-					size={UDim2.fromOffset(px(400), px(40))}
-					key={"center-group"}
 					backgroundColor={enable === true ? PALETTE.green : PALETTE.dark_red}
 					cornerRadius={new UDim(0, px(4))}
+					anchorPoint={new Vector2(0.5, 0.5)}
+					position={UDim2.fromScale(0.5, 0.5)}
+					backgroundTransparency={0}
+					key={"center-button"}
 				>
 					<Text
 						size={UDim2.fromScale(0.25, 1)}
@@ -85,23 +77,25 @@ export function EnableSettingsRow({ enable, settingName, layoutOrder, onClick }:
 						textSize={px(30)}
 						key={"enable-text"}
 					/>
-				</Frame>
+				</ReactiveButton>
 				<ReactiveButton
 					size={UDim2.fromOffset(px(40), px(40))}
 					position={UDim2.fromScale(1, 1)}
 					anchorPoint={new Vector2(1, 1)}
 					backgroundTransparency={0.2}
-					backgroundColor={PALETTE.light_gray}
+					backgroundColor={PALETTE.red}
 					cornerRadius={new UDim(0, px(4))}
-					onClick={(): void => onClick?.(!enable)}
+					onClick={(): void => {
+						onReset?.();
+					}}
 					enabled={true}
-					key={"right-button"}
+					key={"reset-button"}
 				>
 					<Image
 						size={UDim2.fromOffset(px(30), px(30))}
 						anchorPoint={new Vector2(0.5, 0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
-						image={"rbxassetid://17183391337"}
+						image={"rbxassetid://6723921202"}
 						scaleType="Fit"
 						key={"right-image"}
 					/>

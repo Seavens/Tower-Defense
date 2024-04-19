@@ -61,7 +61,13 @@ export const ReactiveButton = forwardRef(
 		});
 
 		return (
-			<Group size={size} position={position} anchorPoint={anchorPoint} key={"reactive-button-group"}>
+			<Group
+				size={size}
+				position={position}
+				anchorPoint={anchorPoint}
+				layoutOrder={layoutOrder}
+				key={"reactive-button-group"}
+			>
 				<Button
 					size={UDim2.fromScale(1, 1)}
 					position={
@@ -88,7 +94,6 @@ export const ReactiveButton = forwardRef(
 						(alpha: number, transparency: number): number => lerp(transparency, 0.75, alpha),
 					)}
 					clipsDescendants={clipsDescendants}
-					layoutOrder={layoutOrder}
 					rotation={hover.map((value: number): number => (rotation ? map(value, 0, 1, 0, 15) : 0))}
 					zIndex={zIndex}
 					active={active}

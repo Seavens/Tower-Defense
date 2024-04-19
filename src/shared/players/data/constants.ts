@@ -15,6 +15,15 @@ export const DATA_TEMPLATE: Data = {
 			vfxEnabled: true,
 			mobBillboardsEnabled: true,
 			towerBillboardsEnabled: true,
+
+			keybinds: {
+				slotOne: Enum.KeyCode.One,
+				slotTwo: Enum.KeyCode.Two,
+				slotThree: Enum.KeyCode.Three,
+				slotFour: Enum.KeyCode.Four,
+				slotFive: Enum.KeyCode.Five,
+				slotSix: Enum.KeyCode.Six,
+			},
 		},
 	},
 	inventory: {
