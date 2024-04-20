@@ -25,11 +25,11 @@ export const supporterTowerItem: ItemDefinition<ItemId.Supporter, ItemKind.Tower
 		damageKind: MobDamage.None,
 
 		upgrades: [
-			{ upgrade: 1, multiplier: { damage: 1, range: 0.2, cooldown: 1 }, cost: 400 },
-			{ upgrade: 2, multiplier: { damage: 2, range: 0.4, cooldown: 1 }, cost: 700 },
-			{ upgrade: 3, multiplier: { damage: 3, range: 0.9, cooldown: 1 }, cost: 1200 },
-			{ upgrade: 4, multiplier: { damage: 4, range: 1.2, cooldown: 1 }, cost: 1600 },
-			{ upgrade: 5, multiplier: { damage: 5, range: 1.8, cooldown: 1 }, cost: 2000 },
+			{ upgrade: 1, multiplier: { damage: 1, range: 0.2, cooldown: 1 }, ability: false, cost: 400 },
+			{ upgrade: 2, multiplier: { damage: 2, range: 0.4, cooldown: 1 }, ability: false, cost: 700 },
+			{ upgrade: 3, multiplier: { damage: 3, range: 0.9, cooldown: 1 }, ability: false, cost: 1200 },
+			{ upgrade: 4, multiplier: { damage: 4, range: 1.2, cooldown: 1 }, ability: false, cost: 1600 },
+			{ upgrade: 5, multiplier: { damage: 5, range: 1.8, cooldown: 1 }, ability: false, cost: 2000 },
 		],
 
 		targeting: [TowerTargeting.None],

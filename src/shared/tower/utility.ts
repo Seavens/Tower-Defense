@@ -5,6 +5,7 @@ import { TowerGrade } from "./types";
 import { itemDefinitions } from "shared/inventory";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { ReplicatedTower } from "./types";
+import type { TowerAbility } from "shared/inventory/towers/abilities/types";
 
 type TowerStat = "damage" | "range" | "cooldown";
 
@@ -139,5 +140,18 @@ export namespace TowerUtility {
 		const level = TOWER_LEVEL_MULTIPLIER * (1 / MAX_TOWER_LEVEL);
 		const multiplier = -average + duration / base - level;
 		return multiplier;
+	}
+
+	export function isAbilityUnlocked({ id, upgrades: upgrade }: ReplicatedTower, check: TowerAbility): boolean {
+		if (upgrade <= 0) {
+			return false;
+		}
+		const { kind } = itemDefinitions[id];
+		const { abilities, upgrades } = kind;
+		const { ability } = upgrades[upgrade - 1];
+		if (!ability || abilities === undefined || !abilities.includes(check)) {
+			return false;
+		}
+		return !abilities.isEmpty();
 	}
 }

@@ -27,12 +27,11 @@ import { InventorySlot } from "../slot";
 import { InventoryViewport } from "./viewport";
 import { ItemKind } from "shared/inventory/types";
 import { ItemUtility } from "shared/inventory/utility";
-import { MAX_TOWER_LEVEL } from "shared/tower/constants";
 import { Modding } from "@flamework/core";
 import { formatStats } from "../utility";
 import { idToName } from "shared/utility/functions/id-to-name";
 import { itemDefinitions } from "shared/inventory";
-import { useAsync } from "@rbxts/pretty-react-hooks";
+import { useAsync, useUnmountEffect } from "@rbxts/pretty-react-hooks";
 import { useDarkenedColor, useMotion, usePx, useRarityColor, useStore } from "client/ui/hooks";
 import React, { useEffect, useMemo, useState } from "@rbxts/react";
 import type { AnyItemDefinition } from "shared/inventory";
@@ -192,6 +191,10 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 	useEffect((): void => {
 		transparencyMotion.spring(visible ? 0 : 1, SPRINGS.gentle);
 	}, [visible]);
+
+	useUnmountEffect((): void => {
+		setSearch(undefined);
+	});
 
 	return (
 		<DelayRender shouldRender={visible} unmountDelay={1}>

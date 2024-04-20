@@ -26,11 +26,11 @@ export const farmerTowerItem: ItemDefinition<ItemId.Farmer, ItemKind.Tower> = {
 		damageKind: MobDamage.None,
 
 		upgrades: [
-			{ upgrade: 1, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.3 }, cost: 500 },
-			{ upgrade: 2, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.6 }, cost: 800 },
-			{ upgrade: 3, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.9 }, cost: 1200 },
-			{ upgrade: 4, multiplier: { damage: 0, range: 0, cooldown: 0, income: 1.2 }, cost: 1800 },
-			{ upgrade: 5, multiplier: { damage: 0, range: 0, cooldown: 0, income: 1.5 }, cost: 2400 },
+			{ upgrade: 1, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.3 }, ability: false, cost: 500 },
+			{ upgrade: 2, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.6 }, ability: false, cost: 800 },
+			{ upgrade: 3, multiplier: { damage: 0, range: 0, cooldown: 0, income: 0.9 }, ability: false, cost: 1200 },
+			{ upgrade: 4, multiplier: { damage: 0, range: 0, cooldown: 0, income: 1.2 }, ability: false, cost: 1800 },
+			{ upgrade: 5, multiplier: { damage: 0, range: 0, cooldown: 0, income: 1.5 }, ability: false, cost: 2400 },
 		],
 
 		targeting: [TowerTargeting.None],

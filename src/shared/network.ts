@@ -15,7 +15,7 @@ interface ClientToServerEvents {
 		targeting(key: string, targeting: TowerTargeting): void;
 		upgrade(key: string): void;
 		sell(key: string): void;
-		ability(ability: TowerAbility): void;
+		ability(key: string, ability: TowerAbility): void;
 	};
 
 	inventory: {
@@ -49,6 +49,7 @@ interface ServerToClientEvents {
 	tower: {
 		place: Networking.Unreliable<(uuid: UUID, position: Vector3) => void>;
 		attack(key: string, target?: UUID): void;
+		ability(key: string, ability: TowerAbility, target?: UUID): void;
 	};
 
 	mob: {

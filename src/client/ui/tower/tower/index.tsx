@@ -26,7 +26,7 @@ interface TowerProps {
 }
 
 export function Tower({ tower }: TowerProps): Element {
-	const { id, unique } = tower;
+	const { key, id, unique } = tower;
 
 	const px = usePx();
 	const definition = useTowerDefintion(id);
@@ -60,15 +60,18 @@ export function Tower({ tower }: TowerProps): Element {
 	const abilities = useMemo((): Array<Element> => {
 		const elements = new Array<Element>();
 		const { abilities } = kind;
-		if (abilities === undefined) {
+		if (abilities === undefined || tower === undefined) {
 			return elements;
 		}
 		for (const ability of abilities) {
-			const element = <TowerAbilityUI id={id} ability={ability} />;
+			if (!TowerUtility.isAbilityUnlocked(tower, ability)) {
+				continue;
+			}
+			const element = <TowerAbilityUI tower={tower} ability={ability} />;
 			elements.push(element);
 		}
 		return elements;
-	}, [id, definition]);
+	}, [definition, tower]);
 
 	return (
 		<Group

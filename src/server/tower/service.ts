@@ -147,8 +147,18 @@ export class TowerService implements OnStart, OnPlayerRemoving {
 			indices.remove(i);
 			tower.sellTower();
 		});
-		Events.tower.ability.connect((player: Player, ability: TowerAbility): void => {
-			warn("Implement abilities bruh!");
+		Events.tower.ability.connect((player: Player, key: string, ability: TowerAbility): void => {
+			const tower = Tower.getTower(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { owner } = tower;
+			const user = player.Name;
+			const replicated = tower.getReplicated();
+			if (user !== owner || !TowerUtility.isAbilityUnlocked(replicated, ability)) {
+				return;
+			}
+			tower.useAbility(ability);
 		});
 	}
 }

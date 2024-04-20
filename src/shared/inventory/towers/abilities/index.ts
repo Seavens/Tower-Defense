@@ -1,6 +1,6 @@
 import { TowerAbility } from "./types";
 import { atomicVoidAbility } from "./atmoic-void";
-import { godSpeakAbility as godSpeakAbility } from "./god-speak";
+import { godSpeakAbility } from "./god-speak";
 import type { AbilityTarget } from "./types";
 import type { TowerVisual } from "shared/tower/types";
 
@@ -17,9 +17,9 @@ export interface AbilityDefinition<I extends TowerAbility> {
 	name: string;
 	desc: string;
 
-	visual: Array<TowerVisual>;
+	visual: TowerVisual;
 
-	coolDown: number;
+	cooldown: number;
 	duration: number;
 	areaEffect: boolean;
 	targetType: AbilityTarget;

@@ -13,6 +13,7 @@ export type TowerUpgradeInfo = {
 		cooldown: number;
 		income?: number;
 	};
+	ability: boolean;
 	cost: number;
 };
 

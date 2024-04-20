@@ -6,6 +6,8 @@ import { Mob } from "client/mob/class";
 import { PlacementController } from "client/tower/placement/controller";
 import { TOWER_KEY_ATTRIBUTE } from "./constants";
 import { Tower } from "client/tower";
+import { VisualController } from "client/assets/visuals/controller";
+import { abilityDefinitions } from "shared/inventory/towers/abilities";
 import { selectInventoryData } from "client/inventory/selectors";
 import { selectPlacedTowers, selectSpecificTower } from "shared/tower/selectors";
 import { selectPlacementState } from "client/tower/placement/selectors";
@@ -14,6 +16,7 @@ import { store } from "client/state/store";
 import Gizmo from "@rbxts/gizmo";
 import type { OnStart } from "@flamework/core";
 import type { ReplicatedTower } from "shared/tower/types";
+import type { TowerAbility } from "shared/inventory/towers/abilities/types";
 
 const { placed, characters, mobs, debris } = Workspace;
 
@@ -177,5 +180,19 @@ export class TowerController implements OnStart {
 			this.selectTower();
 		});
 		// !! Consider allowing for hotkey'ing to towers, ie; pressing `1` would select the 1st tower and begin placement.
+		Events.tower.ability.connect((key: string, ability: TowerAbility, target?: UUID): void => {
+			const { visual } = abilityDefinitions[ability];
+			const tower = Tower.getTower(key);
+			if (tower === undefined) {
+				return;
+			}
+			const { instance } = tower;
+			const replicated = tower.getReplicated();
+			let mob: Option<Mob>;
+			if (target !== undefined) {
+				mob = Mob.getMob(target);
+			}
+			VisualController.onEffect(visual, instance, mob, replicated);
+		});
 	}
 }

@@ -72,7 +72,7 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 			bin.add(tween);
 		}
 
-		VisualUtility.onShake(priority, camera);
+		VisualUtility.onShake(priority, camera, 0, 0.25, 0.1, 0.1, 0.25);
 		VisualUtility.emitRocks(bin, position, 15, 1, 1);
 
 		const soundDelay = task.delay(0.1, (): void => {

@@ -7,6 +7,7 @@ import { MobDamage } from "shared/mob/types";
 import { Players } from "@rbxts/services";
 import { TowerInventoryUtility } from "./utility";
 import { TowerUtility } from "shared/tower/utility";
+import { abilityModules } from "./modules/abilities";
 import { createSchedule } from "shared/utility/functions/create-schedule";
 import { itemDefinitions } from "shared/inventory";
 import { mobDefinitions } from "shared/mob/definitions";
@@ -19,6 +20,7 @@ import Octree from "@rbxts/octo-tree";
 import type { ItemTowerUnique, TowerItemId } from "shared/inventory/types";
 import type { Node } from "@rbxts/octo-tree";
 import type { ReplicatedTower, TowerTargeting } from "shared/tower/types";
+import type { TowerAbility } from "shared/inventory/towers/abilities/types";
 
 export class Tower extends API {
 	public static readonly towers = new Map<string, Tower>();
@@ -79,6 +81,22 @@ export class Tower extends API {
 	public static getTower(key: string): Option<Tower> {
 		const { towers } = this;
 		return towers.get(key);
+	}
+
+	public static isTower(value: unknown): value is Tower {
+		if (!typeIs(value, "table") || !("key" in value)) {
+			return false;
+		}
+		const { towers } = this;
+		const { key } = value;
+		if (!typeIs(key, "string")) {
+			return false;
+		}
+		const tower = towers.get(key);
+		if (tower === undefined) {
+			return false;
+		}
+		return tower === (value as never);
 	}
 
 	protected static updateTowersInRange(): void {
@@ -168,6 +186,27 @@ export class Tower extends API {
 		store.towerUpgrade({ key }, { user: owner, broadcast: true });
 	}
 
+	public getTarget(targeting = this.getTargeting()): Option<Mob> {
+		const { cframe } = this;
+		const position = cframe.Position;
+		const replicated = this.getReplicated();
+		const range = TowerUtility.getTotalRange(replicated);
+		const mobs = Mob.getMobsInRadius(position, range);
+		const module = targetingModules[targeting];
+		const target = module.getTarget(mobs);
+		return target as Option<Mob>;
+	}
+
+	public useAbility(ability: TowerAbility): void {
+		const replicated = this.getReplicated();
+		if (!TowerUtility.isAbilityUnlocked(replicated, ability)) {
+			return;
+		}
+		const module = abilityModules[ability];
+		const target = module?.getTarget(this);
+		module?.useAbility(this, target);
+	}
+
 	public destroy(): void {
 		const { towers, octree } = Tower;
 		const { key, node } = this;
@@ -242,17 +281,5 @@ export class Tower extends API {
 	protected getTargeting(): TowerTargeting {
 		const { targeting } = this.getReplicated();
 		return targeting;
-	}
-
-	protected getTarget(): Option<Mob> {
-		const { cframe } = this;
-		const position = cframe.Position;
-		const replicated = this.getReplicated();
-		const range = TowerUtility.getTotalRange(replicated);
-		const mobs = Mob.getMobsInRadius(position, range);
-		const targeting = this.getTargeting();
-		const module = targetingModules[targeting];
-		const target = module.getTarget(mobs);
-		return target as Option<Mob>;
 	}
 }

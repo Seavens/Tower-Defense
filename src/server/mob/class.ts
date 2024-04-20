@@ -5,6 +5,7 @@ import { MobUtility } from "shared/mob/utility";
 import { Signal } from "@rbxts/beacon";
 import { Workspace } from "@rbxts/services";
 import { createSchedule } from "shared/utility/functions/create-schedule";
+import { isUUID } from "shared/utility/guards";
 import { reuseThread } from "shared/utility/functions/reuse-thread";
 import { selectGameData } from "shared/game/selectors";
 import { store } from "server/state/store";
@@ -99,6 +100,22 @@ export class Mob extends API {
 	public static removeAllMobs(): void {
 		const { mobs } = this;
 		for (const [_, mob] of mobs) mob.forceKill();
+	}
+
+	public static isMob(value: unknown): value is Mob {
+		if (!typeIs(value, "table") || !("uuid" in value)) {
+			return false;
+		}
+		const { mobs } = this;
+		const { uuid } = value;
+		if (!isUUID(uuid)) {
+			return false;
+		}
+		const mob = mobs.get(uuid);
+		if (mob === undefined) {
+			return false;
+		}
+		return mob === (value as never);
 	}
 
 	public onDied(key?: string): void {

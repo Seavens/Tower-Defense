@@ -7,15 +7,17 @@ import { useDarkenedColor, usePx, useRarityColor } from "client/ui/hooks";
 import { useTowerDefintion } from "../hooks";
 import React from "@rbxts/react";
 import type { Element } from "@rbxts/react";
+import type { ReplicatedTower } from "shared/tower/types";
 import type { TowerAbility } from "shared/inventory/towers/abilities/types";
-import type { TowerItemId } from "shared/inventory/types";
 
 interface TowerAbilityProps {
-	id: TowerItemId;
+	tower: ReplicatedTower;
 	ability: TowerAbility;
 }
 
-export function TowerAbilityUI({ id, ability }: TowerAbilityProps): Element {
+export function TowerAbilityUI({ tower, ability }: TowerAbilityProps): Element {
+	const { id, key } = tower;
+
 	const px = usePx();
 
 	const definition = useTowerDefintion(id);
@@ -37,8 +39,7 @@ export function TowerAbilityUI({ id, ability }: TowerAbilityProps): Element {
 				cornerRadius={new UDim(0, px(3))}
 				backgroundColor={darker}
 				onClick={(): void => {
-					// TROLLING!!!
-					Events.tower.ability(ability);
+					Events.tower.ability(key, ability);
 				}}
 				key={"ability-button"}
 			>
