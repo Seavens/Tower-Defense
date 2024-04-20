@@ -4,7 +4,6 @@ import { Flamework } from "@flamework/core";
 import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SoundEmitter } from "shared/assets/sound";
 import { TowerVisual } from "shared/tower/types";
-import { VisualController } from "../controller";
 import { VisualUtility, params } from "../utility";
 import type { Bin } from "@rbxts/bin";
 import type { Mob } from "client/mob/class";
@@ -74,8 +73,8 @@ export const holyStrikeVisual: TowerVisualModule<TowerVisual.HolyStrike> = {
 		}
 
 		VisualUtility.onShake(priority, camera);
-
 		VisualUtility.emitRocks(bin, position, 15, 1, 1);
+
 		const soundDelay = task.delay(0.1, (): void => {
 			incoming.playSound("ElectricExplosion");
 		});

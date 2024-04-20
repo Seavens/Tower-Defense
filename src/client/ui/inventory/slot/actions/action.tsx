@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { Group, ReactiveButton, Text } from "client/ui/components";
 import { PALETTE } from "client/ui/constants";
 import { usePx } from "client/ui/hooks";
@@ -32,6 +33,7 @@ export function SlotAction({ text, enabled, options, layoutOrder = 1, onClick }:
 				backgroundTransparency={0.35}
 				enabled={enabled}
 				onClick={onClick}
+				sound={ASSET_IDS.UIClick}
 				key={"action-button"}
 			>
 				<Text

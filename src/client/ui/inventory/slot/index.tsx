@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
 import { Frame, Group, Image, ReactiveButton, Text } from "client/ui/components";
 import { ItemKind } from "shared/inventory/types";
@@ -94,6 +95,7 @@ export function InventorySlot({
 				onRightClick={(): void => {
 					onRightClick?.();
 				}}
+				sound={ASSET_IDS.UIClick}
 				key={"slot-button"}
 			>
 				<Group

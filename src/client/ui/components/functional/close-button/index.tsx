@@ -11,8 +11,9 @@ interface CloseButtonProps {
 	position: BindingOrValue<UDim2>;
 	anchorPoint: BindingOrValue<Vector2>;
 	textSize: number;
-	layoutOrder?: number;
 	enabled: boolean;
+	sound?: RBXAssetId;
+	layoutOrder?: number;
 	onClose?: () => void;
 }
 
@@ -24,6 +25,7 @@ export function CloseButton({
 	layoutOrder,
 	enabled,
 	onClose,
+	sound,
 }: CloseButtonProps): Element {
 	const px = usePx();
 
@@ -39,6 +41,7 @@ export function CloseButton({
 			enabled={enabled}
 			onClick={onClose}
 			layoutOrder={layoutOrder}
+			sound={sound}
 			key={"close-button"}
 		>
 			<Text

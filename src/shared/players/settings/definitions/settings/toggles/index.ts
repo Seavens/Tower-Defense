@@ -4,6 +4,7 @@ import { musicToggleSetting } from "./music-toggle";
 import { sfxToggleSetting } from "./sfx-toggle";
 import { shakeToggleSetting } from "./shake-toggle";
 import { towerBBToggleSetting } from "./tower-toggle";
+import { uiSoundToggleSetting } from "./ui-sound-toggle";
 import { vfxToggleSetting } from "./vfx-toggle";
 
 export const toggles = {
@@ -13,4 +14,5 @@ export const toggles = {
 	[SettingId.ToggleShake]: shakeToggleSetting,
 	[SettingId.ToggleVfx]: vfxToggleSetting,
 	[SettingId.ToggleSfx]: sfxToggleSetting,
+	[SettingId.ToggleUISound]: uiSoundToggleSetting,
 } as const;

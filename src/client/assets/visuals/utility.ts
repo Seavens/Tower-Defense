@@ -69,7 +69,7 @@ export namespace VisualUtility {
 		sustainTime: number = 3,
 	): void {
 		const values = store.getState(selectSettingValues);
-		const visual = values.get(SettingId.ToggleVfx);
+		const visual = values.get(SettingId.ToggleShake);
 		if (!typeIs(visual, "boolean") || !visual) {
 			return;
 		}

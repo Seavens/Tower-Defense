@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { ColorUtil } from "client/ui/utility";
 import { DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "client/ui/components";
 import { FONTS, PALETTE, SPRINGS } from "client/ui/constants";
@@ -245,6 +246,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 								? store.closeUI({ kind: UIKind.Inventory })
 								: store.openUI({ kind: UIKind.Inventory });
 						}}
+						sound={ASSET_IDS.UIClick}
 						enabled={true}
 					>
 						<uistroke
@@ -276,6 +278,7 @@ export function Hotbar({ visible, items, equipped }: HotbarProps): Element {
 								? store.closeUI({ kind: UIKind.Settings })
 								: store.openUI({ kind: UIKind.Settings });
 						}}
+						sound={ASSET_IDS.UIClick}
 						enabled={true}
 					>
 						<uistroke

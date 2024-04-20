@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Group, Image, ReactiveButton, Text, TextField } from "../../components";
 import { SETTINGS_MENU_ROW_SIZE } from "../constants";
@@ -93,6 +94,7 @@ export function KeySettingsRow({ settingName, layoutOrder, keyCode, onReset, onS
 						onClick={handleSubmitClick}
 						enabled={isEditing}
 						layoutOrder={1}
+						sound={ASSET_IDS.UIClick}
 						key={"submit-button"}
 					>
 						<Image
@@ -133,6 +135,7 @@ export function KeySettingsRow({ settingName, layoutOrder, keyCode, onReset, onS
 					onClick={handleResetClick}
 					enabled={true}
 					layoutOrder={3}
+					sound={ASSET_IDS.UIClick}
 					key={"reset-button"}
 				>
 					<Image

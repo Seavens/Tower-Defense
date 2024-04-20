@@ -1,4 +1,5 @@
-import { Button, DelayRender, Frame, Group, Text, Transition } from "../components";
+import { ASSET_IDS } from "shared/assets/constants";
+import { Button, DelayRender, Frame, Group, ReactiveButton, Text, Transition } from "../components";
 import { ColorUtil } from "../utility";
 import { EnableSettingsRow } from "./row/enable-row";
 import { Events } from "client/network";
@@ -7,6 +8,7 @@ import { KeySettingsRow } from "./row/key-row";
 import { PercentSettingsRow } from "./row/percent-row";
 import { SETTINGS_MENU_SIZE } from "./constants";
 import { SettingId } from "shared/players/settings";
+import { enable } from "@rbxts/gizmo";
 import { selectSettingValues } from "client/players/profile/settings";
 import { store } from "client/state/store";
 import { useMotion, usePx } from "../hooks";
@@ -65,7 +67,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							SortOrder={Enum.SortOrder.LayoutOrder}
 							Padding={new UDim(0, px(8))}
 						/>
-						<Button
+						<ReactiveButton
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={tab === "Audio" ? light : PALETTE.gray}
 							backgroundTransparency={0.5}
@@ -73,6 +75,11 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								setTab("Audio");
 							}}
 							key={"audio-button"}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							cornerRadius={new UDim(0, 0)}
+							sound={ASSET_IDS.UIClick}
+							enabled={true}
 						>
 							{tab === "Audio" && (
 								<Frame
@@ -94,8 +101,8 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								textColor={PALETTE.white}
 								key={"audio-text"}
 							/>
-						</Button>
-						<Button
+						</ReactiveButton>
+						<ReactiveButton
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={tab === "Video" ? light : PALETTE.gray}
 							backgroundTransparency={0.5}
@@ -103,6 +110,11 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								setTab("Video");
 							}}
 							key={"video-button"}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							cornerRadius={new UDim(0, 0)}
+							sound={ASSET_IDS.UIClick}
+							enabled={true}
 						>
 							{tab === "Video" && (
 								<Frame
@@ -124,38 +136,8 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								textColor={PALETTE.white}
 								key={"video-text"}
 							/>
-						</Button>
-						<Button
-							size={UDim2.fromScale(1, 0.1)}
-							backgroundColor={tab === "Controls" ? light : PALETTE.gray}
-							backgroundTransparency={0.5}
-							onClick={() => {
-								setTab("Controls");
-							}}
-							key={"controls-button"}
-						>
-							{tab === "Controls" && (
-								<Frame
-									size={UDim2.fromScale(0.025, 1)}
-									anchorPoint={new Vector2(1, 0.5)}
-									position={UDim2.fromScale(0, 0.5)}
-									backgroundColor={PALETTE.dark_yellow}
-									key={"yellow-selector-controls"}
-								/>
-							)}
-							<Text
-								size={UDim2.fromScale(0.95, 1)}
-								anchorPoint={new Vector2(0.5, 0.5)}
-								position={UDim2.fromScale(0.5, 0.5)}
-								text={"Controls"}
-								textXAlignment="Center"
-								textSize={px(40)}
-								font={FONTS.inter.medium}
-								textColor={PALETTE.white}
-								key={"controls-text"}
-							/>
-						</Button>
-						<Button
+						</ReactiveButton>
+						<ReactiveButton
 							size={UDim2.fromScale(1, 0.1)}
 							backgroundColor={PALETTE.gray}
 							backgroundTransparency={0.5}
@@ -163,6 +145,11 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								onClose?.();
 							}}
 							key={"exit-button"}
+							position={UDim2.fromScale(0.5, 0.5)}
+							anchorPoint={new Vector2(0.5, 0.5)}
+							cornerRadius={new UDim(0, 0)}
+							sound={ASSET_IDS.UIClick}
+							enabled={true}
 						>
 							<Text
 								size={UDim2.fromScale(0.95, 1)}
@@ -175,13 +162,13 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 								textColor={PALETTE.white}
 								key={"video-text"}
 							/>
-						</Button>
+						</ReactiveButton>
 					</Group>
 					<Frame
 						size={UDim2.fromOffset(px(SETTINGS_MENU_SIZE.X) / 1.28, px(SETTINGS_MENU_SIZE.Y))}
 						anchorPoint={Vector2.one.mul(0.5)}
 						position={UDim2.fromScale(0.5, 0.5)}
-						backgroundTransparency={0.5}
+						backgroundTransparency={0.3}
 						backgroundColor={PALETTE.gray}
 						key={"right-frame"}
 					>
@@ -201,9 +188,8 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Audio" && (
 								<>
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleMusic)}
-										settingName={"Music"}
+										settingName={"Game Music"}
 										onClick={(enabled: boolean): void => {
 											store.setSetting({ id: SettingId.ToggleMusic, value: enabled });
 											Events.settings.set(SettingId.ToggleMusic, enabled);
@@ -211,13 +197,16 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										onReset={(): void => {
 											store.resetSetting({ id: SettingId.ToggleMusic });
 											Events.settings.reset(SettingId.ToggleMusic);
+
+											store.setSetting({ id: SettingId.MusicVolume, value: 100 });
+											Events.settings.set(SettingId.MusicVolume, 100);
 										}}
 										layoutOrder={1}
 									/>
 									{!!values.get(SettingId.ToggleMusic) === true && (
 										<PercentSettingsRow
 											percent={values.get(SettingId.MusicVolume) as number}
-											settingName={"Music Volume"}
+											settingName={"Volume"}
 											onClick={(percent: number): void => {
 												store.setSetting({ id: SettingId.MusicVolume, value: percent });
 												Events.settings.set(SettingId.MusicVolume, percent);
@@ -226,9 +215,8 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										/>
 									)}
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleSfx)}
-										settingName={"Sound Effects"}
+										settingName={"Game Sounds"}
 										onClick={(enabled: boolean): void => {
 											store.setSetting({ id: SettingId.ToggleSfx, value: enabled });
 											Events.settings.set(SettingId.ToggleSfx, enabled);
@@ -236,18 +224,48 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 										onReset={(): void => {
 											store.resetSetting({ id: SettingId.ToggleSfx });
 											Events.settings.reset(SettingId.ToggleSfx);
+
+											store.setSetting({ id: SettingId.SfxVolume, value: 100 });
+											Events.settings.set(SettingId.SfxVolume, 100);
 										}}
-										layoutOrder={1}
+										layoutOrder={3}
 									/>
-									{!!values.get(SettingId.SfxVolume) === true && (
+									{!!values.get(SettingId.ToggleSfx) === true && (
 										<PercentSettingsRow
 											percent={values.get(SettingId.SfxVolume) as number}
-											settingName={"Sound Volume"}
+											settingName={"Volume"}
 											onClick={(percent: number): void => {
 												store.setSetting({ id: SettingId.SfxVolume, value: percent });
 												Events.settings.set(SettingId.SfxVolume, percent);
 											}}
-											layoutOrder={2}
+											layoutOrder={4}
+										/>
+									)}
+									<EnableSettingsRow
+										enable={!!values.get(SettingId.ToggleUISound)}
+										settingName={"UI Sounds"}
+										onClick={(enabled: boolean): void => {
+											store.setSetting({ id: SettingId.ToggleUISound, value: enabled });
+											Events.settings.set(SettingId.ToggleUISound, enabled);
+										}}
+										onReset={(): void => {
+											store.resetSetting({ id: SettingId.ToggleUISound });
+											Events.settings.reset(SettingId.ToggleUISound);
+
+											store.setSetting({ id: SettingId.UIVolume, value: 100 });
+											Events.settings.set(SettingId.UIVolume, 100);
+										}}
+										layoutOrder={5}
+									/>
+									{!!values.get(SettingId.ToggleUISound) === true && (
+										<PercentSettingsRow
+											percent={values.get(SettingId.UIVolume) as number}
+											settingName={"Volume"}
+											onClick={(percent: number): void => {
+												store.setSetting({ id: SettingId.UIVolume, value: percent });
+												Events.settings.set(SettingId.UIVolume, percent);
+											}}
+											layoutOrder={6}
 										/>
 									)}
 								</>
@@ -255,7 +273,6 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 							{tab === "Video" && (
 								<>
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleVfx)}
 										settingName={"Visual Effects"}
 										onClick={(enabled: boolean): void => {
@@ -266,9 +283,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											store.resetSetting({ id: SettingId.ToggleVfx });
 											Events.settings.reset(SettingId.ToggleVfx);
 										}}
+										layoutOrder={1}
 									/>
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleShake)}
 										settingName={"Visual Shake"}
 										onClick={(enabled: boolean): void => {
@@ -279,10 +296,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											store.resetSetting({ id: SettingId.ToggleShake });
 											Events.settings.reset(SettingId.ToggleShake);
 										}}
-										layoutOrder={1}
+										layoutOrder={2}
 									/>
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleMobBB)}
 										settingName={"Mob Healthbars"}
 										onClick={(enabled: boolean): void => {
@@ -293,10 +309,9 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											store.resetSetting({ id: SettingId.ToggleMobBB });
 											Events.settings.reset(SettingId.ToggleMobBB);
 										}}
-										layoutOrder={2}
+										layoutOrder={3}
 									/>
 									<EnableSettingsRow
-										// eslint-disable-next-line roblox-ts/lua-truthiness
 										enable={!!values.get(SettingId.ToggleTowerBB)}
 										settingName={"Tower Statbars"}
 										onClick={(enabled: boolean): void => {
@@ -307,89 +322,7 @@ export function SettingsMenu({ visible, onClose }: SettingMenuProps): Element {
 											store.resetSetting({ id: SettingId.ToggleTowerBB });
 											Events.settings.reset(SettingId.ToggleTowerBB);
 										}}
-										layoutOrder={2}
-									/>
-								</>
-							)}
-							{tab === "Controls" && (
-								<>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.One}
-										settingName={"Slot 1"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotOne });
-											Events.settings.reset(SettingId.SlotOne);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotOne, value: keycode });
-											Events.settings.set(SettingId.SlotOne, keycode);
-										}}
-										layoutOrder={1}
-									/>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.Two}
-										settingName={"Slot 2"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotTwo });
-											Events.settings.reset(SettingId.SlotTwo);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotTwo, value: keycode });
-											Events.settings.set(SettingId.SlotTwo, keycode);
-										}}
-										layoutOrder={2}
-									/>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.Three}
-										settingName={"Slot 3"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotThree });
-											Events.settings.reset(SettingId.SlotThree);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotThree, value: keycode });
-											Events.settings.set(SettingId.SlotThree, keycode);
-										}}
-										layoutOrder={3}
-									/>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.Four}
-										settingName={"Slot 4"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotFour });
-											Events.settings.reset(SettingId.SlotFour);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotFour, value: keycode });
-											Events.settings.set(SettingId.SlotFour, keycode);
-										}}
 										layoutOrder={4}
-									/>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.Five}
-										settingName={"Slot 5"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotFive });
-											Events.settings.reset(SettingId.SlotFive);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotFive, value: keycode });
-											Events.settings.set(SettingId.SlotFive, keycode);
-										}}
-										layoutOrder={5}
-									/>
-									<KeySettingsRow
-										keyCode={Enum.KeyCode.Six}
-										settingName={"Slot 6"}
-										onReset={(): void => {
-											store.resetSetting({ id: SettingId.SlotSix });
-											Events.settings.reset(SettingId.SlotSix);
-										}}
-										onSubmit={(keycode: Keycode): void => {
-											store.setSetting({ id: SettingId.SlotSix, value: keycode });
-											Events.settings.set(SettingId.SlotSix, keycode);
-										}}
-										layoutOrder={6}
 									/>
 								</>
 							)}

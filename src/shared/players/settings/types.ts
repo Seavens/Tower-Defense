@@ -6,6 +6,7 @@ import type { SettingValueOfId } from "./definitions";
 export const enum SettingId {
 	MusicVolume = "setting_id:music_volume",
 	SfxVolume = "setting_id:sfx_volume",
+	UIVolume = "setting_id:ui_volume",
 
 	SlotOne = "keybind_id:slot_one",
 	SlotTwo = "keybind_id:slot_two",
@@ -18,6 +19,7 @@ export const enum SettingId {
 	ToggleSettings = "setting_id:settings_toggle",
 	ToggleMusic = "setting_id:music_toggle",
 	ToggleSfx = "setting_id:sfx_toggle",
+	ToggleUISound = "setting_id:ui_sound_toggle",
 	ToggleVfx = "setting_id:vfx_toggle",
 	ToggleShake = "setting_id:shake_toggle",
 	ToggleMobBB = "setting_id:mob_bb_toggle",

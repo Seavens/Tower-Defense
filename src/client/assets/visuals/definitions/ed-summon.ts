@@ -4,6 +4,7 @@ import { ReplicatedStorage, TweenService, Workspace } from "@rbxts/services";
 import { SettingId } from "shared/players/settings";
 import { SoundEmitter } from "shared/assets/sound/sound-emitter";
 import { TowerVisual } from "shared/tower/types";
+import { VisualUtility } from "../utility";
 import { selectSettingValues } from "client/players/profile/settings";
 import { store } from "client/state/store";
 import type { Bin } from "@rbxts/bin";
@@ -29,10 +30,13 @@ const guard = Flamework.createGuard<
 >();
 
 const prefab = effects.FindFirstChild(TowerVisual.EDSummon);
+const priority = Enum.RenderPriority.Last.Value;
+const camera = Workspace.CurrentCamera;
 
 const values = store.getState(selectSettingValues);
 const sfxEnabled = values.get(SettingId.ToggleSfx);
 const sfxVolume = values.get(SettingId.SfxVolume);
+const shakeEnabled = values.get(SettingId.ToggleShake);
 
 export const edSummonVisual: TowerVisualModule<TowerVisual.EDSummon> = {
 	id: TowerVisual.EDSummon,
@@ -60,9 +64,12 @@ export const edSummonVisual: TowerVisualModule<TowerVisual.EDSummon> = {
 				DemonFive: [ASSET_IDS.DemonFive],
 			});
 
+			const volumeScale = (sfxVolume as number) / 100;
+			const halfVolumeScale = volumeScale / 2;
+
 			for (const key of soundNames) {
-				const volumeScale = key === "DownTen" ? (sfxVolume as number) / 200 : (sfxVolume as number) / 100;
-				const sound = sounds.playSound(key, 0, volumeScale);
+				const soundVolume = key === "DownTen" ? halfVolumeScale : volumeScale;
+				const sound = sounds.playSound(key, 0, soundVolume);
 				const tween = TweenService.Create(sound, info, { Volume: 0 });
 				tween.Play();
 				bin.add(tween);
@@ -75,6 +82,8 @@ export const edSummonVisual: TowerVisualModule<TowerVisual.EDSummon> = {
 			bin.add(sounds);
 			bin.add(delay);
 		}
+
+		if (shakeEnabled === true) VisualUtility.onShake(priority, camera);
 
 		const thread = task.delay(1.95, (): void => {
 			const emitters = effect.GetDescendants();

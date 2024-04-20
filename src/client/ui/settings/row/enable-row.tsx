@@ -1,8 +1,13 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { FONTS, PALETTE } from "client/ui/constants";
 import { Group, Image, ReactiveButton, Text } from "../../components";
 import { SETTINGS_MENU_ROW_SIZE } from "../constants";
+import { SettingId } from "shared/players/settings";
+import { Workspace } from "@rbxts/services";
+import { selectSettingValues } from "client/players/profile/settings";
 import { usePx } from "../../hooks";
-import React, { useState } from "@rbxts/react";
+import { useSelector } from "@rbxts/react-reflex";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 interface EnableSettingsRowProps {
@@ -58,13 +63,16 @@ export function EnableSettingsRow({
 				/>
 				<ReactiveButton
 					size={UDim2.fromOffset(px(400), px(40))}
-					onClick={(): void => onClick?.(!enable)}
+					onClick={(): void => {
+						onClick?.(!enable);
+					}}
 					enabled={true}
 					backgroundColor={enable === true ? PALETTE.green : PALETTE.dark_red}
 					cornerRadius={new UDim(0, px(4))}
 					anchorPoint={new Vector2(0.5, 0.5)}
 					position={UDim2.fromScale(0.5, 0.5)}
 					backgroundTransparency={0}
+					sound={ASSET_IDS.UIClick}
 					key={"center-button"}
 				>
 					<Text
@@ -89,6 +97,7 @@ export function EnableSettingsRow({
 						onReset?.();
 					}}
 					enabled={true}
+					sound={ASSET_IDS.UIClick}
 					key={"reset-button"}
 				>
 					<Image

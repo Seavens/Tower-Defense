@@ -1,9 +1,16 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import { type BindingOrValue, composeBindings, lerp, map } from "@rbxts/pretty-react-hooks";
 import { Button, Group } from "../../basic";
 import { PALETTE, SPRINGS } from "client/ui/constants";
+import { SettingId } from "shared/players/settings";
+import { Workspace } from "@rbxts/services";
+import { selectSettingValues } from "client/players/profile/settings";
 import { useButtonAnimation, useButtonState, useMotion, usePx } from "client/ui/hooks";
-import React, { forwardRef, useEffect } from "@rbxts/react";
+import { useSelector } from "@rbxts/react-reflex";
+import React, { forwardRef, useEffect, useMemo } from "@rbxts/react";
 import type { Element, InstanceEvent, PropsWithChildren, Ref } from "@rbxts/react";
+
+const { debris } = Workspace;
 
 interface ReactiveButtonProps extends PropsWithChildren {
 	size: BindingOrValue<UDim2>;
@@ -20,6 +27,7 @@ interface ReactiveButtonProps extends PropsWithChildren {
 	active?: boolean;
 	hoverable?: boolean;
 	event?: InstanceEvent<TextButton>;
+	sound?: RBXAssetId;
 	onClick?: () => void;
 	onLeftClick?: () => void;
 	onRightClick?: () => void;
@@ -43,6 +51,7 @@ export const ReactiveButton = forwardRef(
 			hoverable = true,
 			event,
 			children,
+			sound,
 			onClick,
 			onLeftClick,
 			onRightClick,
@@ -59,6 +68,27 @@ export const ReactiveButton = forwardRef(
 		useEffect((): void => {
 			transparencyMotion.spring(enabled ? 0 : 1, SPRINGS.gentle);
 		});
+
+		const values = useSelector(selectSettingValues);
+		const soundEnabled = values.get(SettingId.ToggleUISound);
+
+		const volume = useMemo((): number => {
+			if (soundEnabled === false) return 0;
+			const UIVolume = values.get(SettingId.UIVolume);
+			if (!typeIs(soundEnabled, "boolean") || !soundEnabled) return 0;
+			if (!typeIs(UIVolume, "number")) return 0;
+			return UIVolume;
+		}, [values]);
+
+		const handleClick = (): void => {
+			if (sound === undefined) return;
+			const _sound = new Instance("Sound");
+			_sound.SoundId = sound;
+			_sound.Parent = debris;
+			_sound.Volume = volume / 100;
+			_sound.PlayOnRemove = true;
+			_sound.Destroy();
+		};
 
 		return (
 			<Group
@@ -99,10 +129,12 @@ export const ReactiveButton = forwardRef(
 					active={active}
 					event={{
 						MouseButton1Click: (): void => {
+							handleClick();
 							onLeftClick?.();
 							onClick?.();
 						},
 						MouseButton2Click: (): void => {
+							handleClick();
 							onRightClick?.();
 							onClick?.();
 						},

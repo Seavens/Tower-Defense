@@ -1,3 +1,4 @@
+import { ASSET_IDS } from "shared/assets/constants";
 import {
 	CloseButton,
 	DelayRender,
@@ -264,6 +265,7 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 								textSize={px(INVENTORY_TOPBAR_Y + 5)}
 								enabled={enabled}
 								onClose={onClose}
+								sound={ASSET_IDS.UIClick}
 								key={"inventory-close"}
 							/>
 							<ReactiveButton
@@ -314,6 +316,7 @@ export function Inventory({ items, equipped, visible, onClose }: InventoryProps)
 									const result = filters[(index - 1) % filters.size()];
 									setFilter(result);
 								}}
+								sound={ASSET_IDS.UIClick}
 								key={"inventory-filter"}
 							>
 								<Text

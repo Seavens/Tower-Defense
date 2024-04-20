@@ -1,8 +1,13 @@
-import { Button, Frame, Group, Image, ReactiveButton, Text } from "../../components";
+import { ASSET_IDS } from "shared/assets/constants";
 import { FONTS, PALETTE } from "client/ui/constants";
+import { Frame, Group, Image, ReactiveButton, Text } from "../../components";
 import { SETTINGS_MENU_ROW_SIZE } from "../constants";
+import { SettingId } from "shared/players/settings";
+import { Workspace } from "@rbxts/services";
+import { selectSettingValues } from "client/players/profile/settings";
 import { usePx } from "../../hooks";
-import React from "@rbxts/react";
+import { useSelector } from "@rbxts/react-reflex";
+import React, { useMemo } from "@rbxts/react";
 import type { Element } from "@rbxts/react";
 
 interface PercentSettingsRowProps {
@@ -56,8 +61,11 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick 
 					backgroundTransparency={0.2}
 					backgroundColor={PALETTE.light_gray}
 					cornerRadius={new UDim(0, px(4))}
-					onClick={(): void => onClick?.(percent - 5 < 0 ? 0 : percent - 5)}
+					onClick={(): void => {
+						onClick?.(percent - 5 < 0 ? 0 : percent - 5);
+					}}
 					enabled={true}
+					sound={ASSET_IDS.UIClick}
 					key={"left-button"}
 				>
 					<Image
@@ -96,8 +104,11 @@ export function PercentSettingsRow({ percent, settingName, layoutOrder, onClick 
 					backgroundTransparency={0.2}
 					backgroundColor={PALETTE.light_gray}
 					cornerRadius={new UDim(0, px(4))}
-					onClick={(): void => onClick?.(percent + 5 > 100 ? 100 : percent + 5)}
+					onClick={(): void => {
+						onClick?.(percent + 5 > 100 ? 100 : percent + 5);
+					}}
 					enabled={true}
+					sound={ASSET_IDS.UIClick}
 					key={"right-button"}
 				>
 					<Image
