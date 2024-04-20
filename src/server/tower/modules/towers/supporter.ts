@@ -13,10 +13,7 @@ export const supporterTower: TowerModule<ItemId.Supporter> = {
 		for (const tower of towers) {
 			const key = tower.getKey();
 			const timestamp = getTimestamp();
-			store.addStatus(
-				{ duration: 10, timestamp, id: StatusId.Buffed, stacks: 20 },
-				{ user: key, broadcast: true },
-			);
+			store.addStatus({ duration: 5, timestamp, id: StatusId.Buffed, stacks: 2 }, { user: key, broadcast: true });
 		}
 	},
 };

@@ -6,6 +6,7 @@ import { healingStatus } from "./healing";
 import { shieldedStatus } from "./shielded";
 import { slowedStatus } from "./slowed";
 import { stunnedStatus } from "./stunned";
+import { zoinkedStatus } from "./zoinked";
 
 export interface StatusDefinition<I extends StatusId> {
 	id: I;
@@ -25,4 +26,5 @@ export const statusDefinitions: { [I in StatusId]: StatusDefinition<I> } = {
 	[StatusId.Frozen]: frozenStatus,
 	[StatusId.Stunned]: stunnedStatus,
 	[StatusId.Slowed]: slowedStatus,
+	[StatusId.Zoinked]: zoinkedStatus,
 } as const;

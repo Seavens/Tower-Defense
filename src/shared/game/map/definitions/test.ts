@@ -11,7 +11,7 @@ export const testMap: MapDefinition<MapId.Test> = {
 	waves: {
 		first: {
 			[MobId.UrbanOne]: {
-				count: 7,
+				count: 10,
 				delay: 1,
 				wait: 1,
 			},

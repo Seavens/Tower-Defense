@@ -5,6 +5,7 @@ export const enum StatusId {
 	// Mobs
 	Healing = "status_effect:healing",
 	Shielded = "status_effect:shielded",
+	Zoinked = "status_effect:zoinked",
 
 	// Towers
 	Buffed = "status_effect:buffed",
@@ -17,7 +18,6 @@ export const enum StatusId {
 }
 
 export const enum StatusKind {
-	// Character = "status_kind:character",
 	Tower = "status_kind:tower",
 	Mob = "status_kind:mob",
 	Shared = "status_kind:shared",
