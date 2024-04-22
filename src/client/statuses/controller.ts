@@ -3,7 +3,7 @@ import { Mob } from "client/mob/class";
 import { StatusKind } from "shared/statuses/types";
 import { Tower } from "client/tower";
 import { createSchedule } from "shared/utility/functions/create-schedule";
-import { getPlayer } from "shared/utility/functions/get-player";
+import { getTimestamp } from "shared/utility/functions/get-timestamp";
 import { isUUID } from "shared/utility/guards";
 import { selectStatusState, selectStatusesByUser } from "shared/statuses/selectors";
 import { statusDefinitions } from "shared/statuses/definitions/statuses";
@@ -20,31 +20,35 @@ export class StatusController implements OnStart {
 			(_: Map<StatusId, Status>, user: string | number): defined => `${user}`,
 			(_: Map<StatusId, Status>, user: string | number): (() => void) | void => {
 				user = `${user}`;
-				const player = getPlayer(user);
-				if (player === undefined) {
-					return undefined;
-				}
 				const unsubscribe = store.observe(
 					selectStatusesByUser(user),
 					({ stacks }: Status, id: StatusId): defined => `${user}-(${id}_${stacks})`,
 					(status: Status, id: StatusId): (() => void) | void => {
+						const { timestamp } = status;
+						const now = getTimestamp();
+						const remaining = timestamp - now;
 						const result = this.getOwner(`${user}`);
-						if (result === undefined) {
+						if (remaining <= 0 || result === undefined) {
 							return undefined;
 						}
 						const [owner, kind] = result;
 						const module = statusModules[id];
+						// Me when typescript!
 						if (kind === StatusKind.Tower) {
 							module.onAdded(owner, status, kind);
 						} else if (kind === StatusKind.Mob) {
 							module.onAdded(owner, status, kind);
 						}
-						return (): void => {
+						const thread = task.delay(remaining, (): void => {
 							if (kind === StatusKind.Tower) {
 								module.onRemove(owner, status, kind);
 							} else if (kind === StatusKind.Mob) {
 								module.onRemove(owner, status, kind);
 							}
+						});
+						// Me when typescript!
+						return (): void => {
+							pcall((): void => task.cancel(thread));
 						};
 					},
 				);

@@ -112,6 +112,11 @@ export class Tower extends API {
 		return towers.get(key);
 	}
 
+	public getInstance(): Model {
+		const { instance } = this;
+		return instance;
+	}
+
 	public getReplicated(): ReplicatedTower {
 		const { key } = this;
 		const tower = store.getState(selectSpecificTower(key));

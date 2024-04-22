@@ -41,7 +41,7 @@ export class InventoryController implements OnStart {
 			if (state !== Enum.UserInputState.Begin) {
 				return;
 			}
-			warn("balls!");
+			//
 		});
 		StarterGui.SetCoreGuiEnabled("PlayerList", false);
 	}

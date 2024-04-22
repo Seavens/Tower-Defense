@@ -53,7 +53,6 @@ export class WaveImpl {
 				continue;
 			}
 			const count = adding;
-			warn(count / max);
 			definition = { count, delay, wait: (count / max) * SPEED_FACTOR };
 			allocated -= health * count;
 			wave[id] = definition;

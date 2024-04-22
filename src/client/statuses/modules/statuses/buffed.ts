@@ -1,30 +1,51 @@
-import { ReplicatedStorage, Workspace } from "@rbxts/services";
+import { AssetController } from "client/assets/controller";
+import { CollectionService } from "@rbxts/services";
+import { Collision } from "shared/utility/collision";
 import { StatusId } from "shared/statuses/types";
-import { Tower } from "client/tower";
-import { TowerVisual } from "shared/tower/types";
+import { t } from "@rbxts/t";
 import type { Mob } from "client/mob/class";
 import type { Status, StatusKind } from "shared/statuses/types";
 import type { StatusModule } from ".";
+import type { Tower } from "client/tower";
 
-const { debris } = Workspace;
-const { assets } = ReplicatedStorage;
-const { effects } = assets;
+const isBasePart = t.instanceIsA("BasePart");
 
 export const buffedStatus: StatusModule<StatusId.Buffed> = {
 	id: StatusId.Buffed,
 
-	onAdded: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
-		warn("Buffed status added");
-		const clone = effects.FindFirstChild(TowerVisual.Buff);
-		if (clone === undefined || !clone.IsA("BasePart")) return;
-		if (character instanceof Tower === false) return;
-		clone.Parent = debris;
-		clone.CFrame === character.cframe;
+	onAdded: (object: Mob | Tower, { id }: Status, kind: StatusKind): void => {
+		const asset = AssetController.getAsset("effects", id, isBasePart);
+		if (asset === undefined) {
+			return;
+		}
+		const effects = CollectionService.GetTagged(id);
+		const instance = object.getInstance();
+		for (const effect of effects) {
+			if (!effect.IsDescendantOf(instance)) {
+				continue;
+			}
+			return;
+		}
+		const effect = asset.Clone();
+		effect.CollisionGroup = Collision.Debris;
+		effect.CanCollide = false;
+		effect.Anchored = true;
+		effect.CFrame = instance.GetPivot();
+		effect.Parent = instance;
+		effect.AddTag(id);
 	},
-	onTick: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
-		warn("Buffed status added!!!!!!!!!!!");
-	},
-	onRemove: (character: Mob | Tower, status: Status, kind: StatusKind): void => {
+	onTick: (object: Mob | Tower, status: Status, kind: StatusKind): void => {
 		//
+	},
+	onRemove: (object: Mob | Tower, { id }: Status, kind: StatusKind): void => {
+		const effects = CollectionService.GetTagged(id);
+		const instance = object.getInstance();
+		for (const effect of effects) {
+			if (!effect.IsDescendantOf(instance)) {
+				continue;
+			}
+			effect.Destroy();
+			break;
+		}
 	},
 };

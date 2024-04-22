@@ -41,7 +41,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 	public spawnWave(map: MapId, wave: number): void {
 		store.gameSetStatus({ status: GameStatus.Spawning }, { broadcast: true });
 		const definition = WaveImpl.calculateWave(map, wave, MapDifficulty.Easy);
-		// warn(definition);
 		const longest = this.getSpawnDuration(definition);
 		for (const [id, { count, delay, wait }] of pairs(definition)) {
 			if (count <= 0) {
@@ -81,7 +80,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 	}
 
 	public nextWave(): void {
-		// warn("Wave ended.");
 		store.gameEndWave({}, { broadcast: true });
 
 		const { map, wave } = store.getState(selectGameData);
@@ -96,11 +94,9 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 
 		// Wait for intermission time before starting the next wave
 		for (const index of $range(0, INTERMISSION_TIME - 1)) {
-			// warn(INTERMISSION_TIME - index, INTERMISSION_TIME - index > 1 ? "s" : "");
 			task.wait(1);
 		}
 
-		// warn("Wave started.");
 		store.gameStartWave({}, { broadcast: true });
 	}
 
@@ -120,13 +116,11 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 		const { health } = mobDefinitions[id];
 		const damage = current ** 2 / (health * 2);
 		store.gameBaseDamage({ damage }, { broadcast: true });
-		const { health: baseHealth, status } = store.getState(selectGameData);
-		// warn(`Base: ${baseHealth} | Damage: -${damage} | Mobs: ${Mob.getMobCount()}`);
+		const { status } = store.getState(selectGameData);
 		if (status !== GameStatus.Ended) {
 			return;
 		}
 		Mob.removeAllMobs();
-		// warn("Round ended.");
 	}
 
 	public onPlayerReady(player: Player): void {
@@ -138,7 +132,6 @@ export class WaveService implements OnStart, OnMobRemoved, OnMobEnded, OnPlayerR
 			const data = mob.serialize();
 			serialized.set(uuid, data);
 		}
-		// warn("synchronizing");
 		Events.mob.sync(player, serialized);
 	}
 

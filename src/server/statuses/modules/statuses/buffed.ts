@@ -14,7 +14,6 @@ export const buffedStatus: StatusModule<StatusId.Buffed> = {
 		// Typescript moment!
 		const tower = owner as Tower;
 		tower.setSpeedBuff(3 * stacks);
-		warn("added");
 	},
 	onTick: (owner: Mob | Tower, status: Status, kind: StatusKind): void => {
 		//
@@ -31,6 +30,5 @@ export const buffedStatus: StatusModule<StatusId.Buffed> = {
 			return;
 		}
 		tower.setSpeedBuff(0);
-		warn("removed");
 	},
 };

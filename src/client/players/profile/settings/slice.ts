@@ -37,7 +37,6 @@ export const settingSlice = createProducer<SettingState, ExcludeMetadata<Setting
 			const { kind: definition } = settingDefinitions[id];
 			const { kind, guard } = definition;
 			if (!guard(value)) {
-				// warn(id, value);
 				return;
 			}
 			if (kind !== SettingKind.Keybind) {

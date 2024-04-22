@@ -6,7 +6,7 @@ import { healingStatus } from "./healing";
 import { shieldedStatus } from "./shielded";
 import { slowedStatus } from "./slowed";
 import { stunnedStatus } from "./stunned";
-import { zonikedStatus } from "./zoinked";
+import { zoinkedStatus } from "./zoinked";
 import type { Mob } from "client/mob/class";
 import type { Status, StatusKind } from "shared/statuses/types";
 import type { Tower } from "client/tower";
@@ -39,5 +39,5 @@ export const statusModules: { [I in StatusId]: StatusModule<I> } = {
 	[StatusId.Slowed]: slowedStatus,
 	[StatusId.Stunned]: stunnedStatus,
 	[StatusId.Shielded]: shieldedStatus,
-	[StatusId.Zoinked]: zonikedStatus,
+	[StatusId.Zoinked]: zoinkedStatus,
 } as const;
